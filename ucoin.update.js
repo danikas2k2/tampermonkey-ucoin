@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin
 // @namespace    http://ucoin.net/
-// @version      0.1.2
+// @version      0.1.3
 // @description  special actions
 // @author       dan
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -210,7 +210,7 @@ function updatePrices(config) {
 }
 
 function loadThenUpdatePrices() {
-    $.getJSON('http://dev.andriaus.com/ucoin-swap-prices.json', data => {
+    $.getJSON('http://dev.andriaus.com/ucoin/ucoin-swap-prices.json', data => {
         localStorage.ucoinSwapPrices = JSON.stringify(data);
         localStorage.ucoinSwapPricesUpdated = Date.now();
         updatePrices(data);
