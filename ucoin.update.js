@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         uCoin
 // @namespace    http://ucoin.net/
-// @version      0.1.3
+// @version      0.1.4
 // @description  special actions
-// @author       dan
+// @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
@@ -20,9 +20,10 @@ var inline_src = (<><![CDATA[
 
 
 const uid = 'uid=28609';
+const ucid = 'ucid=';
 const loc = document.location.href;
 
-if (loc.includes(uid)) {
+if (loc.includes(uid) || loc.includes(ucid)) {
 
     if (loc.includes('/swap-list/')) {
         if (localStorage.ucoinSwapPrices && (Date.now() - localStorage.ucoinSwapPricesUpdated < 86400000)) {
@@ -36,13 +37,49 @@ if (loc.includes(uid)) {
         }
     }
 
-    if (loc.includes('/gallery/')) {
-
-
-
+    if (loc.includes('/coin/')) {
+        initPublicityToggler();
     }
 
+}
 
+
+function initPublicityToggler() {
+    const view = $('#my-func-block');
+    const status = $('.status-line .left', view);
+    const edit = $('button.btn-blue', view);
+
+    const form = $('#coin-form');
+    const checkbox = $('input[name=public]', form);
+    let checked = checkbox.prop('checked');
+
+    const button = edit.clone()
+        .removeAttr('onclick')
+        .css('padding', '4px 14px')
+        .insertBefore(edit)
+        .click(function () {
+                checkbox.prop('checked', !checked);
+                $.post(loc, $('form', form).serialize(), function () {
+                    checked = !checked;
+                    updatePublicityStatus();
+                    if (checked) ok('Coin public');
+                    else       info('Coin private');
+                });
+            });
+
+    updatePublicityStatus();
+
+    function updatePublicityStatus() {
+        button
+            .text(checked ? 'Hide' : 'Show')
+            .toggleClass('btn-blue', !checked)
+            .toggleClass('btn-gray', checked);
+
+        status
+            .text(checked ? 'Public' : 'Private')
+            .toggleClass('status0', !checked)
+            .toggleClass('status1', checked);
+    }
 }
 
 
