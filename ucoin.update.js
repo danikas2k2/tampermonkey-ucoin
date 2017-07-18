@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin
 // @namespace    http://ucoin.net/
-// @version      0.1.5
+// @version      0.1.6
 // @description  special actions
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -42,10 +42,13 @@ var inline_src = (<><![CDATA[
 
             }
 
-            else if (loc.includes(ucid) && $('#user-menu').length) {
+            else if (loc.includes('/coin/')) {
 
-                if (loc.includes('/coin/')) {
+                if (loc.includes(ucid) && $('#user-menu').length) {
                     initPublicityToggler();
+                }
+
+                if ($('#swap-block').length) {
                     initSwapPriceUpdater();
                 }
 
@@ -272,7 +275,7 @@ var inline_src = (<><![CDATA[
                 $('tr.my').each((i, tr) => {
                     const $tr = $(tr);
                     if ($tr.hasClass('mark')) {
-                        return false;
+                        return;
                     }
 
                     const trData  = $tr.data();
@@ -370,17 +373,33 @@ var inline_src = (<><![CDATA[
                     }
                 }
 
-                const pn = prices.get(name);
-                if (!pn.has(q)) {
-                    return false;
+                const nameVariants = [`${name} ${year}`, name];
+                if (subject) {
+                    nameVariants.unshift(`${name} ${subject} ${year}`, `${name} ${subject}`);
                 }
 
-                let pp = pn.get(q);
-                if (pp < price) {
-                    pp = price;
+                for (let nameVariant of nameVariants) {
+                    const pp = getQPrice(nameVariant);
+                    if (pp !== false) {
+                        return pp;
+                    }
                 }
 
-                return pp;
+                return false;
+
+                function getQPrice(name) {
+                    if (!prices.has(name)) {
+                        return false;
+                    }
+
+                    const pn = prices.get(name);
+                    if (!pn.has(q)) {
+                        return false;
+                    }
+
+                    const pp = pn.get(q);
+                    return (pp < price) ? price : pp;
+                }
             }
 
             function getPriceConfig() {
