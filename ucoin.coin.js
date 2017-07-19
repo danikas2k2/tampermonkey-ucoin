@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.0
-// @description  Fix gallery links and add publicity toggler
+// @version      0.1.1
+// @description  Fix tag links, add publicity toggler, and update swap prices
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
@@ -26,6 +26,8 @@ var inline_src = (<><![CDATA[
 
             const loc = document.location.href;
 
+            fixTagLinks();
+
             if (loc.includes('ucid=') && $('#user-menu').length) {
                 initPublicityToggler();
             }
@@ -34,6 +36,28 @@ var inline_src = (<><![CDATA[
                 initSwapPriceUpdater();
             }
 
+
+            function fixTagLinks() {
+                const tags = $('#tags');
+                $('a[href^="/gallery/"]', tags).each(updateLinkHref);
+            }
+
+            function updateLinkHref() {
+                const a    = $(this);
+                const href = a.attr('href');
+                a.attr('href', updateHref(href));
+            }
+
+            function updateHref(href) {
+                const [locPath, locQuery] = getHrefParts(href);
+                return [locPath, [...locQuery.entries()].map(([k, v]) => `${k}=${v.replace(/\+/g, '%2B')}`).join('&')].join('?');
+            }
+
+            function getHrefParts(href) {
+                const parts = href.split('?');
+                parts[1]    = new Map(parts[1].split('&').map(q => q.split('=')));
+                return parts;
+            }
 
             function initPublicityToggler() {
                 const view   = $('#my-func-block');
