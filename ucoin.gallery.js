@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Gallery
 // @namespace    https://ucoin.net/
-// @version      0.1.1
+// @version      0.1.2
 // @description  Fix gallery links and add publicity toggler
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -136,14 +136,12 @@ var inline_src = (<><![CDATA[
                     let queue = $.when();
 
                     updateStatus.each((i, status) => {
-                        status    = $(status);
-                        const url = status.prevAll('.coin-desc').children('div').first().find('a').attr('href');
+                        const $status = $(status);
+                        const url     = $status.prevAll('.coin-desc').children('div').first().find('a').attr('href');
 
                         queue = queue
-                            .then($.get(url))
+                            .then(() => $.get(url))
                             .then(html => $('form', $(html).find('#coin-form')))
-                            .then(randomDelay())
-
                             .then(form => postPublicityForm(url, form, checked))
                             .then(() => {
                                 status.removeClass(removeClass).addClass(addClass).text(text);
