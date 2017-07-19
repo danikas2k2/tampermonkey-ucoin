@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Gallery
 // @namespace    https://ucoin.net/
-// @version      0.1.2
+// @version      0.1.3
 // @description  Fix gallery links and add publicity toggler
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -127,15 +127,13 @@ var inline_src = (<><![CDATA[
                 }
 
                 function toggleGroupVisibility(checked) {
-                    let updateStatus   = (checked ? privateStatus : publicStatus);
-                    let oppositeStatus = (checked ? publicStatus : privateStatus);
-                    let addClass       = `status${checked * 1}`;
-                    let removeClass    = `status${(!checked) * 1}`;
-                    let text           = checked ? 'Public' : 'Private';
+                    let addClass    = `status${checked * 1}`;
+                    let removeClass = `status${(!checked) * 1}`;
+                    let text        = checked ? 'Public' : 'Private';
 
                     let queue = $.when();
 
-                    updateStatus.each((i, status) => {
+                    (checked ? privateStatus : publicStatus).each((i, status) => {
                         const $status = $(status);
                         const url     = $status.prevAll('.coin-desc').children('div').first().find('a').attr('href');
 
@@ -144,10 +142,10 @@ var inline_src = (<><![CDATA[
                             .then(html => $('form', $(html).find('#coin-form')))
                             .then(form => postPublicityForm(url, form, checked))
                             .then(() => {
-                                status.removeClass(removeClass).addClass(addClass).text(text);
+                                $status.removeClass(removeClass).addClass(addClass).text(text);
 
-                                updateStatus   = updateStatus.not(status);
-                                oppositeStatus = oppositeStatus.add(status);
+                                privateStatus = privateStatus[checked ? 'not' : 'add']($status);
+                                publicStatus  = publicStatus[checked ? 'add' : 'not']($status);
 
                                 toggleButtonVisibility();
                             })
