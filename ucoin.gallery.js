@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Gallery
 // @namespace    https://ucoin.net/
-// @version      0.1.0
+// @version      0.1.1
 // @description  Fix gallery links and add publicity toggler
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -35,6 +35,7 @@ var inline_src = (<><![CDATA[
             function fixGalleryLinks() {
                 const gallery = $('#gallery');
                 $('a[href^="/gallery/"]', gallery).each(updateLinkHref);
+                $('a[href^="?"]', gallery).each(updateLinkHref);
                 $('div.close', gallery).each(updateOnClickHref);
             }
 
