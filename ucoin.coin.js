@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.1
+// @version      0.1.2
 // @description  Fix tag links, add publicity toggler, and update swap prices
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -30,6 +30,7 @@ var inline_src = (<><![CDATA[
 
             if (loc.includes('ucid=') && $('#user-menu').length) {
                 initPublicityToggler();
+                initFormImprovements();
             }
 
             if ($('#swap-block').length) {
@@ -101,6 +102,40 @@ var inline_src = (<><![CDATA[
                         .toggleClass('status0', !checked)
                         .toggleClass('status1', checked);
                 }
+            }
+
+            function initFormImprovements() {
+                const form = $('form', '#coin-form');
+                const cond = $('#condition', form);
+
+                $('<a href="#">&#x21BB;</a>')
+                    .click(() => {
+                        const d = new Date();
+                        $('#buy_month', form).val(d.getMonth() + 1);
+                        $('#buy_year', form).val(d.getFullYear());
+                        return false;
+                    })
+                    .insertBefore($('#buy_month', form));
+
+                $('table div[class^="marked-"]', form).not('#set-color')
+                    .click(() => {
+                        const div = $(this);
+                        if (div.hasClass('marked-7')) {
+                            condition.val('6'); // G
+                        } else if (div.hasClass('marked-8')) {
+                            condition.val('5'); // VG
+                        } else if (div.hasClass('marked-9')) {
+                            condition.val('4'); // F
+                        } else if (div.hasClass('marked-10')) {
+                            condition.val('3'); // VF
+                        } else if (div.hasClass('marked-11')) {
+                            condition.val('2'); // XF
+                        } else if (div.hasClass('marked-12')) {
+                            condition.val('1'); // UNC
+                        } else if (div.hasClass('marked-3')) {
+                            condition.val('7'); // PRF
+                        }
+                    });
             }
 
             function postPublicityForm(url, form, checked) {
