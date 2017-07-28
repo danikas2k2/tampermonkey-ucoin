@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.3
+// @version      0.1.4
 // @description  Fix tag links, add publicity toggler, and update swap prices
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -130,52 +130,25 @@ var inline_src = (<><![CDATA[
                     })
                     .insertBefore($('#buy_month', form));
 
-                function initFormImprovements() {
-                    const form = $('form', '#coin-form');
-                    const cond = $('#condition', form);
-
-                    $('<a href="#">&#x21BB;</a>')
-                        .css({
-                            fontSize: '16px',
-                            fontWeight: 'bold',
-                            width: '22px',
-                            height: '22px',
-                            display: 'inline-block',
-                            textAlign: 'center'
-                        })
-                        .click(e => {
-                            const d = new Date();
-                            let m = d.getMonth() + 1;
-                            if (m < 10) {
-                                m = `0${m}`;
-                            }
-                            const y = d.getFullYear();
-                            $('#buy_month', form).val(m);
-                            $('#buy_year', form).val(y);
-                            return false;
-                        })
-                        .insertBefore($('#buy_month', form));
-
-                    $('table div[class^="marked-"]', form).not('#set-color')
-                        .click(e => {
-                            const div = $(e.target);
-                            if (div.hasClass('marked-7')) {
-                                cond.val('6'); // G
-                            } else if (div.hasClass('marked-8')) {
-                                cond.val('5'); // VG
-                            } else if (div.hasClass('marked-9')) {
-                                cond.val('4'); // F
-                            } else if (div.hasClass('marked-10')) {
-                                cond.val('3'); // VF
-                            } else if (div.hasClass('marked-11')) {
-                                cond.val('2'); // XF
-                            } else if (div.hasClass('marked-12')) {
-                                cond.val('1'); // UNC
-                            } else if (div.hasClass('marked-3')) {
-                                cond.val('7'); // PRF
-                            }
-                        });
-                }
+                $('table div[class^="marked-"]', form).not('#set-color')
+                    .click(e => {
+                        const div = $(e.target);
+                        if (div.hasClass('marked-7')) {
+                            cond.val('6'); // G
+                        } else if (div.hasClass('marked-8')) {
+                            cond.val('5'); // VG
+                        } else if (div.hasClass('marked-9')) {
+                            cond.val('4'); // F
+                        } else if (div.hasClass('marked-10')) {
+                            cond.val('3'); // VF
+                        } else if (div.hasClass('marked-11')) {
+                            cond.val('2'); // XF
+                        } else if (div.hasClass('marked-12')) {
+                            cond.val('1'); // UNC
+                        } else if (div.hasClass('marked-3')) {
+                            cond.val('7'); // PRF
+                        }
+                    });
             }
 
             function postPublicityForm(url, form, checked) {
