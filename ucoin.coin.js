@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.4
+// @version      0.1.5
 // @description  Fix tag links, add publicity toggler, and update swap prices
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -28,9 +28,12 @@ var inline_src = (<><![CDATA[
 
             fixTagLinks();
 
-            if (loc.includes('ucid=') && $('#user-menu').length) {
-                initPublicityToggler();
+            if ($('#user-menu').length) {
                 initFormImprovements();
+
+                if (loc.includes('ucid=')) {
+                    initPublicityToggler();
+                }
             }
 
             if ($('#swap-block').length) {
