@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.5
+// @version      0.1.6
 // @description  Fix tag links, add publicity toggler, and update swap prices
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -306,7 +306,7 @@ var inline_src = (<><![CDATA[
             }
 
             function loadPriceConfig() {
-                return $.when($.getJSON('http://dev.andriaus.com/ucoin/ucoin-swap-prices.json')).then(data => {
+                return $.when($.getJSON('//dev.andriaus.com/ucoin/ucoin-swap-prices.json')).then(data => {
                     localStorage.ucoinSwapPrices        = JSON.stringify(data);
                     localStorage.ucoinSwapPricesUpdated = Date.now();
                     return data;
