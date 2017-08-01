@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Swap-list
 // @namespace    https://ucoin.net/
-// @version      0.1.0
+// @version      0.1.1
 // @description  Update swap prices
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -224,7 +224,7 @@ var inline_src = (<><![CDATA[
             }
 
             function loadPriceConfig() {
-                return $.when($.getJSON('http://dev.andriaus.com/ucoin/ucoin-swap-prices.json')).then(data => {
+                return $.when($.getJSON('//dev.andriaus.com/ucoin/ucoin-swap-prices.json')).then(data => {
                     localStorage.ucoinSwapPrices        = JSON.stringify(data);
                     localStorage.ucoinSwapPricesUpdated = Date.now();
                     return data;
