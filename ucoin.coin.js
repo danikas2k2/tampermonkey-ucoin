@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.6
+// @version      0.1.7
 // @description  Fix tag links, add publicity toggler, and update swap prices
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -133,25 +133,41 @@ var inline_src = (<><![CDATA[
                     })
                     .insertBefore($('#buy_month', form));
 
+                const CN = new Map([
+                    ['6', '7'],  // G
+                    ['5', '8'],  // VG
+                    ['4', '9'],  // F
+                    ['3', '10'], // VF
+                    ['2', '11'], // XF
+                    ['1', '12'], // UNC
+                    ['7', '3'],  // PRf
+                ]);
+
+                const CL = new Map([...CN.entries()].map(([k, v]) => [v, k])); // switch conditions and colors
+
                 $('table div[class^="marked-"]', form).not('#set-color')
                     .click(e => {
                         const div = $(e.target);
-                        if (div.hasClass('marked-7')) {
-                            cond.val('6'); // G
-                        } else if (div.hasClass('marked-8')) {
-                            cond.val('5'); // VG
-                        } else if (div.hasClass('marked-9')) {
-                            cond.val('4'); // F
-                        } else if (div.hasClass('marked-10')) {
-                            cond.val('3'); // VF
-                        } else if (div.hasClass('marked-11')) {
-                            cond.val('2'); // XF
-                        } else if (div.hasClass('marked-12')) {
-                            cond.val('1'); // UNC
-                        } else if (div.hasClass('marked-3')) {
-                            cond.val('7'); // PRF
+                        const color = div.attr('class').split(' ')
+                            .map(c => c.startsWith('marked-') ? c.split('-', 3)[1] : null)
+                            .filter(c => !!c).pop(); // get last marked color
+                        if (CL.has(color)) {
+                            cond.val(CL.get(color));
                         }
                     });
+
+                cond.change(e => {
+                    const value = $('#table-color', form);
+                    const color = $('#set-color', form);
+                    color.removeClass(`marked-${value.val()}`);
+
+                    const condition = $(e.target).val();
+                    if (CN.has(condition)) {
+                        value.val(CN.get(condition));
+                    }
+
+                    color.addClass(`marked-${value.val()}`);
+                });
             }
 
             function postPublicityForm(url, form, checked) {
