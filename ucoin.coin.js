@@ -8,7 +8,7 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js
-// @require      https://dev.andriaus.com/ucoin/lib.prices.js
+// @require      https://dev.andriaus.com/ucoin/lib.prices.js?v=0.1.3
 // @match        https://*.ucoin.net/coin/*
 // ==/UserScript==
 

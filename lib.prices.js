@@ -1,3 +1,10 @@
+// ==UserScriptLib==
+// @version      0.1.3
+// @description  Don't forget to update version for script includes
+// @author       danikas2k2
+// @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
+// ==/UserScriptLib==
+
 "use strict";
 
 function getPrice(config, country, name, subject, year, q, comment, price) {
@@ -58,7 +65,7 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
                 q = cheapRegular.get(q);
             }
         } else {
-            const regular = new Map([['VG', 'F'], ['G', 'F']]);
+            const regular = new Map([['VF', 'VF1'], ['VG', 'F'], ['G', 'F']]);
             if (regular.has(q)) {
                 q = regular.get(q);
             }
