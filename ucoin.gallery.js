@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Gallery
 // @namespace    https://ucoin.net/
-// @version      0.1.4
+// @version      0.1.5
 // @description  Fix gallery links and add publicity toggler
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -45,6 +45,9 @@ var inline_src = (<><![CDATA[
             const href = a.attr('href');
             if (a.hasClass('active')) {
                 d.push('view');
+            } else if (a.hasClass('switcher')) {
+                const view = getHrefParts(href)[1].get('view');
+                d.push(view);
             }
             a.attr('href', updateHref(href, 'view', d));
         }
