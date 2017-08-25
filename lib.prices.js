@@ -1,5 +1,5 @@
 // ==UserScriptLib==
-// @version      0.1.3
+// @version      0.1.4
 // @description  Don't forget to update version for script includes
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -27,6 +27,7 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
         q = 'BU';
     }
 
+    let alias;
     if (subject) {
         if (veryCheap.has(country)) {
             /*
@@ -44,14 +45,14 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
             }
             */
             // get ** commemorative prices
-            name = `${name}*`; // **
+            alias = `${name}*`; // **
         } else {
             /*const commemorative = new Map([['XF', 'AU'], ['VF', 'XF2'], ['F', 'XF1'], ['VG', 'XF'], ['G', 'VF1']]);
             if (commemorative.has(q)) {
                 q = commemorative.get(q);
             }*/
             // get *3 commemorative prices
-            name = `${name}3`; // *3
+            alias = `${name}3`; // *3
         }
     } else {
         if (veryCheap.has(country)) {
@@ -74,15 +75,35 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
 
     const nameVariants = [];
     if (subject) {
-        nameVariants.unshift(
-            `${country} ${name} ${subject} ${year}`,
-            `${country} ${name} ${subject}`,
-            `${country} ${name} ${year}`,
-            `${country} ${name}`,
-            `${name} ${subject} ${year}`,
-            `${name} ${subject}`,
-            `${name} ${year}`,
-            name);
+        if (alias) {
+            nameVariants.unshift(
+                `${country} ${alias} ${subject} ${year}`,
+                `${country} ${name} ${subject} ${year}`,
+                `${country} ${alias} ${subject}`,
+                `${country} ${name} ${subject}`,
+                `${country} ${alias} ${year}`,
+                `${country} ${name} ${year}`,
+                `${country} ${alias}`,
+                `${country} ${name}`,
+                `${alias} ${subject} ${year}`,
+                `${name} ${subject} ${year}`,
+                `${alias} ${subject}`,
+                `${name} ${subject}`,
+                `${alias} ${year}`,
+                `${name} ${year}`,
+                alias,
+                name);
+        } else {
+            nameVariants.unshift(
+                `${country} ${name} ${subject} ${year}`,
+                `${country} ${name} ${subject}`,
+                `${country} ${name} ${year}`,
+                `${country} ${name}`,
+                `${name} ${subject} ${year}`,
+                `${name} ${subject}`,
+                `${name} ${year}`,
+                name);
+        }
     } else {
         nameVariants.unshift(
             `${country} ${name} ${year}`,

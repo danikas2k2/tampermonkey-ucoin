@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.8
+// @version      0.1.9
 // @description  Fix tag links, add publicity toggler, and update swap prices
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js
-// @require      https://dev.andriaus.com/ucoin/lib.prices.js?v=0.1.3
+// @require      https://dev.andriaus.com/ucoin/lib.prices.js?v=0.1.4
 // @match        https://*.ucoin.net/coin/*
 // ==/UserScript==
 
