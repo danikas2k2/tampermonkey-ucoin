@@ -1,7 +1,7 @@
-(function ($) {
+(function (global, $) {
     "use strict";
 
-    export function getPrice(config, country, name, subject, year, q, comment, price) {
+    global.getPrice = function getPrice(config, country, name, subject, year, q, comment, price) {
         const {prices, cheap, veryCheap} = config;
 
         if (subject) {
@@ -78,9 +78,9 @@
             const pp = pn.get(q);
             return (pp < price) ? price : pp;
         }
-    }
+    };
 
-    export function getPriceConfig() {
+    global.getPriceConfig = function getPriceConfig() {
         return getOrLoadPriceConfig().then(config => {
             if (!config) {
                 err('config not found');
@@ -103,9 +103,9 @@
                 veryCheap: new Set(config.veryCheap || config['very-cheap'] || []),
             };
         });
-    }
+    };
 
-    export function getOrLoadPriceConfig() {
+    global.getOrLoadPriceConfig = function getOrLoadPriceConfig() {
         if (localStorage.ucoinSwapPrices && (Date.now() - localStorage.ucoinSwapPricesUpdated < 86400000)) {
             try {
                 return $.when(JSON.parse(localStorage.ucoinSwapPrices));
@@ -115,14 +115,14 @@
         } else {
             return loadPriceConfig();
         }
-    }
+    };
 
-    export function loadPriceConfig() {
+    global.loadPriceConfig = function loadPriceConfig() {
         return $.when($.getJSON('//dev.andriaus.com/ucoin/ucoin-swap-prices.json')).then(data => {
             localStorage.ucoinSwapPrices        = JSON.stringify(data);
             localStorage.ucoinSwapPricesUpdated = Date.now();
             return data;
         });
-    }
+    };
 
-})(jQuery);
+})(window, jQuery);
