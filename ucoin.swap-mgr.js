@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Swap-Manager
 // @namespace    https://ucoin.net/
-// @version      0.1.0
+// @version      0.1.1
 // @description  Show all prices
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -33,7 +33,7 @@ var inline_src = (<><![CDATA[
                 const myPrice = $td.text();
                 const theyPrice = $tr.data('tooltipPrice');
                 if (myPrice !== theyPrice) {
-                    $td.append(`<span class="gray-11">(${theyPrice})</span>`);
+                    $td.append(`<br/><span class="gray-11">${theyPrice}</span>`);
                 }
             });
         }
