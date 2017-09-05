@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Swap-Manager
 // @namespace    https://ucoin.net/
-// @version      0.1.2
+// @version      0.1.3
 // @description  Show all prices
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -29,7 +29,7 @@ var inline_src = (<><![CDATA[
         function showAllPrices() {
             $('table.swap-coin tr').each((i, tr) => {
                 const $tr = $(tr);
-                const $td = $('td.td-cond + td', tr);
+                const $td = $('.td-cond + *', tr);
                 const myPrice = +$('span.blue-13', $td).text();
                 const prefix = $('span.gray-11:first-child', $td).text();
                 const suffix = $('span.gray-11:last-child', $td).text();
