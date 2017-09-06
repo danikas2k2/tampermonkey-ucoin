@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Swap-Manager
 // @namespace    https://ucoin.net/
-// @version      0.1.3
+// @version      0.1.4
 // @description  Show all prices
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -24,10 +24,42 @@ var inline_src = (<><![CDATA[
     (function ($) {
         "use strict";
 
+        const CN = new Map([
+            ['7',  1],
+            ['8',  2],
+            ['9',  3],
+            ['10', 4],
+            ['11', 5],
+            ['12', 6],
+            ['3',  7],
+            ['2',  8],
+            ['1',  9],
+        ]);
+
+        const CM = new Map([
+            ['G',   1],
+            ['VG',  2],
+            ['F',   3],
+            ['VF',  4],
+            ['XF',  5],
+            ['UNC', 6],
+            ['PRF', 7],
+            ['PRF', 8],
+        ]);
+
+        const isSelected = $('#need-swap-list').length;
+        const $table = $('table.swap-coin');
+        const $list = $('tr', $table);
+
         showAllPrices();
+        hiliteConflicting();
+        if (!isSelected) {
+            handleCheckEvent();
+            grayOutUnwanted();
+        }
 
         function showAllPrices() {
-            $('table.swap-coin tr').each((i, tr) => {
+            $list.each((i, tr) => {
                 const $tr = $(tr);
                 const $td = $('.td-cond + *', tr);
                 const myPrice = +$('span.blue-13', $td).text();
@@ -37,6 +69,43 @@ var inline_src = (<><![CDATA[
                 if (!isNaN(price) && myPrice !== price) {
                     $td.append(`<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
                 }
+            });
+        }
+
+        function grayOutUnwanted() {
+            $list.each((i, tr) => {
+                const $tr = $(tr);
+                const marked = $('td span[class^="marked-"]', $tr).attr('class');
+                const myQuality = marked && CN.get(marked.split('marked-').pop()) || 0;
+                const quality = CM.get($('td.td-cond', $tr).text()) || 0;
+                if (myQuality && (!quality || quality <= myQuality)) {
+                    $tr.css('opacity', '.5');
+                }
+            });
+        }
+
+        function hiliteConflicting() {
+            let $checked = $list;
+            if (!isSelected) {
+                $checked = $checked.has('input.swap-checkbox:checked');
+            }
+            $checked.each((i, tr) => {
+                const data = $(tr).data();
+                const $dup = $checked.filter(`[data-tooltip-name=${JSON.stringify(data.tooltipName)}]` +
+                                                `[data-tooltip-subject=${JSON.stringify(data.tooltipSubject)}]` +
+                                                `[data-tooltip-variety=${JSON.stringify(data.tooltipVariety)}]` +
+                                                `[data-tooltip-km=${JSON.stringify(data.tooltipKm)}]`);
+                $dup.css('background', ($dup.length > 1) ? '#ffeeee' : '');
+            });
+        }
+
+        function handleCheckEvent() {
+            $table.on('click', 'input.swap-checkbox', e => {
+                const $input = $(e.target);
+                if (!$input.is(':checked')) {
+                    $input.parents('tr').css('background','');
+                }
+                hiliteConflicting();
             });
         }
 
