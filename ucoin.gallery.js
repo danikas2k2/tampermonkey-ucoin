@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Gallery
 // @namespace    https://ucoin.net/
-// @version      0.1.5
+// @version      0.1.6
 // @description  Fix gallery links and add publicity toggler
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -108,8 +108,7 @@ var inline_src = (<><![CDATA[
 
         function getHrefParts(href) {
             const parts = href.split('?');
-            parts[1]    = new Map(parts[1].split('&').map(q => q.split('=')));
-            return parts;
+            return [parts.shift(), new Map(parts.join('%3F').split('&').map(q => q.split('=')))];
         }
 
         function addPublicityToggler() {

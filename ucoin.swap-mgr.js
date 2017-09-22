@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Swap-Manager
 // @namespace    https://ucoin.net/
-// @version      0.1.4
+// @version      0.1.6
 // @description  Show all prices
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -51,6 +51,7 @@ var inline_src = (<><![CDATA[
         const $table = $('table.swap-coin');
         const $list = $('tr', $table);
 
+        addTrackingLinks();
         showAllPrices();
         hiliteConflicting();
         if (!isSelected) {
@@ -65,9 +66,14 @@ var inline_src = (<><![CDATA[
                 const myPrice = +$('span.blue-13', $td).text();
                 const prefix = $('span.gray-11:first-child', $td).text();
                 const suffix = $('span.gray-11:last-child', $td).text();
-                const price = +$tr.data('tooltipPrice').replace(prefix, '').replace(suffix, '');
-                if (!isNaN(price) && myPrice !== price) {
-                    $td.append(`<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
+                const tooltipPrice = $tr.data('tooltipPrice');
+                if (tooltipPrice) {
+                    const price = +tooltipPrice.replace(prefix, '').replace(suffix, '');
+                    if (!isNaN(price) && myPrice !== price) {
+                        $td.append(`<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
+                    }
+                } else {
+                    $td.append(`<br/><span class="gray-11">— ¿? —</span>`);
                 }
             });
         }
@@ -106,6 +112,16 @@ var inline_src = (<><![CDATA[
                     $input.parents('tr').css('background','');
                 }
                 hiliteConflicting();
+            });
+        }
+
+        function addTrackingLinks() {
+            $('div.left.lgray-11:contains("Track")+div.right.gray-11', '#swap-mgr').each((i, div) => {
+                const $div = $(div);
+                const text = $div.text();
+                if (text) {
+                    $div.html(`<a href="https://www.17track.net/en/track?nums=${text}">${text}</a>`);
+                }
             });
         }
 
