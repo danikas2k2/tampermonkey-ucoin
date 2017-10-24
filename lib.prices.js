@@ -114,6 +114,7 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
 
     for (let nameVariant of nameVariants) {
         const pp = getQPrice(nameVariant);
+        console.log(nameVariant, q, pp);
         if (pp !== false) {
             return pp;
         }
