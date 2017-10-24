@@ -1,5 +1,5 @@
 // ==UserScriptLib==
-// @version      0.1.7
+// @version      0.1.8
 // @description  Don't forget to update version for script includes
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -121,8 +121,8 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
             return false;
         }
 
-        const pp = pn.get(q);
-        return (+pp < +price) ? price : pp;
+        const pp = +pn.get(q);
+        return (pp < +price) ? price : pp.toFixed(2);
     }
 }
 
