@@ -128,6 +128,7 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
         }
 
         const pn = prices.get(name);
+        console.log(pn.entries());
         if (!pn.has(q)) {
             return false;
         }
