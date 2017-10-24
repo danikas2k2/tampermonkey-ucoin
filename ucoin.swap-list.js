@@ -10,7 +10,7 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js
 // @require      https://dev.andriaus.com/ucoin/lib.delay.js?v=0.1.0
-// @require      https://dev.andriaus.com/ucoin/lib.prices.js?v=0.1.4
+// @require      https://dev.andriaus.com/ucoin/lib.prices.js?v=0.1.5
 // @require      https://dev.andriaus.com/ucoin/lib.notify.js?v=0.1.0
 // @require      https://dev.andriaus.com/ucoin/lib.utils.js?v=0.1.0
 // @match        https://*.ucoin.net/swap-list/?*uid=28609*

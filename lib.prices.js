@@ -1,5 +1,5 @@
 // ==UserScriptLib==
-// @version      0.1.4
+// @version      0.1.5
 // @description  Don't forget to update version for script includes
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -30,27 +30,11 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
     let alias;
     if (subject) {
         if (veryCheap.has(country)) {
-            /*
-            const cheapCommemorative = new Map([['BU', 'UNC'], ['UNC', 'AU'], ['XF', 'XF2'], ['VF', 'XF1'], ['F', 'XF'], ['VG', 'VF1'], ['G', 'VF']]);
-            if (cheapCommemorative.has(q)) {
-                q = cheapCommemorative.get(q);
-            }
-            */
             // leave * commemorative prices
         } else if (cheap.has(country)) {
-            /*
-            const cheapCommemorative = new Map([['BU', 'UNC'], ['UNC', 'AU'], ['XF', 'XF2'], ['VF', 'XF1'], ['F', 'XF'], ['VG', 'VF1'], ['G', 'VF']]);
-            if (cheapCommemorative.has(q)) {
-                q = cheapCommemorative.get(q);
-            }
-            */
             // get ** commemorative prices
             alias = `${name}*`; // **
         } else {
-            /*const commemorative = new Map([['XF', 'AU'], ['VF', 'XF2'], ['F', 'XF1'], ['VG', 'XF'], ['G', 'VF1']]);
-            if (commemorative.has(q)) {
-                q = commemorative.get(q);
-            }*/
             // get *3 commemorative prices
             alias = `${name}3`; // *3
         }
@@ -112,12 +96,32 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
             name);
     }
 
-    for (let nameVariant of nameVariants) {
-        const pp = getQPrice(nameVariant);
-        console.log(nameVariant, q, pp);
-        if (pp !== false) {
-            return pp;
+    const qFallback = new Map([
+        ['BU', 'UNC'],
+        ['AU', 'XF2'],
+        ['XF2', 'XF1'],
+        ['XF1', 'XF'],
+        ['VF1', 'VF'],
+        ['F', 'VF'],
+        ['VG', 'F'],
+        ['G', 'VG'],
+        ['AG', 'G'],
+        ['PO', 'AG'],
+    ]);
+
+    for (;q;) {
+        for (let nameVariant of nameVariants) {
+            const pp = getQPrice(nameVariant);
+            if (pp !== false) {
+                return pp;
+            }
         }
+
+        if (!qFallback.has(q)) {
+            return false;
+        }
+
+        q = qFallback.get(q);
     }
 
     return false;
@@ -128,7 +132,6 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
         }
 
         const pn = prices.get(name);
-        console.log(pn.entries());
         if (!pn.has(q)) {
             return false;
         }
