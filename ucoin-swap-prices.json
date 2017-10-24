@@ -1,17 +1,4 @@
 {
-    "rules": {
-        "regular": {
-            "": {"VF": "VF1", "VG": "F", "G": "F"},
-            "cheap": {"BU": "UNC", "UNC": "AU", "AU": "XF2", "XF2": "XF1", "XF1": "XF", "XF": "VF1", "VF1": "VF", "VF": "F", "VG": "F", "G": "F"},
-            "very-cheap": {"BU": "AU", "UNC": "XF2", "AU": "XF1", "XF2": "XF", "XF1": "VF1", "XF": "VF", "VF1": "F", "VF": "F", "VG": "F", "G": "F"}
-        },
-        "commemorative": {
-            "": {"*": "*3"},
-            "cheap": {"*": "**"},
-            "very-cheap": {"*": "*"}
-        }
-    },
-
     "prices": {
         "1 cent":    {"F": "0.02", "VF": "0.02", "VF1": "0.02", "XF": "0.03", "XF1": "0.04", "XF2": "0.06", "AU": "0.08", "UNC": "0.15", "BU": "0.23"},
         "2 cents":   {"F": "0.03", "VF": "0.03", "VF1": "0.03", "XF": "0.04", "XF1": "0.06", "XF2": "0.08", "AU": "0.11", "UNC": "0.20", "BU": "0.29"},
@@ -57,6 +44,31 @@
         "Lithuania 10 litas * 1938":  {"F": "50.00", "VF": "70.00", "XF": "100.0", "AU": "130.0", "UNC": "150.0", "BU": "200.0"},
 
         "": {}
+    },
+
+    "rules": {
+        "regular": {
+            "": {"VF": "VF1", "VG": "F", "G": "F"},
+            "cheap": {"BU": "UNC", "UNC": "AU", "AU": "XF2", "XF2": "XF1", "XF1": "XF", "XF": "VF1", "VF1": "VF", "VF": "F", "VG": "F", "G": "F"},
+            "very-cheap": {"BU": "AU", "UNC": "XF2", "AU": "XF1", "XF2": "XF", "XF1": "VF1", "XF": "VF", "VF1": "F", "VF": "F", "VG": "F", "G": "F"}
+        },
+        "commemorative": {
+            "": "*3",
+            "cheap": "**",
+            "very-cheap": "*"
+        },
+        "fallback": {
+            "BU": "UNC",
+            "AU": "XF2",
+            "XF2": "XF1",
+            "XF1": "XF",
+            "VF1": "VF",
+            "F": "VF",
+            "VG": "F",
+            "G": "VG",
+            "AG": "G",
+            "PO": "AG"
+        }
     },
     "cheap": [],
     "very-cheap": []

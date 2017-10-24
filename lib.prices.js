@@ -1,5 +1,5 @@
 // ==UserScriptLib==
-// @version      0.1.6
+// @version      0.1.7
 // @description  Don't forget to update version for script includes
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -8,11 +8,7 @@
 "use strict";
 
 function getPrice(config, country, name, subject, year, q, comment, price) {
-    const {prices, cheap, veryCheap} = config;
-
-    if (subject) {
-        name = `${name} *`;
-    }
+    const {prices, cheap, veryCheap, rules: {regular, commemorative, fallback}} = config;
 
     if (comment.includes('aUNC')) {
         q = 'AU';
@@ -29,37 +25,39 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
 
     let alias;
     if (subject) {
+        let flag;
+
         if (veryCheap.has(country)) {
-            // leave * commemorative prices
+            flag = commemorative.veryCheap || commemorative['very-cheap'];
         } else if (cheap.has(country)) {
-            // get ** commemorative prices
-            alias = `${name}*`; // **
+            flag = commemorative.cheap;
         } else {
-            // get *3 commemorative prices
-            alias = `${name}3`; // *3
+            flag = commemorative.common || commemorative[''];
         }
+
+        if (flag) {
+            alias = `${name} ${flag}`.trim();
+        }
+        name = `${name} *`;
     } else {
+        let mapping;
+
         if (veryCheap.has(country)) {
-            const veryCheapRegular = new Map([['BU', 'AU'], ['UNC', 'XF2'], ['AU', 'XF1'], ['XF2', 'XF'], ['XF1', 'VF1'], ['XF', 'VF'], ['VF1', 'F'], ['VF', 'F'], ['VG', 'F'], ['G', 'F']]);
-            if (veryCheapRegular.has(q)) {
-                q = veryCheapRegular.get(q);
-            }
+            mapping = regular.veryCheap || regular['very-cheap'];
         } else if (cheap.has(country)) {
-            const cheapRegular = new Map([['BU', 'UNC'], ['UNC', 'AU'], ['AU', 'XF2'], ['XF2', 'XF1'], ['XF1', 'XF'], ['XF', 'VF1'], ['VF1', 'VF'], ['VF', 'F'], ['VG', 'F'], ['G', 'F']]);
-            if (cheapRegular.has(q)) {
-                q = cheapRegular.get(q);
-            }
+            mapping = regular.cheap;
         } else {
-            const regular = new Map([['VF', 'VF1'], ['VG', 'F'], ['G', 'F']]);
-            if (regular.has(q)) {
-                q = regular.get(q);
-            }
+            mapping = regular.common || regular[''];
+        }
+
+        if (mapping && mapping.has(q)) {
+            q = mapping.get(q);
         }
     }
 
     const nameVariants = [];
     if (subject) {
-        if (alias) {
+        if (alias && alias !== name) {
             nameVariants.unshift(
                 `${country} ${alias} ${subject} ${year}`,
                 `${country} ${name} ${subject} ${year}`,
@@ -96,20 +94,7 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
             name);
     }
 
-    const qFallback = new Map([
-        ['BU', 'UNC'],
-        ['AU', 'XF2'],
-        ['XF2', 'XF1'],
-        ['XF1', 'XF'],
-        ['VF1', 'VF'],
-        ['F', 'VF'],
-        ['VG', 'F'],
-        ['G', 'VG'],
-        ['AG', 'G'],
-        ['PO', 'AG'],
-    ]);
-
-    for (;q;) {
+    for (; fallback && q;) {
         for (let nameVariant of nameVariants) {
             const pp = getQPrice(nameVariant);
             if (pp !== false) {
@@ -117,11 +102,11 @@ function getPrice(config, country, name, subject, year, q, comment, price) {
             }
         }
 
-        if (!qFallback.has(q)) {
+        if (!fallback.has(q)) {
             return false;
         }
 
-        q = qFallback.get(q);
+        q = fallback.get(q);
     }
 
     return false;
@@ -162,6 +147,11 @@ function getPriceConfig() {
             prices:    map,
             cheap:     new Set(config.cheap || []),
             veryCheap: new Set(config.veryCheap || config['very-cheap'] || []),
+            rules:     {
+                regular:       new Map(config.rules && config.rules.regular ? Object.entries(config.rules.regular) : []),
+                commemorative: new Map(config.rules && config.rules.commemorative ? Object.entries(config.rules.commemorative) : []),
+                fallback:      new Map(config.rules && config.rules.fallback ? Object.entries(config.rules.fallback) : []),
+            },
         };
     });
 }
