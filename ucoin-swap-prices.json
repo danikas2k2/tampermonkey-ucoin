@@ -35,6 +35,6 @@
 
         "": {}
     },
-    "cheap": ["France", "Germany", "Italy", "Latvia", "Lithuania", "Spain"],
+    "cheap": [],
     "very-cheap": []
 }
