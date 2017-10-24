@@ -12,7 +12,7 @@
 // @require      https://dev.andriaus.com/ucoin/lib.delay.js?v=0.1.0
 // @require      https://dev.andriaus.com/ucoin/lib.links.js?v=0.1.0
 // @require      https://dev.andriaus.com/ucoin/lib.notify.js?v=0.1.0
-// @require      https://dev.andriaus.com/ucoin/lib.prices.js?v=0.1.4
+// @require      https://dev.andriaus.com/ucoin/lib.prices.js?v=0.1.5
 // @require      https://dev.andriaus.com/ucoin/lib.utils.js?v=0.1.0
 // @match        https://*.ucoin.net/coin/*
 // ==/UserScript==
