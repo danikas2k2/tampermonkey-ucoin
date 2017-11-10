@@ -1,5 +1,5 @@
 // ==UserScriptLib==
-// @version      0.1.0
+// @version      0.1.1
 // @description  Don't forget to update version for script includes
 // @author       danikas2k2
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
@@ -8,7 +8,6 @@
 "use strict";
 
 const loc = document.location.href;
-const [locPath, locQuery] = getHrefParts(loc);
 
 function updateLinkHref() {
     const a      = $(this);
@@ -44,6 +43,8 @@ function updateOnClickHref() {
 }
 
 function updateHref(href, before = null, after = null) {
+    const [locPath, locQuery] = getHrefParts(loc);
+
     if (before) {
         applyQuery(locQuery, before);
     }
