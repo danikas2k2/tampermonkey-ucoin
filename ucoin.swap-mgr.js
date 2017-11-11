@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         uCoin: Swap-Manager
 // @namespace    https://ucoin.net/
-// @version      0.1.8
+// @version      0.1.9
 // @description  Show all prices
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
+// @require      https://dev.andriaus.com/ucoin/lib.delay.js?v=0.1.0
 // @match        https://*.ucoin.net/swap-mgr/*
 // @match        https://*.ucoin.net/swap-list/*
 // ==/UserScript==
@@ -16,10 +17,10 @@
 
 /* jshint ignore:start */
 var inline_src = (<><![CDATA[
-/* jshint ignore:end */
-    /* jshint esnext: false */
-    /* jshint esversion: 6 */
-
+    /* jshint ignore:end */
+        /* jshint esnext: false */
+        /* jshint esversion: 6 */
+    
 // @formatter:on
 
     (function ($) {
@@ -67,7 +68,10 @@ var inline_src = (<><![CDATA[
             ['PRF', 8],
         ]);
 
-        const isSelected = $('#need-swap-list').length;
+        const needSwapList = $('#need-swap-list');
+        const actionBoard = $('.action-board', needSwapList);
+        const isSelected = needSwapList.length;
+
         const $table     = $('table.swap-coin');
         const $list      = $('tr', $table);
 
@@ -77,6 +81,38 @@ var inline_src = (<><![CDATA[
         if (!isSelected) {
             handleCheckEvent();
             grayOutUnwanted();
+        } else {
+            checkSold();
+        }
+
+        function checkSold() {
+            const soldList = $list.filter('.del');
+            let soldCount = soldList.length;
+            if (soldCount) {
+                const button = $('<a class="btn-s btn-gray ico-del" id="act-d-all" style="float: right;"><div class="ico-16"></div></a>');
+                button.on('click', () => {
+                    if (! confirm('Are you sure you want to delete these coins?')) return false;
+                    let queue   = $.when();
+                    soldList.each((i, sold) => {
+                        queue = queue.then(() => {
+                            const href = $('a.act', sold).attr('href');
+                            return $.get(href);
+                        }).then(() => {
+                            const $soldCount = $('a.region.list-link div.right.blue-13 sup', '#tree');
+                            if (--soldCount) {
+                                $soldCount.html(`&nbsp;-${soldCount}`);
+                            } else {
+                                $soldCount.remove();
+                            }
+                            $(sold).remove();
+                        }).then(randomDelay());
+                    });
+                    queue.done(() => {
+                        button.remove();
+                    });
+                });
+                actionBoard.append(button);
+            }
         }
 
         function showAllPrices() {
