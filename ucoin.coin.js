@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.13.1
+// @version      0.1.14
 // @description  Fix tag links, add publicity toggler, and update swap prices
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
@@ -54,16 +54,22 @@ var inline_src = (<><![CDATA[
         }
 
         function initPublicityToggler() {
+            const buttonPadding = {paddingLeft:'14px',paddingRight:'14px'};
             const view   = $('#my-func-block');
-            const status = $('.status-line .left', view);
             const edit   = $('button.btn-blue', view);
+            const status = $('.status-line .left', view);
+            let replaceStatus = $('.status-line + table tr:has(span.status2)', view);
+
+            edit.css(buttonPadding);
+            $('+ a.btn-gray', edit).css(buttonPadding);
 
             const form  = $('form', '#coin-form');
+            let replace = $('input[name=replace]', form).prop('checked');
             let checked = $('input[name=public]', form).prop('checked');
 
-            const button = edit.clone()
+            const visibilityButton = edit.clone()
                 .removeAttr('onclick')
-                .css('padding', '4px 14px')
+                .css(buttonPadding)
                 .insertBefore(edit)
                 .click(() => {
                     $.when(postPublicityForm(loc, form, !checked)).then(() => {
@@ -74,19 +80,39 @@ var inline_src = (<><![CDATA[
                     });
                 });
 
+            const replacementButton = edit.clone()
+                .removeAttr('onclick')
+                .css(buttonPadding)
+                .insertBefore(visibilityButton)
+                .click(() => {
+                    $.when(postReplacementForm(loc, form, !replace)).then(() => {
+                        replace = !replace;
+                        updateReplacementStatus();
+                        if (replace) err('Should be replaced');
+                        else info('No replace required');
+                    });
+                });
+
             let prevKeyCode;
+            let requiredKeyCode;
             $('body').keydown(e => {
-                if (e.keyCode === prevKeyCode && e.keyCode === (checked ? 72 : 83)) {
-                    button.click();
+                if (e.keyCode === prevKeyCode) {
+                    if (e.keyCode === 72 || e.keyCode === 83) {
+                        visibilityButton.click();
+                    }
+                    if (e.keyCode === 82) {
+                        replacementButton.click();
+                    }
                 }
                 prevKeyCode = e.keyCode;
             });
 
             updatePublicityStatus();
+            updateReplacementStatus();
 
             function updatePublicityStatus() {
-                button
-                    .text(checked ? 'Hide' : 'Show')
+                visibilityButton
+                    .text(checked ? 'H' : 'S')
                     .toggleClass('btn-blue', !checked)
                     .toggleClass('btn-gray', checked);
 
@@ -94,6 +120,23 @@ var inline_src = (<><![CDATA[
                     .text(checked ? 'Public' : 'Private')
                     .toggleClass('status0', !checked)
                     .toggleClass('status1', checked);
+            }
+
+            function updateReplacementStatus() {
+                replacementButton
+                    .text('R')
+                    .toggleClass('btn-blue', !replace)
+                    .toggleClass('btn-gray', replace);
+
+                if (replace) {
+                    if (!replaceStatus || !replaceStatus.length) {
+                        replaceStatus = $('<tr><td class="lgray-12" colspan="2"><span class="set status2 wrap" style="max-width: 232px;width: 232px;padding: 0px;display: block;margin-top: 6px;">Need to replace</span></td></tr>');
+                        $('.status-line + table', view).append(replaceStatus);
+                    }
+                } else if (replaceStatus) {
+                    replaceStatus.remove();
+                    replaceStatus = null;
+                }
             }
         }
 
@@ -162,6 +205,11 @@ var inline_src = (<><![CDATA[
 
         function postPublicityForm(url, form, checked) {
             $('input[name=public]', form).prop('checked', checked);
+            return $.post(url, $(form).serialize());
+        }
+
+        function postReplacementForm(url, form, replace) {
+            $('input[name=replace]', form).prop('checked', replace);
             return $.post(url, $(form).serialize());
         }
 
