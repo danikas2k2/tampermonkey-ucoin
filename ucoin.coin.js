@@ -1,15 +1,15 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.14
-// @description  Fix tag links, add publicity toggler, and update swap prices
+// @version      0.1.15
+// @description  Fix tag links, add publicity toggler, expand/combine swap coins, and update swap prices
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.2/babel.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.16.0/polyfill.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js
-// @require      https://dev.andriaus.com/ucoin/lib.delay.js?v=0.1.0
+// @require      https://dev.andriaus.com/ucoin/lib.delay.js?v=0.1.1
 // @require      https://dev.andriaus.com/ucoin/lib.links.js?v=0.1.1
 // @require      https://dev.andriaus.com/ucoin/lib.notify.js?v=0.1.0
 // @require      https://dev.andriaus.com/ucoin/lib.prices.js?v=0.1.8
@@ -32,6 +32,10 @@ var inline_src = (<><![CDATA[
 
         const loc = document.location.href;
 
+        const coin      = $('#coin');
+        const swapForm  = $('#swap-form', coin);
+        const swapBlock = $('+ #swap-block', swapForm);
+
 
         fixTagLinks();
 
@@ -43,8 +47,203 @@ var inline_src = (<><![CDATA[
             }
         }
 
-        if ($('#swap-block').length) {
+        if (swapBlock.length) {
             initSwapPriceUpdater();
+            addSwapComments();
+            addSwapButtons();
+        }
+
+        function addSwapComments() {
+            const links = $('a.list-link', swapBlock);
+            links.each((i, a) => {
+                a = $(a);
+                const m = (a.attr('onclick') || '').match(/CoinSwapFormOn\((?:'[^']*', ){3}'([^']+)'/);
+                if (m && m[1]) {
+                    a.append(`<span class="right dgray-11 wrap" style="width:auto" title="${m[1]}"><div class="ico-16" style="display: inline-block;vertical-align: middle; background-position: -16px 0px;"></div> ${m[1]}</span>`);
+                }
+            });
+        }
+
+        function addSwapButtons() {
+            const buttons = $('center', swapBlock);
+            const variants = new Map();
+            let couldExpand = false, couldCombine = false;
+
+            function getSwapLinks() {
+                return $('a.list-link', swapBlock);
+            }
+
+            function forEachSwapLink(fn) {
+                getSwapLinks().each((i, a) => {
+                    a = $(a);
+                    if ($('> div.ico-16', a).length) {
+                        return;
+                    }
+
+                    const m = (a.attr('onclick') || '').match(/CoinSwapFormOn\('([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)'\)/);
+                    if (m) {
+                        m[0] = `${cond} ${vid} ${info}`;
+                        fn(i, a, m);
+                    }
+                });
+            }
+
+            function updateSwapVariants() {
+                forEachSwapLink((i, a, m) => {
+                    const [uniq, usid, cond, price, info, vid, qty] = m;
+                    if (qty > 1) {
+                        couldExpand = true;
+                    }
+                    let variant;
+                    if (variants.has(uniq)) {
+                        variant = variants.get(uniq);
+                        variant.qty += +qty;
+                        couldCombine = true;
+                    } else {
+                        variant = {usid, cond, price, info, vid, qty: +qty};
+                    }
+                    variants.set(uniq, variant);
+                });
+            }
+
+            function updateButtons() {
+                updateSwapVariants();
+                couldExpand ? addExpandButton() : removeExpandButton();
+                couldCombine ? addCombineButton() : removeCombineButton();
+            }
+
+            function disableButtons() {
+                $('button.btn--combiners', buttons)
+                    .addClass('btn-white')
+                    .removeClass('btn-blue')
+                    .prop('disabled', true);
+            }
+
+            function enableButtons() {
+                $('button.btn--combiners', buttons)
+                    .addClass('btn-blue')
+                    .removeClass('btn-white')
+                    .prop('disabled', false);
+            }
+
+            function expandClicked() {
+                disableButtons();
+
+                console.log(`EXPANDING...`);
+
+                let queue = $.when();
+
+                forEachSwapLink((i, a, m) => {
+                    const [uniq, usid, cond, price, info, vid, qty] = m;
+
+                    if (qty <= 1) {
+                        queue = queue
+                            .then(() => console.log(`IGNORING ${usid}`));
+                        return;
+                    }
+
+                    for (let i = 1; i < qty; i++) {
+                        queue = queue
+                            .then(() => console.log(`ADDING ${uniq} ${i} -> 1`))
+                            .then(() => addSwapCoin(cond, 1, vid, info, price))
+                            .then(() => {
+                                const A = a.clone();
+                                $('span.left.dblue-13', A).remove();
+                                a.after(A);
+                            })
+                            .then(randomDelay());
+                    }
+                    queue = queue
+                        .then(() => console.log(`UPDATING ${usid} -> 1`))
+                        .then(() => updSwapCoin(usid, cond, 1, vid, info, price))
+                        .then(() => $('span.left.dblue-13', a).remove())
+                        .then(randomDelay());
+                });
+
+                queue.then(() => {
+                    console.log('DONE!');
+                    enableButtons();
+                    updateButtons();
+                });
+            }
+
+            function addExpandButton() {
+                let expand = $('#expand', buttons);
+                if (expand.length) {
+                    expand.show();
+                } else {
+                    expand = $('<button id="expand" type="button" class="btn--combiners btn-s btn-blue" style="margin: 8px 2px 0">Expand</button>');
+                    buttons.append(expand);
+
+                    expand.click(() => expandClicked());
+                }
+            }
+
+            function combineClicked() {
+                disableButtons();
+
+                console.log(`COMBINING...`);
+
+                let queue = $.when();
+
+                forEachSwapLink((i, a, m) => {
+                    const [uniq, usid, cond, price, info, vid, qty] = m;
+
+                    let variant;
+                    if (variants.has(uniq)) {
+                        if (usid != variants.get(uniq).usid) {
+                            queue = queue
+                                .then(() => console.log(`REMOVING ${usid}`))
+                                .then(() => delSwapCoin(usid))
+                                .then(() => a.remove())
+                                .then(randomDelay());
+                        } else {
+                            const vqty = variants.get(uniq).qty;
+                            if (qty != vqty) {
+                                queue = queue
+                                    .then(() => console.log(`UPDATING ${usid} -> ${vqty}`))
+                                    .then(() => updSwapCoin(usid, cond, vqty, vid, info, price))
+                                    .then(() => $('span.left.gray-13.wrap', a).after(`<span class="left dblue-13"><span>&times;</span>${vqty}</span>`))
+                                    .then(randomDelay());
+                            } else {
+                                queue = queue
+                                    .then(() => console.log(`IGNORING ${usid}`));
+                            }
+                        }
+                    } else {
+                        queue = queue
+                            .then(() => console.log(`IGNORING ${usid}`));
+                    }
+                });
+
+                queue.then(() => {
+                    console.log('DONE!');
+                    enableButtons();
+                    updateButtons();
+                });
+            }
+
+            function addCombineButton() {
+                let combine = $('#combine', buttons);
+                if (combine.length) {
+                    combine.show();
+                } else {
+                    combine = $('<button id="combine" type="button" class="btn--combiners btn-s btn-blue" style="margin: 8px 2px 0">Combine</button>');
+                    buttons.append(combine);
+
+                    combine.click(() => combineClicked());
+                }
+            }
+
+            function removeExpandButton() {
+                $('button#expand', buttons).remove();
+            }
+
+            function removeCollapseButton() {
+                $('button#expand', buttons).remove();
+            }
+
+            updateButtons();
         }
 
 
@@ -203,6 +402,8 @@ var inline_src = (<><![CDATA[
             });
         }
 
+
+
         function postPublicityForm(url, form, checked) {
             $('input[name=public]', form).prop('checked', checked);
             return $.post(url, $(form).serialize());
@@ -213,12 +414,32 @@ var inline_src = (<><![CDATA[
             return $.post(url, $(form).serialize());
         }
 
+
+
+        function addSwapCoin(cond, qty, vid, info, price) {
+            return updSwapCoin('', cond, qty, vid, info, price, 'addswapcoin');
+        }
+
+        function delSwapCoin(usid) {
+            return updSwapCoin(usid, '', '', '', '', '', 'delswapcoin');
+        }
+
+        function updSwapCoin(usid, cond, qty, vid, info, price, action = 'editswapcoin') {
+            const map = new Map(swapForm.serializeArray().map(({name, value}) => [name, value]));
+            map.set('usid', usid);
+            map.set('condition', cond);
+            map.set('qty', qty);
+            map.set('swap-variety', vid);
+            map.set('comment', info);
+            map.set('price', price);
+            map.set('action', action);
+            return $.post(loc, [...map.entries()].map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join('&'));
+        }
+
+
+
         function initSwapPriceUpdater() {
             getPriceConfig().then(config => {
-                const coin      = $('#coin');
-                const swapForm  = $('#swap-form', coin);
-                const swapBlock = $('+ #swap-block', swapForm);
-
                 const country = sp($('th:contains("Country") + td', coin).text());
                 const name    = sp($('th:contains("Denomination") + td', coin).text());
                 const subject = sp($('th:contains("Subject") + td', coin).text());
@@ -241,17 +462,7 @@ var inline_src = (<><![CDATA[
                             return;
                         }
 
-                        queue = queue.then(() => {
-                            const map = new Map(swapForm.serializeArray().map(({name, value}) => [name, value]));
-                            map.set('usid', usid);
-                            map.set('condition', cond);
-                            map.set('qty', qty);
-                            map.set('swap-variety', vid);
-                            map.set('comment', info);
-                            map.set('price', p);
-                            map.set('action', 'editswapcoin');
-                            return $.post(loc, [...map.entries()].map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join('&'));
-                        }).then(() => {
+                        queue = queue.then(() => updSwapCoin(usid, cond, qty, vid, info, p)).then(() => {
                             $a.css("transition", "background-color .5s").css("background-color", "#C4F9AC")
                                 .find('span.right')
                                 .html(`<span class="lgray-11">€ </span>${p}<span class="lgray-11"></span>`)

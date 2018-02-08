@@ -1,5 +1,5 @@
 // ==UserScriptLib==
-// @version      0.1.0
+// @version      0.1.1
 // @description  Don't forget to update version for script includes
 // @author       danikas2k2
 // ==/UserScriptLib==
@@ -16,6 +16,9 @@ function delay(time) {
     };
 }
 
+const minDelay = 500; // ms
+const rndDelay = 500; // ms
+
 function randomDelay() {
-    return delay(Math.round(1000 + Math.random() * 1000));
+    return delay(Math.round(minDelay + Math.random() * rndDelay));
 }
