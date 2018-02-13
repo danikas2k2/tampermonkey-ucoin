@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.17
+// @version      0.1.18
 // @description  Fix tag links, add publicity toggler, expand/combine swap coins, and update swap prices
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
@@ -54,12 +54,37 @@ var inline_src = (<><![CDATA[
         }
 
         function addSwapComments() {
+            $(head).append(`<style>
+            a.list-link {
+                position: relative;
+            
+            }
+            a.list-link .comment {
+                position: absolute;
+                width: auto;
+                left: 100%;
+                text-align: left;
+            }
+            a.list-link:active .comment,
+            a.list-link:focus .comment,
+            a.list-link:hover .comment,
+            a.list-link .comment:active,
+            a.list-link .comment:focus,
+            a.list-link .comment:hover {
+                max-width: 100%;
+            }
+            a.list-link .comment .ico-16 {
+                display: inline-block;
+                vertical-align: middle;
+                background-position: -16px 0px;
+            }
+            </style>`);
             const links = $('a.list-link', swapBlock);
             links.each((i, a) => {
                 a = $(a);
                 const m = (a.attr('onclick') || '').match(/CoinSwapFormOn\((?:'[^']*', ){3}'([^']+)'/);
                 if (m && m[1]) {
-                    a.append(`<span class="right dgray-11 wrap" style="width:auto" title="${m[1]}"><div class="ico-16" style="display: inline-block;vertical-align: middle; background-position: -16px 0px;"></div> ${m[1]}</span>`);
+                    a.append(`<span class="right dgray-11 wrap comments" title="${m[1]}"><div class="ico-16"></div> ${m[1]}</span>`);
                 }
             });
         }
