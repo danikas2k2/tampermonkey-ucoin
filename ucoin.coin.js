@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.18
+// @version      0.1.19
 // @description  Fix tag links, add publicity toggler, expand/combine swap coins, and update swap prices
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
@@ -53,44 +53,48 @@ var inline_src = (<><![CDATA[
             addSwapButtons();
         }
 
-        function addSwapComments() {
-            $(head).append(`<style>
-            a.list-link {
-                position: relative;
-            
-            }
-            a.list-link .comment {
-                position: absolute;
-                width: auto;
-                left: 100%;
-                text-align: left;
-            }
-            a.list-link:active .comment,
-            a.list-link:focus .comment,
-            a.list-link:hover .comment,
-            a.list-link .comment:active,
-            a.list-link .comment:focus,
-            a.list-link .comment:hover {
-                max-width: 100%;
-            }
-            a.list-link .comment .ico-16 {
-                display: inline-block;
-                vertical-align: middle;
-                background-position: -16px 0px;
-            }
-            </style>`);
-            const links = $('a.list-link', swapBlock);
-            links.each((i, a) => {
-                a = $(a);
-                const m = (a.attr('onclick') || '').match(/CoinSwapFormOn\((?:'[^']*', ){3}'([^']+)'/);
-                if (m && m[1]) {
-                    a.append(`<span class="right dgray-11 wrap comments" title="${m[1]}"><div class="ico-16"></div> ${m[1]}</span>`);
-                }
-            });
+        function getSwapLinks(d = coin) {
+            return $('#swap-form + #swap-block a.list-link', d);
         }
 
-        function getSwapLinks() {
-            return $('a.list-link', swapBlock);
+        function addSwapComments() {
+            $('head').append(`<style type="text/css">
+                #coin #swap-block a {
+                    position: relative;
+                }
+                #coin #swap-block a .comments {
+                    position: absolute;
+                    width: auto;
+                    left: 100%;
+                    text-align: left;
+                }
+                #coin #swap-block a:active .comments,
+                #coin #swap-block a:focus .comments,
+                #coin #swap-block a:hover .comments,
+                #coin #swap-block a .comments:active,
+                #coin #swap-block a .comments:focus,
+                #coin #swap-block a .comments:hover {
+                    max-width: 100%;
+                    overflow: visible;
+                }
+                #coin #swap-block a .comments .ico-16 {
+                    display: inline-block;
+                    vertical-align: middle;
+                    background-position: -16px 0px;
+                }
+            </style>`);
+
+            getSwapLinks().each((i, a) => addSwapComment(a));
+        }
+
+        function addSwapComment(a) {
+            a = $(a);
+            const m = (a.attr('onclick') || '').match(/CoinSwapFormOn\((?:'[^']*', ){3}'([^']+)'/);
+            if (m && m[1]) {
+                if (!$('.comments', a).length) {
+                    a.append(`<span class="right dgray-11 wrap comments" title="${m[1]}"><div class="ico-16"></div> ${m[1]}</span>`);
+                }
+            }
         }
 
         function forEachSwapLink(fn) {
@@ -110,17 +114,27 @@ var inline_src = (<><![CDATA[
         }
 
         function addSwapButtons() {
+            $('head').append(`<style type="text/css">
+                #coin #swap-block .btn--combiners {
+                    margin: 8px 2px 0;
+                }
+            </style>`);
+
             const buttons = $('center', swapBlock);
             const variants = new Map();
             let couldExpand = false, couldCombine = false;
 
             function updateSwapVariants() {
+                couldExpand = false; couldCombine = false;
+                variants.clear();
                 forEachSwapLink((i, a, m) => {
                     const [uniq, usid, cond, price, info, vid, qty] = m;
+                    console.log({uniq, usid, qty});
                     if (qty > 1) {
                         couldExpand = true;
                     }
                     let variant;
+                    console.log({variants});
                     if (variants.has(uniq)) {
                         variant = variants.get(uniq);
                         variant.qty += +qty;
@@ -128,6 +142,7 @@ var inline_src = (<><![CDATA[
                     } else {
                         variant = {usid, cond, price, info, vid, qty: +qty};
                     }
+                    console.log({variant});
                     variants.set(uniq, variant);
                 });
             }
@@ -152,6 +167,16 @@ var inline_src = (<><![CDATA[
                     .prop('disabled', false);
             }
 
+            function updateLinkQty(a, qty) {
+                a = $(a);
+                a.attr('onclick', a.attr('onclick').replace(/CoinSwapFormOn\('([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)'\)/, `CoinSwapFormOn('$1', '$2', '$3', '$4', '$5', '${qty}')`));
+                if (qty > 1) {
+                    $('span.left.gray-13.wrap', a).after(`<span class="left dblue-13"><span>&times;</span>${qty}</span>`);
+                } else {
+                    $('span.left.dblue-13', a).remove();
+                }
+            }
+
             function expandClicked() {
                 disableButtons();
 
@@ -172,17 +197,30 @@ var inline_src = (<><![CDATA[
                         queue = queue
                             .then(() => console.log(`ADDING ${uniq} ${i} -> 1`))
                             .then(() => addSwapCoin(cond, 1, vid, info, price))
-                            .then(() => {
-                                const A = a.clone();
-                                $('span.left.dblue-13', A).remove();
-                                a.after(A);
+                            .then(r => {
+                                const links = getSwapLinks().map((i, l) => {
+                                    l = $(l);
+                                    const m = (l.attr('onclick') || '').match(/CoinSwapFormOn\('([^']*)'/);
+                                    return m && m[1];
+                                }).toArray();
+                                getSwapLinks(r).each((i, l) => {
+                                    l = $(l);
+                                    const m = (l.attr('onclick') || '').match(/CoinSwapFormOn\('([^']*)'/);
+                                    const usid = m && m[1];
+                                    if (usid && links.includes(usid)) {
+                                        return;
+                                    }
+                                    links.push(usid);
+                                    a.after(l);
+                                    addSwapComment(l);
+                                });
                             })
                             .then(randomDelay());
                     }
                     queue = queue
                         .then(() => console.log(`UPDATING ${usid} -> 1`))
                         .then(() => updSwapCoin(usid, cond, 1, vid, info, price))
-                        .then(() => $('span.left.dblue-13', a).remove())
+                        .then(() => updateLinkQty(a, 1))
                         .then(randomDelay());
                 });
 
@@ -198,7 +236,7 @@ var inline_src = (<><![CDATA[
                 if (expand.length) {
                     expand.show();
                 } else {
-                    expand = $('<button id="expand" type="button" class="btn--combiners btn-s btn-blue" style="margin: 8px 2px 0">Expand</button>');
+                    expand = $('<button id="expand" type="button" class="btn--combiners btn-s btn-blue">Expand</button>');
                     buttons.append(expand);
 
                     expand.click(() => expandClicked());
@@ -229,7 +267,7 @@ var inline_src = (<><![CDATA[
                                 queue = queue
                                     .then(() => console.log(`UPDATING ${usid} -> ${vqty}`))
                                     .then(() => updSwapCoin(usid, cond, vqty, vid, info, price))
-                                    .then(() => $('span.left.gray-13.wrap', a).after(`<span class="left dblue-13"><span>&times;</span>${vqty}</span>`))
+                                    .then(() => updateLinkQty(a, vqty))
                                     .then(randomDelay());
                             } else {
                                 queue = queue
@@ -262,11 +300,11 @@ var inline_src = (<><![CDATA[
             }
 
             function removeExpandButton() {
-                $('button#expand', buttons).remove();
+                $('button#expand', buttons).hide();
             }
 
-            function removeCollapseButton() {
-                $('button#expand', buttons).remove();
+            function removeCombineButton() {
+                $('button#combine', buttons).hide();
             }
 
             updateButtons();
