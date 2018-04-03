@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.19
+// @version      0.1.20
 // @description  Fix tag links, add publicity toggler, expand/combine swap coins, and update swap prices
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
@@ -104,7 +104,8 @@ var inline_src = (<><![CDATA[
                     return;
                 }
 
-                const m = (a.attr('onclick') || '').match(/CoinSwapFormOn\('([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)'\)/);
+                //                                         CoinSwapFormOn(  usid,      cond,      price,     info,      vid,       qty,       replica)
+                const m = (a.attr('onclick') || '').match(/CoinSwapFormOn\('([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)'/);
                 if (m) {
                     const [, , cond, , info, vid] = m;
                     m[0] = `${cond} ${vid} ${info}`;
@@ -169,7 +170,9 @@ var inline_src = (<><![CDATA[
 
             function updateLinkQty(a, qty) {
                 a = $(a);
-                a.attr('onclick', a.attr('onclick').replace(/CoinSwapFormOn\('([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)'\)/, `CoinSwapFormOn('$1', '$2', '$3', '$4', '$5', '${qty}')`));
+                a.attr('onclick', a.attr('onclick').replace(
+                    /CoinSwapFormOn\('([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)', '([^']*)'/,
+                    `CoinSwapFormOn('$1', '$2', '$3', '$4', '$5', '${qty}'`));
                 if (qty > 1) {
                     $('span.left.gray-13.wrap', a).after(`<span class="left dblue-13"><span>&times;</span>${qty}</span>`);
                 } else {
