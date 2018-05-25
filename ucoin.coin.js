@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.22
+// @version      0.1.23
 // @description  Fix tag links, add publicity toggler, expand/combine swap coins, and update swap prices
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
@@ -36,7 +36,6 @@ var inline_src = (<><![CDATA[
         const swapForm  = $('#swap-form', coin);
         const swapBlock = $('+ #swap-block', swapForm);
 
-
         fixTagLinks();
 
         if ($('#user-menu').length) {
@@ -49,6 +48,7 @@ var inline_src = (<><![CDATA[
 
         if (swapBlock.length) {
             initSwapPriceUpdater();
+            initSwapFormImprovements();
             addSwapComments();
             addSwapButtons();
         }
@@ -562,6 +562,23 @@ var inline_src = (<><![CDATA[
                     }).then(randomDelay());
                 });
             });
+        }
+
+        function initSwapFormImprovements() {
+            if (swapForm.length) {
+                $('#swap-qty', swapForm).attr('type', 'number').css({marginTop: '1em'});
+
+                const cond = $('#swap-cond', swapForm);
+                const fieldset = $(`<fieldset><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
+                const options = $('option', cond).each((i, o) => {
+                    o = $(o);
+                    const val = o.val();
+                    const text = val ? o.text() : 'Without condition';
+                    const checked = (val === '3') ? 'checked' : '';
+                    $(`<label class="dgray-12" style="margin-top:0px;"><input name="condition" value="${val}" ${checked} type="radio"/>${text}</label>`).appendTo(fieldset);
+                });
+                cond.replaceWith(fieldset);
+            }
         }
 
     })(jQuery);
