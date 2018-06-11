@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uCoin: Coin
 // @namespace    https://ucoin.net/
-// @version      0.1.24
+// @version      0.1.25
 // @description  Fix tag links, add publicity toggler, expand/combine swap coins, and update swap prices
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
@@ -566,7 +566,26 @@ var inline_src = (<><![CDATA[
 
         function initSwapFormImprovements() {
             if (swapForm.length) {
-                $('#swap-qty', swapForm).attr('type', 'number').css({marginTop: '1em'});
+                $('head').append(`<style type="text/css">
+                    #coin #swap-form .btn-ctrl {
+                    float: right;
+                    margin: 14px 3px 0;
+                    height: 26px;
+                    }
+                    #coin #swap-form .btn-ctrl + .btn-ctrl {
+                    margin-right: 0;
+                    }
+                    #coin #swap-form #swap-qty {
+                    margin-top: 1em;
+                    }
+                </style>`);
+
+                const qty = $('#swap-qty', swapForm);
+                qty.attr('inputmode', 'numeric').focus(e => e.target.setSelectionRange(0, e.target.value.length));
+                $('<button type="button">&minus;</button>').addClass('btn-s btn-gray btn-ctrl').click(() => qty.val(+qty.val()-1)).insertAfter(qty);
+                $('<button type="button">+10</button>').addClass('btn-s btn-gray btn-ctrl').click(() => qty.val(+qty.val()+10)).insertBefore(qty);
+                $('<button type="button">+5</button>').addClass('btn-s btn-gray btn-ctrl').click(() => qty.val(+qty.val()+5)).insertBefore(qty);
+                $('<button type="button">+</button>').addClass('btn-s btn-gray btn-ctrl').click(() => qty.val(+qty.val()+1)).insertBefore(qty);
 
                 const cond = $('#swap-cond', swapForm);
                 const fieldset = $(`<fieldset><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
