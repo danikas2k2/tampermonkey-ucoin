@@ -1,0 +1,36 @@
+{
+    "name": "ucoin",
+    "version": "1.0.0",
+    "description": "",
+    "main": "lib.delay.js",
+    "directories": {
+        "lib": "lib"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://danikas2k2@bitbucket.org/danikas2k2/ucoin.userscripts.git"
+    },
+    "browser": [
+        "last 1 version",
+        "> 1%",
+        "not dead"
+    ],
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "homepage": "https://bitbucket.org/danikas2k2/ucoin.userscripts#readme",
+    "devDependencies": {
+        "@babel/cli": "^7.0.0",
+        "@babel/core": "^7.0.0",
+        "@babel/preset-env": "^7.0.0",
+        "babel-cli": "^6.26.0",
+        "babel-core": "^6.26.3",
+        "babel-preset-env": "^1.7.0",
+        "typescript": "^3.0.3",
+        "webpack": "^4.17.2",
+        "webpack-cli": "^3.1.0"
+    }
+}
