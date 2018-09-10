@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Colnect: Coin
 // @namespace    https://colnect.com/
-// @version      0.1
+// @version      0.2
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB6UlEQVQ4jdWSTUhUcRTFf/c/b8ZyMUW5qhZF1MaNZF8qge2siGxR29o48wZ1EW1bqGCt2hTWvCGKaNenEFgEIwXiWKK7FhEtMoQKtbSEGN/8T4sUxI82rbqrC+eewzmHC//92NJSn4lqkk7dDk56eD6SDzMAxzqvVX2Lqy46dE5il8Fnj574RKXnTV/HdADQlM3v96anQFow64w0QO2Z+6nvCzMvQJtkPAK9kiw27EKiEpSOdN5uChoz0W5vKoJNWmLh8HBf+0RzV3cCIL11OgO23bBbeI2Wolzxj18NNoaF/jguX3FyugykMcsN93V8BNPLrq54MWGrsHsmzZWisLgsubzZdROnHNACaMfU5qE1Oqp28BPTw1VIRT8E1cFikTZRM1UHjAEcbCvstSDegGdIpuOlfO7qqvadb0U2ZA1h/jFwGmPexLDENoxamZ1PBsmBeKE8DtZf9lwaK2Rn6zNRMmkKzeiVt2ZnKAQ9Q2wUqsPxzokTIzezdxX/ihED4PelnL40hPkPKacZM9pwrmWkkB23ldaW/UV1KqFBRF3sKnsC77xgp2RfX0fh+6W7YG26LOWiO4hDGD2jN9o/LQKTKy/dWvTGMH8U44BhY3NTW3rXc7mugHBNJhUrsWt9++Bs+W8C/zy/AT3Myy3qczVrAAAAAElFTkSuQmCC
 // @match        https://*.colnect.com/*/coins/*
@@ -53,7 +53,7 @@
             }
 
             #quality_list li + li {
-                margin-left: 4px;
+                margin-left: 1px;
             }
 
             #quality_list li a {
@@ -64,6 +64,15 @@
                 white-space: normal;
                 text-align: center;
                 line-height: 32px;
+            }
+
+            #quality_list li a.pop_selected,
+            #quality_list li a:hover {
+                font-size: 14px;
+                padding: 0 6px;
+                width: 20px;
+                border-top: inherit;
+                border-bottom: inherit;
             }
 
             #quality_list li:first-child a::before {
@@ -87,8 +96,12 @@
             .coins #quality_list li a[data-value="9"]  { background:#0000CC;color:#DFE2FF; } /* BU */
             .coins #quality_list li a[data-value="10"] { background:#5229A3;color:#E0D5F9; } /* FDC */
 
-            .coins #quality_list li:nth-last-child(1) a /* FDC */,
-            .coins #quality_list li:nth-last-child(3) a /* UNC */ {
+            .coins #quality_list li:nth-last-child(1) a              /* FDC */,
+            .coins #quality_list li:nth-last-child(1) a.pop_selected /* FDC */,
+            .coins #quality_list li:nth-last-child(1) a:hover        /* FDC */,
+            .coins #quality_list li:nth-last-child(3) a              /* UNC */,
+            .coins #quality_list li:nth-last-child(3) a.pop_selected /* UNC */,
+            .coins #quality_list li:nth-last-child(3) a:hover        /* UNC */ {
                 padding: 0;
                 width: 32px;
             }
@@ -105,8 +118,12 @@
             .tokens #quality_list li a[data-value="9"]  { background:#0000CC;color:#DFE2FF; } /* BU */
             .tokens #quality_list li a[data-value="10"] { background:#5229A3;color:#E0D5F9; } /* FDC */
 
-            .tokens #quality_list li:nth-last-child(1) a /* FDC */,
-            .tokens #quality_list li:nth-last-child(3) a /* UNC */ {
+            .tokens #quality_list li:nth-last-child(1) a              /* FDC */,
+            .tokens #quality_list li:nth-last-child(1) a.pop_selected /* FDC */,
+            .tokens #quality_list li:nth-last-child(1) a:hover        /* FDC */,
+            .tokens #quality_list li:nth-last-child(3) a              /* UNC */,
+            .tokens #quality_list li:nth-last-child(3) a.pop_selected /* UNC */,
+            .tokens #quality_list li:nth-last-child(3) a:hover        /* UNC */ {
                 padding: 0;
                 width: 32px;
             }
@@ -129,7 +146,9 @@
             .banknotes #quality_list li a[data-value="8"]  { background:#206CFF;color:#E0ECFF; } /* AUNC */
             .banknotes #quality_list li a[data-value="9"]  { background:#0000CC;color:#DFE2FF; } /* UNC */
 
-            .banknotes #quality_list li:nth-last-child(1) a /* UNC */ {
+            .banknotes #quality_list li:nth-last-child(1) a              /* UNC */,
+            .banknotes #quality_list li:nth-last-child(1) a.pop_selected /* UNC */,
+            .banknotes #quality_list li:nth-last-child(1) a:hover        /* UNC */ {
                 padding: 0;
                 width: 32px;
             }
@@ -144,15 +163,24 @@
             .stamps #quality_list li a[data-value="3"]  { background:#636330;color:#FFFFD4; } /* U */
             .stamps #quality_list li a[data-value="4"]  { background:#AB8B00;color:#F3E7B3; } /* CTO */
 
-            .stamps #quality_list li:nth-child(2) a /* MNH */,
-            .stamps #quality_list li:nth-child(5) a /* CTO */ {
+            .stamps #quality_list li:nth-child(2) a              /* MNH */,
+            .stamps #quality_list li:nth-child(2) a.pop_selected /* MNH */,
+            .stamps #quality_list li:nth-child(2) a:hover        /* MNH */,
+            .stamps #quality_list li:nth-child(5) a              /* CTO */,
+            .stamps #quality_list li:nth-child(5) a.pop_selected /* CTO */,
+            .stamps #quality_list li:nth-child(5) a:hover        /* CTO */ {
                 padding: 0;
                 width: 32px;
             }
 
-            .stamps #quality_list li:nth-child(3) a /* MH */ {
+            .stamps #quality_list li:nth-child(3) a              /* MH */ {
                 padding: 0 2px;
                 width: 28px;
+            }
+            .stamps #quality_list li:nth-child(3) a.pop_selected /* MH */,
+            .stamps #quality_list li:nth-child(3) a:hover        /* MH */ {
+                padding: 0;
+                width: 32px;
             }
         </style>
     `);
