@@ -2,9 +2,9 @@
     "name": "ucoin",
     "version": "1.0.0",
     "description": "",
-    "main": "lib.delay.js",
+    "main": "index.js",
     "directories": {
-        "lib": "lib"
+        "src/lib": "src/lib"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -26,11 +26,22 @@
         "@babel/cli": "^7.0.0",
         "@babel/core": "^7.0.0",
         "@babel/preset-env": "^7.0.0",
+        "@types/core-js": "^2.5.0",
+        "@types/node": "^10.12.12",
+        "@types/react": "^16.7.13",
+        "@types/uglifyjs-webpack-plugin": "^1.1.0",
+        "@types/webpack": "^4.4.20",
         "babel-cli": "^6.26.0",
         "babel-core": "^6.26.3",
         "babel-preset-env": "^1.7.0",
-        "typescript": "^3.0.3",
-        "webpack": "^4.17.2",
+        "react": "^16.6.3",
+        "react-dom": "^16.6.3",
+        "terser-webpack-plugin": "^1.1.0",
+        "ts-loader": "^5.3.1",
+        "ts-node": "^7.0.1",
+        "typescript": "^3.2.2",
+        "uglifyjs-webpack-plugin": "^2.0.1",
+        "webpack": "^4.27.1",
         "webpack-cli": "^3.1.0"
     }
 }
