@@ -11,7 +11,7 @@
 // @match        https://*.colnect.com/*/tokens/*
 // ==/UserScript==
 
-((W, D, I, $) => {
+((W: Window, D: Document, I) => {
 
     const loc = D.location.href;
 
@@ -34,10 +34,10 @@
         return 'other';
     })(loc);
 
-    $('body').addClass(type);
+    D.body.classList.add(type);
 
-    $('head').append(`
-        <style>
+    D.head.insertAdjacentHTML("beforeend", `
+        <style type="text/css">
             #quality_list {
                 display: flex;
                 visibility: visible;
@@ -186,25 +186,30 @@
     `);
 
 
-    const itemFullDetails = $('#item_full_details');
-    const itemCondition   = $('>.ibox >.ibox_list[data-lt="2"] .pop.condition', itemFullDetails);
+    const itemFullDetails = D.getElementById('item_full_details');
+    const itemCondition   = itemFullDetails.querySelector('>.ibox >.ibox_list[data-lt="2"] .pop.condition');
 
     const _updateQC = I.updateQC;
     const _spanCBup = I.spanCBup;
 
     if (type === 'coins' && loc.includes('/coin/')) {
 
-        const itemYearVariants = $('>.year_variants >ul >li[data-id]', itemFullDetails);
+        const itemYearVariants = itemFullDetails.querySelectorAll('>.year_variants >ul >li[data-id]');
 
         // clicking on year row
-        itemYearVariants.on('click', ({currentTarget: li}) => {
-            $('.ibox_list[data-lt="2"] >.pop.condition', li).mouseover();
+        itemYearVariants.forEach(itemYearVariant => {
+            itemYearVariant.addEventListener("click", e => {
+                const li = <HTMLLIElement>e.currentTarget;
+                li.querySelector('.ibox_list[data-lt="2"] >.pop.condition')
+                    .dispatchEvent(new MouseEvent('mouseover'));
+            });
         });
 
 
         const _q = {P: 1, FA: 2, G: 3, VG: 4, FI: 5, VF: 6, XF: 7, UNC: 8, BU: 9, FDC: 10};
 
-        function q(s) {
+        function q(s: string) {
+            // @ts-ignore
             return (s && s in _q) ? _q[s] : 0;
         }
 
@@ -212,49 +217,62 @@
         //
 
 
-        function updateOverallCondition(e, current, container) {
-            const best = Math.max(...itemYearVariants.map((i, n) => $(n).is('.open') ? current : q($('ul.oth_inv', n).text().split(':', 2).pop().trim())).toArray());
-            if (best && best !== q(itemCondition.text())) {
-                itemCondition.mouseover();
-                _updateQC(e, $(`#quality_list a[data-value="${best}"]`, itemCondition)[0]);
+        function updateOverallCondition(e: Event, current: number, container: HTMLElement) {
+            const variants: number[] = [];
+            itemYearVariants.forEach((n: HTMLElement) => {
+                variants.push(n.classList.contains('open')
+                    ? current
+                    : q(n.querySelector('ul.oth_inv').textContent.split(':', 2).pop().trim()));
+            });
+
+            const best = Math.max(...variants);
+            if (best && best !== q(itemCondition.textContent)) {
+                itemCondition.dispatchEvent(new MouseEvent('mouseover'));
+                _updateQC(e, itemCondition.querySelector(`#quality_list a[data-value="${best}"]`));
 
                 if (container) {
-                    container.mouseover();
+                    container.dispatchEvent(new MouseEvent('mouseover'));
                 } else {
-                    itemCondition.mouseout();
+                    itemCondition.dispatchEvent(new MouseEvent('mouseout'));
                 }
             }
         }
 
-        I.updateQC = (e, n) => {
-            const $n = $(n);
+        I.updateQC = (e: Event, n: HTMLElement) => {
             const _r = _updateQC(e, n);
 
-            updateOverallCondition(e, +$n.data('value'), $n.closest('.pop.condition'));
+            updateOverallCondition(e, +n.dataset.value, n.querySelector('.pop.condition'));
 
             return _r;
         };
 
-        I.spanCBup = (n) => {
+        I.spanCBup = (n: HTMLElement) => {
             const _r = _spanCBup(n);
-            if ($(n).is('.cb_checked')) {
+
+            if (n.classList.contains('cb_checked')) {
                 updateOverallCondition(event, 0, null);
             } else {
-                itemCondition.mouseover();
+                itemCondition.dispatchEvent(new MouseEvent('mouseover'));
             }
+
             return _r;
         };
 
     } else {
 
-        I.spanCBup = (n) => {
+        I.spanCBup = (n: HTMLElement) => {
             const _r = _spanCBup(n);
-            if (!$(n).is('.cb_checked')) {
-                itemCondition.mouseover();
+
+            if (!n.classList.contains('cb_checked')) {
+                itemCondition.dispatchEvent(new MouseEvent('mouseover'));
             }
+
             return _r;
         };
 
     }
 
-})(window, document, Inventory, $);
+})(window, document,
+    // @ts-ignore
+    Inventory
+);
