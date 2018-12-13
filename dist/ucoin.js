@@ -1,4 +1,5 @@
-/******/ (function(modules) { // webpackBootstrap
+// [AIV_SHORT]  Build version: 1.0.0 - Thursday, December 13th, 2018, 3:06:53 PM  
+ /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -81,7 +82,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -107,111 +108,6 @@ exports.post = post;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-function delay(time) {
-    return () => new Promise(resolve => setTimeout(() => resolve(), time));
-}
-exports.delay = delay;
-const minDelay = 300; // ms
-const rndDelay = 500; // ms
-function randomDelay() {
-    return delay(Math.round(minDelay + Math.random() * rndDelay));
-}
-exports.randomDelay = randomDelay;
-
-
-/***/ }),
-/* 2 */,
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-// ==UserScript==
-// @name         collector :: ucoin.net
-// @namespace    https://ucoin.net/
-// @version      1.0
-// @author       danikas2k2
-// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
-// @match        https://*.ucoin.net/*
-// ==/UserScript==
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const ucoin_less_1 = __importDefault(__webpack_require__(4));
-document.head.insertAdjacentHTML("beforeend", `<style type="text/css">${ucoin_less_1.default}</style>`);
-'use strict';
-const links_1 = __webpack_require__(6);
-const coin_form_1 = __webpack_require__(7);
-const swap_form_1 = __webpack_require__(13);
-const swap_list_1 = __webpack_require__(15);
-const gallery_1 = __webpack_require__(16);
-const prices_1 = __webpack_require__(17);
-const UID = '28609';
-const loc = document.location.href;
-if (loc.includes('/coin/')) {
-    const tags = document.getElementById('tags');
-    if (tags) {
-        // fixTagLinks
-        tags.querySelectorAll('a[href^="/gallery/"]').forEach(links_1.updateLinkHref);
-    }
-    if (document.getElementById('user-menu')) {
-        coin_form_1.addBuyDateResetButton();
-        coin_form_1.addSyncConditionToColorTable();
-        if (loc.includes('ucid=')) {
-            coin_form_1.addPublicityToggle();
-            coin_form_1.addReplacementToggle();
-        }
-    }
-    const mySwap = document.getElementById('my-swap-block');
-    if (mySwap && mySwap.querySelector('#swap-block')) {
-        swap_form_1.addSwapFormQtyButtons();
-        swap_form_1.addSwapColorMarkers();
-        swap_form_1.addSwapComments();
-        swap_form_1.addSwapButtons();
-    }
-    swap_form_1.styleSwapLists();
-    const theySwap = document.getElementById('swap');
-    if (theySwap && theySwap.nextElementSibling.id === 'swap-block') {
-        prices_1.estimateSwapPrices();
-    }
-}
-if (loc.includes('/gallery/') && loc.includes(`uid=${UID}`)) {
-    const gallery = document.getElementById('gallery');
-    if (gallery) {
-        // fix gallery links
-        gallery.querySelectorAll('a[href^="/gallery/"]').forEach(links_1.updateLinkHref);
-        gallery.querySelectorAll('a[href^="?"]').forEach(links_1.updateLinkHref);
-        gallery.querySelectorAll('div.close').forEach(links_1.updateOnClickHref);
-    }
-    gallery_1.addGalleryVisibilityToggle();
-}
-if (loc.includes('/swap-mgr/') || loc.includes('/swap-list/')) {
-    swap_list_1.addTrackingLinks();
-    swap_list_1.showAllPrices();
-    swap_list_1.addConflictHandling();
-    swap_list_1.checkSold();
-    swap_list_1.ignoreUnwanted();
-}
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(5)(false);
-// Module
-exports.push([module.i, "#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n  text-align: center;\n}\n#ucid-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n#estimated-prices {\n  overflow-x: hidden;\n  max-height: 400px;\n}\n#estimated-prices .list-link {\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #E9EDF1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 1em;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  flex: 0 0 20px;\n  width: 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n}\n#my-swap-block #swap-block .btn--combiner,\n#my-swap-block #swap-block .btn--expander {\n  margin: 8px 2px 0;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #fdd;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #fed;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n", ""]);
-
-
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -302,7 +198,115 @@ function toComment(sourceMap) {
 }
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function delay(time) {
+    return () => new Promise(resolve => setTimeout(() => resolve(), time));
+}
+exports.delay = delay;
+const minDelay = 300; // ms
+const rndDelay = 500; // ms
+function randomDelay() {
+    return delay(Math.round(minDelay + Math.random() * rndDelay));
+}
+exports.randomDelay = randomDelay;
+
+
+/***/ }),
+/* 3 */,
+/* 4 */,
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// ==UserScript==
+// @name         collector :: ucoin.net
+// @namespace    https://ucoin.net/
+// @version      1.0.0
+// @date         Thursday, December 13th, 2018, 3:06:53 PM
+// @author       danikas2k2
+// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
+// @match        https://*.ucoin.net/*
+// @run-at       document-end
+// ==/UserScript==
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const ucoin_less_1 = __importDefault(__webpack_require__(6));
+document.head.insertAdjacentHTML("beforeend", `<style type="text/css">${ucoin_less_1.default}</style>`);
+'use strict';
+const links_1 = __webpack_require__(7);
+const coin_form_1 = __webpack_require__(8);
+const swap_form_1 = __webpack_require__(14);
+const swap_list_1 = __webpack_require__(16);
+const gallery_1 = __webpack_require__(17);
+const prices_1 = __webpack_require__(18);
+const UID = '28609';
+const loc = document.location.href;
+if (loc.includes('/coin/')) {
+    const tags = document.getElementById('tags');
+    if (tags) {
+        // fixTagLinks
+        tags.querySelectorAll('a[href^="/gallery/"]').forEach(links_1.updateLinkHref);
+    }
+    if (document.getElementById('user-menu')) {
+        coin_form_1.addBuyDateResetButton();
+        coin_form_1.addSyncConditionToColorTable();
+        if (loc.includes('ucid=')) {
+            coin_form_1.addPublicityToggle();
+            coin_form_1.addReplacementToggle();
+        }
+    }
+    const mySwap = document.getElementById('my-swap-block');
+    if (mySwap && mySwap.querySelector('#swap-block')) {
+        swap_form_1.addSwapFormQtyButtons();
+        swap_form_1.addSwapColorMarkers();
+        swap_form_1.addSwapComments();
+        swap_form_1.addSwapButtons();
+    }
+    swap_form_1.styleSwapLists();
+    const theySwap = document.getElementById('swap');
+    if (theySwap && theySwap.nextElementSibling.id === 'swap-block') {
+        prices_1.estimateSwapPrices();
+    }
+}
+if (loc.includes('/gallery/') && loc.includes(`uid=${UID}`)) {
+    const gallery = document.getElementById('gallery');
+    if (gallery) {
+        // fix gallery links
+        gallery.querySelectorAll('a[href^="/gallery/"]').forEach(links_1.updateLinkHref);
+        gallery.querySelectorAll('a[href^="?"]').forEach(links_1.updateLinkHref);
+        gallery.querySelectorAll('div.close').forEach(links_1.updateOnClickHref);
+    }
+    gallery_1.addGalleryVisibilityToggle();
+}
+if (loc.includes('/swap-mgr/') || loc.includes('/swap-list/')) {
+    swap_list_1.addTrackingLinks();
+    swap_list_1.showAllPrices();
+    swap_list_1.addConflictHandling();
+    swap_list_1.checkSold();
+    swap_list_1.ignoreUnwanted();
+}
+
+
+/***/ }),
 /* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// Module
+exports.push([module.i, "#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n  text-align: center;\n}\n#ucid-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n#estimated-prices {\n  overflow-x: hidden;\n  max-height: 400px;\n}\n#estimated-prices .list-link {\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #E9EDF1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 1em;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  flex: 0 0 20px;\n  width: 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n}\n#my-swap-block #swap-block .btn--combiner,\n#my-swap-block #swap-block .btn--expander {\n  margin: 8px 2px 0;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #fdd;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #fed;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n", ""]);
+
+
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -390,13 +394,13 @@ exports.getHrefParts = getHrefParts;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const notify_1 = __webpack_require__(8);
+const notify_1 = __webpack_require__(9);
 const ajax_1 = __webpack_require__(0);
 function addBuyDateResetButton() {
     const buyYear = document.getElementById('buy_year');
@@ -583,7 +587,7 @@ exports.addReplacementToggle = addReplacementToggle;
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -593,13 +597,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // @ts-ignore
-const success_svg_1 = __importDefault(__webpack_require__(9));
+const success_svg_1 = __importDefault(__webpack_require__(10));
 // @ts-ignore
-const error_svg_1 = __importDefault(__webpack_require__(10));
+const error_svg_1 = __importDefault(__webpack_require__(11));
 // @ts-ignore
-const info_svg_1 = __importDefault(__webpack_require__(11));
+const info_svg_1 = __importDefault(__webpack_require__(12));
 // @ts-ignore
-const minus_svg_1 = __importDefault(__webpack_require__(12));
+const minus_svg_1 = __importDefault(__webpack_require__(13));
 function notify(title, body, icon) {
     const options = {};
     if (body) {
@@ -644,38 +648,38 @@ exports.ok = ok;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#25ae88\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"M38 15L22 33l-10-8\"></path></svg>"
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#d75a4a\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M16 34l9-9 9-9m-18 0l9 9 9 9\"></path></svg>"
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#48a0dc\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M25 37v2m-7-23a7 7 0 0 1 7.1-7 7.1 7.1 0 0 1 6.9 6.9 7 7 0 0 1-3.21 5.99A8.6 8.6 0 0 0 25 29.16V32\"></path></svg>"
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#ed8a19\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"M38 25H12\"></path></svg>"
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const swap_links_1 = __webpack_require__(14);
-const delay_1 = __webpack_require__(1);
+const swap_links_1 = __webpack_require__(15);
+const delay_1 = __webpack_require__(2);
 const ajax_1 = __webpack_require__(0);
 function addSwapComments() {
     swap_links_1.getSwapLinks().forEach(a => {
@@ -1014,7 +1018,7 @@ exports.styleSwapLists = styleSwapLists;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1048,14 +1052,14 @@ exports.forEachSwapLink = forEachSwapLink;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
-const delay_1 = __webpack_require__(1);
+const delay_1 = __webpack_require__(2);
 function addTrackingLinks() {
     const swapMgr = document.getElementById('swap-mgr');
     swapMgr && swapMgr.querySelectorAll('div.left.lgray-11:contains("Track")+div.right.gray-11').forEach(div => {
@@ -1226,14 +1230,14 @@ exports.ignoreUnwanted = ignoreUnwanted;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
-const delay_1 = __webpack_require__(1);
+const delay_1 = __webpack_require__(2);
 function addGalleryVisibilityToggle() {
     const gallery = document.getElementById('gallery');
     const coins = gallery.querySelector('.coin .desc-block .coin-desc');
@@ -1301,7 +1305,7 @@ exports.addGalleryVisibilityToggle = addGalleryVisibilityToggle;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1391,4 +1395,4 @@ exports.estimateSwapPrices = estimateSwapPrices;
 
 
 /***/ })
-/******/ ]);
+/******/ ]); 
