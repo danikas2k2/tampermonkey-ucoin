@@ -9,7 +9,7 @@
     "scripts": {
         "build": "webpack",
         "watch": "webpack --watch",
-        "preversion": "webpack",
+        "postversion": "webpack",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
