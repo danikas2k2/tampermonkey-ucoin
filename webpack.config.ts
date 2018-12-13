@@ -1,29 +1,34 @@
 import path from 'path';
 import webpack from 'webpack';
-// import TerserPlugin from 'terser-webpack-plugin';
 
 
 const config: webpack.Configuration = {
     mode: 'production',
+    context: __dirname,
     entry: {
         'colnect': './src/colnect.ts',
-        'ucoin.coin': './src/ucoin.coin.ts',
-        'ucoin.gallery': './src/ucoin.gallery.ts',
-        'ucoin.swap-list': './src/ucoin.swap-list.ts',
-        'ucoin.swap-mgr': './src/ucoin.swap-mgr.ts',
+        'ucoin': './src/ucoin.ts',
     },
-    // devtool: 'inline-source-map',
     module: {
         rules: [
+            {test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/},
+            {test: /\.svg$/, use: 'svg-inline-loader'},
             {
-                test: /\.tsx?$/,
-                use: 'ts-loader',
-                exclude: /node_modules/
+                test: /\.less$/,
+                use: [
+                    // {loader: 'to-string-loader'},
+                    // {loader: 'style-loader'},
+                    {loader: 'css-loader'},
+                    {loader: 'less-loader'}
+                ]
             }
         ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts']
+        extensions: ['.tsx', '.ts', '.css', '.less'],
+        modules: [
+            'node_modules'
+        ]
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

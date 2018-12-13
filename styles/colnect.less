@@ -1,0 +1,364 @@
+#quality_list {
+  display: flex;
+  visibility: visible;
+  opacity: 1;
+  width: auto;
+  padding: 0 1px;
+
+  li {
+    width: 32px;
+    flex: 0 0 32px;
+    overflow: hidden;
+
+    + li {
+      margin-left: 1px;
+    }
+
+    &:first-child a::before {
+      content: "- ";
+    }
+
+    a {
+      margin: 0;
+      padding: 0 8px;
+      width: 16px;
+      height: 32px;
+      white-space: normal;
+      text-align: center;
+      line-height: 32px;
+
+      &.pop_selected,
+      &:hover {
+        font-size: 14px;
+        padding: 0 6px;
+        width: 20px;
+        border-top: 1px solid #fff;
+        border-bottom: 1px solid #fff;
+      }
+
+
+      &[data-value="-1"] {
+        background: #5A6986;
+        color: #dee5f2;
+      }
+
+      /* reserved */
+
+      &[data-value="-2"] {
+        background: #854F61;
+        color: #FDE9F4;
+      }
+
+      /* reserved */
+
+      &[data-value="0"] {
+        background: #EEEEEE;
+        color: #242633;
+      }
+
+      /* - */
+
+
+    }
+  }
+}
+
+.cond-po() {
+  background: #CC0000;
+  color: #FFE3E3;
+}
+
+.cond-fa() {
+  background: #EC7000;
+  color: #FFF0E1;
+}
+
+.cond-gd() {
+  background: #B36D00;
+  color: #FADCB3;
+}
+
+.cond-vg() {
+  background: #AB8B00;
+  color: #F3E7B3;
+}
+
+.cond-fi() {
+  background: #636330;
+  color: #FFFFD4;
+}
+
+.cond-vf() {
+  background: #64992C;
+  color: #F9FFEF;
+}
+
+.cond-xf() {
+  background: #006633;
+  color: #F1F5EC;
+}
+
+.cond-un() {
+  background: #206CFF;
+  color: #E0ECFF;
+}
+
+.cond-bu() {
+  background: #0000CC;
+  color: #DFE2FF;
+}
+
+.cond-pr() {
+  background: #5229A3;
+  color: #E0D5F9;
+}
+
+.wide() {
+  padding: 0;
+  width: 32px;
+}
+
+.wide-link() {
+  a {
+    &, &.pop_selected, &:hover {
+      .wide();
+    }
+  }
+}
+
+/* coins, tokens */
+.coins, .tokens {
+  #quality_list li {
+    a {
+      /* P */
+
+      &[data-value="1"] {
+        .cond-po();
+      }
+
+      /* FA */
+
+      &[data-value="2"] {
+        .cond-fa();
+      }
+
+      /* G */
+
+      &[data-value="3"] {
+        .cond-gd();
+      }
+
+      /* VG */
+
+      &[data-value="4"] {
+        .cond-vg();
+      }
+
+      /* FI */
+
+      &[data-value="5"] {
+        .cond-fi();
+      }
+
+      /* VF */
+
+      &[data-value="6"] {
+        .cond-vf();
+      }
+
+      /* XF */
+
+      &[data-value="7"] {
+        .cond-xf();
+      }
+
+      /* UNC */
+
+      &[data-value="8"] {
+        .cond-un();
+      }
+
+      /* BU */
+
+      &[data-value="9"] {
+        .cond-bu();
+      }
+
+      /* FDC */
+
+      &[data-value="10"] {
+        .cond-pr();
+      }
+    }
+
+    /* FDC */
+
+    &:nth-last-child(1),
+      /* UNC */
+    &:nth-last-child(3) {
+      .wide-link();
+    }
+  }
+}
+
+/* medals */
+.medals {
+  #quality_list li {
+    a {
+      /* P */
+
+      &[data-value="1"] {
+        .cond-po();
+      }
+
+      /* G */
+
+      &[data-value="2"] {
+        .cond-vg();
+      }
+
+      /* VG */
+
+      &[data-value="3"] {
+        .cond-vf();
+      }
+
+      /* E */
+
+      &[data-value="4"] {
+        .cond-xf();
+      }
+
+      /* M */
+
+      &[data-value="5"] {
+        .cond-bu();
+      }
+    }
+  }
+}
+
+/* banknotes */
+.banknotes {
+  #quality_list li {
+    a {
+      /* P */
+
+      &[data-value="1"] {
+        .cond-po();
+      }
+
+      /* FA */
+
+      &[data-value="2"] {
+        .cond-fa();
+      }
+
+      /* G */
+
+      &[data-value="3"] {
+        .cond-gd();
+      }
+
+      /* VG */
+
+      &[data-value="4"] {
+        .cond-vg();
+      }
+
+      /* FI */
+
+      &[data-value="5"] {
+        .cond-fi();
+      }
+
+      /* VF */
+
+      &[data-value="6"] {
+        .cond-vf();
+      }
+
+      /* XF */
+
+      &[data-value="7"] {
+        .cond-xf();
+      }
+
+      /* AUNC */
+
+      &[data-value="8"] {
+        .cond-un();
+      }
+
+      /* UNC */
+
+      &[data-value="9"] {
+        .cond-bu();
+      }
+    }
+
+    /* UNC */
+
+    &:nth-last-child(1) {
+      .wide-link();
+    }
+
+    /* AUNC */
+
+    &:nth-last-child(2) a::before {
+      content: "AU ";
+    }
+  }
+}
+
+/* stamps */
+.stamps {
+  #quality_list li {
+    a {
+      /* MNH */
+
+      &[data-value="1"] {
+        .cond-xf();
+      }
+
+      /* MH */
+
+      &[data-value="2"] {
+        .cond-vf();
+      }
+
+      /* U */
+
+      &[data-value="3"] {
+        .cond-fi();
+      }
+
+      /* CTO */
+
+      &[data-value="4"] {
+        .cond-vg();
+      }
+    }
+
+    /* MNH */
+
+    &:nth-last-child(2),
+      /* CTO */
+    &:nth-last-child(5) {
+      .wide-link();
+    }
+
+    /* MH */
+
+    &:nth-last-child(3) {
+      a {
+        padding: 0 2px;
+        width: 28px;
+
+        &.pop_selected, &:hover {
+          .wide();
+        }
+      }
+    }
+  }
+}
