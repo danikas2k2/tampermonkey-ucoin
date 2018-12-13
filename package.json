@@ -9,8 +9,7 @@
     "scripts": {
         "build": "webpack",
         "watch": "webpack --watch",
-        "version": "webpack",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "version": "webpack"
     },
     "repository": {
         "type": "git",
