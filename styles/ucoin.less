@@ -1,0 +1,145 @@
+#buy_reset {
+    font-size: 16px;
+    font-weight: bold;
+    width: 22px;
+    height: 22px;
+    display: inline-block;
+    text-align: center;
+}
+
+#ucid-block .btn-narrow {
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+.estimated-prices-widget {
+    margin: 30px 0;
+}
+
+#estimated-prices {
+    overflow-x: hidden;
+    max-height: 400px;
+
+    .list-link {
+        padding: 6px 0 3px;
+    }
+
+    .list-sep {
+        padding: 0;
+        border-bottom: 2px solid #E9EDF1;
+    }
+
+    .dgray-11 {
+        display: inline-block;
+        text-align: center;
+        line-height: 19px;
+        width: 32px;
+        margin: 0 4px;
+    }
+
+    .gray-13 {
+        padding: 1px 4px 1px 8px;
+        max-width: 64px;
+    }
+}
+
+#coin {
+    #swap-block,
+    #wish-block {
+        .dgray-11 {
+            width: 32px !important;
+            margin: 0 4px;
+        }
+    }
+}
+
+#swap-form {
+    .btn-ctrl {
+        float: right;
+        margin: 14px 3px 0;
+        height: 26px;
+
+        + .btn-ctrl {
+            margin-right: 0;
+        }
+    }
+
+    #swap-qty {
+        margin-top: 1em;
+    }
+}
+
+#my-swap-block #swap-block {
+    a {
+        position: relative;
+
+        .comments {
+            position: absolute;
+            width: auto;
+            left: 100%;
+            text-align: left;
+
+            .ico-16 {
+                display: inline-block;
+                vertical-align: middle;
+                background-position: -16px 0;
+            }
+
+            &:active, &:focus, &:hover {
+                max-width: 100%;
+                overflow: visible;
+            }
+        }
+
+        &:active, &:focus, &:hover {
+            .comments {
+                max-width: 100%;
+                overflow: visible;
+            }
+        }
+    }
+
+    center div.btn-set {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 1em;
+
+        div {
+            flex: 0 0 20px;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            cursor: pointer;
+            padding: 1px;
+        }
+    }
+
+    .btn--combiner,
+    .btn--expander {
+        margin: 8px 2px 0;
+    }
+}
+
+#swap-list,
+#swap-mgr {
+    .swap-coin tr {
+        transition: opacity .25s, background .25s;
+
+        &.conflict {
+            background: #fdd;
+
+            &.mark {
+                background: #fed;
+            }
+        }
+
+        &.ignore {
+            opacity: .5;
+
+            &.conflict,
+            &.mark {
+                opacity: .75;
+            }
+        }
+    }
+}

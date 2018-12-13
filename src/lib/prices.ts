@@ -1,165 +1,100 @@
-// import {err} from './notify';
-//
-// interface PriceConfig {
-//     prices: Map<string, Map<string, number>>,
-//     cheap: Set<string>,
-//     veryCheap: Set<string>,
-//     rules: {
-//         regular: Map<string, Map<string, string>>,
-//         commemorative: Map<string, Map<string, string>>,
-//         fallback: Map<string, string>
-//     }
-// }
-//
-//
-// export function getPrice(config: PriceConfig, country: string, name: string, subject: string, year: string, q: string, comment: string, price: string) {
-//     const {prices, cheap, veryCheap, rules: {regular, commemorative, fallback}} = config;
-//
-//     if (comment.includes('NP')) {
-//         return false;
-//     }
-//
-//     if (comment.includes('aUNC')) {
-//         q = 'AU';
-//     } else if (comment.includes('XF++')) {
-//         q = 'XF2';
-//     } else if (comment.includes('XF+')) {
-//         q = 'XF1';
-//     } else if (comment.includes('VF+')) {
-//         q = 'VF1';
-//     }
-//     if (q === 'PRF') {
-//         q = 'BU';
-//     }
-//
-//     let alias;
-//     if (subject) {
-//         let flag;
-//
-//         if (veryCheap.has(country)) {
-//             flag = commemorative.veryCheap;
-//         } else if (cheap.has(country)) {
-//             flag = commemorative.cheap;
-//         } else {
-//             flag = commemorative.common;
-//         }
-//
-//         if (flag) {
-//             alias = `${name} ${flag}`.trim();
-//         }
-//         name = `${name} *`;
-//     } else {
-//         let mapping;
-//
-//         if (veryCheap.has(country)) {
-//             mapping = regular.veryCheap || regular['very-cheap'];
-//         } else if (cheap.has(country)) {
-//             mapping = regular.cheap;
-//         } else {
-//             mapping = regular.common || regular[''];
-//         }
-//
-//         if (mapping && mapping.has(q)) {
-//             q = mapping.get(q);
-//         }
-//     }
-//
-//     const nameVariants = [];
-//     if (subject) {
-//         if (alias && alias !== name) {
-//             nameVariants.unshift(
-//                 `${country} ${alias} ${subject} ${year}`,
-//                 `${country} ${name} ${subject} ${year}`,
-//                 `${country} ${alias} ${subject}`,
-//                 `${country} ${name} ${subject}`,
-//                 `${country} ${alias} ${year}`,
-//                 `${country} ${name} ${year}`,
-//                 `${country} ${alias}`,
-//                 `${country} ${name}`,
-//                 `${alias} ${subject} ${year}`,
-//                 `${name} ${subject} ${year}`,
-//                 `${alias} ${subject}`,
-//                 `${name} ${subject}`,
-//                 `${alias} ${year}`,
-//                 `${name} ${year}`,
-//                 alias,
-//                 name);
-//         } else {
-//             nameVariants.unshift(
-//                 `${country} ${name} ${subject} ${year}`,
-//                 `${country} ${name} ${subject}`,
-//                 `${country} ${name} ${year}`,
-//                 `${country} ${name}`,
-//                 `${name} ${subject} ${year}`,
-//                 `${name} ${subject}`,
-//                 `${name} ${year}`,
-//                 name);
-//         }
-//     } else {
-//         nameVariants.unshift(
-//             `${country} ${name} ${year}`,
-//             `${country} ${name}`,
-//             `${name} ${year}`,
-//             name);
-//     }
-//
-//     for (; fallback && q;) {
-//         for (let nameVariant of nameVariants) {
-//             const pp = getQPrice(nameVariant);
-//             if (pp !== false) {
-//                 return pp;
-//             }
-//         }
-//
-//         if (!fallback.has(q)) {
-//             return false;
-//         }
-//
-//         q = fallback.get(q);
-//     }
-//
-//     return false;
-//
-//     function getQPrice(name: string) {
-//         if (!prices.has(name)) {
-//             return false;
-//         }
-//
-//         const pn = prices.get(name);
-//         if (!pn.has(q)) {
-//             return false;
-//         }
-//
-//         const pp = +pn.get(q);
-//         return (pp < +price) ? price : pp.toFixed(2);
-//     }
-// }
-//
-// export function getPriceConfig(): PriceConfig {
-//     const config = JSON.parse(localStorage.ucoinSwapPrices);
-//     if (!config) {
-//         err('config not found');
-//         return null;
-//     }
-//
-//     if (!config.prices) {
-//         err('prices not found');
-//         return null;
-//     }
-//
-//     const map: Map<string, Map<string, number>> = new Map(Object.entries(config.prices));
-//     for (const [name, prices] of map.entries()) {
-//         map.set(name, new Map(Object.entries(prices)));
-//     }
-//
-//     return {
-//         prices: map,
-//         cheap: new Set(config.cheap || []),
-//         veryCheap: new Set(config.veryCheap || config['very-cheap'] || []),
-//         rules: {
-//             regular: new Map(config.rules && config.rules.regular ? Object.entries(config.rules.regular) : []),
-//             commemorative: new Map(config.rules && config.rules.commemorative ? Object.entries(config.rules.commemorative) : []),
-//             fallback: new Map(config.rules && config.rules.fallback ? Object.entries(config.rules.fallback) : []),
-//         },
-//     };
-// }
+const ConditionValues = new Map([
+    ['G', 1],
+    ['VG', 2],
+    ['F', 3],
+    ['VF', 4],
+    ['XF', 5],
+    ['UNC', 6],
+    ['PRF', 7],
+    ['BU', 8],
+]);
+
+const ConditionColors = new Map([
+    ['G', 7],
+    ['VG', 8],
+    ['F', 9],
+    ['VF', 10],
+    ['XF', 11],
+    ['UNC', 12],
+    ['PRF', 3],
+    ['BU', 4],
+]);
+
+
+export function estimateSwapPrices() {
+    const theySwap = document.getElementById('swap');
+    const swapBlock = theySwap && theySwap.nextElementSibling;
+    if (!swapBlock || swapBlock.id !== 'swap-block') {
+        return;
+    }
+
+    const byType = new Map();
+    const byMint = new Map();
+
+    let pricePrefix: string, priceSuffix: string;
+    swapBlock.querySelectorAll(`a.list-link`).forEach((a: HTMLAnchorElement) => {
+
+        const cond = a.querySelector(`.left.dgray-11`).textContent;
+        const mint = a.querySelector(`.left.gray-13`).textContent;
+
+        const priceElement = a.querySelector(`.right.blue-13`);
+        let priceStr = priceElement.textContent;
+
+        pricePrefix = priceElement.firstChild.textContent;
+        if (pricePrefix) {
+            priceStr = priceStr.replace(pricePrefix, '');
+        }
+
+        priceSuffix = priceElement.lastChild.textContent;
+        if (priceSuffix) {
+            priceStr = priceStr.replace(priceSuffix, '');
+        }
+
+        const price = +priceStr;
+
+        const p = byType.has(cond) ? byType.get(cond) : [];
+        p.push(price);
+        byType.set(cond, p);
+
+        const pm = byMint.has(mint) ? byMint.get(mint) : new Map();
+        const pc = pm.has(cond) ? pm.get(cond) : [];
+        pc.push(price);
+        pm.set(cond, pc);
+        byMint.set(mint, pm);
+    });
+
+    swapBlock.parentElement.insertAdjacentHTML("beforebegin", `<div class="widget estimated-prices-widget"><a class="widget-header">Estimated prices</a><div id="estimated-prices"></div></div>`);
+
+    const estimatedPrices = document.getElementById('estimated-prices');
+    if (byMint.size > 1) {
+        addPricesByType(byType);
+        estimatedPrices.insertAdjacentHTML("beforeend", `<div class="list-sep"></div>`);
+    }
+    byMint.forEach((byType, mint) => {
+        addPricesByType(byType, mint);
+    });
+
+    function addPricesByType(byType: Map<string, number[]>, mint = '') {
+        [...byType.keys()].sort(sortByCond).forEach((cond: string) => {
+            const p: number[] = byType.get(cond);
+
+            const avg = p.reduce((sum: number, val: number): number => sum + val, 0) / p.length;
+            const min = p.reduce((min: number, val: number): number => min < val ? min : val, +Infinity);
+            const max = p.reduce((max: number, val: number): number => max > val ? max : val, -Infinity);
+
+            const avgPrice = avg.toFixed(2);
+            const minPrice = min < avg ? `${min.toFixed(2)}<small> &middot; </small>` : '';
+            const maxPrice = max > avg ? `<small> &middot; </small>${max.toFixed(2)}` : '';
+
+            const parts = mint.split(' ');
+            const y = parts.shift();
+            const m = parts.length ? ` <span class="lgray-11">${parts.join(' ')}</span>` : '';
+
+            estimatedPrices.insertAdjacentHTML("beforeend", `<a class="list-link"><span class="left dgray-11 marked-${ConditionColors.get(cond)}">${cond}</span><span class="left gray-13 wrap">${y}${m}</span><span class="right blue-13"><span class="lgray-11">${pricePrefix}</span>${minPrice}${avgPrice}${maxPrice}</span></a>`);
+        });
+    }
+
+    function sortByCond(a: string, b: string): number {
+        return ConditionValues.get(b) - ConditionValues.get(a);
+    }
+}
