@@ -1,6 +1,6 @@
 {
     "name": "ucoin",
-    "version": "1.1.1",
+    "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "directories": {
@@ -9,7 +9,7 @@
     "scripts": {
         "build": "webpack",
         "watch": "webpack --watch",
-        "postversion": "webpack",
+        "version": "webpack",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
