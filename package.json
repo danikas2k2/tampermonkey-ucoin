@@ -7,6 +7,8 @@
         "src/lib": "src/lib"
     },
     "scripts": {
+        "update": "webpack",
+        "watch": "webpack --watch",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
@@ -55,6 +57,7 @@
         "uglifyjs-webpack-plugin": "^2.0.1",
         "urls": "0.0.4",
         "webpack": "^4.27.1",
+        "webpack-auto-inject-version": "^1.2.2",
         "webpack-cli": "^3.1.2"
     }
 }

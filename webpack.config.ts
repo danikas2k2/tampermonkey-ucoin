@@ -1,6 +1,10 @@
 import path from 'path';
 import webpack from 'webpack';
 
+// @ts-ignore
+import WebpackAutoInject from 'webpack-auto-inject-version';
+
+
 
 const config: webpack.Configuration = {
     mode: 'production',
@@ -37,6 +41,10 @@ const config: webpack.Configuration = {
     optimization: {
         minimize: false
     },
+    plugins: [
+        new WebpackAutoInject({
+        }),
+    ]
 };
 
 export default config;
