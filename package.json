@@ -7,8 +7,9 @@
         "src/lib": "src/lib"
     },
     "scripts": {
-        "update": "webpack",
+        "build": "webpack",
         "watch": "webpack --watch",
+        "preversion": "webpack",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
