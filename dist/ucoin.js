@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Build version: 1.0.2 - Thursday, December 13th, 2018, 3:26:03 PM  
+// [AIV_SHORT]  Build version: 1.0.2 - Friday, December 14th, 2018, 1:41:51 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -228,7 +228,7 @@ exports.randomDelay = randomDelay;
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/
 // @version      1.0.2
-// @date         Thursday, December 13th, 2018, 3:26:03 PM
+// @date         Friday, December 14th, 2018, 1:41:51 PM
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
 // @downloadURL  https://bitbucket.org/danikas2k2/collection.userscripts/raw/HEAD/dist/ucoin.js
@@ -303,7 +303,7 @@ if (loc.includes('/swap-mgr/') || loc.includes('/swap-list/')) {
 
 exports = module.exports = __webpack_require__(1)(false);
 // Module
-exports.push([module.i, "#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n  text-align: center;\n}\n#ucid-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n#estimated-prices {\n  overflow-x: hidden;\n  max-height: 400px;\n}\n#estimated-prices .list-link {\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #E9EDF1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 1em;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  flex: 0 0 20px;\n  width: 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n}\n#my-swap-block #swap-block .btn--combiner,\n#my-swap-block #swap-block .btn--expander {\n  margin: 8px 2px 0;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #fdd;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #fed;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n", ""]);
+exports.push([module.i, "#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n  text-align: center;\n}\n#ucid-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n#estimated-prices {\n  overflow-x: hidden;\n  max-height: 400px;\n}\n#estimated-prices .list-link {\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #E9EDF1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .blue-13 {\n  max-width: 120px;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 1em;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  flex: 0 0 20px;\n  width: 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n}\n#my-swap-block #swap-block .btn--combiner,\n#my-swap-block #swap-block .btn--expander {\n  margin: 8px 2px 0;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #fdd;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #fed;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n", ""]);
 
 
 
@@ -432,7 +432,8 @@ function addSyncConditionToColorTable() {
     ]);
     // @ts-ignore
     const CL = new Map([...CN.entries()].map(([k, v]) => [v, k])); // switch conditions and colors
-    document.getElementById('edit-coin-form').querySelectorAll('table div[class^="marked-"]').forEach((div) => {
+    const editCoinForm = document.getElementById('edit-coin-form');
+    editCoinForm && editCoinForm.querySelectorAll('table div[class^="marked-"]').forEach((div) => {
         if (div.id === 'set-color') {
             return;
         }
@@ -472,8 +473,6 @@ function addPublicityToggle() {
     const form = document.getElementById('edit-coin-form').querySelector('form');
     const publicCheckbox = form.querySelector('input[name=public]');
     let checked = publicCheckbox && publicCheckbox.checked;
-    console.log(publicCheckbox);
-    console.log(publicCheckbox.checked);
     const visibilityButton = edit.cloneNode();
     edit.insertAdjacentElement("beforebegin", visibilityButton);
     visibilityButton.removeAttribute('onClick');
@@ -532,8 +531,6 @@ function addReplacementToggle() {
     });
     const form = document.getElementById('edit-coin-form').querySelector('form');
     const replaceCheckbox = form.querySelector('input[name=replace]');
-    console.log(replaceCheckbox);
-    console.log(replaceCheckbox.checked);
     let replace = replaceCheckbox && replaceCheckbox.checked;
     const replacementButton = edit.cloneNode();
     edit.insertAdjacentElement("beforebegin", replacementButton);
@@ -926,9 +923,9 @@ function addSwapFormQtyButtons() {
     qty.setAttribute('inputmode', 'numeric');
     qty.addEventListener("focus", e => e.target.setSelectionRange(0, e.target.value.length));
     addQtyCtrlButton("afterend", 'minus', '&minus;', v => v - 1);
-    addQtyCtrlButton("afterbegin", 'plus10', '+10', v => v + 10);
-    addQtyCtrlButton("afterbegin", 'plus5', '+5', v => v + 5);
-    addQtyCtrlButton("afterbegin", 'plus', '+', v => v + 1);
+    addQtyCtrlButton("beforebegin", 'plus10', '+10', v => v + 10);
+    addQtyCtrlButton("beforebegin", 'plus5', '+5', v => v + 5);
+    addQtyCtrlButton("beforebegin", 'plus', '+', v => v + 1);
     function addQtyCtrlButton(where, id, text, valueChanger) {
         const qtyId = `swap-qty-${id}`;
         qty.insertAdjacentHTML(where, `<button id="${qtyId}" type="button" class="btn-s btn-gray btn-ctrl">${text}</button>`);
@@ -945,21 +942,19 @@ function addSwapColorMarkers() {
     const fieldset = document.getElementById(id);
     cond.querySelectorAll('option').forEach((o) => {
         const val = o.value;
-        const text = val ? o.text : 'Without condition';
+        const text = val ? o.textContent : 'Without condition';
         const checked = (val === '3') ? 'checked' : '';
         const style = o.getAttribute('style') || '';
         fieldset.insertAdjacentHTML("beforeend", `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${val}" ${checked} type="radio"/>${text}</label>`);
     });
     cond.remove();
-    // @ts-ignore
-    const _onCoinSwapForm = window.CoinSwapFormOn;
+    const _onCoinSwapForm = CoinSwapFormOn;
     if (!_onCoinSwapForm) {
         return;
     }
-    const CoinSwapFormOn = function (...args) {
+    CoinSwapFormOn = function (...args) {
         _onCoinSwapForm(...args);
-        const swapForm = document.getElementById('swap-form');
-        swapForm.querySelector(`input[name="condition"][value="${args[1]}"]`).checked = true;
+        fieldset.querySelector(`input[name="condition"][value="${args[1]}"]`).checked = true;
     };
     const mySwap = document.getElementById('my-swap-block');
     const swapBlock = mySwap.querySelector('#swap-block');
@@ -1036,7 +1031,6 @@ function getSwapLinks(d = document) {
 exports.getSwapLinks = getSwapLinks;
 function forEachSwapLink(fn) {
     const swapLinks = getSwapLinks();
-    console.log(swapLinks.length);
     swapLinks.forEach(a => {
         if (a.querySelector(`div.ico-16`)) {
             return;
@@ -1380,13 +1374,26 @@ function estimateSwapPrices() {
             const avg = p.reduce((sum, val) => sum + val, 0) / p.length;
             const min = p.reduce((min, val) => min < val ? min : val, +Infinity);
             const max = p.reduce((max, val) => max > val ? max : val, -Infinity);
-            const avgPrice = avg.toFixed(2);
-            const minPrice = min < avg ? `${min.toFixed(2)}<small> &middot; </small>` : '';
-            const maxPrice = max > avg ? `<small> &middot; </small>${max.toFixed(2)}` : '';
+            const prices = [];
+            prices.push(min.toFixed(2));
+            if (avg > min) {
+                prices.push(avg.toFixed(2));
+                if (max > avg) {
+                    prices.push(max.toFixed(2));
+                }
+            }
+            if (pricePrefix) {
+                prices[0] = `<span class="lgray-11">${pricePrefix}</span>${prices[0]}`;
+            }
+            if (priceSuffix) {
+                const n = prices.length - 1;
+                prices[n] = `${prices[n]}<span class="lgray-11">${priceSuffix}</span>`;
+            }
+            const price = `<nobr>${prices.join(`</nobr><nobr><small> &middot; </small>`)}</nobr>`;
             const parts = mint.split(' ');
             const y = parts.shift();
             const m = parts.length ? ` <span class="lgray-11">${parts.join(' ')}</span>` : '';
-            estimatedPrices.insertAdjacentHTML("beforeend", `<a class="list-link"><span class="left dgray-11 marked-${ConditionColors.get(cond)}">${cond}</span><span class="left gray-13 wrap">${y}${m}</span><span class="right blue-13"><span class="lgray-11">${pricePrefix}</span>${minPrice}${avgPrice}${maxPrice}</span></a>`);
+            estimatedPrices.insertAdjacentHTML("beforeend", `<a class="list-link"><span class="left dgray-11 marked-${ConditionColors.get(cond)}">${cond}</span><span class="left gray-13">${y}${m}</span><span class="right blue-13">${price}</span></a>`);
         });
     }
     function sortByCond(a, b) {

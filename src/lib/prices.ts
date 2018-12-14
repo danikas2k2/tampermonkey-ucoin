@@ -82,15 +82,30 @@ export function estimateSwapPrices() {
             const min = p.reduce((min: number, val: number): number => min < val ? min : val, +Infinity);
             const max = p.reduce((max: number, val: number): number => max > val ? max : val, -Infinity);
 
-            const avgPrice = avg.toFixed(2);
-            const minPrice = min < avg ? `${min.toFixed(2)}<small> &middot; </small>` : '';
-            const maxPrice = max > avg ? `<small> &middot; </small>${max.toFixed(2)}` : '';
+            const prices = [];
+            prices.push(min.toFixed(2));
+            if (avg > min) {
+                prices.push(avg.toFixed(2));
+                if (max > avg) {
+                    prices.push(max.toFixed(2));
+                }
+            }
+
+            if (pricePrefix) {
+                prices[0] = `<span class="lgray-11">${pricePrefix}</span>${prices[0]}`;
+            }
+            if (priceSuffix) {
+                const n = prices.length - 1;
+                prices[n] = `${prices[n]}<span class="lgray-11">${priceSuffix}</span>`;
+            }
+
+            const price = `<nobr>${prices.join(`</nobr><nobr><small> &middot; </small>`)}</nobr>`;
 
             const parts = mint.split(' ');
             const y = parts.shift();
             const m = parts.length ? ` <span class="lgray-11">${parts.join(' ')}</span>` : '';
 
-            estimatedPrices.insertAdjacentHTML("beforeend", `<a class="list-link"><span class="left dgray-11 marked-${ConditionColors.get(cond)}">${cond}</span><span class="left gray-13 wrap">${y}${m}</span><span class="right blue-13"><span class="lgray-11">${pricePrefix}</span>${minPrice}${avgPrice}${maxPrice}</span></a>`);
+            estimatedPrices.insertAdjacentHTML("beforeend", `<a class="list-link"><span class="left dgray-11 marked-${ConditionColors.get(cond)}">${cond}</span><span class="left gray-13">${y}${m}</span><span class="right blue-13">${price}</span></a>`);
         });
     }
 
