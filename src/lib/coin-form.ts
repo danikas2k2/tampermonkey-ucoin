@@ -32,7 +32,8 @@ export function addSyncConditionToColorTable() {
     // @ts-ignore
     const CL = new Map([...CN.entries()].map(([k, v]) => [v, k])); // switch conditions and colors
 
-    document.getElementById('edit-coin-form').querySelectorAll('table div[class^="marked-"]').forEach((div: HTMLDivElement) => {
+    const editCoinForm = document.getElementById('edit-coin-form');
+    editCoinForm && editCoinForm.querySelectorAll('table div[class^="marked-"]').forEach((div: HTMLDivElement) => {
         if (div.id === 'set-color') {
             return;
         }
@@ -78,8 +79,6 @@ export function addPublicityToggle() {
 
     const publicCheckbox = <HTMLInputElement>form.querySelector('input[name=public]');
     let checked = publicCheckbox && publicCheckbox.checked;
-    console.log(publicCheckbox);
-    console.log(publicCheckbox.checked);
 
     const visibilityButton = <HTMLButtonElement>edit.cloneNode();
     edit.insertAdjacentElement("beforebegin", visibilityButton);
@@ -146,8 +145,6 @@ export function addReplacementToggle() {
     const form = <HTMLFormElement>document.getElementById('edit-coin-form').querySelector('form');
 
     const replaceCheckbox = <HTMLInputElement>form.querySelector('input[name=replace]');
-    console.log(replaceCheckbox);
-    console.log(replaceCheckbox.checked);
     let replace = replaceCheckbox && replaceCheckbox.checked;
 
     const replacementButton = <HTMLButtonElement>edit.cloneNode();

@@ -9,7 +9,6 @@ export function getSwapLinks(d: DocumentFragment = document): NodeListOf<HTMLAnc
 
 export function forEachSwapLink(fn: (a: HTMLAnchorElement, m: CoinSwapFormOnMatchGroups) => void): void {
     const swapLinks = getSwapLinks();
-    console.log(swapLinks.length);
     swapLinks.forEach(a => {
         if (a.querySelector(`div.ico-16`)) {
             return;

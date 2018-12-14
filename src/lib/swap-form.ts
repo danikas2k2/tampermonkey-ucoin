@@ -1,3 +1,5 @@
+declare var CoinSwapFormOn: (...args: string[]) => void;
+
 import {CoinSwapFormOnMatcher, forEachSwapLink, getSwapLinks} from "./swap-links";
 import {randomDelay} from "./delay";
 import {post} from "./ajax";
@@ -275,9 +277,9 @@ export function addSwapFormQtyButtons() {
     qty.addEventListener("focus", e => (<HTMLInputElement>e.target).setSelectionRange(0, (<HTMLInputElement>e.target).value.length));
 
     addQtyCtrlButton("afterend", 'minus', '&minus;', v => v - 1);
-    addQtyCtrlButton("afterbegin", 'plus10', '+10', v => v + 10);
-    addQtyCtrlButton("afterbegin", 'plus5', '+5', v => v + 5);
-    addQtyCtrlButton("afterbegin", 'plus', '+', v => v + 1);
+    addQtyCtrlButton("beforebegin", 'plus10', '+10', v => v + 10);
+    addQtyCtrlButton("beforebegin", 'plus5', '+5', v => v + 5);
+    addQtyCtrlButton("beforebegin", 'plus', '+', v => v + 1);
 
     function addQtyCtrlButton(where: InsertPosition, id: string, text: string, valueChanger: (prevValue: number) => number): void {
         const qtyId = `swap-qty-${id}`;
@@ -296,7 +298,7 @@ export function addSwapColorMarkers() {
 
     cond.querySelectorAll('option').forEach((o: HTMLOptionElement) => {
         const val = o.value;
-        const text = val ? o.text : 'Without condition';
+        const text = val ? o.textContent : 'Without condition';
         const checked = (val === '3') ? 'checked' : '';
         const style = o.getAttribute('style') || '';
         fieldset.insertAdjacentHTML("beforeend", `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${val}" ${checked} type="radio"/>${text}</label>`);
@@ -304,16 +306,14 @@ export function addSwapColorMarkers() {
 
     cond.remove();
 
-    // @ts-ignore
-    const _onCoinSwapForm = window.CoinSwapFormOn;
+    const _onCoinSwapForm = CoinSwapFormOn;
     if (!_onCoinSwapForm) {
         return;
     }
 
-    const CoinSwapFormOn = function (...args: any[]) {
+    CoinSwapFormOn = function (...args: any[]) {
         _onCoinSwapForm(...args);
-        const swapForm = <HTMLFormElement>document.getElementById('swap-form');
-        (<HTMLInputElement>swapForm.querySelector(`input[name="condition"][value="${args[1]}"]`)).checked = true;
+        (<HTMLInputElement>fieldset.querySelector(`input[name="condition"][value="${args[1]}"]`)).checked = true;
     };
 
     const mySwap = <HTMLElement>document.getElementById('my-swap-block');
