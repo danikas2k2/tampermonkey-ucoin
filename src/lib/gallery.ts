@@ -3,12 +3,14 @@ import {randomDelay} from "./delay";
 
 export function addGalleryVisibilityToggle() {
     const gallery = <HTMLElement>document.getElementById('gallery');
-    const coins = gallery.querySelector('.coin .desc-block .coin-desc');
 
     let privateStatus: NodeListOf<HTMLDivElement>,
         publicStatus: NodeListOf<HTMLDivElement>;
 
     updateStatusElements();
+
+    console.log(privateStatus.length);
+    console.log(publicStatus.length);
 
     const buttonContainerId = 'button-container';
     const sortFilter = document.getElementById('sort-filter').parentElement;
@@ -45,17 +47,21 @@ export function addGalleryVisibilityToggle() {
         let queue = Promise.resolve();
 
         (checked ? privateStatus : publicStatus).forEach(status => {
-            const url = (<HTMLAnchorElement>status.querySelector(`~ .coin-desc div a`)).href;
+            const url = (<HTMLAnchorElement>status.parentElement.querySelector(`.coin-desc div a`)).href;
 
             queue = queue
                 .then(() => get(url))
                 .then(response => response.text())
                 .then(text => {
-                    const fragment = document.createDocumentFragment();
-                    fragment.textContent = text;
-                    return fragment;
+                    const temp = document.createElement('template');
+                    temp.innerHTML = text;
+                    return temp.content;
                 })
-                .then((fragment: DocumentFragment) => fragment.getElementById('coin-form').querySelector('form'))
+                .then((fragment: DocumentFragment) => {
+                    const coinForm = fragment.getElementById('edit-coin-form') || document.getElementById('add-coin-form');
+                    console.log(coinForm);
+                    return coinForm.querySelector('form');
+                })
                 .then(form => postPublicityForm(url, form, checked))
                 .then(() => {
                     status.classList.replace(removeClass, addClass);
@@ -71,8 +77,8 @@ export function addGalleryVisibilityToggle() {
     }
 
     function updateStatusElements() {
-        privateStatus = coins.querySelectorAll('span.status0');
-        publicStatus = coins.querySelectorAll('span.status1');
+        privateStatus = gallery.querySelectorAll('.coin .desc-block span.status0');
+        publicStatus = gallery.querySelectorAll('.coin .desc-block span.status1');
     }
 
     function postPublicityForm(url: RequestInfo, form: HTMLFormElement, checked: boolean) {

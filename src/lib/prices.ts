@@ -76,17 +76,19 @@ export function estimateSwapPrices() {
 
     function addPricesByType(byType: Map<string, number[]>, mint = '') {
         [...byType.keys()].sort(sortByCond).forEach((cond: string) => {
-            const p: number[] = byType.get(cond);
+            const p: number[] = byType.get(cond).sort();
+            const l = p.length, r = l % 2, h = (l + r) / 2;
 
-            const avg = p.reduce((sum: number, val: number): number => sum + val, 0) / p.length;
-            const min = p.reduce((min: number, val: number): number => min < val ? min : val, +Infinity);
-            const max = p.reduce((max: number, val: number): number => max > val ? max : val, -Infinity);
+            // const avg = p.reduce((sum: number, val: number): number => sum + val, 0) / p.length;
+            const med = r ? p[h] : (p[h] + p[h+1]) / 2;
+            const min = Math.min(...p); // p.reduce((min: number, val: number): number => min < val ? min : val, +Infinity);
+            const max = Math.max(...p); // p.reduce((max: number, val: number): number => max > val ? max : val, -Infinity);
 
             const prices = [];
             prices.push(min.toFixed(2));
-            if (avg > min) {
-                prices.push(avg.toFixed(2));
-                if (max > avg) {
+            if (med > min) {
+                prices.push(med.toFixed(2));
+                if (max > med) {
                     prices.push(max.toFixed(2));
                 }
             }

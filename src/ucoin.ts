@@ -38,14 +38,12 @@ if (loc.includes('/coin/')) {
         tags.querySelectorAll('a[href^="/gallery/"]').forEach(updateLinkHref);
     }
 
-    if (document.getElementById('user-menu')) {
-        addBuyDateResetButton();
-        addSyncConditionToColorTable();
+    addBuyDateResetButton();
+    addSyncConditionToColorTable();
 
-        if (loc.includes('ucid=')) {
-            addPublicityToggle();
-            addReplacementToggle();
-        }
+    if (loc.includes('ucid=')) {
+        addPublicityToggle();
+        addReplacementToggle();
     }
 
     const mySwap = document.getElementById('my-swap-block');

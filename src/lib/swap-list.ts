@@ -3,10 +3,15 @@ import {randomDelay} from "./delay";
 
 export function addTrackingLinks() {
     const swapMgr = document.getElementById('swap-mgr');
-    swapMgr && swapMgr.querySelectorAll('div.left.lgray-11:contains("Track")+div.right.gray-11').forEach(div => {
-        const text = div.textContent;
+    swapMgr && swapMgr.querySelectorAll('div.left.lgray-11').forEach(div => {
+        if (!div.textContent.includes("Track")) {
+            return;
+        }
+
+        const next = div.nextElementSibling;
+        const text = next.textContent;
         if (text) {
-            div.innerHTML = `<a href="https://www.17track.net/en/track?nums=${text}">${text}</a>`;
+            next.innerHTML = `<a href="https://www.17track.net/en/track?nums=${text}" target="_blank">${text}</a>`;
         }
     });
 }
@@ -31,65 +36,78 @@ export function addConflictHandling() {
     hiliteConflicts();
 
     if (!document.getElementById('need-swap-list')) {
-        const table = document.querySelector('table.swap-coin');
-        table.querySelectorAll('input.swap-checkbox, input.swap-country-checkbox').forEach((input: HTMLInputElement) => {
-            input.addEventListener('click', e => {
-                const input = <HTMLInputElement>e.target;
-                if (!input.checked) {
-                    let parent = input.parentElement;
-                    while (parent && parent.tagName !== 'tr') {
-                        parent = parent.parentElement;
+        const tables = document.querySelectorAll('table.swap-coin');
+        tables.forEach((table: HTMLTableElement) => {
+            table.querySelectorAll('input.swap-checkbox, input.swap-country-checkbox').forEach((input: HTMLInputElement) => {
+                input.addEventListener('click', e => {
+                    const input = <HTMLInputElement>e.target;
+                    if (!input.checked) {
+                        let parent = input.parentElement;
+                        while (parent && parent.tagName !== 'tr') {
+                            parent = parent.parentElement;
+                        }
+                        if (parent) {
+                            parent.classList.remove('conflict');
+                        }
                     }
-                    if (parent) {
-                        parent.classList.remove('conflict');
-                    }
-                }
-                hiliteConflicts();
-            })
+                    hiliteConflicts();
+                })
+            });
         });
     }
 }
 
 function hiliteConflicts() {
     const needSwapList = !!document.getElementById('need-swap-list');
-    const table = document.querySelector('table.swap-coin');
-    const rows = table.querySelectorAll('tr');
+    const tables = document.querySelectorAll('table.swap-coin');
+    tables.forEach((table: HTMLTableElement) => {
+        const rows = table.querySelectorAll('tr');
 
-    let checked: Array<HTMLTableRowElement>;
-    if (needSwapList) {
-        // @ts-ignore
-        checked = rows;
-    } else {
-        checked = [];
-        rows.forEach((r: HTMLTableRowElement) => {
-            if (r.querySelector('input.swap-checkbox:checked')) {
-                checked.push(r);
-            }
-        });
-    }
-
-    checked.forEach((r: HTMLTableRowElement) => {
-        const data = r.dataset;
-        const rows = table.querySelectorAll(`tr[data-tooltip-name=${JSON.stringify(data.tooltipName)}]` +
-            `[data-tooltip-subject=${JSON.stringify(data.tooltipSubject)}]` +
-            `[data-tooltip-variety=${JSON.stringify(data.tooltipVariety)}]` +
-            `[data-tooltip-km=${JSON.stringify(data.tooltipKm)}]`);
-        let dup: Array<HTMLTableRowElement>;
+        let checked: Array<HTMLTableRowElement>;
         if (needSwapList) {
             // @ts-ignore
-            dup = rows;
+            checked = rows;
         } else {
-            dup = [];
+            checked = [];
             rows.forEach((r: HTMLTableRowElement) => {
                 if (r.querySelector('input.swap-checkbox:checked')) {
-                    dup.push(r);
+                    checked.push(r);
+                } else {
+                    r.classList.remove('conflict');
                 }
             });
+
+            const heading = <HTMLHeadingElement>table.previousElementSibling;
+            if (heading.tagName.toLowerCase() === 'h2') {
+                const all = <HTMLInputElement>heading.querySelector('input.swap-country-checkbox');
+                all.checked = checked.length === rows.length;
+            }
         }
 
-        const hasConflicts = dup.length > 1;
-        dup.forEach((r: HTMLTableRowElement) => {
-            r.classList.toggle('conflict', hasConflicts);
+        checked.forEach((r: HTMLTableRowElement) => {
+            const data = r.dataset;
+            const selector = `tr[data-tooltip-name=${JSON.stringify(data.tooltipName)}]` +
+                `[data-tooltip-subject=${JSON.stringify(data.tooltipSubject)}]` +
+                `[data-tooltip-variety=${JSON.stringify(data.tooltipVariety)}]` +
+                `[data-tooltip-km=${JSON.stringify(data.tooltipKm)}]`;
+            const rows = table.querySelectorAll(selector);
+            let dup: Array<HTMLTableRowElement>;
+            if (needSwapList) {
+                // @ts-ignore
+                dup = rows;
+            } else {
+                dup = [];
+                rows.forEach((r: HTMLTableRowElement) => {
+                    if (r.querySelector('input.swap-checkbox:checked')) {
+                        dup.push(r);
+                    }
+                });
+            }
+
+            const hasConflicts = dup.length > 1;
+            dup.forEach((r: HTMLTableRowElement) => {
+                r.classList.toggle('conflict', hasConflicts);
+            });
         });
     });
 }
@@ -161,16 +179,17 @@ const CM = new Map([
 
 export function ignoreUnwanted() {
     if (!document.getElementById('need-swap-list')) {
-        const table = document.querySelector('table.swap-coin');
-        table && table.querySelectorAll('tr').forEach((tr: HTMLTableRowElement) => {
-            const markedElement = tr.querySelector('td span[class^="marked-"]');
-            const marked = markedElement && markedElement.classList;
-            const myCond = marked && CN.get(marked.item(0).split('marked-').pop()) || 0;
-            const condElement = tr.querySelector('td.td-cond');
-            const cond = condElement && CM.get(condElement.textContent) || 0;
-            if (myCond && (!cond || cond <= myCond)) {
-                tr.classList.add('ignore');
-            }
+        document.querySelectorAll('table.swap-coin').forEach(table => {
+            table.querySelectorAll('tr').forEach((tr: HTMLTableRowElement) => {
+                const markedElement = tr.querySelector('td span[class^="marked-"]');
+                const marked = markedElement && markedElement.classList;
+                const myCond = marked && CN.get(marked.item(0).split('marked-').pop()) || 0;
+                const condElement = tr.querySelector('td.td-cond');
+                const cond = condElement && CM.get(condElement.textContent) || 0;
+                if (myCond && (!cond || cond <= myCond)) {
+                    tr.classList.add('ignore');
+                }
+            });
         });
     }
 }
