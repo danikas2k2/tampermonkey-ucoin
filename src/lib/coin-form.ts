@@ -17,7 +17,8 @@ export function addBuyDateResetButton() {
 }
 
 export function addSyncConditionToColorTable() {
-    const cond = <HTMLSelectElement>document.getElementById('condition');
+    const coinForm = document.getElementById('edit-coin-form') || document.getElementById('add-coin-form');
+    const cond = <HTMLSelectElement>(coinForm.querySelector('#condition'));
 
     const CN = new Map([
         ['6', '7'],  // G
@@ -32,8 +33,7 @@ export function addSyncConditionToColorTable() {
     // @ts-ignore
     const CL = new Map([...CN.entries()].map(([k, v]) => [v, k])); // switch conditions and colors
 
-    const editCoinForm = document.getElementById('edit-coin-form');
-    editCoinForm && editCoinForm.querySelectorAll('table div[class^="marked-"]').forEach((div: HTMLDivElement) => {
+    coinForm && coinForm.querySelectorAll('table div[class^="marked-"]').forEach((div: HTMLDivElement) => {
         if (div.id === 'set-color') {
             return;
         }
@@ -52,8 +52,8 @@ export function addSyncConditionToColorTable() {
     });
 
 
-    const tableColor = <HTMLInputElement>document.getElementById('table-color');
-    const setColor = document.getElementById('set-color');
+    const tableColor = <HTMLInputElement>document.getElementById('edit-table-color');
+    const setColor = document.getElementById('edit-set-color');
 
     cond.addEventListener('change', e => {
         setColor.classList.remove(`marked-${tableColor.value}`);

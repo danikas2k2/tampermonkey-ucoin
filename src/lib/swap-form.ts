@@ -12,7 +12,30 @@ export function addSwapComments() {
 
 export function addSwapButtons() {
     const mySwap = <HTMLElement>document.getElementById('my-swap-block');
+    if (!mySwap) {
+        return;
+    }
+
+    if (mySwap.classList.contains('hide')) {
+        mySwap.classList.remove('hide');
+        mySwap.style.display = '';
+
+        const showButton = <HTMLElement>mySwap.previousSibling;
+        showButton.classList.add('hide');
+        showButton.style.display = 'none';
+    }
+
     const swapBlock = <HTMLElement>mySwap.querySelector('#swap-block');
+
+    const div = document.createElement('div');
+    div.style.maxHeight = '400px';
+    div.style.overflowX = 'hidden';
+    div.style.overflowY = 'auto';
+    swapBlock.insertAdjacentElement("afterbegin", div);
+    forEachSwapLink(a => {
+        div.insertAdjacentElement("beforeend", a);
+    });
+
     const buttonSet = swapBlock.querySelector('center');
     const variants = new Map();
     let couldExpand = false, couldCombine = false;
@@ -49,20 +72,9 @@ export function addSwapButtons() {
         couldCombine ? addCombineButtons() : removeCombineButtons();
     }
 
-    function disableButtons() {
-        buttonSet.querySelectorAll('button.btn--combiner,button.btn--expander').forEach((combiner: HTMLButtonElement) => {
-            combiner.classList.add('btn-white');
-            combiner.classList.remove('btn-blue');
-            combiner.disabled = true;
-        });
-    }
-
-    function enableButtons() {
-        buttonSet.querySelectorAll('button.btn--combiner,button.btn--expander').forEach((combiner: HTMLButtonElement) => {
-            combiner.classList.add('btn-blue');
-            combiner.classList.remove('btn-white');
-            combiner.disabled = false;
-        });
+    function removeButtons() {
+        removeExpandButtons();
+        removeCombineButtons();
     }
 
     function updateLinkQty(a: HTMLAnchorElement, qty: number) {
@@ -80,11 +92,12 @@ export function addSwapButtons() {
 
     // expandTo - number of links (0 for unlimited)
     function expandClicked(expandTo = 0) {
-        disableButtons();
+        removeButtons();
 
         console.log(`EXPANDING...`);
 
         let queue = Promise.resolve();
+        let isFirstQuery = true;
 
         forEachSwapLink((a: HTMLAnchorElement, m: CoinSwapFormOnMatchGroups) => {
             const {uniq, usid, cond, price, info, vid, strqty} = m;
@@ -97,50 +110,50 @@ export function addSwapButtons() {
                 return;
             }
 
-            for (let i = n, qq = qty, q = Math.floor(qq / i); i > 0; i--, qq -= q, q = Math.floor(qq / i)) {
-                if (i > 1) {
-                    queue = queue
-                        .then(() => console.log(`ADDING ${uniq} ${n - i + 1} -> ${q}`))
-                        .then(() => addSwapCoin(cond, `${q}`, vid, info, price))
-                        .then(r => {
-                            const links = new Set();
-                            getSwapLinks().forEach(l => {
-                                if (!l.hasAttribute('onClick')) {
-                                    return;
-                                }
-                                const m = <CoinSwapFormOnMatchResult>l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
-                                if (m && m.groups) {
-                                    links.add(m.groups.usid);
-                                }
-                            });
-                            getSwapLinks(r).forEach(l => {
-                                if (!l.hasAttribute('onClick')) {
-                                    return;
-                                }
-                                const m = <CoinSwapFormOnMatchResult>l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
-                                const usid = m && m.groups && m.groups.usid;
-                                if (!usid || links.has(usid)) {
-                                    return;
-                                }
-                                links.add(usid);
-                                a.insertAdjacentElement("afterend", l);
-                                addSwapComment(l);
-                            });
-                        })
-                        .then(randomDelay());
-                } else {
-                    queue = queue
-                        .then(() => console.log(`UPDATING ${uniq} ${usid} -> 1`))
-                        .then(() => updSwapCoin(usid, cond, `${q}`, vid, info, price))
-                        .then(() => updateLinkQty(a, q))
-                        .then(randomDelay());
+            for (let i = n, qq = qty, q = Math.floor(qq / i); i > 1; i--, q = Math.floor(qq / i)) {
+                qq -= q;
+                if (!isFirstQuery) {
+                    queue = queue.then(randomDelay());
                 }
+                queue = queue
+                    .then(() => console.log(`ADDING ${uniq} ${n - i + 1} -> ${q}`))
+                    .then(() => addSwapCoin(cond, `${q}`, vid, info, price))
+                    .then(r => {
+                        const links = new Set();
+                        getSwapLinks().forEach(l => {
+                            if (!l.hasAttribute('onClick')) {
+                                return;
+                            }
+                            const m = <CoinSwapFormOnMatchResult>l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+                            if (m && m.groups) {
+                                links.add(m.groups.usid);
+                            }
+                        });
+                        getSwapLinks(r).forEach(l => {
+                            if (!l.hasAttribute('onClick')) {
+                                return;
+                            }
+                            const m = <CoinSwapFormOnMatchResult>l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+                            const usid = m && m.groups && m.groups.usid;
+                            if (!usid || links.has(usid)) {
+                                return;
+                            }
+                            links.add(usid);
+                            styleSwapLink(l);
+                            a.insertAdjacentElement("afterend", l);
+                            addSwapComment(l);
+                        });
+                    })
+                    .then(randomDelay())
+                    .then(() => console.log(`UPDATING ${uniq} ${usid} -> ${qq}`))
+                    .then(() => updSwapCoin(usid, cond, `${qq}`, vid, info, price))
+                    .then(() => updateLinkQty(a, qq));
+                isFirstQuery = false;
             }
         });
 
         queue.then(() => {
             console.log('DONE!');
-            enableButtons();
             updateButtons();
         });
     }
@@ -163,7 +176,7 @@ export function addSwapButtons() {
     }
 
     function combineClicked() {
-        disableButtons();
+        removeButtons();
 
         console.log(`COMBINING...`);
 
@@ -201,7 +214,6 @@ export function addSwapButtons() {
 
         queue.then(() => {
             console.log('DONE!');
-            enableButtons();
             updateButtons();
         });
     }
@@ -361,19 +373,21 @@ const ConditionColors = new Map([
     ['BU', 4],
 ]);
 
-export function styleSwapLists() {
-    document.querySelectorAll('#swap-block a.list-link').forEach((a: HTMLAnchorElement) => {
-        const condBlock = a.querySelector(`.left.dgray-11`);
-        const cond = condBlock.textContent;
-        condBlock.classList.add(`marked-${ConditionColors.get(cond)}`);
+export function styleSwapLink(a: HTMLAnchorElement) {
+    const condBlock = a.querySelector(`.left.dgray-11`);
+    const cond = condBlock.textContent;
+    condBlock.classList.add(`marked-${ConditionColors.get(cond)}`);
 
-        const mintBlock = a.querySelector(`.left.gray-13`);
-        const mint = mintBlock.textContent;
-        const parts = mint.split(' ');
-        const y = parts.shift();
-        if (parts.length) {
-            mintBlock.textContent = y;
-            mintBlock.insertAdjacentHTML("beforeend", ` <span class="lgray-11">${parts.join(' ')}</span>`);
-        }
-    });
+    const mintBlock = a.querySelector(`.left.gray-13`);
+    const mint = mintBlock.textContent;
+    const parts = mint.split(' ');
+    const y = parts.shift();
+    if (parts.length) {
+        mintBlock.textContent = y;
+        mintBlock.insertAdjacentHTML("beforeend", ` <span class="lgray-11">${parts.join(' ')}</span>`);
+    }
+}
+
+export function styleSwapLists() {
+    document.querySelectorAll('#swap-block a.list-link').forEach(styleSwapLink);
 }

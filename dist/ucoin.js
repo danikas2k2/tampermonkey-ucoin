@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Build version: 1.0.3 - Friday, December 14th, 2018, 1:45:20 PM  
+// [AIV_SHORT]  Build version: 1.0.3 - Friday, February 15th, 2019, 1:51:33 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -228,7 +228,7 @@ exports.randomDelay = randomDelay;
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/
 // @version      1.0.3
-// @date         Friday, December 14th, 2018, 1:45:20 PM
+// @date         Friday, February 15th, 2019, 1:51:33 PM
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
 // @downloadURL  https://bitbucket.org/danikas2k2/collection.userscripts/raw/HEAD/dist/ucoin.js
@@ -257,13 +257,11 @@ if (loc.includes('/coin/')) {
         // fixTagLinks
         tags.querySelectorAll('a[href^="/gallery/"]').forEach(links_1.updateLinkHref);
     }
-    if (document.getElementById('user-menu')) {
-        coin_form_1.addBuyDateResetButton();
-        coin_form_1.addSyncConditionToColorTable();
-        if (loc.includes('ucid=')) {
-            coin_form_1.addPublicityToggle();
-            coin_form_1.addReplacementToggle();
-        }
+    coin_form_1.addBuyDateResetButton();
+    coin_form_1.addSyncConditionToColorTable();
+    if (loc.includes('ucid=')) {
+        coin_form_1.addPublicityToggle();
+        coin_form_1.addReplacementToggle();
     }
     const mySwap = document.getElementById('my-swap-block');
     if (mySwap && mySwap.querySelector('#swap-block')) {
@@ -316,83 +314,53 @@ exports.push([module.i, "#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\
 Object.defineProperty(exports, "__esModule", { value: true });
 const loc = document.location.href;
 function updateLinkHref(a) {
-    const before = ['page', 'view'];
-    const after = [];
-    const href = a.href;
+    const oldUrl = new URL(a.href, loc);
+    const oldParams = oldUrl.searchParams;
+    const newUrl = new URL(loc);
+    newUrl.pathname = oldUrl.pathname;
+    const newParams = newUrl.searchParams;
+    newParams.delete('page');
+    newParams.delete('view');
+    // @ts-ignore
+    for (const [k, v] of oldParams.entries()) {
+        newParams.set(k, v);
+    }
     if (a.classList.contains('active')) {
-        after.push('view');
+        newParams.delete('view');
     }
     else if (a.classList.contains('switcher')) {
-        const view = getHrefParts(href)[1].get('view');
-        after.push(view);
+        newParams.delete(oldParams.get('view'));
     }
-    a.href = updateHref(href, before, after);
+    a.href = newUrl.href;
 }
 exports.updateLinkHref = updateLinkHref;
 function updateOnClickHref(div) {
     const match = div.getAttribute('onclick').match(/location.href='([^']+)';/);
     if (match) {
-        const before = ['page'];
+        const oldUrl = new URL(match[1], loc);
+        const oldParams = oldUrl.searchParams;
+        const newUrl = new URL(loc);
+        newUrl.pathname = oldUrl.pathname;
+        const newParams = newUrl.searchParams;
+        newParams.delete('page');
+        // @ts-ignore
+        for (const [k, v] of oldParams.entries()) {
+            newParams.set(k, v);
+        }
         if (document.getElementById('status-filter')) {
-            before.push('status');
+            newParams.delete('status');
         }
         else {
             const a = div.querySelector('a.switcher');
             if (a) {
-                const view = getHrefParts(a.href)[1].get('view');
-                before.push('view');
-                before.push(view);
+                newParams.delete('view');
+                newParams.delete(new URL(a.href, loc).searchParams.get('view'));
             }
         }
-        div.setAttribute('onclick', `location.href='${updateHref(match[1], before)}';`);
+        div.setAttribute('onclick', `location.href='${newUrl.href}';`);
     }
 }
 exports.updateOnClickHref = updateOnClickHref;
-function updateHref(href, before, after) {
-    const [locPath, locQuery] = getHrefParts(loc);
-    if (before) {
-        applyQuery(locQuery, before);
-    }
-    applyQuery(locQuery, getHrefParts(href)[1]);
-    if (after) {
-        applyQuery(locQuery, after);
-    }
-    return [locPath, [...locQuery.entries()]
-            .map(([k, v]) => `${k}=${v.replace(/\+/g, '%2B')}`).join('&')]
-        .join('?');
-}
-exports.updateHref = updateHref;
-function applyQuery(query, apply) {
-    if (!apply) {
-        return;
-    }
-    if (!(apply instanceof Map)) {
-        // @ts-ignore
-        apply = new Map(arrayOf(apply).map(arrayOf));
-    }
-    for (const [key, value] of apply.entries()) {
-        if (!value || !value.length) {
-            // @ts-ignore
-            query.delete(key);
-        }
-        else {
-            // @ts-ignore
-            query.set(key, value);
-        }
-    }
-}
-exports.applyQuery = applyQuery;
-function arrayOf(a) {
-    return Array.isArray(a) ? a : [a];
-}
-exports.arrayOf = arrayOf;
-function getHrefParts(href) {
-    const parts = href.split('?');
-    const add = parts.join('%3F').split('&').map(q => q.split('='));
-    // @ts-ignore
-    return [parts.shift(), new Map(add)];
-}
-exports.getHrefParts = getHrefParts;
 
 
 /***/ }),
@@ -420,7 +388,8 @@ function addBuyDateResetButton() {
 }
 exports.addBuyDateResetButton = addBuyDateResetButton;
 function addSyncConditionToColorTable() {
-    const cond = document.getElementById('condition');
+    const coinForm = document.getElementById('edit-coin-form') || document.getElementById('add-coin-form');
+    const cond = (coinForm.querySelector('#condition'));
     const CN = new Map([
         ['6', '7'],
         ['5', '8'],
@@ -432,8 +401,7 @@ function addSyncConditionToColorTable() {
     ]);
     // @ts-ignore
     const CL = new Map([...CN.entries()].map(([k, v]) => [v, k])); // switch conditions and colors
-    const editCoinForm = document.getElementById('edit-coin-form');
-    editCoinForm && editCoinForm.querySelectorAll('table div[class^="marked-"]').forEach((div) => {
+    coinForm && coinForm.querySelectorAll('table div[class^="marked-"]').forEach((div) => {
         if (div.id === 'set-color') {
             return;
         }
@@ -450,8 +418,8 @@ function addSyncConditionToColorTable() {
             }
         });
     });
-    const tableColor = document.getElementById('table-color');
-    const setColor = document.getElementById('set-color');
+    const tableColor = document.getElementById('edit-table-color');
+    const setColor = document.getElementById('edit-set-color');
     cond.addEventListener('change', e => {
         setColor.classList.remove(`marked-${tableColor.value}`);
         const condition = e.target.value;
@@ -688,7 +656,25 @@ function addSwapComments() {
 exports.addSwapComments = addSwapComments;
 function addSwapButtons() {
     const mySwap = document.getElementById('my-swap-block');
+    if (!mySwap) {
+        return;
+    }
+    if (mySwap.classList.contains('hide')) {
+        mySwap.classList.remove('hide');
+        mySwap.style.display = '';
+        const showButton = mySwap.previousSibling;
+        showButton.classList.add('hide');
+        showButton.style.display = 'none';
+    }
     const swapBlock = mySwap.querySelector('#swap-block');
+    const div = document.createElement('div');
+    div.style.maxHeight = '400px';
+    div.style.overflowX = 'hidden';
+    div.style.overflowY = 'auto';
+    swapBlock.insertAdjacentElement("afterbegin", div);
+    swap_links_1.forEachSwapLink(a => {
+        div.insertAdjacentElement("beforeend", a);
+    });
     const buttonSet = swapBlock.querySelector('center');
     const variants = new Map();
     let couldExpand = false, couldCombine = false;
@@ -720,19 +706,9 @@ function addSwapButtons() {
         couldExpand ? addExpandButtons() : removeExpandButtons();
         couldCombine ? addCombineButtons() : removeCombineButtons();
     }
-    function disableButtons() {
-        buttonSet.querySelectorAll('button.btn--combiner,button.btn--expander').forEach((combiner) => {
-            combiner.classList.add('btn-white');
-            combiner.classList.remove('btn-blue');
-            combiner.disabled = true;
-        });
-    }
-    function enableButtons() {
-        buttonSet.querySelectorAll('button.btn--combiner,button.btn--expander').forEach((combiner) => {
-            combiner.classList.add('btn-blue');
-            combiner.classList.remove('btn-white');
-            combiner.disabled = false;
-        });
+    function removeButtons() {
+        removeExpandButtons();
+        removeCombineButtons();
     }
     function updateLinkQty(a, qty) {
         if (a.hasAttribute('onClick')) {
@@ -745,9 +721,10 @@ function addSwapButtons() {
     }
     // expandTo - number of links (0 for unlimited)
     function expandClicked(expandTo = 0) {
-        disableButtons();
+        removeButtons();
         console.log(`EXPANDING...`);
         let queue = Promise.resolve();
+        let isFirstQuery = true;
         swap_links_1.forEachSwapLink((a, m) => {
             const { uniq, usid, cond, price, info, vid, strqty } = m;
             const qty = +strqty;
@@ -757,50 +734,49 @@ function addSwapButtons() {
                     .then(() => console.log(`IGNORING ${uniq} ${usid}`));
                 return;
             }
-            for (let i = n, qq = qty, q = Math.floor(qq / i); i > 0; i--, qq -= q, q = Math.floor(qq / i)) {
-                if (i > 1) {
-                    queue = queue
-                        .then(() => console.log(`ADDING ${uniq} ${n - i + 1} -> ${q}`))
-                        .then(() => addSwapCoin(cond, `${q}`, vid, info, price))
-                        .then(r => {
-                        const links = new Set();
-                        swap_links_1.getSwapLinks().forEach(l => {
-                            if (!l.hasAttribute('onClick')) {
-                                return;
-                            }
-                            const m = l.getAttribute('onClick').match(swap_links_1.CoinSwapFormOnMatcher);
-                            if (m && m.groups) {
-                                links.add(m.groups.usid);
-                            }
-                        });
-                        swap_links_1.getSwapLinks(r).forEach(l => {
-                            if (!l.hasAttribute('onClick')) {
-                                return;
-                            }
-                            const m = l.getAttribute('onClick').match(swap_links_1.CoinSwapFormOnMatcher);
-                            const usid = m && m.groups && m.groups.usid;
-                            if (!usid || links.has(usid)) {
-                                return;
-                            }
-                            links.add(usid);
-                            a.insertAdjacentElement("afterend", l);
-                            addSwapComment(l);
-                        });
-                    })
-                        .then(delay_1.randomDelay());
+            for (let i = n, qq = qty, q = Math.floor(qq / i); i > 1; i--, q = Math.floor(qq / i)) {
+                qq -= q;
+                if (!isFirstQuery) {
+                    queue = queue.then(delay_1.randomDelay());
                 }
-                else {
-                    queue = queue
-                        .then(() => console.log(`UPDATING ${uniq} ${usid} -> 1`))
-                        .then(() => updSwapCoin(usid, cond, `${q}`, vid, info, price))
-                        .then(() => updateLinkQty(a, q))
-                        .then(delay_1.randomDelay());
-                }
+                queue = queue
+                    .then(() => console.log(`ADDING ${uniq} ${n - i + 1} -> ${q}`))
+                    .then(() => addSwapCoin(cond, `${q}`, vid, info, price))
+                    .then(r => {
+                    const links = new Set();
+                    swap_links_1.getSwapLinks().forEach(l => {
+                        if (!l.hasAttribute('onClick')) {
+                            return;
+                        }
+                        const m = l.getAttribute('onClick').match(swap_links_1.CoinSwapFormOnMatcher);
+                        if (m && m.groups) {
+                            links.add(m.groups.usid);
+                        }
+                    });
+                    swap_links_1.getSwapLinks(r).forEach(l => {
+                        if (!l.hasAttribute('onClick')) {
+                            return;
+                        }
+                        const m = l.getAttribute('onClick').match(swap_links_1.CoinSwapFormOnMatcher);
+                        const usid = m && m.groups && m.groups.usid;
+                        if (!usid || links.has(usid)) {
+                            return;
+                        }
+                        links.add(usid);
+                        styleSwapLink(l);
+                        a.insertAdjacentElement("afterend", l);
+                        addSwapComment(l);
+                    });
+                })
+                    .then(delay_1.randomDelay())
+                    .then(() => console.log(`UPDATING ${uniq} ${usid} -> ${qq}`))
+                    .then(() => updSwapCoin(usid, cond, `${qq}`, vid, info, price))
+                    .then(() => updateLinkQty(a, qq));
+                isFirstQuery = false;
             }
         });
         queue.then(() => {
             console.log('DONE!');
-            enableButtons();
             updateButtons();
         });
     }
@@ -820,7 +796,7 @@ function addSwapButtons() {
         addExpandButton('expand-x10', 'Ex/10', () => expandClicked(10));
     }
     function combineClicked() {
-        disableButtons();
+        removeButtons();
         console.log(`COMBINING...`);
         let queue = Promise.resolve();
         swap_links_1.forEachSwapLink((a, m) => {
@@ -856,7 +832,6 @@ function addSwapButtons() {
         });
         queue.then(() => {
             console.log('DONE!');
-            enableButtons();
             updateButtons();
         });
     }
@@ -996,20 +971,22 @@ const ConditionColors = new Map([
     ['PRF', 3],
     ['BU', 4],
 ]);
+function styleSwapLink(a) {
+    const condBlock = a.querySelector(`.left.dgray-11`);
+    const cond = condBlock.textContent;
+    condBlock.classList.add(`marked-${ConditionColors.get(cond)}`);
+    const mintBlock = a.querySelector(`.left.gray-13`);
+    const mint = mintBlock.textContent;
+    const parts = mint.split(' ');
+    const y = parts.shift();
+    if (parts.length) {
+        mintBlock.textContent = y;
+        mintBlock.insertAdjacentHTML("beforeend", ` <span class="lgray-11">${parts.join(' ')}</span>`);
+    }
+}
+exports.styleSwapLink = styleSwapLink;
 function styleSwapLists() {
-    document.querySelectorAll('#swap-block a.list-link').forEach((a) => {
-        const condBlock = a.querySelector(`.left.dgray-11`);
-        const cond = condBlock.textContent;
-        condBlock.classList.add(`marked-${ConditionColors.get(cond)}`);
-        const mintBlock = a.querySelector(`.left.gray-13`);
-        const mint = mintBlock.textContent;
-        const parts = mint.split(' ');
-        const y = parts.shift();
-        if (parts.length) {
-            mintBlock.textContent = y;
-            mintBlock.insertAdjacentHTML("beforeend", ` <span class="lgray-11">${parts.join(' ')}</span>`);
-        }
-    });
+    document.querySelectorAll('#swap-block a.list-link').forEach(styleSwapLink);
 }
 exports.styleSwapLists = styleSwapLists;
 
@@ -1058,10 +1035,14 @@ const ajax_1 = __webpack_require__(0);
 const delay_1 = __webpack_require__(2);
 function addTrackingLinks() {
     const swapMgr = document.getElementById('swap-mgr');
-    swapMgr && swapMgr.querySelectorAll('div.left.lgray-11:contains("Track")+div.right.gray-11').forEach(div => {
-        const text = div.textContent;
+    swapMgr && swapMgr.querySelectorAll('div.left.lgray-11').forEach(div => {
+        if (!div.textContent.includes("Track")) {
+            return;
+        }
+        const next = div.nextElementSibling;
+        const text = next.textContent;
         if (text) {
-            div.innerHTML = `<a href="https://www.17track.net/en/track?nums=${text}">${text}</a>`;
+            next.innerHTML = `<a href="https://www.17track.net/en/track?nums=${text}" target="_blank">${text}</a>`;
         }
     });
 }
@@ -1085,20 +1066,22 @@ exports.showAllPrices = showAllPrices;
 function addConflictHandling() {
     hiliteConflicts();
     if (!document.getElementById('need-swap-list')) {
-        const table = document.querySelector('table.swap-coin');
-        table.querySelectorAll('input.swap-checkbox, input.swap-country-checkbox').forEach((input) => {
-            input.addEventListener('click', e => {
-                const input = e.target;
-                if (!input.checked) {
-                    let parent = input.parentElement;
-                    while (parent && parent.tagName !== 'tr') {
-                        parent = parent.parentElement;
+        const tables = document.querySelectorAll('table.swap-coin');
+        tables.forEach((table) => {
+            table.querySelectorAll('input.swap-checkbox, input.swap-country-checkbox').forEach((input) => {
+                input.addEventListener('click', e => {
+                    const input = e.target;
+                    if (!input.checked) {
+                        let parent = input.parentElement;
+                        while (parent && parent.tagName !== 'tr') {
+                            parent = parent.parentElement;
+                        }
+                        if (parent) {
+                            parent.classList.remove('conflict');
+                        }
                     }
-                    if (parent) {
-                        parent.classList.remove('conflict');
-                    }
-                }
-                hiliteConflicts();
+                    hiliteConflicts();
+                });
             });
         });
     }
@@ -1106,43 +1089,54 @@ function addConflictHandling() {
 exports.addConflictHandling = addConflictHandling;
 function hiliteConflicts() {
     const needSwapList = !!document.getElementById('need-swap-list');
-    const table = document.querySelector('table.swap-coin');
-    const rows = table.querySelectorAll('tr');
-    let checked;
-    if (needSwapList) {
-        // @ts-ignore
-        checked = rows;
-    }
-    else {
-        checked = [];
-        rows.forEach((r) => {
-            if (r.querySelector('input.swap-checkbox:checked')) {
-                checked.push(r);
-            }
-        });
-    }
-    checked.forEach((r) => {
-        const data = r.dataset;
-        const rows = table.querySelectorAll(`tr[data-tooltip-name=${JSON.stringify(data.tooltipName)}]` +
-            `[data-tooltip-subject=${JSON.stringify(data.tooltipSubject)}]` +
-            `[data-tooltip-variety=${JSON.stringify(data.tooltipVariety)}]` +
-            `[data-tooltip-km=${JSON.stringify(data.tooltipKm)}]`);
-        let dup;
+    const tables = document.querySelectorAll('table.swap-coin');
+    tables.forEach((table) => {
+        const rows = table.querySelectorAll('tr');
+        let checked;
         if (needSwapList) {
             // @ts-ignore
-            dup = rows;
+            checked = rows;
         }
         else {
-            dup = [];
+            checked = [];
             rows.forEach((r) => {
                 if (r.querySelector('input.swap-checkbox:checked')) {
-                    dup.push(r);
+                    checked.push(r);
+                }
+                else {
+                    r.classList.remove('conflict');
                 }
             });
+            const heading = table.previousElementSibling;
+            if (heading.tagName.toLowerCase() === 'h2') {
+                const all = heading.querySelector('input.swap-country-checkbox');
+                all.checked = checked.length === rows.length;
+            }
         }
-        const hasConflicts = dup.length > 1;
-        dup.forEach((r) => {
-            r.classList.toggle('conflict', hasConflicts);
+        checked.forEach((r) => {
+            const data = r.dataset;
+            const selector = `tr[data-tooltip-name=${JSON.stringify(data.tooltipName)}]` +
+                `[data-tooltip-subject=${JSON.stringify(data.tooltipSubject)}]` +
+                `[data-tooltip-variety=${JSON.stringify(data.tooltipVariety)}]` +
+                `[data-tooltip-km=${JSON.stringify(data.tooltipKm)}]`;
+            const rows = table.querySelectorAll(selector);
+            let dup;
+            if (needSwapList) {
+                // @ts-ignore
+                dup = rows;
+            }
+            else {
+                dup = [];
+                rows.forEach((r) => {
+                    if (r.querySelector('input.swap-checkbox:checked')) {
+                        dup.push(r);
+                    }
+                });
+            }
+            const hasConflicts = dup.length > 1;
+            dup.forEach((r) => {
+                r.classList.toggle('conflict', hasConflicts);
+            });
         });
     });
 }
@@ -1209,16 +1203,17 @@ const CM = new Map([
 ]);
 function ignoreUnwanted() {
     if (!document.getElementById('need-swap-list')) {
-        const table = document.querySelector('table.swap-coin');
-        table && table.querySelectorAll('tr').forEach((tr) => {
-            const markedElement = tr.querySelector('td span[class^="marked-"]');
-            const marked = markedElement && markedElement.classList;
-            const myCond = marked && CN.get(marked.item(0).split('marked-').pop()) || 0;
-            const condElement = tr.querySelector('td.td-cond');
-            const cond = condElement && CM.get(condElement.textContent) || 0;
-            if (myCond && (!cond || cond <= myCond)) {
-                tr.classList.add('ignore');
-            }
+        document.querySelectorAll('table.swap-coin').forEach(table => {
+            table.querySelectorAll('tr').forEach((tr) => {
+                const markedElement = tr.querySelector('td span[class^="marked-"]');
+                const marked = markedElement && markedElement.classList;
+                const myCond = marked && CN.get(marked.item(0).split('marked-').pop()) || 0;
+                const condElement = tr.querySelector('td.td-cond');
+                const cond = condElement && CM.get(condElement.textContent) || 0;
+                if (myCond && (!cond || cond <= myCond)) {
+                    tr.classList.add('ignore');
+                }
+            });
         });
     }
 }
@@ -1236,9 +1231,10 @@ const ajax_1 = __webpack_require__(0);
 const delay_1 = __webpack_require__(2);
 function addGalleryVisibilityToggle() {
     const gallery = document.getElementById('gallery');
-    const coins = gallery.querySelector('.coin .desc-block .coin-desc');
     let privateStatus, publicStatus;
     updateStatusElements();
+    console.log(privateStatus.length);
+    console.log(publicStatus.length);
     const buttonContainerId = 'button-container';
     const sortFilter = document.getElementById('sort-filter').parentElement;
     sortFilter.insertAdjacentHTML("afterend", `<div id="${buttonContainerId}" class="left filter-container" style="float:right">`);
@@ -1267,16 +1263,20 @@ function addGalleryVisibilityToggle() {
         let text = checked ? 'Public' : 'Private';
         let queue = Promise.resolve();
         (checked ? privateStatus : publicStatus).forEach(status => {
-            const url = status.querySelector(`~ .coin-desc div a`).href;
+            const url = status.parentElement.querySelector(`.coin-desc div a`).href;
             queue = queue
                 .then(() => ajax_1.get(url))
                 .then(response => response.text())
                 .then(text => {
-                const fragment = document.createDocumentFragment();
-                fragment.textContent = text;
-                return fragment;
+                const temp = document.createElement('template');
+                temp.innerHTML = text;
+                return temp.content;
             })
-                .then((fragment) => fragment.getElementById('coin-form').querySelector('form'))
+                .then((fragment) => {
+                const coinForm = fragment.getElementById('edit-coin-form') || document.getElementById('add-coin-form');
+                console.log(coinForm);
+                return coinForm.querySelector('form');
+            })
                 .then(form => postPublicityForm(url, form, checked))
                 .then(() => {
                 status.classList.replace(removeClass, addClass);
@@ -1289,8 +1289,8 @@ function addGalleryVisibilityToggle() {
         return queue;
     }
     function updateStatusElements() {
-        privateStatus = coins.querySelectorAll('span.status0');
-        publicStatus = coins.querySelectorAll('span.status1');
+        privateStatus = gallery.querySelectorAll('.coin .desc-block span.status0');
+        publicStatus = gallery.querySelectorAll('.coin .desc-block span.status1');
     }
     function postPublicityForm(url, form, checked) {
         form.querySelector('input[name=public]').checked = checked;
@@ -1370,15 +1370,17 @@ function estimateSwapPrices() {
     });
     function addPricesByType(byType, mint = '') {
         [...byType.keys()].sort(sortByCond).forEach((cond) => {
-            const p = byType.get(cond);
-            const avg = p.reduce((sum, val) => sum + val, 0) / p.length;
-            const min = p.reduce((min, val) => min < val ? min : val, +Infinity);
-            const max = p.reduce((max, val) => max > val ? max : val, -Infinity);
+            const p = byType.get(cond).sort();
+            const l = p.length, r = l % 2, h = (l + r) / 2;
+            // const avg = p.reduce((sum: number, val: number): number => sum + val, 0) / p.length;
+            const med = r ? p[h] : (p[h] + p[h + 1]) / 2;
+            const min = Math.min(...p); // p.reduce((min: number, val: number): number => min < val ? min : val, +Infinity);
+            const max = Math.max(...p); // p.reduce((max: number, val: number): number => max > val ? max : val, -Infinity);
             const prices = [];
             prices.push(min.toFixed(2));
-            if (avg > min) {
-                prices.push(avg.toFixed(2));
-                if (max > avg) {
+            if (med > min) {
+                prices.push(med.toFixed(2));
+                if (max > med) {
                     prices.push(max.toFixed(2));
                 }
             }
