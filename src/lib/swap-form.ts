@@ -246,8 +246,8 @@ export async function addSwapButtons() {
 
                 let {qty: vqty} = variant;
                 vqty += qty;
-                console.log(`UPDATING ${usid} -> ${vqty}`);
-                const updR = await updSwapCoin(usid, cond, vqty, vid, info, price);
+                console.log(`UPDATING ${vusid} -> ${vqty}`);
+                const updR = await updSwapCoin(vusid, cond, vqty, vid, info, price);
                 if (!updR) {
                     isUpdFailed = true;
                     break;

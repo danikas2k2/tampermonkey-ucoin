@@ -41,6 +41,12 @@ const config: webpack.Configuration = {
     },
     plugins: [
         new WebpackAutoInject({
+            SILENT: true,
+            components: {
+                AutoIncreaseVersion: true,
+                InjectAsComment: false,
+                InjectByTag: true,
+            },
         }),
     ]
 };
