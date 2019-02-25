@@ -32,7 +32,8 @@ export function estimateSwapPrices() {
     const byMint = new Map();
 
     let pricePrefix: string, priceSuffix: string;
-    swapBlock.querySelectorAll(`a.list-link`).forEach((a: HTMLAnchorElement) => {
+    const listOfLinks = swapBlock.querySelectorAll(`a.list-link`);
+    for (const a of listOfLinks) {
 
         const cond = a.querySelector(`.left.dgray-11`).textContent;
         const mint = a.querySelector(`.left.gray-13`).textContent;
@@ -61,7 +62,7 @@ export function estimateSwapPrices() {
         pc.push(price);
         pm.set(cond, pc);
         byMint.set(mint, pm);
-    });
+    }
 
     swapBlock.parentElement.insertAdjacentHTML("beforebegin", `<div class="widget estimated-prices-widget"><a class="widget-header">Estimated prices</a><div id="estimated-prices"></div></div>`);
 
@@ -70,27 +71,28 @@ export function estimateSwapPrices() {
         addPricesByType(byType);
         estimatedPrices.insertAdjacentHTML("beforeend", `<div class="list-sep"></div>`);
     }
-    byMint.forEach((byType, mint) => {
+    for (const [byType, mint] of byMint) {
         addPricesByType(byType, mint);
-    });
+    }
 
     function addPricesByType(byType: Map<string, number[]>, mint = '') {
-        [...byType.keys()].sort(sortByCond).forEach((cond: string) => {
+        const keys = [...byType.keys()].sort(sortByCond);
+        for (const cond of keys) {
             const p: number[] = byType.get(cond).sort();
-            const l = p.length, r = l % 2, h = (l + r) / 2;
+            const l = p.length - 1, r = l % 2, h = (l + r) / 2;
 
             // const avg = p.reduce((sum: number, val: number): number => sum + val, 0) / p.length;
             const med = r ? p[h] : (p[h] + p[h+1]) / 2;
-            const min = Math.min(...p); // p.reduce((min: number, val: number): number => min < val ? min : val, +Infinity);
-            const max = Math.max(...p); // p.reduce((max: number, val: number): number => max > val ? max : val, -Infinity);
+            const min = Math.min(...p);
+            const max = Math.max(...p);
 
             const prices = [];
             prices.push(min.toFixed(2));
             if (med > min) {
                 prices.push(med.toFixed(2));
-                if (max > med) {
-                    prices.push(max.toFixed(2));
-                }
+            }
+            if (max > med) {
+                prices.push(max.toFixed(2));
             }
 
             if (pricePrefix) {
@@ -108,7 +110,7 @@ export function estimateSwapPrices() {
             const m = parts.length ? ` <span class="lgray-11">${parts.join(' ')}</span>` : '';
 
             estimatedPrices.insertAdjacentHTML("beforeend", `<a class="list-link"><span class="left dgray-11 marked-${ConditionColors.get(cond)}">${cond}</span><span class="left gray-13">${y}${m}</span><span class="right blue-13">${price}</span></a>`);
-        });
+        }
     }
 
     function sortByCond(a: string, b: string): number {

@@ -4,8 +4,6 @@ import webpack from 'webpack';
 // @ts-ignore
 import WebpackAutoInject from 'webpack-auto-inject-version';
 
-
-
 const config: webpack.Configuration = {
     mode: 'production',
     context: __dirname,

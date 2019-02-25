@@ -92,16 +92,16 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-function ajax(url, method = "GET", body) {
-    return fetch(url, { method, body });
+async function ajax(url, method = "GET", body) {
+    return await fetch(url, { method, body });
 }
 exports.ajax = ajax;
-function get(url, body) {
-    return ajax(url, "GET", body);
+async function get(url, body) {
+    return await ajax(url, "GET", body);
 }
 exports.get = get;
-function post(url, body) {
-    return ajax(url, "POST", body);
+async function post(url, body) {
+    return await ajax(url, "POST", body);
 }
 exports.post = post;
 
@@ -204,14 +204,14 @@ function toComment(sourceMap) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-function delay(time) {
-    return () => new Promise(resolve => setTimeout(() => resolve(), time));
+async function delay(time) {
+    return await new Promise(resolve => setTimeout(() => resolve(), time));
 }
 exports.delay = delay;
-const minDelay = 300; // ms
-const rndDelay = 500; // ms
-function randomDelay() {
-    return delay(Math.round(minDelay + Math.random() * rndDelay));
+async function randomDelay(rndDelay = 1000, minDelay = 500) {
+    const time = Math.round(minDelay + Math.random() * rndDelay);
+    console.log(`DELAY FOR ${time} MS`);
+    return await delay(time);
 }
 exports.randomDelay = randomDelay;
 
@@ -241,58 +241,71 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ucoin_less_1 = __importDefault(__webpack_require__(6));
-document.head.insertAdjacentHTML("beforeend", `<style type="text/css">${ucoin_less_1.default}</style>`);
-'use strict';
 const links_1 = __webpack_require__(7);
 const coin_form_1 = __webpack_require__(8);
 const swap_form_1 = __webpack_require__(14);
 const swap_list_1 = __webpack_require__(16);
 const gallery_1 = __webpack_require__(17);
 const prices_1 = __webpack_require__(18);
+document.head.insertAdjacentHTML("beforeend", `<style type="text/css">${ucoin_less_1.default}</style>`);
 const UID = '28609';
 const loc = document.location.href;
-if (loc.includes('/coin/')) {
-    const tags = document.getElementById('tags');
-    if (tags) {
-        // fixTagLinks
-        tags.querySelectorAll('a[href^="/gallery/"]').forEach(links_1.updateLinkHref);
+(async function () {
+    if (loc.includes('/coin/')) {
+        const tags = document.getElementById('tags');
+        if (tags) {
+            // fixTagLinks
+            const galleryLinks = tags.querySelectorAll('a[href^="/gallery/"]');
+            for (const a of galleryLinks) {
+                links_1.updateLinkHref(a);
+            }
+        }
+        coin_form_1.addBuyDateResetButton();
+        coin_form_1.addSyncConditionToColorTable();
+        if (loc.includes('ucid=')) {
+            coin_form_1.addPublicityToggle();
+            coin_form_1.addReplacementToggle();
+        }
+        const mySwap = document.getElementById('my-swap-block');
+        if (mySwap && mySwap.querySelector('#swap-block')) {
+            swap_form_1.addSwapFormQtyButtons();
+            swap_form_1.addSwapColorMarkers();
+            swap_form_1.addSwapComments();
+            await swap_form_1.addSwapButtons();
+        }
+        swap_form_1.styleSwapLists();
+        const theySwap = document.getElementById('swap');
+        if (theySwap && theySwap.nextElementSibling.id === 'swap-block') {
+            prices_1.estimateSwapPrices();
+        }
     }
-    coin_form_1.addBuyDateResetButton();
-    coin_form_1.addSyncConditionToColorTable();
-    if (loc.includes('ucid=')) {
-        coin_form_1.addPublicityToggle();
-        coin_form_1.addReplacementToggle();
+    if (loc.includes('/gallery/') && loc.includes(`uid=${UID}`)) {
+        const gallery = document.getElementById('gallery');
+        if (gallery) {
+            // fix gallery links
+            const galleryLinks = gallery.querySelectorAll('a[href^="/gallery/"]');
+            for (const a of galleryLinks) {
+                links_1.updateLinkHref(a);
+            }
+            const queryLinks = gallery.querySelectorAll('a[href^="?"]');
+            for (const a of queryLinks) {
+                links_1.updateLinkHref(a);
+            }
+            const closeButtons = gallery.querySelectorAll('div.close');
+            for (const div of closeButtons) {
+                links_1.updateOnClickHref(div);
+            }
+        }
+        gallery_1.addGalleryVisibilityToggle();
     }
-    const mySwap = document.getElementById('my-swap-block');
-    if (mySwap && mySwap.querySelector('#swap-block')) {
-        swap_form_1.addSwapFormQtyButtons();
-        swap_form_1.addSwapColorMarkers();
-        swap_form_1.addSwapComments();
-        swap_form_1.addSwapButtons();
+    if (loc.includes('/swap-mgr/') || loc.includes('/swap-list/')) {
+        swap_list_1.addTrackingLinks();
+        swap_list_1.showAllPrices();
+        swap_list_1.addConflictHandling();
+        swap_list_1.checkSold();
+        swap_list_1.ignoreUnwanted();
     }
-    swap_form_1.styleSwapLists();
-    const theySwap = document.getElementById('swap');
-    if (theySwap && theySwap.nextElementSibling.id === 'swap-block') {
-        prices_1.estimateSwapPrices();
-    }
-}
-if (loc.includes('/gallery/') && loc.includes(`uid=${UID}`)) {
-    const gallery = document.getElementById('gallery');
-    if (gallery) {
-        // fix gallery links
-        gallery.querySelectorAll('a[href^="/gallery/"]').forEach(links_1.updateLinkHref);
-        gallery.querySelectorAll('a[href^="?"]').forEach(links_1.updateLinkHref);
-        gallery.querySelectorAll('div.close').forEach(links_1.updateOnClickHref);
-    }
-    gallery_1.addGalleryVisibilityToggle();
-}
-if (loc.includes('/swap-mgr/') || loc.includes('/swap-list/')) {
-    swap_list_1.addTrackingLinks();
-    swap_list_1.showAllPrices();
-    swap_list_1.addConflictHandling();
-    swap_list_1.checkSold();
-    swap_list_1.ignoreUnwanted();
-}
+})();
 
 
 /***/ }),
@@ -321,7 +334,6 @@ function updateLinkHref(a) {
     const newParams = newUrl.searchParams;
     newParams.delete('page');
     newParams.delete('view');
-    // @ts-ignore
     for (const [k, v] of oldParams.entries()) {
         newParams.set(k, v);
     }
@@ -343,7 +355,6 @@ function updateOnClickHref(div) {
         newUrl.pathname = oldUrl.pathname;
         const newParams = newUrl.searchParams;
         newParams.delete('page');
-        // @ts-ignore
         for (const [k, v] of oldParams.entries()) {
             newParams.set(k, v);
         }
@@ -401,23 +412,26 @@ function addSyncConditionToColorTable() {
     ]);
     // @ts-ignore
     const CL = new Map([...CN.entries()].map(([k, v]) => [v, k])); // switch conditions and colors
-    coinForm && coinForm.querySelectorAll('table div[class^="marked-"]').forEach((div) => {
-        if (div.id === 'set-color') {
-            return;
-        }
-        div.addEventListener('click', e => {
-            const div = e.target;
-            let color = null;
-            div.classList.forEach((c) => {
-                if (c.startsWith('marked-')) {
-                    color = c.split('-', 3)[1];
+    if (coinForm) {
+        const markedDivs = coinForm.querySelectorAll('table div[class^="marked-"]');
+        for (const div of markedDivs) {
+            if (div.id === 'set-color') {
+                continue;
+            }
+            div.addEventListener('click', e => {
+                const div = e.target;
+                let color = null;
+                for (const c of div.classList) {
+                    if (c.startsWith('marked-')) {
+                        color = c.split('-', 3)[1];
+                    }
+                }
+                if (CL.has(color)) {
+                    cond.value = CL.get(color);
                 }
             });
-            if (CL.has(color)) {
-                cond.value = CL.get(color);
-            }
-        });
-    });
+        }
+    }
     const tableColor = document.getElementById('edit-table-color');
     const setColor = document.getElementById('edit-set-color');
     cond.addEventListener('change', e => {
@@ -435,9 +449,9 @@ function addPublicityToggle() {
     const buttons = view.querySelector('.func-button');
     const edit = buttons.querySelector('button.btn-blue');
     const status = view.querySelector('.status-line .left');
-    buttons.querySelectorAll('.btn-l').forEach(button => {
+    for (const button of buttons.querySelectorAll('.btn-l')) {
         button.classList.add('btn-narrow');
-    });
+    }
     const form = document.getElementById('edit-coin-form').querySelector('form');
     const publicCheckbox = form.querySelector('input[name=public]');
     let checked = publicCheckbox && publicCheckbox.checked;
@@ -445,12 +459,11 @@ function addPublicityToggle() {
     edit.insertAdjacentElement("beforebegin", visibilityButton);
     visibilityButton.removeAttribute('onClick');
     visibilityButton.classList.add('btn-narrow');
-    visibilityButton.addEventListener("click", () => {
-        postPublicityForm(document.location.href, form, !checked).then(() => {
-            checked = !checked;
-            updatePublicityStatus();
-            checked ? notify_1.ok('Coin public') : notify_1.info('Coin private');
-        });
+    visibilityButton.addEventListener("click", async () => {
+        await postPublicityForm(document.location.href, form, !checked);
+        checked = !checked;
+        updatePublicityStatus();
+        checked ? notify_1.ok('Coin public') : notify_1.info('Coin private');
     });
     let prevKeyCode = -1;
     document.body.addEventListener("keydown", e => {
@@ -475,28 +488,30 @@ function addPublicityToggle() {
             status.classList.replace('status1', 'status0');
         }
     }
-    function postPublicityForm(url, form, checked) {
+    async function postPublicityForm(url, form, checked) {
         const input = form.querySelector('input[name=public]');
         if (input) {
             input.checked = checked;
         }
-        return ajax_1.post(url, new FormData(form));
+        return await ajax_1.post(url, new FormData(form));
     }
 }
 exports.addPublicityToggle = addPublicityToggle;
 function addReplacementToggle() {
     const view = document.getElementById('ucid-block');
-    const buttons = view.querySelector('.func-button');
-    const edit = buttons.querySelector('button.btn-blue');
+    const funcButtons = view.querySelector('.func-button');
+    const edit = funcButtons.querySelector('button.btn-blue');
     let replaceStatus;
-    view.querySelectorAll('.status-line + table tr').forEach((tr) => {
+    const statusRows = view.querySelectorAll('.status-line + table tr');
+    for (const tr of statusRows) {
         if (tr.querySelector('span.status2')) {
             replaceStatus = tr;
         }
-    });
-    buttons.querySelectorAll('.btn-l').forEach(button => {
+    }
+    const buttons = funcButtons.querySelectorAll('.btn-l');
+    for (const button of buttons) {
         button.classList.add('btn-narrow');
-    });
+    }
     const form = document.getElementById('edit-coin-form').querySelector('form');
     const replaceCheckbox = form.querySelector('input[name=replace]');
     let replace = replaceCheckbox && replaceCheckbox.checked;
@@ -644,17 +659,24 @@ module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\
 
 "use strict";
 
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const swap_links_1 = __webpack_require__(15);
 const delay_1 = __webpack_require__(2);
 const ajax_1 = __webpack_require__(0);
 function addSwapComments() {
-    swap_links_1.getSwapLinks().forEach(a => {
+    for (const a of swap_links_1.getSwapLinks()) {
         addSwapComment(a);
-    });
+    }
 }
 exports.addSwapComments = addSwapComments;
-function addSwapButtons() {
+async function addSwapButtons() {
     const mySwap = document.getElementById('my-swap-block');
     if (!mySwap) {
         return;
@@ -672,9 +694,9 @@ function addSwapButtons() {
     div.style.overflowX = 'hidden';
     div.style.overflowY = 'auto';
     swapBlock.insertAdjacentElement("afterbegin", div);
-    swap_links_1.forEachSwapLink(a => {
+    for (const { a } of swap_links_1.getSwapLinksWithMatches()) {
         div.insertAdjacentElement("beforeend", a);
-    });
+    }
     const buttonSet = swapBlock.querySelector('center');
     const variants = new Map();
     let couldExpand = false, couldCombine = false;
@@ -683,7 +705,7 @@ function addSwapButtons() {
         couldExpand = false;
         couldCombine = false;
         variants.clear();
-        swap_links_1.forEachSwapLink((a, m) => {
+        for (const { a, m } of swap_links_1.getSwapLinksWithMatches()) {
             const { uniq, usid, cond, price, info, vid, strqty } = m;
             const qty = +strqty;
             if (qty > 1) {
@@ -692,14 +714,14 @@ function addSwapButtons() {
             let variant;
             if (variants.has(uniq)) {
                 variant = variants.get(uniq);
-                variant.qty += qty;
+                variant.total += qty;
                 couldCombine = true;
             }
             else {
-                variant = { usid, cond, price, info, vid, qty };
+                variant = { a, usid, cond, price, info, vid, qty, total: qty };
             }
             variants.set(uniq, variant);
-        });
+        }
     }
     function updateButtons() {
         updateSwapVariants();
@@ -714,71 +736,103 @@ function addSwapButtons() {
         if (a.hasAttribute('onClick')) {
             a.setAttribute('onClick', a.getAttribute('onClick').replace(swap_links_1.CoinSwapFormOnMatcher, `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${qty}', '$<replica>'`));
         }
-        a.querySelectorAll('span.left.dblue-13').forEach(a => a.remove());
+        for (const span of a.querySelectorAll('span.left.dblue-13')) {
+            span.remove();
+        }
         if (qty > 1) {
-            a.querySelectorAll('span.left.gray-13.wrap').forEach(a => a.insertAdjacentHTML("afterend", `<span class="left dblue-13"><span>&times;</span>${qty}</span>`));
+            for (const span of a.querySelectorAll('span.left.gray-13.wrap')) {
+                span.insertAdjacentHTML("afterend", `<span class="left dblue-13"><span>&times;</span>${qty}</span>`);
+            }
         }
     }
     // expandTo - number of links (0 for unlimited)
-    function expandClicked(expandTo = 0) {
+    async function expandClicked(expandTo = 0) {
+        var e_1, _a;
         removeButtons();
         console.log(`EXPANDING...`);
-        let queue = Promise.resolve();
+        let isAddFailed = false;
+        let isUpdFailed = false;
         let isFirstQuery = true;
-        swap_links_1.forEachSwapLink((a, m) => {
-            const { uniq, usid, cond, price, info, vid, strqty } = m;
-            const qty = +strqty;
-            const n = expandTo > 0 ? Math.min(qty, expandTo) : qty;
-            if (n <= 1) {
-                queue = queue
-                    .then(() => console.log(`IGNORING ${uniq} ${usid}`));
-                return;
-            }
-            for (let i = n, qq = qty, q = Math.floor(qq / i); i > 1; i--, q = Math.floor(qq / i)) {
-                qq -= q;
-                if (!isFirstQuery) {
-                    queue = queue.then(delay_1.randomDelay());
+        try {
+            for (var _b = __asyncValues(swap_links_1.getSwapLinksWithMatches()), _c; _c = await _b.next(), !_c.done;) {
+                const { a, m } = _c.value;
+                const { uniq, usid, cond, price, info, vid, strqty } = m;
+                const qty = +strqty;
+                const n = expandTo > 0 ? Math.min(qty, expandTo) : qty;
+                if (n <= 1) {
+                    console.log(`IGNORING ${uniq} ${usid}`);
+                    continue; // return?
                 }
-                queue = queue
-                    .then(() => console.log(`ADDING ${uniq} ${n - i + 1} -> ${q}`))
-                    .then(() => addSwapCoin(cond, `${q}`, vid, info, price))
-                    .then(r => {
+                for (let i = n, qq = qty, q = Math.floor(qq / i); i > 1; i--, q = Math.floor(qq / i)) {
+                    qq -= q;
+                    if (!isFirstQuery) {
+                        await delay_1.randomDelay();
+                    }
+                    isFirstQuery = false;
+                    console.log(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
+                    const addR = await addSwapCoin(cond, `${q}`, vid, info, price);
+                    if (!addR) {
+                        isAddFailed = true;
+                        break;
+                    }
                     const links = new Set();
-                    swap_links_1.getSwapLinks().forEach(l => {
+                    for (const l of swap_links_1.getSwapLinks()) {
                         if (!l.hasAttribute('onClick')) {
-                            return;
+                            continue;
                         }
                         const m = l.getAttribute('onClick').match(swap_links_1.CoinSwapFormOnMatcher);
                         if (m && m.groups) {
                             links.add(m.groups.usid);
                         }
-                    });
-                    swap_links_1.getSwapLinks(r).forEach(l => {
+                    }
+                    for (const l of swap_links_1.getSwapLinks(addR)) {
                         if (!l.hasAttribute('onClick')) {
-                            return;
+                            continue;
                         }
                         const m = l.getAttribute('onClick').match(swap_links_1.CoinSwapFormOnMatcher);
                         const usid = m && m.groups && m.groups.usid;
                         if (!usid || links.has(usid)) {
-                            return;
+                            continue;
                         }
                         links.add(usid);
                         styleSwapLink(l);
                         a.insertAdjacentElement("afterend", l);
                         addSwapComment(l);
-                    });
-                })
-                    .then(delay_1.randomDelay())
-                    .then(() => console.log(`UPDATING ${uniq} ${usid} -> ${qq}`))
-                    .then(() => updSwapCoin(usid, cond, `${qq}`, vid, info, price))
-                    .then(() => updateLinkQty(a, qq));
-                isFirstQuery = false;
+                    }
+                    if (!isFirstQuery) {
+                        await delay_1.randomDelay();
+                    }
+                    isFirstQuery = false;
+                    console.log(`UPDATING ${uniq} ${usid} -> ${qq}`);
+                    const updR = await updSwapCoin(usid, cond, `${qq}`, vid, info, price);
+                    if (!updR) {
+                        isUpdFailed = true;
+                        break;
+                    }
+                    updateLinkQty(a, qq);
+                }
+                if (isAddFailed || isUpdFailed) {
+                    break;
+                }
             }
-        });
-        queue.then(() => {
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        if (isAddFailed) {
+            console.log('ADD FAILED :(');
+        }
+        else if (isUpdFailed) {
+            console.log('UPDATE FAILED :(');
+        }
+        else {
             console.log('DONE!');
-            updateButtons();
-        });
+        }
+        updateButtons();
     }
     function addExpandButton(id, text, clickHandler) {
         const expand = document.getElementById(id);
@@ -795,45 +849,71 @@ function addSwapButtons() {
         addExpandButton('expand-x5', 'Ex/5', () => expandClicked(5));
         addExpandButton('expand-x10', 'Ex/10', () => expandClicked(10));
     }
-    function combineClicked() {
+    async function combineClicked() {
+        var e_2, _a;
         removeButtons();
         console.log(`COMBINING...`);
-        let queue = Promise.resolve();
-        swap_links_1.forEachSwapLink((a, m) => {
-            const { uniq, usid, cond, price, info, vid, strqty } = m;
-            const qty = +strqty;
-            if (variants.has(uniq)) {
-                if (usid != variants.get(uniq).usid) {
-                    queue = queue
-                        .then(() => console.log(`REMOVING ${usid}`))
-                        .then(() => delSwapCoin(usid))
-                        .then(() => a.remove())
-                        .then(delay_1.randomDelay());
+        let isDelFailed = false;
+        let isUpdFailed = false;
+        let isFirstQuery = true;
+        try {
+            for (var _b = __asyncValues(swap_links_1.getSwapLinksWithMatches()), _c; _c = await _b.next(), !_c.done;) {
+                const { a, m } = _c.value;
+                const { uniq, usid, cond, price, info, vid, strqty } = m;
+                const qty = +strqty;
+                if (!variants.has(uniq)) {
+                    console.log(`IGNORING ${usid}`);
+                    continue;
                 }
-                else {
-                    const vqty = variants.get(uniq).qty;
-                    if (qty != vqty) {
-                        queue = queue
-                            .then(() => console.log(`UPDATING ${usid} -> ${vqty}`))
-                            .then(() => updSwapCoin(usid, cond, vqty, vid, info, price))
-                            .then(() => updateLinkQty(a, vqty))
-                            .then(delay_1.randomDelay());
+                const variant = variants.get(uniq);
+                const { usid: vusid } = variant;
+                if (usid != vusid) {
+                    if (!isFirstQuery) {
+                        await delay_1.randomDelay();
                     }
-                    else {
-                        queue = queue
-                            .then(() => console.log(`IGNORING ${usid}`));
+                    isFirstQuery = false;
+                    console.log(`REMOVING ${usid}`);
+                    const delR = await delSwapCoin(usid);
+                    if (!delR) {
+                        isDelFailed = true;
+                        break;
                     }
+                    a.remove();
+                    if (!isFirstQuery) {
+                        await delay_1.randomDelay();
+                    }
+                    isFirstQuery = false;
+                    let { qty: vqty } = variant;
+                    vqty += qty;
+                    console.log(`UPDATING ${usid} -> ${vqty}`);
+                    const updR = await updSwapCoin(usid, cond, vqty, vid, info, price);
+                    if (!updR) {
+                        isUpdFailed = true;
+                        break;
+                    }
+                    const { a: va } = variant;
+                    updateLinkQty(va, vqty);
+                    variant.qty = vqty;
                 }
             }
-            else {
-                queue = queue
-                    .then(() => console.log(`IGNORING ${usid}`));
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
             }
-        });
-        queue.then(() => {
+            finally { if (e_2) throw e_2.error; }
+        }
+        if (isDelFailed) {
+            console.log('ADD FAILED :(');
+        }
+        else if (isUpdFailed) {
+            console.log('UPDATE FAILED :(');
+        }
+        else {
             console.log('DONE!');
-            updateButtons();
-        });
+        }
+        updateButtons();
     }
     function addCombineButtons() {
         const id = 'combine';
@@ -847,22 +927,22 @@ function addSwapButtons() {
         }
     }
     function removeExpandButtons() {
-        buttonSet.querySelectorAll('button.btn--expander').forEach((b) => {
+        for (const b of buttonSet.querySelectorAll('button.btn--expander')) {
             b.style.display = 'none';
-        });
+        }
     }
     function removeCombineButtons() {
-        buttonSet.querySelectorAll('button.btn--combiner').forEach((b) => {
+        for (const b of buttonSet.querySelectorAll('button.btn--combiner')) {
             b.style.display = 'none';
-        });
+        }
     }
-    function addSwapCoin(cond, qty, vid, info, price) {
-        return updSwapCoin('', cond, qty, vid, info, price, 'addswapcoin');
+    async function addSwapCoin(cond, qty, vid, info, price) {
+        return await updSwapCoin('', cond, qty, vid, info, price, 'addswapcoin');
     }
-    function delSwapCoin(usid) {
-        return updSwapCoin(usid, '', '', '', '', '', 'delswapcoin');
+    async function delSwapCoin(usid) {
+        return await updSwapCoin(usid, '', '', '', '', '', 'delswapcoin');
     }
-    function updSwapCoin(usid, cond, qty, vid, info, price, action = 'editswapcoin') {
+    async function updSwapCoin(usid, cond, qty, vid, info, price, action = 'editswapcoin') {
         const swapForm = document.getElementById('swap-form');
         const data = new FormData(swapForm);
         data.set('usid', usid);
@@ -872,13 +952,15 @@ function addSwapButtons() {
         data.set('comment', info);
         data.set('price', price);
         data.set('action', action);
-        return ajax_1.post(document.location.href, data)
-            .then(response => response.text())
-            .then(text => {
-            const temp = document.createElement('template');
-            temp.innerHTML = text;
-            return temp.content;
-        });
+        const response = await ajax_1.post(document.location.href, data);
+        console.log(response);
+        if (response.status !== 200) {
+            return null;
+        }
+        const text = await response.text();
+        const temp = document.createElement('template');
+        temp.innerHTML = text;
+        return temp.content;
     }
 }
 exports.addSwapButtons = addSwapButtons;
@@ -915,13 +997,14 @@ function addSwapColorMarkers() {
     const cond = document.getElementById('swap-cond');
     cond.insertAdjacentHTML("afterend", `<fieldset id="${id}"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
     const fieldset = document.getElementById(id);
-    cond.querySelectorAll('option').forEach((o) => {
+    const options = cond.querySelectorAll('option');
+    for (const o of options) {
         const val = o.value;
         const text = val ? o.textContent : 'Without condition';
         const checked = (val === '3') ? 'checked' : '';
         const style = o.getAttribute('style') || '';
         fieldset.insertAdjacentHTML("beforeend", `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${val}" ${checked} type="radio"/>${text}</label>`);
-    });
+    }
     cond.remove();
     const _onCoinSwapForm = CoinSwapFormOn;
     if (!_onCoinSwapForm) {
@@ -986,7 +1069,10 @@ function styleSwapLink(a) {
 }
 exports.styleSwapLink = styleSwapLink;
 function styleSwapLists() {
-    document.querySelectorAll('#swap-block a.list-link').forEach(styleSwapLink);
+    const listOfLinks = document.querySelectorAll('#swap-block a.list-link');
+    for (const a of listOfLinks) {
+        styleSwapLink(a);
+    }
 }
 exports.styleSwapLists = styleSwapLists;
 
@@ -999,16 +1085,18 @@ exports.styleSwapLists = styleSwapLists;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CoinSwapFormOnMatcher = /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
-function getSwapLinks(d = document) {
+function* getSwapLinks(d = document) {
     const swapBlock = d.getElementById('swap-block');
-    return swapBlock
-        ? swapBlock.querySelectorAll('a.list-link')
-        : d.querySelectorAll('a.imaginary-list-link'); // should return empty list
+    if (swapBlock) {
+        const listOfLinks = swapBlock.querySelectorAll('a.list-link');
+        for (const a of listOfLinks) {
+            yield a;
+        }
+    }
 }
 exports.getSwapLinks = getSwapLinks;
-function forEachSwapLink(fn) {
-    const swapLinks = getSwapLinks();
-    swapLinks.forEach(a => {
+function* getSwapLinksWithMatches() {
+    for (const a of getSwapLinks()) {
         if (a.querySelector(`div.ico-16`)) {
             return;
         }
@@ -1016,12 +1104,12 @@ function forEachSwapLink(fn) {
             const m = a.getAttribute('onClick').match(exports.CoinSwapFormOnMatcher);
             if (m && m.groups) {
                 const { cond, info, vid } = m.groups;
-                fn(a, Object.assign({}, m.groups, { uniq: `${cond} ${vid} ${info}` }));
+                yield { a, m: Object.assign({}, m.groups, { uniq: `${cond} ${vid} ${info}` }) };
             }
         }
-    });
+    }
 }
-exports.forEachSwapLink = forEachSwapLink;
+exports.getSwapLinksWithMatches = getSwapLinksWithMatches;
 
 
 /***/ }),
@@ -1030,25 +1118,36 @@ exports.forEachSwapLink = forEachSwapLink;
 
 "use strict";
 
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
 const delay_1 = __webpack_require__(2);
 function addTrackingLinks() {
     const swapMgr = document.getElementById('swap-mgr');
-    swapMgr && swapMgr.querySelectorAll('div.left.lgray-11').forEach(div => {
-        if (!div.textContent.includes("Track")) {
-            return;
+    if (swapMgr) {
+        const trackingNumbers = swapMgr.querySelectorAll('div.left.lgray-11');
+        for (const div of trackingNumbers) {
+            if (!div.textContent.includes("Track")) {
+                continue;
+            }
+            const next = div.nextElementSibling;
+            const text = next.textContent;
+            if (text) {
+                next.innerHTML = `<a href="https://www.17track.net/en/track?nums=${text}" target="_blank">${text}</a>`;
+            }
         }
-        const next = div.nextElementSibling;
-        const text = next.textContent;
-        if (text) {
-            next.innerHTML = `<a href="https://www.17track.net/en/track?nums=${text}" target="_blank">${text}</a>`;
-        }
-    });
+    }
 }
 exports.addTrackingLinks = addTrackingLinks;
 function showAllPrices() {
-    document.querySelectorAll('table.swap-coin tr').forEach((tr) => {
+    const swapRows = document.querySelectorAll('table.swap-coin tr');
+    for (const tr of swapRows) {
         const td = tr.querySelector('.td-cond + *');
         const myPrice = +td.querySelector('span.blue-13').textContent;
         const prefix = td.querySelector('span.gray-11:first-child').textContent;
@@ -1060,16 +1159,17 @@ function showAllPrices() {
                 td.insertAdjacentHTML("beforeend", `<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
             }
         }
-    });
+    }
 }
 exports.showAllPrices = showAllPrices;
 function addConflictHandling() {
-    hiliteConflicts();
+    highlightConflicts();
     if (!document.getElementById('need-swap-list')) {
         const tables = document.querySelectorAll('table.swap-coin');
-        tables.forEach((table) => {
-            table.querySelectorAll('input.swap-checkbox, input.swap-country-checkbox').forEach((input) => {
-                input.addEventListener('click', e => {
+        for (const table of tables) {
+            const checkboxes = table.querySelectorAll('input.swap-checkbox, input.swap-country-checkbox');
+            for (const checkbox of checkboxes) {
+                checkbox.addEventListener('click', e => {
                     const input = e.target;
                     if (!input.checked) {
                         let parent = input.parentElement;
@@ -1080,65 +1180,48 @@ function addConflictHandling() {
                             parent.classList.remove('conflict');
                         }
                     }
-                    hiliteConflicts();
+                    highlightConflicts();
                 });
-            });
-        });
+            }
+        }
     }
 }
 exports.addConflictHandling = addConflictHandling;
-function hiliteConflicts() {
+function highlightConflicts() {
     const needSwapList = !!document.getElementById('need-swap-list');
     const tables = document.querySelectorAll('table.swap-coin');
-    tables.forEach((table) => {
-        const rows = table.querySelectorAll('tr');
-        let checked;
-        if (needSwapList) {
-            // @ts-ignore
-            checked = rows;
-        }
-        else {
-            checked = [];
-            rows.forEach((r) => {
-                if (r.querySelector('input.swap-checkbox:checked')) {
-                    checked.push(r);
-                }
-                else {
-                    r.classList.remove('conflict');
-                }
-            });
-            const heading = table.previousElementSibling;
-            if (heading.tagName.toLowerCase() === 'h2') {
-                const all = heading.querySelector('input.swap-country-checkbox');
-                all.checked = checked.length === rows.length;
+    for (const table of tables) {
+        let rows = [...table.querySelectorAll('tr')];
+        const checked = rows.filter((r) => {
+            if (r.matches('tr input.swap-checkbox:checked')) {
+                return true;
             }
+            r.classList.remove('conflict');
+        });
+        const heading = table.previousElementSibling;
+        if (heading.tagName.toLowerCase() === 'h2') {
+            const all = heading.querySelector('input.swap-country-checkbox, input.edit-country-checkbox');
+            all.checked = checked.length === rows.length;
         }
-        checked.forEach((r) => {
+        if (!needSwapList) {
+            rows = checked;
+        }
+        for (const r of rows) {
             const data = r.dataset;
             const selector = `tr[data-tooltip-name=${JSON.stringify(data.tooltipName)}]` +
                 `[data-tooltip-subject=${JSON.stringify(data.tooltipSubject)}]` +
                 `[data-tooltip-variety=${JSON.stringify(data.tooltipVariety)}]` +
                 `[data-tooltip-km=${JSON.stringify(data.tooltipKm)}]`;
-            const rows = table.querySelectorAll(selector);
-            let dup;
-            if (needSwapList) {
-                // @ts-ignore
-                dup = rows;
+            let rows = [...table.querySelectorAll(selector)];
+            if (!needSwapList) {
+                rows = rows.filter(r => r.matches('tr input.swap-checkbox:checked'));
             }
-            else {
-                dup = [];
-                rows.forEach((r) => {
-                    if (r.querySelector('input.swap-checkbox:checked')) {
-                        dup.push(r);
-                    }
-                });
-            }
-            const hasConflicts = dup.length > 1;
-            dup.forEach((r) => {
+            const hasConflicts = rows.length > 1;
+            for (const r of rows) {
                 r.classList.toggle('conflict', hasConflicts);
-            });
-        });
-    });
+            }
+        }
+    }
 }
 function checkSold() {
     const needSwapList = document.getElementById('need-swap-list');
@@ -1151,16 +1234,21 @@ function checkSold() {
             const actionBoard = needSwapList.querySelector('.action-board');
             actionBoard.insertAdjacentHTML("beforeend", `<a class="btn-s btn-gray ico-del" id="${delAllButtonId}" style="float: right;"><div class="ico-16"></div></a>`);
             const button = document.getElementById(delAllButtonId);
-            button.addEventListener('click', () => {
+            button.addEventListener('click', async () => {
+                var e_1, _a;
                 if (!confirm('Are you sure you want to delete these coins?')) {
                     return false;
                 }
-                let queue = Promise.resolve();
-                soldList.forEach(sold => {
-                    queue = queue.then(() => {
+                let isFirstRequest = true;
+                try {
+                    for (var soldList_1 = __asyncValues(soldList), soldList_1_1; soldList_1_1 = await soldList_1.next(), !soldList_1_1.done;) {
+                        const sold = soldList_1_1.value;
+                        if (!isFirstRequest) {
+                            await delay_1.randomDelay();
+                        }
+                        isFirstRequest = false;
                         const { href } = sold.querySelector('a.act');
-                        return ajax_1.get(href);
-                    }).then(() => {
+                        await ajax_1.get(href);
                         const tree = document.getElementById('tree');
                         const soldCountElement = tree.querySelector('a.region.list-link div.right.blue-13 sup');
                         if (--soldCount) {
@@ -1170,11 +1258,16 @@ function checkSold() {
                             soldCountElement.remove();
                         }
                         sold.remove();
-                    }).then(delay_1.randomDelay());
-                });
-                queue.then(() => {
-                    button.remove();
-                });
+                    }
+                }
+                catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                finally {
+                    try {
+                        if (soldList_1_1 && !soldList_1_1.done && (_a = soldList_1.return)) await _a.call(soldList_1);
+                    }
+                    finally { if (e_1) throw e_1.error; }
+                }
+                button.remove();
             });
         }
     }
@@ -1203,8 +1296,10 @@ const CM = new Map([
 ]);
 function ignoreUnwanted() {
     if (!document.getElementById('need-swap-list')) {
-        document.querySelectorAll('table.swap-coin').forEach(table => {
-            table.querySelectorAll('tr').forEach((tr) => {
+        const tables = document.querySelectorAll('table.swap-coin');
+        for (const table of tables) {
+            const rows = table.querySelectorAll('tr');
+            for (const tr of rows) {
                 const markedElement = tr.querySelector('td span[class^="marked-"]');
                 const marked = markedElement && markedElement.classList;
                 const myCond = marked && CN.get(marked.item(0).split('marked-').pop()) || 0;
@@ -1213,8 +1308,8 @@ function ignoreUnwanted() {
                 if (myCond && (!cond || cond <= myCond)) {
                     tr.classList.add('ignore');
                 }
-            });
-        });
+            }
+        }
     }
 }
 exports.ignoreUnwanted = ignoreUnwanted;
@@ -1226,6 +1321,13 @@ exports.ignoreUnwanted = ignoreUnwanted;
 
 "use strict";
 
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
 const delay_1 = __webpack_require__(2);
@@ -1233,8 +1335,6 @@ function addGalleryVisibilityToggle() {
     const gallery = document.getElementById('gallery');
     let privateStatus, publicStatus;
     updateStatusElements();
-    console.log(privateStatus.length);
-    console.log(publicStatus.length);
     const buttonContainerId = 'button-container';
     const sortFilter = document.getElementById('sort-filter').parentElement;
     sortFilter.insertAdjacentHTML("afterend", `<div id="${buttonContainerId}" class="left filter-container" style="float:right">`);
@@ -1257,44 +1357,46 @@ function addGalleryVisibilityToggle() {
         hideButtonCount.textContent = `(${publicStatus.length})`;
         hideButton.style.display = publicStatus.length ? 'block' : 'none';
     }
-    function toggleGroupVisibility(checked) {
+    async function toggleGroupVisibility(checked) {
+        var e_1, _a;
         let addClass = `status${checked ? 1 : 0}`;
         let removeClass = `status${checked ? 0 : 1}`;
-        let text = checked ? 'Public' : 'Private';
-        let queue = Promise.resolve();
-        (checked ? privateStatus : publicStatus).forEach(status => {
-            const url = status.parentElement.querySelector(`.coin-desc div a`).href;
-            queue = queue
-                .then(() => ajax_1.get(url))
-                .then(response => response.text())
-                .then(text => {
+        let statusText = checked ? 'Public' : 'Private';
+        const statusList = checked ? privateStatus : publicStatus;
+        try {
+            for (var statusList_1 = __asyncValues(statusList), statusList_1_1; statusList_1_1 = await statusList_1.next(), !statusList_1_1.done;) {
+                const status = statusList_1_1.value;
+                const url = status.parentElement.querySelector(`.coin-desc div a`).href;
+                const response = await ajax_1.get(url);
+                const responseText = await response.text();
                 const temp = document.createElement('template');
-                temp.innerHTML = text;
-                return temp.content;
-            })
-                .then((fragment) => {
+                temp.innerHTML = responseText;
+                const fragment = temp.content;
                 const coinForm = fragment.getElementById('edit-coin-form') || document.getElementById('add-coin-form');
-                console.log(coinForm);
-                return coinForm.querySelector('form');
-            })
-                .then(form => postPublicityForm(url, form, checked))
-                .then(() => {
+                const form = coinForm.querySelector('form');
+                await postPublicityForm(url, form, checked);
                 status.classList.replace(removeClass, addClass);
-                status.textContent = text;
+                status.textContent = statusText;
                 updateStatusElements();
                 toggleButtonVisibility();
-            })
-                .then(delay_1.randomDelay());
-        });
-        return queue;
+                await delay_1.randomDelay();
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (statusList_1_1 && !statusList_1_1.done && (_a = statusList_1.return)) await _a.call(statusList_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
     }
     function updateStatusElements() {
         privateStatus = gallery.querySelectorAll('.coin .desc-block span.status0');
         publicStatus = gallery.querySelectorAll('.coin .desc-block span.status1');
     }
-    function postPublicityForm(url, form, checked) {
+    async function postPublicityForm(url, form, checked) {
         form.querySelector('input[name=public]').checked = checked;
-        return ajax_1.post(url, new FormData(form));
+        return await ajax_1.post(url, new FormData(form));
     }
 }
 exports.addGalleryVisibilityToggle = addGalleryVisibilityToggle;
@@ -1336,7 +1438,8 @@ function estimateSwapPrices() {
     const byType = new Map();
     const byMint = new Map();
     let pricePrefix, priceSuffix;
-    swapBlock.querySelectorAll(`a.list-link`).forEach((a) => {
+    const listOfLinks = swapBlock.querySelectorAll(`a.list-link`);
+    for (const a of listOfLinks) {
         const cond = a.querySelector(`.left.dgray-11`).textContent;
         const mint = a.querySelector(`.left.gray-13`).textContent;
         const priceElement = a.querySelector(`.right.blue-13`);
@@ -1358,31 +1461,32 @@ function estimateSwapPrices() {
         pc.push(price);
         pm.set(cond, pc);
         byMint.set(mint, pm);
-    });
+    }
     swapBlock.parentElement.insertAdjacentHTML("beforebegin", `<div class="widget estimated-prices-widget"><a class="widget-header">Estimated prices</a><div id="estimated-prices"></div></div>`);
     const estimatedPrices = document.getElementById('estimated-prices');
     if (byMint.size > 1) {
         addPricesByType(byType);
         estimatedPrices.insertAdjacentHTML("beforeend", `<div class="list-sep"></div>`);
     }
-    byMint.forEach((byType, mint) => {
+    for (const [byType, mint] of byMint) {
         addPricesByType(byType, mint);
-    });
+    }
     function addPricesByType(byType, mint = '') {
-        [...byType.keys()].sort(sortByCond).forEach((cond) => {
+        const keys = [...byType.keys()].sort(sortByCond);
+        for (const cond of keys) {
             const p = byType.get(cond).sort();
-            const l = p.length, r = l % 2, h = (l + r) / 2;
+            const l = p.length - 1, r = l % 2, h = (l + r) / 2;
             // const avg = p.reduce((sum: number, val: number): number => sum + val, 0) / p.length;
             const med = r ? p[h] : (p[h] + p[h + 1]) / 2;
-            const min = Math.min(...p); // p.reduce((min: number, val: number): number => min < val ? min : val, +Infinity);
-            const max = Math.max(...p); // p.reduce((max: number, val: number): number => max > val ? max : val, -Infinity);
+            const min = Math.min(...p);
+            const max = Math.max(...p);
             const prices = [];
             prices.push(min.toFixed(2));
             if (med > min) {
                 prices.push(med.toFixed(2));
-                if (max > med) {
-                    prices.push(max.toFixed(2));
-                }
+            }
+            if (max > med) {
+                prices.push(max.toFixed(2));
             }
             if (pricePrefix) {
                 prices[0] = `<span class="lgray-11">${pricePrefix}</span>${prices[0]}`;
@@ -1396,7 +1500,7 @@ function estimateSwapPrices() {
             const y = parts.shift();
             const m = parts.length ? ` <span class="lgray-11">${parts.join(' ')}</span>` : '';
             estimatedPrices.insertAdjacentHTML("beforeend", `<a class="list-link"><span class="left dgray-11 marked-${ConditionColors.get(cond)}">${cond}</span><span class="left gray-13">${y}${m}</span><span class="right blue-13">${price}</span></a>`);
-        });
+        }
     }
     function sortByCond(a, b) {
         return ConditionValues.get(b) - ConditionValues.get(a);

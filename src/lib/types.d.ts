@@ -9,6 +9,11 @@ interface CoinSwapFormOnMatchGroups {
     replica?: string,
 }
 
+interface CoinSwapAnchorAndMatchTuple {
+    a: HTMLAnchorElement,
+    m: CoinSwapFormOnMatchGroups,
+}
+
 interface CoinSwapFormOnMatchResult extends RegExpMatchArray {
     groups: CoinSwapFormOnMatchGroups,
 }
