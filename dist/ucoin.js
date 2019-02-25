@@ -1466,7 +1466,7 @@ function estimateSwapPrices() {
         addPricesByType(byType);
         estimatedPrices.insertAdjacentHTML("beforeend", `<div class="list-sep"></div>`);
     }
-    for (const [byType, mint] of byMint) {
+    for (const [mint, byType] of byMint) {
         addPricesByType(byType, mint);
     }
     function addPricesByType(byType, mint = '') {
