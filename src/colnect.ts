@@ -61,13 +61,13 @@ if (type === 'coins' && loc.includes('/coin/')) {
     const itemYearVariants = itemFullDetails.querySelectorAll('>.year_variants >ul >li[data-id]');
 
     // clicking on year row
-    itemYearVariants.forEach(itemYearVariant => {
+    for (const itemYearVariant of itemYearVariants) {
         itemYearVariant.addEventListener("click", e => {
-            const li = <HTMLLIElement>e.currentTarget;
+            const li = <HTMLLIElement> e.currentTarget;
             li.querySelector('.ibox_list[data-lt="2"] >.pop.condition')
                 .dispatchEvent(new MouseEvent('mouseover'));
         });
-    });
+    }
 
 
     const _q: {[key: string]: number} = {P: 1, FA: 2, G: 3, VG: 4, FI: 5, VF: 6, XF: 7, UNC: 8, BU: 9, FDC: 10};
@@ -82,11 +82,11 @@ if (type === 'coins' && loc.includes('/coin/')) {
 
     function updateOverallCondition(e: Event, current: number, container: HTMLElement) {
         const variants: number[] = [];
-        itemYearVariants.forEach((n: HTMLElement) => {
+        for (const n of itemYearVariants) {
             variants.push(n.classList.contains('open')
                 ? current
                 : q(n.querySelector('ul.oth_inv').textContent.split(':', 2).pop().trim()));
-        });
+        }
 
         const best = Math.max(...variants);
         if (best && best !== q(itemCondition.textContent)) {

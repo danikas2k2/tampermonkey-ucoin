@@ -1,24 +1,26 @@
 export const CoinSwapFormOnMatcher = /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
 
-export function getSwapLinks(d: DocumentFragment = document): NodeListOf<HTMLAnchorElement> {
+export function* getSwapLinks(d: DocumentFragment = document): IterableIterator<HTMLAnchorElement> {
     const swapBlock = d.getElementById('swap-block');
-    return swapBlock
-        ? swapBlock.querySelectorAll('a.list-link')
-        : d.querySelectorAll('a.imaginary-list-link'); // should return empty list
+    if (swapBlock) {
+        const listOfLinks = <NodeListOf<HTMLAnchorElement>> swapBlock.querySelectorAll('a.list-link');
+        for (const a of listOfLinks) {
+            yield a;
+        }
+    }
 }
 
-export function forEachSwapLink(fn: (a: HTMLAnchorElement, m: CoinSwapFormOnMatchGroups) => void): void {
-    const swapLinks = getSwapLinks();
-    swapLinks.forEach(a => {
+export function* getSwapLinksWithMatches(): IterableIterator<CoinSwapAnchorAndMatchTuple> {
+    for (const a of getSwapLinks()) {
         if (a.querySelector(`div.ico-16`)) {
             return;
         }
         if (a.hasAttribute('onClick')) {
-            const m = <CoinSwapFormOnMatchResult>a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+            const m = <CoinSwapFormOnMatchResult> a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
             if (m && m.groups) {
                 const {cond, info, vid} = m.groups;
-                fn(a, {...m.groups, uniq: `${cond} ${vid} ${info}`});
+                yield {a, m: {...m.groups, uniq: `${cond} ${vid} ${info}`}};
             }
         }
-    });
+    }
 }

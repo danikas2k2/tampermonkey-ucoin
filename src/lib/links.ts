@@ -11,7 +11,6 @@ export function updateLinkHref(a: HTMLAnchorElement) {
     newParams.delete('page');
     newParams.delete('view');
 
-    // @ts-ignore
     for (const [k, v] of oldParams.entries()) {
         newParams.set(k, v);
     }
@@ -37,7 +36,6 @@ export function updateOnClickHref(div: HTMLDivElement) {
         const newParams = newUrl.searchParams;
         newParams.delete('page');
 
-        // @ts-ignore
         for (const [k, v] of oldParams.entries()) {
             newParams.set(k, v);
         }
@@ -45,7 +43,7 @@ export function updateOnClickHref(div: HTMLDivElement) {
         if (document.getElementById('status-filter')) {
             newParams.delete('status');
         } else {
-            const a = <HTMLAnchorElement>div.querySelector('a.switcher');
+            const a = <HTMLAnchorElement> div.querySelector('a.switcher');
             if (a) {
                 newParams.delete('view');
                 newParams.delete(new URL(a.href, loc).searchParams.get('view'));

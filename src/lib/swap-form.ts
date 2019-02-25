@@ -1,17 +1,17 @@
 declare var CoinSwapFormOn: (...args: string[]) => void;
 
-import {CoinSwapFormOnMatcher, forEachSwapLink, getSwapLinks} from "./swap-links";
+import {CoinSwapFormOnMatcher, getSwapLinks, getSwapLinksWithMatches} from "./swap-links";
 import {randomDelay} from "./delay";
 import {post} from "./ajax";
 
 export function addSwapComments() {
-    getSwapLinks().forEach(a => {
+    for (const a of getSwapLinks()) {
         addSwapComment(a);
-    });
+    }
 }
 
-export function addSwapButtons() {
-    const mySwap = <HTMLElement>document.getElementById('my-swap-block');
+export async function addSwapButtons() {
+    const mySwap = <HTMLElement> document.getElementById('my-swap-block');
     if (!mySwap) {
         return;
     }
@@ -20,21 +20,21 @@ export function addSwapButtons() {
         mySwap.classList.remove('hide');
         mySwap.style.display = '';
 
-        const showButton = <HTMLElement>mySwap.previousSibling;
+        const showButton = <HTMLElement> mySwap.previousSibling;
         showButton.classList.add('hide');
         showButton.style.display = 'none';
     }
 
-    const swapBlock = <HTMLElement>mySwap.querySelector('#swap-block');
+    const swapBlock = <HTMLElement> mySwap.querySelector('#swap-block');
 
     const div = document.createElement('div');
     div.style.maxHeight = '400px';
     div.style.overflowX = 'hidden';
     div.style.overflowY = 'auto';
     swapBlock.insertAdjacentElement("afterbegin", div);
-    forEachSwapLink(a => {
+    for (const {a} of getSwapLinksWithMatches()) {
         div.insertAdjacentElement("beforeend", a);
-    });
+    }
 
     const buttonSet = swapBlock.querySelector('center');
     const variants = new Map();
@@ -46,7 +46,8 @@ export function addSwapButtons() {
         couldExpand = false;
         couldCombine = false;
         variants.clear();
-        forEachSwapLink((a: HTMLAnchorElement, m: CoinSwapFormOnMatchGroups) => {
+
+        for (const {a, m} of getSwapLinksWithMatches()) {
             const {uniq, usid, cond, price, info, vid, strqty} = m;
             const qty = +strqty;
             if (qty > 1) {
@@ -56,14 +57,14 @@ export function addSwapButtons() {
             let variant;
             if (variants.has(uniq)) {
                 variant = variants.get(uniq);
-                variant.qty += qty;
+                variant.total += qty;
                 couldCombine = true;
             } else {
-                variant = {usid, cond, price, info, vid, qty};
+                variant = {a, usid, cond, price, info, vid, qty, total: qty};
             }
 
             variants.set(uniq, variant);
-        });
+        }
     }
 
     function updateButtons() {
@@ -83,79 +84,106 @@ export function addSwapButtons() {
                 `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${qty}', '$<replica>'`));
         }
 
-        a.querySelectorAll('span.left.dblue-13').forEach(a => a.remove());
+        for (const span of a.querySelectorAll('span.left.dblue-13')) {
+            span.remove();
+        }
         if (qty > 1) {
-            a.querySelectorAll('span.left.gray-13.wrap').forEach(a =>
-                a.insertAdjacentHTML("afterend", `<span class="left dblue-13"><span>&times;</span>${qty}</span>`));
+            for (const span of a.querySelectorAll('span.left.gray-13.wrap')) {
+                span.insertAdjacentHTML("afterend", `<span class="left dblue-13"><span>&times;</span>${qty}</span>`);
+            }
         }
     }
 
     // expandTo - number of links (0 for unlimited)
-    function expandClicked(expandTo = 0) {
+    async function expandClicked(expandTo = 0) {
         removeButtons();
 
         console.log(`EXPANDING...`);
 
-        let queue = Promise.resolve();
+        let isAddFailed = false;
+        let isUpdFailed = false;
         let isFirstQuery = true;
 
-        forEachSwapLink((a: HTMLAnchorElement, m: CoinSwapFormOnMatchGroups) => {
+        for await (const {a, m} of getSwapLinksWithMatches()) {
             const {uniq, usid, cond, price, info, vid, strqty} = m;
             const qty = +strqty;
 
             const n = expandTo > 0 ? Math.min(qty, expandTo) : qty;
             if (n <= 1) {
-                queue = queue
-                    .then(() => console.log(`IGNORING ${uniq} ${usid}`));
-                return;
+                console.log(`IGNORING ${uniq} ${usid}`);
+                continue; // return?
             }
 
             for (let i = n, qq = qty, q = Math.floor(qq / i); i > 1; i--, q = Math.floor(qq / i)) {
                 qq -= q;
                 if (!isFirstQuery) {
-                    queue = queue.then(randomDelay());
+                    await randomDelay();
                 }
-                queue = queue
-                    .then(() => console.log(`ADDING ${uniq} ${n - i + 1} -> ${q}`))
-                    .then(() => addSwapCoin(cond, `${q}`, vid, info, price))
-                    .then(r => {
-                        const links = new Set();
-                        getSwapLinks().forEach(l => {
-                            if (!l.hasAttribute('onClick')) {
-                                return;
-                            }
-                            const m = <CoinSwapFormOnMatchResult>l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
-                            if (m && m.groups) {
-                                links.add(m.groups.usid);
-                            }
-                        });
-                        getSwapLinks(r).forEach(l => {
-                            if (!l.hasAttribute('onClick')) {
-                                return;
-                            }
-                            const m = <CoinSwapFormOnMatchResult>l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
-                            const usid = m && m.groups && m.groups.usid;
-                            if (!usid || links.has(usid)) {
-                                return;
-                            }
-                            links.add(usid);
-                            styleSwapLink(l);
-                            a.insertAdjacentElement("afterend", l);
-                            addSwapComment(l);
-                        });
-                    })
-                    .then(randomDelay())
-                    .then(() => console.log(`UPDATING ${uniq} ${usid} -> ${qq}`))
-                    .then(() => updSwapCoin(usid, cond, `${qq}`, vid, info, price))
-                    .then(() => updateLinkQty(a, qq));
                 isFirstQuery = false;
-            }
-        });
 
-        queue.then(() => {
+                console.log(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
+                const addR = await addSwapCoin(cond, `${q}`, vid, info, price);
+                if (!addR) {
+                    isAddFailed = true;
+                    break;
+                }
+
+                const links = new Set();
+                for (const l of getSwapLinks()) {
+                    if (!l.hasAttribute('onClick')) {
+                        continue;
+                    }
+
+                    const m = <CoinSwapFormOnMatchResult> l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+                    if (m && m.groups) {
+                        links.add(m.groups.usid);
+                    }
+                }
+
+                for (const l of getSwapLinks(addR)) {
+                    if (!l.hasAttribute('onClick')) {
+                        continue;
+                    }
+                    const m = <CoinSwapFormOnMatchResult> l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+                    const usid = m && m.groups && m.groups.usid;
+                    if (!usid || links.has(usid)) {
+                        continue;
+                    }
+                    links.add(usid);
+                    styleSwapLink(l);
+                    a.insertAdjacentElement("afterend", l);
+                    addSwapComment(l);
+                }
+
+                if (!isFirstQuery) {
+                    await randomDelay();
+                }
+                isFirstQuery = false;
+
+                console.log(`UPDATING ${uniq} ${usid} -> ${qq}`);
+                const updR = await updSwapCoin(usid, cond, `${qq}`, vid, info, price);
+                if (!updR) {
+                    isUpdFailed = true;
+                    break;
+                }
+
+                updateLinkQty(a, qq);
+            }
+
+            if (isAddFailed || isUpdFailed) {
+                break;
+            }
+        }
+
+        if (isAddFailed) {
+            console.log('ADD FAILED :(');
+        } else if (isUpdFailed) {
+            console.log('UPDATE FAILED :(');
+        } else {
             console.log('DONE!');
-            updateButtons();
-        });
+        }
+
+        updateButtons();
     }
 
     function addExpandButton(id: string, text: string, clickHandler: () => void) {
@@ -175,47 +203,71 @@ export function addSwapButtons() {
         addExpandButton('expand-x10', 'Ex/10', () => expandClicked(10));
     }
 
-    function combineClicked() {
+    async function combineClicked() {
         removeButtons();
 
         console.log(`COMBINING...`);
 
-        let queue = Promise.resolve();
+        let isDelFailed = false;
+        let isUpdFailed = false;
+        let isFirstQuery = true;
 
-        forEachSwapLink((a: HTMLAnchorElement, m: CoinSwapFormOnMatchGroups) => {
+        for await (const {a, m} of getSwapLinksWithMatches()) {
             const {uniq, usid, cond, price, info, vid, strqty} = m;
             const qty = +strqty;
 
-            if (variants.has(uniq)) {
-                if (usid != variants.get(uniq).usid) {
-                    queue = queue
-                        .then(() => console.log(`REMOVING ${usid}`))
-                        .then(() => delSwapCoin(usid))
-                        .then(() => a.remove())
-                        .then(randomDelay());
-                } else {
-                    const vqty = variants.get(uniq).qty;
-                    if (qty != vqty) {
-                        queue = queue
-                            .then(() => console.log(`UPDATING ${usid} -> ${vqty}`))
-                            .then(() => updSwapCoin(usid, cond, vqty, vid, info, price))
-                            .then(() => updateLinkQty(a, vqty))
-                            .then(randomDelay());
-                    } else {
-                        queue = queue
-                            .then(() => console.log(`IGNORING ${usid}`));
-                    }
-                }
-            } else {
-                queue = queue
-                    .then(() => console.log(`IGNORING ${usid}`));
+            if (!variants.has(uniq)) {
+                console.log(`IGNORING ${usid}`);
+                continue;
             }
-        });
 
-        queue.then(() => {
+            const variant = variants.get(uniq);
+            const {usid: vusid} = variant;
+
+            if (usid != vusid) {
+                if (!isFirstQuery) {
+                    await randomDelay();
+                }
+                isFirstQuery = false;
+
+                console.log(`REMOVING ${usid}`);
+                const delR = await delSwapCoin(usid);
+                if (!delR) {
+                    isDelFailed = true;
+                    break;
+                }
+
+                a.remove();
+
+                if (!isFirstQuery) {
+                    await randomDelay();
+                }
+                isFirstQuery = false;
+
+                let {qty: vqty} = variant;
+                vqty += qty;
+                console.log(`UPDATING ${usid} -> ${vqty}`);
+                const updR = await updSwapCoin(usid, cond, vqty, vid, info, price);
+                if (!updR) {
+                    isUpdFailed = true;
+                    break;
+                }
+
+                const {a: va} = variant;
+                updateLinkQty(va, vqty);
+                variant.qty = vqty;
+            }
+       }
+
+        if (isDelFailed) {
+            console.log('ADD FAILED :(');
+        } else if (isUpdFailed) {
+            console.log('UPDATE FAILED :(');
+        } else {
             console.log('DONE!');
-            updateButtons();
-        });
+        }
+
+        updateButtons();
     }
 
     function addCombineButtons() {
@@ -231,27 +283,28 @@ export function addSwapButtons() {
     }
 
     function removeExpandButtons() {
-        buttonSet.querySelectorAll('button.btn--expander').forEach((b: HTMLElement) => {
+        for (const b of <NodeListOf<HTMLButtonElement>> buttonSet.querySelectorAll('button.btn--expander')) {
             b.style.display = 'none';
-        })
+        }
     }
 
     function removeCombineButtons() {
-        buttonSet.querySelectorAll('button.btn--combiner').forEach((b: HTMLElement) => {
+        for (const b of <NodeListOf<HTMLButtonElement>> buttonSet.querySelectorAll('button.btn--combiner')) {
             b.style.display = 'none';
-        })
+        }
     }
 
-    function addSwapCoin(cond: string, qty: string, vid: string, info: string, price: string) {
-        return updSwapCoin('', cond, qty, vid, info, price, 'addswapcoin');
+    async function addSwapCoin(cond: string, qty: string, vid: string, info: string, price: string) {
+        return await updSwapCoin('', cond, qty, vid, info, price, 'addswapcoin');
     }
 
-    function delSwapCoin(usid: string) {
-        return updSwapCoin(usid, '', '', '', '', '', 'delswapcoin');
+    async function delSwapCoin(usid: string) {
+        return await updSwapCoin(usid, '', '', '', '', '', 'delswapcoin');
     }
 
-    function updSwapCoin(usid: string, cond: string, qty: string, vid: string, info: string, price: string, action: SwapFormAction = 'editswapcoin') {
-        const swapForm = <HTMLFormElement>document.getElementById('swap-form');
+    async function updSwapCoin(usid: string, cond: string, qty: string, vid: string, info: string, price: string, action: SwapFormAction = 'editswapcoin') {
+        const swapForm = <HTMLFormElement> document.getElementById('swap-form');
+
         const data = new FormData(swapForm);
         data.set('usid', usid);
         data.set('condition', cond);
@@ -260,19 +313,23 @@ export function addSwapButtons() {
         data.set('comment', info);
         data.set('price', price);
         data.set('action', action);
-        return post(document.location.href, data)
-            .then(response => response.text())
-            .then(text => {
-                const temp = document.createElement('template');
-                temp.innerHTML = text;
-                return temp.content;
-            });
+
+        const response = await post(document.location.href, data);
+        console.log(response);
+        if (response.status !== 200) {
+            return null;
+        }
+
+        const text = await response.text();
+        const temp = document.createElement('template');
+        temp.innerHTML = text;
+        return temp.content;
     }
 }
 
 function addSwapComment(a: HTMLAnchorElement): void {
     if (a.hasAttribute('onClick')) {
-        const m = <CoinSwapFormOnMatchResult>a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+        const m = <CoinSwapFormOnMatchResult> a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
         if (m && m.groups) {
             const {info} = m.groups;
             if (info && !a.querySelector('.comments')) {
@@ -284,9 +341,9 @@ function addSwapComment(a: HTMLAnchorElement): void {
 }
 
 export function addSwapFormQtyButtons() {
-    const qty = <HTMLInputElement>document.getElementById('swap-qty');
+    const qty = <HTMLInputElement> document.getElementById('swap-qty');
     qty.setAttribute('inputmode', 'numeric');
-    qty.addEventListener("focus", e => (<HTMLInputElement>e.target).setSelectionRange(0, (<HTMLInputElement>e.target).value.length));
+    qty.addEventListener("focus", e => (<HTMLInputElement> e.target).setSelectionRange(0, (<HTMLInputElement> e.target).value.length));
 
     addQtyCtrlButton("afterend", 'minus', '&minus;', v => v - 1);
     addQtyCtrlButton("beforebegin", 'plus10', '+10', v => v + 10);
@@ -308,13 +365,14 @@ export function addSwapColorMarkers() {
     cond.insertAdjacentHTML("afterend", `<fieldset id="${id}"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
     const fieldset = document.getElementById(id);
 
-    cond.querySelectorAll('option').forEach((o: HTMLOptionElement) => {
+    const options = cond.querySelectorAll('option');
+    for (const o of options) {
         const val = o.value;
         const text = val ? o.textContent : 'Without condition';
         const checked = (val === '3') ? 'checked' : '';
         const style = o.getAttribute('style') || '';
         fieldset.insertAdjacentHTML("beforeend", `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${val}" ${checked} type="radio"/>${text}</label>`);
-    });
+    }
 
     cond.remove();
 
@@ -325,11 +383,11 @@ export function addSwapColorMarkers() {
 
     CoinSwapFormOn = function (...args: any[]) {
         _onCoinSwapForm(...args);
-        (<HTMLInputElement>fieldset.querySelector(`input[name="condition"][value="${args[1]}"]`)).checked = true;
+        (<HTMLInputElement> fieldset.querySelector(`input[name="condition"][value="${args[1]}"]`)).checked = true;
     };
 
-    const mySwap = <HTMLElement>document.getElementById('my-swap-block');
-    const swapBlock = <HTMLElement>mySwap.querySelector('#swap-block');
+    const mySwap = <HTMLElement> document.getElementById('my-swap-block');
+    const swapBlock = <HTMLElement> mySwap.querySelector('#swap-block');
     const addButton = swapBlock.querySelector('center button.btn-s.btn-gray');
     if (!addButton) {
         return;
@@ -389,5 +447,8 @@ export function styleSwapLink(a: HTMLAnchorElement) {
 }
 
 export function styleSwapLists() {
-    document.querySelectorAll('#swap-block a.list-link').forEach(styleSwapLink);
+    const listOfLinks = <NodeListOf<HTMLAnchorElement>> document.querySelectorAll('#swap-block a.list-link');
+    for (const a of listOfLinks) {
+        styleSwapLink(a);
+    }
 }
