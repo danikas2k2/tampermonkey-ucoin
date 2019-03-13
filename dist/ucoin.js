@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -216,9 +216,19 @@ exports.randomDelay = randomDelay;
 
 
 /***/ }),
-/* 3 */,
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UID = '28609';
+
+
+/***/ }),
 /* 4 */,
-/* 5 */
+/* 5 */,
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -226,7 +236,7 @@ exports.randomDelay = randomDelay;
 // ==UserScript==
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/
-// @version      1.1.2
+// @version      1.1.3
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
 // @downloadURL  https://bitbucket.org/danikas2k2/collection.userscripts/raw/HEAD/dist/ucoin.js
@@ -238,14 +248,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const ucoin_less_1 = __importDefault(__webpack_require__(6));
-const links_1 = __webpack_require__(7);
-const coin_form_1 = __webpack_require__(8);
-const swap_form_1 = __webpack_require__(14);
-const swap_list_1 = __webpack_require__(16);
-const gallery_1 = __webpack_require__(17);
-const prices_1 = __webpack_require__(18);
-const uid_1 = __webpack_require__(19);
+const ucoin_less_1 = __importDefault(__webpack_require__(7));
+const links_1 = __webpack_require__(8);
+const coin_form_1 = __webpack_require__(9);
+const swap_form_1 = __webpack_require__(15);
+const swap_list_1 = __webpack_require__(17);
+const gallery_1 = __webpack_require__(18);
+const prices_1 = __webpack_require__(19);
+const uid_1 = __webpack_require__(3);
 document.head.insertAdjacentHTML("beforeend", `<style type="text/css">${ucoin_less_1.default}</style>`);
 const loc = document.location.href;
 (async function () {
@@ -308,7 +318,7 @@ const loc = document.location.href;
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -318,7 +328,7 @@ exports.push([module.i, "#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -374,13 +384,13 @@ exports.updateOnClickHref = updateOnClickHref;
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const notify_1 = __webpack_require__(9);
+const notify_1 = __webpack_require__(10);
 const ajax_1 = __webpack_require__(0);
 function addBuyDateResetButton() {
     const buyYear = document.getElementById('buy_year');
@@ -568,7 +578,7 @@ exports.addReplacementToggle = addReplacementToggle;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -578,13 +588,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // @ts-ignore
-const success_svg_1 = __importDefault(__webpack_require__(10));
+const success_svg_1 = __importDefault(__webpack_require__(11));
 // @ts-ignore
-const error_svg_1 = __importDefault(__webpack_require__(11));
+const error_svg_1 = __importDefault(__webpack_require__(12));
 // @ts-ignore
-const info_svg_1 = __importDefault(__webpack_require__(12));
+const info_svg_1 = __importDefault(__webpack_require__(13));
 // @ts-ignore
-const minus_svg_1 = __importDefault(__webpack_require__(13));
+const minus_svg_1 = __importDefault(__webpack_require__(14));
 function notify(title, body, icon) {
     const options = {};
     if (body) {
@@ -629,31 +639,31 @@ exports.ok = ok;
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#25ae88\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"M38 15L22 33l-10-8\"></path></svg>"
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#d75a4a\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M16 34l9-9 9-9m-18 0l9 9 9 9\"></path></svg>"
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#48a0dc\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M25 37v2m-7-23a7 7 0 0 1 7.1-7 7.1 7.1 0 0 1 6.9 6.9 7 7 0 0 1-3.21 5.99A8.6 8.6 0 0 0 25 29.16V32\"></path></svg>"
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#ed8a19\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"M38 25H12\"></path></svg>"
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -666,10 +676,10 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const swap_links_1 = __webpack_require__(15);
+const swap_links_1 = __webpack_require__(16);
 const delay_1 = __webpack_require__(2);
 const ajax_1 = __webpack_require__(0);
-const uid_1 = __webpack_require__(19);
+const uid_1 = __webpack_require__(3);
 function addSwapComments() {
     for (const a of swap_links_1.getSwapLinks()) {
         addSwapComment(a);
@@ -1143,7 +1153,7 @@ exports.styleSwapLists = styleSwapLists;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1178,7 +1188,7 @@ exports.getSwapLinksWithMatches = getSwapLinksWithMatches;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1411,7 +1421,7 @@ exports.ignoreUnwanted = ignoreUnwanted;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1498,7 +1508,7 @@ exports.addGalleryVisibilityToggle = addGalleryVisibilityToggle;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1602,16 +1612,6 @@ function estimateSwapPrices() {
     }
 }
 exports.estimateSwapPrices = estimateSwapPrices;
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UID = '28609';
 
 
 /***/ })
