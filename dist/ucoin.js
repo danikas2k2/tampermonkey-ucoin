@@ -245,8 +245,8 @@ const swap_form_1 = __webpack_require__(14);
 const swap_list_1 = __webpack_require__(16);
 const gallery_1 = __webpack_require__(17);
 const prices_1 = __webpack_require__(18);
+const uid_1 = __webpack_require__(19);
 document.head.insertAdjacentHTML("beforeend", `<style type="text/css">${ucoin_less_1.default}</style>`);
-const UID = '28609';
 const loc = document.location.href;
 (async function () {
     if (loc.includes('/coin/')) {
@@ -277,7 +277,7 @@ const loc = document.location.href;
             prices_1.estimateSwapPrices();
         }
     }
-    if (loc.includes('/gallery/') && loc.includes(`uid=${UID}`)) {
+    if (loc.includes('/gallery/') && loc.includes(`uid=${uid_1.UID}`)) {
         const gallery = document.getElementById('gallery');
         if (gallery) {
             // fix gallery links
@@ -298,6 +298,7 @@ const loc = document.location.href;
     }
     if (loc.includes('/swap-mgr/') || loc.includes('/swap-list/')) {
         swap_list_1.addTrackingLinks();
+        swap_list_1.duplicatePagination();
         swap_list_1.showAllPrices();
         swap_list_1.addConflictHandling();
         swap_list_1.checkSold();
@@ -668,6 +669,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const swap_links_1 = __webpack_require__(15);
 const delay_1 = __webpack_require__(2);
 const ajax_1 = __webpack_require__(0);
+const uid_1 = __webpack_require__(19);
 function addSwapComments() {
     for (const a of swap_links_1.getSwapLinks()) {
         addSwapComment(a);
@@ -703,7 +705,7 @@ async function addSwapButtons() {
         couldExpand = false;
         couldCombine = false;
         variants.clear();
-        for (const { a, m } of swap_links_1.getSwapLinksWithMatches()) {
+        for (const { m } of swap_links_1.getSwapLinksWithMatches()) {
             const { uniq, usid, cond, price, info, vid, strqty } = m;
             const qty = +strqty;
             if (qty > 1) {
@@ -712,11 +714,12 @@ async function addSwapButtons() {
             let variant;
             if (variants.has(uniq)) {
                 variant = variants.get(uniq);
+                variant.usids.add(usid);
                 variant.total += qty;
                 couldCombine = true;
             }
             else {
-                variant = { a, usid, cond, price, info, vid, qty, total: qty };
+                variant = { usid, usids: new Set([usid]), cond, price, info, vid, qty, total: qty };
             }
             variants.set(uniq, variant);
         }
@@ -768,7 +771,7 @@ async function addSwapButtons() {
                     }
                     isFirstQuery = false;
                     console.log(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
-                    const addR = await addSwapCoin(cond, `${q}`, vid, info, price);
+                    const addR = await addSwapCoin({ cond, qty: q, vid, info, price });
                     if (!addR) {
                         isAddFailed = true;
                         break;
@@ -802,7 +805,7 @@ async function addSwapButtons() {
                     }
                     isFirstQuery = false;
                     console.log(`UPDATING ${uniq} ${usid} -> ${qq}`);
-                    const updR = await updSwapCoin(usid, cond, `${qq}`, vid, info, price);
+                    const updR = await updSwapCoin(usid, { cond, qty: qq, vid, info, price });
                     if (!updR) {
                         isUpdFailed = true;
                         break;
@@ -843,65 +846,95 @@ async function addSwapButtons() {
         }
     }
     function addExpandButtons() {
-        addExpandButton('expand', 'Ex/All', () => expandClicked());
-        addExpandButton('expand-x5', 'Ex/5', () => expandClicked(5));
-        addExpandButton('expand-x10', 'Ex/10', () => expandClicked(10));
+        addExpandButton('expand', '&laquo;*&raquo;', () => expandClicked());
+        addExpandButton('expand-x5', '&laquo;5&raquo;', () => expandClicked(5));
+        addExpandButton('expand-x10', '&laquo;10&raquo;', () => expandClicked(10));
     }
     async function combineClicked() {
-        var e_2, _a;
         removeButtons();
         console.log(`COMBINING...`);
         let isDelFailed = false;
         let isUpdFailed = false;
         let isFirstQuery = true;
-        try {
-            for (var _b = __asyncValues(swap_links_1.getSwapLinksWithMatches()), _c; _c = await _b.next(), !_c.done;) {
-                const { a, m } = _c.value;
-                const { uniq, usid, cond, price, info, vid, strqty } = m;
-                const qty = +strqty;
-                if (!variants.has(uniq)) {
-                    console.log(`IGNORING ${usid}`);
-                    continue;
-                }
-                const variant = variants.get(uniq);
-                const { usid: vusid } = variant;
-                if (usid != vusid) {
-                    if (!isFirstQuery) {
-                        await delay_1.randomDelay();
-                    }
-                    isFirstQuery = false;
-                    console.log(`REMOVING ${usid}`);
-                    const delR = await delSwapCoin(usid);
-                    if (!delR) {
-                        isDelFailed = true;
-                        break;
-                    }
-                    a.remove();
-                    if (!isFirstQuery) {
-                        await delay_1.randomDelay();
-                    }
-                    isFirstQuery = false;
-                    let { qty: vqty } = variant;
-                    vqty += qty;
-                    console.log(`UPDATING ${vusid} -> ${vqty}`);
-                    const updR = await updSwapCoin(vusid, cond, vqty, vid, info, price);
-                    if (!updR) {
-                        isUpdFailed = true;
-                        break;
-                    }
-                    const { a: va } = variant;
-                    updateLinkQty(va, vqty);
-                    variant.qty = vqty;
+        console.log(variants);
+        for (const variant of variants.values()) {
+            const { usid, usids, qty, total } = variant;
+            if (total <= qty) {
+                continue;
+            }
+            /*if (!isFirstQuery) {
+                await randomDelay();
+            }
+            isFirstQuery = false;*/
+            const remove = new Set(usids);
+            remove.delete(usid);
+            console.log(`REMOVING ${remove}`);
+            const delR = await delSwapCoin(remove);
+            if (!delR) {
+                isDelFailed = true;
+                break;
+            }
+            console.log(`UPDATING ${usid}`);
+            const updR = await updSwapCoin(usid, Object.assign({}, variant, { qty: total }));
+            if (updR) {
+                const rSwapBlock = updR.getElementById('my-swap-block');
+                const mySwapBlock = document.getElementById('my-swap-block');
+                if (rSwapBlock && mySwapBlock) {
+                    mySwapBlock.replaceWith(rSwapBlock);
+                    styleSwapLists();
                 }
             }
-        }
-        catch (e_2_1) { e_2 = { error: e_2_1 }; }
-        finally {
-            try {
-                if (_c && !_c.done && (_a = _b.return)) await _a.call(_b);
+            else {
+                isUpdFailed = true;
+                break;
             }
-            finally { if (e_2) throw e_2.error; }
         }
+        /*for await (const {a, m} of getSwapLinksWithMatches()) {
+            const {uniq, usid, cond, price, info, vid, strqty} = m;
+            const qty = +strqty;
+
+            if (!variants.has(uniq)) {
+                console.log(`IGNORING ${usid}`);
+                continue;
+            }
+
+            const variant = variants.get(uniq);
+            const {usid: vusid} = variant;
+
+            if (usid != vusid) {
+                if (!isFirstQuery) {
+                    await randomDelay();
+                }
+                isFirstQuery = false;
+
+                console.log(`REMOVING ${usid}`);
+                const delR = await delSwapCoin(usid);
+                if (!delR) {
+                    isDelFailed = true;
+                    break;
+                }
+
+                a.remove();
+
+                if (!isFirstQuery) {
+                    await randomDelay();
+                }
+                isFirstQuery = false;
+
+                let {qty: vqty} = variant;
+                vqty += qty;
+                console.log(`UPDATING ${vusid} -> ${vqty}`);
+                const updR = await updSwapCoin(vusid, cond, vqty, vid, info, price);
+                if (!updR) {
+                    isUpdFailed = true;
+                    break;
+                }
+
+                const {a: va} = variant;
+                updateLinkQty(va, vqty);
+                variant.qty = vqty;
+            }
+        }*/
         if (isDelFailed) {
             console.log('ADD FAILED :(');
         }
@@ -920,36 +953,62 @@ async function addSwapButtons() {
             combine.style.display = '';
         }
         else {
-            buttonSet.insertAdjacentHTML("beforeend", `<button id="${id}" type="button" class="btn--combiner btn-s btn-blue" style="margin: 8px 2px 0">Combine</button>`);
+            buttonSet.insertAdjacentHTML("beforeend", `<button id="${id}" type="button" class="btn--combiner btn-s btn-blue" style="margin: 8px 2px 0">&raquo;&middot;&laquo;</button>`);
             document.getElementById(id).addEventListener("click", () => combineClicked());
         }
     }
     function removeExpandButtons() {
-        for (const b of buttonSet.querySelectorAll('button.btn--expander')) {
+        const buttons = buttonSet.querySelectorAll('button.btn--expander');
+        for (const b of buttons) {
             b.style.display = 'none';
         }
     }
     function removeCombineButtons() {
-        for (const b of buttonSet.querySelectorAll('button.btn--combiner')) {
+        const buttons = buttonSet.querySelectorAll('button.btn--combiner');
+        for (const b of buttons) {
             b.style.display = 'none';
         }
     }
-    async function addSwapCoin(cond, qty, vid, info, price) {
-        return await updSwapCoin('', cond, qty, vid, info, price, 'addswapcoin');
+    async function addSwapCoin(data) {
+        return await updSwapCoin('', data, 'addswapcoin');
     }
     async function delSwapCoin(usid) {
-        return await updSwapCoin(usid, '', '', '', '', '', 'delswapcoin');
+        if (usid instanceof Set) {
+            usid = [...usid].join(',');
+        }
+        const url = new URL('/swap-list/', document.location.href);
+        const p = url.searchParams;
+        p.set('f', 'del');
+        p.set('uid', uid_1.UID);
+        p.set('usid', usid);
+        const response = await ajax_1.get(url.href);
+        console.log(response);
+        if (response.status !== 200) {
+            return null;
+        }
+        const text = await response.text();
+        const temp = document.createElement('template');
+        temp.innerHTML = text;
+        const content = temp.content;
+        const mySwapBlock = content.getElementById('swap-list');
+        if (!mySwapBlock) {
+            console.error(text);
+            window.location.reload();
+            return null;
+        }
+        console.log(mySwapBlock.innerHTML);
+        return content;
     }
-    async function updSwapCoin(usid, cond, qty, vid, info, price, action = 'editswapcoin') {
+    async function updSwapCoin(usid, { cond, qty, vid, info, price }, action = 'editswapcoin') {
         const swapForm = document.getElementById('swap-form');
         const data = new FormData(swapForm);
-        data.set('usid', usid);
-        data.set('condition', cond);
-        data.set('qty', qty);
-        data.set('swap-variety', vid);
-        data.set('comment', info);
-        data.set('price', price);
-        data.set('action', action);
+        data.set('usid', `${usid || ''}`);
+        data.set('condition', `${cond || ''}`);
+        data.set('qty', `${qty || ''}`);
+        data.set('swap-variety', `${vid || ''}`);
+        data.set('comment', `${info || ''}`);
+        data.set('price', `${price || ''}`);
+        data.set('action', `${action || ''}`);
         const response = await ajax_1.post(document.location.href, data);
         console.log(response);
         if (response.status !== 200) {
@@ -958,7 +1017,15 @@ async function addSwapButtons() {
         const text = await response.text();
         const temp = document.createElement('template');
         temp.innerHTML = text;
-        return temp.content;
+        const content = temp.content;
+        const mySwapBlock = content.getElementById('my-swap-block');
+        if (!mySwapBlock) {
+            console.error(text);
+            window.location.reload();
+            return null;
+        }
+        console.log(mySwapBlock.innerHTML);
+        return content;
     }
 }
 exports.addSwapButtons = addSwapButtons;
@@ -1096,7 +1163,7 @@ exports.getSwapLinks = getSwapLinks;
 function* getSwapLinksWithMatches() {
     for (const a of getSwapLinks()) {
         if (a.querySelector(`div.ico-16`)) {
-            return;
+            continue;
         }
         if (a.hasAttribute('onClick')) {
             const m = a.getAttribute('onClick').match(exports.CoinSwapFormOnMatcher);
@@ -1143,6 +1210,36 @@ function addTrackingLinks() {
     }
 }
 exports.addTrackingLinks = addTrackingLinks;
+function duplicatePagination() {
+    const swapList = document.getElementById('swap-list');
+    if (!swapList) {
+        return;
+    }
+    const pages = swapList.querySelectorAll('div.pages');
+    if (pages.length > 1) {
+        return;
+    }
+    const lastPages = pages.item(pages.length - 1);
+    if (!lastPages.children.length) {
+        return;
+    }
+    const table = swapList.querySelector('table.swap-coin');
+    if (!table) {
+        return;
+    }
+    let heading = table.previousElementSibling;
+    if (!heading || !heading.matches('h2')) {
+        return;
+    }
+    const parent = lastPages.parentElement;
+    if (!parent) {
+        return;
+    }
+    const clone = parent.cloneNode(true);
+    clone.style.height = '30px';
+    heading.insertAdjacentElement("beforebegin", clone);
+}
+exports.duplicatePagination = duplicatePagination;
 function showAllPrices() {
     const swapRows = document.querySelectorAll('table.swap-coin tr');
     for (const tr of swapRows) {
@@ -1505,6 +1602,16 @@ function estimateSwapPrices() {
     }
 }
 exports.estimateSwapPrices = estimateSwapPrices;
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UID = '28609';
 
 
 /***/ })
