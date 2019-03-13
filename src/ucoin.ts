@@ -15,13 +15,12 @@ import style from '../styles/ucoin.less';
 import {updateLinkHref, updateOnClickHref} from './lib/links';
 import {addBuyDateResetButton, addPublicityToggle, addReplacementToggle, addSyncConditionToColorTable} from './lib/coin-form';
 import {addSwapButtons, addSwapColorMarkers, addSwapComments, addSwapFormQtyButtons, styleSwapLists} from './lib/swap-form';
-import {addConflictHandling, addTrackingLinks, checkSold, ignoreUnwanted, showAllPrices} from './lib/swap-list';
+import {addConflictHandling, addTrackingLinks, duplicatePagination, checkSold, ignoreUnwanted, showAllPrices} from './lib/swap-list';
 import {addGalleryVisibilityToggle} from './lib/gallery';
 import {estimateSwapPrices} from './lib/prices';
+import {UID} from './lib/uid';
 
 document.head.insertAdjacentHTML("beforeend", `<style type="text/css">${style}</style>`);
-
-const UID = '28609';
 
 const loc = document.location.href;
 
@@ -95,6 +94,7 @@ const loc = document.location.href;
 
 
         addTrackingLinks();
+        duplicatePagination();
         showAllPrices();
         addConflictHandling();
 

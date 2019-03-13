@@ -13,7 +13,7 @@ export function* getSwapLinks(d: DocumentFragment = document): IterableIterator<
 export function* getSwapLinksWithMatches(): IterableIterator<CoinSwapAnchorAndMatchTuple> {
     for (const a of getSwapLinks()) {
         if (a.querySelector(`div.ico-16`)) {
-            return;
+            continue;
         }
         if (a.hasAttribute('onClick')) {
             const m = <CoinSwapFormOnMatchResult> a.getAttribute('onClick').match(CoinSwapFormOnMatcher);

@@ -19,8 +19,44 @@ export function addTrackingLinks() {
     }
 }
 
+export function duplicatePagination(): void {
+    const swapList = <HTMLDivElement>document.getElementById('swap-list');
+    if (!swapList) {
+        return;
+    }
+
+    const pages = <NodeListOf<HTMLDivElement>>swapList.querySelectorAll('div.pages');
+    if (pages.length > 1) {
+        return;
+    }
+
+    const lastPages = pages.item(pages.length - 1);
+    if (!lastPages.children.length) {
+        return;
+    }
+
+    const table = <HTMLTableElement>swapList.querySelector('table.swap-coin');
+    if (!table) {
+        return;
+    }
+
+    let heading = <HTMLHeadingElement>table.previousElementSibling;
+    if (!heading || !heading.matches('h2')) {
+        return;
+    }
+
+    const parent = lastPages.parentElement;
+    if (!parent) {
+        return;
+    }
+
+    const clone = <HTMLDivElement>parent.cloneNode(true);
+    clone.style.height = '30px';
+    heading.insertAdjacentElement("beforebegin", clone);
+}
+
 export function showAllPrices() {
-    const swapRows = <NodeListOf<HTMLTableRowElement>> document.querySelectorAll('table.swap-coin tr');
+    const swapRows = <NodeListOf<HTMLTableRowElement>>document.querySelectorAll('table.swap-coin tr');
     for (const tr of swapRows) {
         const td = tr.querySelector('.td-cond + *');
         const myPrice = +td.querySelector('span.blue-13').textContent;
@@ -40,12 +76,12 @@ export function addConflictHandling() {
     highlightConflicts();
 
     if (!document.getElementById('need-swap-list')) {
-        const tables = <NodeListOf<HTMLTableElement>> document.querySelectorAll('table.swap-coin');
+        const tables = <NodeListOf<HTMLTableElement>>document.querySelectorAll('table.swap-coin');
         for (const table of tables) {
-            const checkboxes = <NodeListOf<HTMLInputElement>> table.querySelectorAll('input.swap-checkbox, input.swap-country-checkbox');
+            const checkboxes = <NodeListOf<HTMLInputElement>>table.querySelectorAll('input.swap-checkbox, input.swap-country-checkbox');
             for (const checkbox of checkboxes) {
                 checkbox.addEventListener('click', e => {
-                    const input = <HTMLInputElement> e.target;
+                    const input = <HTMLInputElement>e.target;
                     if (!input.checked) {
                         let parent = input.parentElement;
                         while (parent && parent.tagName !== 'tr') {
@@ -73,9 +109,9 @@ function highlightConflicts() {
             }
             r.classList.remove('conflict');
         });
-        const heading = <HTMLHeadingElement> table.previousElementSibling;
+        const heading = <HTMLHeadingElement>table.previousElementSibling;
         if (heading.tagName.toLowerCase() === 'h2') {
-            const all = <HTMLInputElement> heading.querySelector('input.swap-country-checkbox, input.edit-country-checkbox');
+            const all = <HTMLInputElement>heading.querySelector('input.swap-country-checkbox, input.edit-country-checkbox');
             all.checked = checked.length === rows.length;
         }
         if (!needSwapList) {
@@ -123,7 +159,7 @@ export function checkSold() {
                     }
                     isFirstRequest = false;
 
-                    const {href} = (<HTMLAnchorElement> sold.querySelector('a.act'));
+                    const {href} = (<HTMLAnchorElement>sold.querySelector('a.act'));
                     await get(href);
 
                     const tree = document.getElementById('tree');
@@ -170,7 +206,7 @@ export function ignoreUnwanted() {
     if (!document.getElementById('need-swap-list')) {
         const tables = document.querySelectorAll('table.swap-coin');
         for (const table of tables) {
-            const rows = <NodeListOf<HTMLTableRowElement>> table.querySelectorAll('tr');
+            const rows = <NodeListOf<HTMLTableRowElement>>table.querySelectorAll('tr');
             for (const tr of rows) {
                 const markedElement = tr.querySelector('td span[class^="marked-"]');
                 const marked = markedElement && markedElement.classList;

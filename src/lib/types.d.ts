@@ -1,4 +1,6 @@
-interface CoinSwapFormOnMatchGroups {
+type StringObject = { [key: string]: string };
+
+interface CoinSwapFormOnMatchGroups extends StringObject {
     uniq?: string,
     usid?: string,
     cond?: string,
