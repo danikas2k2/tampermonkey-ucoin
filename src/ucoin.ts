@@ -11,97 +11,111 @@
 // ==/UserScript==
 
 
+// @ts-ignore
 import style from '../styles/ucoin.less';
-import {updateLinkHref, updateOnClickHref} from './lib/links';
+
 import {addBuyDateResetButton, addPublicityToggle, addReplacementToggle, addSyncConditionToColorTable} from './lib/coin-form';
-import {addSwapButtons, addSwapColorMarkers, addSwapComments, addSwapFormQtyButtons, styleSwapLists} from './lib/swap-form';
-import {addConflictHandling, addTrackingLinks, duplicatePagination, checkSold, ignoreUnwanted, showAllPrices} from './lib/swap-list';
 import {addGalleryVisibilityToggle} from './lib/gallery';
+import {updateLinkHref, updateOnClickHref} from './lib/links';
 import {estimateSwapPrices} from './lib/prices';
+import {addSwapButtons, addSwapColorMarkers, addSwapComments, addSwapFormQtyButtons, styleSwapLists} from './lib/swap-form';
+import {addConflictHandling, addTrackingLinks, checkSold, duplicatePagination, ignoreUnwanted, showAllPrices} from './lib/swap-list';
 import {UID} from './lib/uid';
 
-document.head.insertAdjacentHTML("beforeend", `<style type="text/css">${style}</style>`);
-
-const loc = document.location.href;
+document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${style}</style>`);
 
 (async function () {
+    const loc = document.location.href;
 
     if (loc.includes('/coin/')) {
-
-
-        const tags = document.getElementById('tags');
-        if (tags) {
-            // fixTagLinks
-            const galleryLinks = <NodeListOf<HTMLAnchorElement>> tags.querySelectorAll('a[href^="/gallery/"]');
-            for (const a of galleryLinks) {
-                updateLinkHref(a);
-            }
-        }
-
-        addBuyDateResetButton();
-        addSyncConditionToColorTable();
-
-        if (loc.includes('ucid=')) {
-            addPublicityToggle();
-            addReplacementToggle();
-        }
-
-        const mySwap = document.getElementById('my-swap-block');
-        if (mySwap && mySwap.querySelector('#swap-block')) {
-            addSwapFormQtyButtons();
-            addSwapColorMarkers();
-            addSwapComments();
-            await addSwapButtons();
-        }
-
-        styleSwapLists();
-        const theySwap = document.getElementById('swap');
-        if (theySwap && theySwap.nextElementSibling.id === 'swap-block') {
-            estimateSwapPrices();
-        }
-
-
+        await handleCoinPage(loc);
     }
-
 
     if (loc.includes('/gallery/') && loc.includes(`uid=${UID}`)) {
-
-
-        const gallery = document.getElementById('gallery');
-        if (gallery) {
-            // fix gallery links
-            const galleryLinks = <NodeListOf<HTMLAnchorElement>> gallery.querySelectorAll('a[href^="/gallery/"]');
-            for (const a of galleryLinks) {
-                updateLinkHref(a);
-            }
-            const queryLinks = <NodeListOf<HTMLAnchorElement>> gallery.querySelectorAll('a[href^="?"]');
-            for (const a of queryLinks) {
-                updateLinkHref(a);
-            }
-            const closeButtons = <NodeListOf<HTMLDivElement>> gallery.querySelectorAll('div.close');
-            for (const div of closeButtons) {
-                updateOnClickHref(div);
-            }
-        }
-
-        addGalleryVisibilityToggle();
-
-
+        await handleGalleryPage();
     }
-
 
     if (loc.includes('/swap-mgr/') || loc.includes('/swap-list/')) {
+        await handleSwapPage();
+    }
+})();
 
-
-        addTrackingLinks();
-        duplicatePagination();
-        showAllPrices();
-        addConflictHandling();
-
-        checkSold();
-        ignoreUnwanted();
-
-
+async function handleCoinPage(loc: string) {
+    const tags = document.getElementById('tags');
+    if (tags) {
+        // fixTagLinks
+        const galleryLinks = <NodeListOf<HTMLAnchorElement>> tags.querySelectorAll('a[href^="/gallery/"]');
+        for (const a of galleryLinks) {
+            updateLinkHref(a);
+        }
     }
 
-})();
+    addBuyDateResetButton();
+    addSyncConditionToColorTable();
+
+    if (loc.includes('ucid=')) {
+        addPublicityToggle();
+        addReplacementToggle();
+    }
+
+    const mySwap = document.getElementById('my-swap-block');
+    if (mySwap && mySwap.querySelector('#swap-block')) {
+        addSwapFormQtyButtons();
+        addSwapColorMarkers();
+        addSwapComments();
+        await addSwapButtons();
+    }
+
+    styleSwapLists();
+    const theySwap = document.getElementById('swap');
+    if (theySwap && theySwap.nextElementSibling.id === 'swap-block') {
+        estimateSwapPrices();
+    }
+}
+
+async function handleGalleryPage() {
+    const gallery = document.getElementById('gallery');
+    if (gallery) {
+        // fix gallery links
+        const galleryLinks = <NodeListOf<HTMLAnchorElement>> gallery.querySelectorAll('a[href^="/gallery/"]');
+        for (const a of galleryLinks) {
+            updateLinkHref(a);
+        }
+        const queryLinks = <NodeListOf<HTMLAnchorElement>> gallery.querySelectorAll('a[href^="?"]');
+        for (const a of queryLinks) {
+            updateLinkHref(a);
+        }
+        const closeButtons = <NodeListOf<HTMLDivElement>> gallery.querySelectorAll('div.close');
+        for (const div of closeButtons) {
+            updateOnClickHref(div);
+        }
+    }
+
+    addGalleryVisibilityToggle();
+}
+
+async function handleSwapPage() {
+    addTrackingLinks();
+    duplicatePagination();
+    showAllPrices();
+    addConflictHandling();
+
+    checkSold();
+    ignoreUnwanted();
+
+    const tree = <HTMLDivElement> document.getElementById('tree');
+    if (tree) {
+        const filterLinks = <NodeListOf<HTMLAnchorElement>> tree.querySelectorAll('.filter-container .list-link');
+        for (const a of filterLinks) {
+            updateLinkHref(a);
+        }
+        const filterBoxes = <NodeListOf<HTMLDivElement>> tree.querySelectorAll('.filter-container .filter-box-active');
+        for (const filter of filterBoxes) {
+            const name = filter.getAttribute('id').replace(/-filter/, '');
+            const div = <HTMLDivElement> filter.querySelector('.close');
+            if (div) {
+                updateOnClickHref(div, [name]);
+            }
+        }
+    }
+}

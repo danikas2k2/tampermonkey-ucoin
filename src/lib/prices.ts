@@ -69,9 +69,11 @@ export function estimateSwapPrices() {
     const estimatedPrices = document.getElementById('estimated-prices');
     if (byMint.size > 1) {
         addPricesByType(byType);
-        estimatedPrices.insertAdjacentHTML("beforeend", `<div class="list-sep"></div>`);
     }
     for (const [mint, byType] of byMint) {
+        if (byMint.size > 1) {
+            estimatedPrices.insertAdjacentHTML("beforeend", `<div class="list-sep"></div>`);
+        }
         addPricesByType(byType, mint);
     }
 

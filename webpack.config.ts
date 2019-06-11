@@ -7,7 +7,6 @@ const config: webpack.Configuration = {
     mode: 'production',
     context: __dirname,
     entry: {
-        'colnect': './src/colnect.ts',
         'ucoin': './src/ucoin.ts',
     },
     module: {

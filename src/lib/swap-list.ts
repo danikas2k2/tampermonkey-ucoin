@@ -1,12 +1,12 @@
-import {get} from "./ajax";
-import {randomDelay} from "./delay";
+import {get} from './ajax';
+import {randomDelay} from './delay';
 
 export function addTrackingLinks() {
     const swapMgr = document.getElementById('swap-mgr');
     if (swapMgr) {
         const trackingNumbers = swapMgr.querySelectorAll('div.left.lgray-11');
         for (const div of trackingNumbers) {
-            if (!div.textContent.includes("Track")) {
+            if (!div.textContent.includes('Track')) {
                 continue;
             }
 
@@ -20,12 +20,12 @@ export function addTrackingLinks() {
 }
 
 export function duplicatePagination(): void {
-    const swapList = <HTMLDivElement>document.getElementById('swap-list');
+    const swapList = <HTMLDivElement> document.getElementById('swap-list');
     if (!swapList) {
         return;
     }
 
-    const pages = <NodeListOf<HTMLDivElement>>swapList.querySelectorAll('div.pages');
+    const pages = <NodeListOf<HTMLDivElement>> swapList.querySelectorAll('div.pages');
     if (pages.length > 1) {
         return;
     }
@@ -35,12 +35,12 @@ export function duplicatePagination(): void {
         return;
     }
 
-    const table = <HTMLTableElement>swapList.querySelector('table.swap-coin');
+    const table = <HTMLTableElement> swapList.querySelector('table.swap-coin');
     if (!table) {
         return;
     }
 
-    let heading = <HTMLHeadingElement>table.previousElementSibling;
+    let heading = <HTMLHeadingElement> table.previousElementSibling;
     if (!heading || !heading.matches('h2')) {
         return;
     }
@@ -50,13 +50,13 @@ export function duplicatePagination(): void {
         return;
     }
 
-    const clone = <HTMLDivElement>parent.cloneNode(true);
+    const clone = <HTMLDivElement> parent.cloneNode(true);
     clone.style.height = '30px';
-    heading.insertAdjacentElement("beforebegin", clone);
+    heading.insertAdjacentElement('beforebegin', clone);
 }
 
 export function showAllPrices() {
-    const swapRows = <NodeListOf<HTMLTableRowElement>>document.querySelectorAll('table.swap-coin tr');
+    const swapRows = <NodeListOf<HTMLTableRowElement>> document.querySelectorAll('table.swap-coin tr');
     for (const tr of swapRows) {
         const td = tr.querySelector('.td-cond + *');
         const myPrice = +td.querySelector('span.blue-13').textContent;
@@ -66,7 +66,7 @@ export function showAllPrices() {
         if (tooltipPrice) {
             const price = +tooltipPrice.replace(prefix, '').replace(suffix, '');
             if (!isNaN(price) && myPrice !== price) {
-                td.insertAdjacentHTML("beforeend", `<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
+                td.insertAdjacentHTML('beforeend', `<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
             }
         }
     }
@@ -76,12 +76,12 @@ export function addConflictHandling() {
     highlightConflicts();
 
     if (!document.getElementById('need-swap-list')) {
-        const tables = <NodeListOf<HTMLTableElement>>document.querySelectorAll('table.swap-coin');
+        const tables = <NodeListOf<HTMLTableElement>> document.querySelectorAll('table.swap-coin');
         for (const table of tables) {
-            const checkboxes = <NodeListOf<HTMLInputElement>>table.querySelectorAll('input.swap-checkbox, input.swap-country-checkbox');
+            const checkboxes = <NodeListOf<HTMLInputElement>> table.querySelectorAll('input.swap-checkbox, input.swap-country-checkbox');
             for (const checkbox of checkboxes) {
                 checkbox.addEventListener('click', e => {
-                    const input = <HTMLInputElement>e.target;
+                    const input = <HTMLInputElement> e.target;
                     if (!input.checked) {
                         let parent = input.parentElement;
                         while (parent && parent.tagName !== 'tr') {
@@ -98,20 +98,30 @@ export function addConflictHandling() {
     }
 }
 
+type TooltipDataset = {
+    tooltipImgpath: string;
+    tooltipCode: string;
+    tooltipName: string;
+    tooltipSubject: string;
+    tooltipVariety: string;
+    tooltipKm: string;
+    tooltipPrice: string;
+};
+
 function highlightConflicts() {
     const needSwapList = !!document.getElementById('need-swap-list');
     const tables = document.querySelectorAll('table.swap-coin');
     for (const table of tables) {
         let rows = [...table.querySelectorAll('tr')];
         const checked = rows.filter((r: HTMLTableRowElement) => {
-            if (r.matches('tr input.swap-checkbox:checked')) {
+            if (r.querySelector('input.swap-checkbox:checked')) {
                 return true;
             }
             r.classList.remove('conflict');
         });
-        const heading = <HTMLHeadingElement>table.previousElementSibling;
+        const heading = <HTMLHeadingElement> table.previousElementSibling;
         if (heading.tagName.toLowerCase() === 'h2') {
-            const all = <HTMLInputElement>heading.querySelector('input.swap-country-checkbox, input.edit-country-checkbox');
+            const all = <HTMLInputElement> heading.querySelector('input.swap-country-checkbox, input.edit-country-checkbox');
             all.checked = checked.length === rows.length;
         }
         if (!needSwapList) {
@@ -120,13 +130,26 @@ function highlightConflicts() {
 
         for (const r of rows) {
             const data = r.dataset;
-            const selector = `tr[data-tooltip-name=${JSON.stringify(data.tooltipName)}]` +
-                `[data-tooltip-subject=${JSON.stringify(data.tooltipSubject)}]` +
-                `[data-tooltip-variety=${JSON.stringify(data.tooltipVariety)}]` +
-                `[data-tooltip-km=${JSON.stringify(data.tooltipKm)}]`;
+            const {tooltipName, tooltipSubject, tooltipVariety, tooltipKm} = <TooltipDataset> (data || {});
+            // const selector = `tr[data-tooltip-name=${JSON.stringify(tooltipName)}]` +
+            //     `[data-tooltip-subject=${JSON.stringify(tooltipSubject)}]` +
+            //     `[data-tooltip-variety=${JSON.stringify(tooltipVariety)}]` +
+            //     `[data-tooltip-km=${JSON.stringify(tooltipKm)}]`;
+            let selector = ``;
+            if (tooltipKm) {
+                selector = `${selector}[data-tooltip-km=${JSON.stringify(tooltipKm)}]`;
+            } else {
+                selector = `${selector}tr[data-tooltip-name=${JSON.stringify(tooltipName)}]`;
+                if (tooltipSubject) {
+                    selector = `${selector}[data-tooltip-subject=${JSON.stringify(tooltipSubject)}]`;
+                }
+            }
+            if (tooltipVariety) {
+                selector = `${selector}[data-tooltip-variety=${JSON.stringify(tooltipVariety)}]`;
+            }
             let rows = [...table.querySelectorAll(selector)];
             if (!needSwapList) {
-                rows = rows.filter(r => r.matches('tr input.swap-checkbox:checked'));
+                rows = rows.filter(r => !!r.querySelector('input.swap-checkbox:checked'));
             }
             const hasConflicts = rows.length > 1;
             for (const r of rows) {
@@ -145,7 +168,7 @@ export function checkSold() {
         if (soldCount) {
             const delAllButtonId = 'act-d-all';
             const actionBoard = needSwapList.querySelector('.action-board');
-            actionBoard.insertAdjacentHTML("beforeend", `<a class="btn-s btn-gray ico-del" id="${delAllButtonId}" style="float: right;"><div class="ico-16"></div></a>`);
+            actionBoard.insertAdjacentHTML('beforeend', `<a class="btn-s btn-gray ico-del" id="${delAllButtonId}" style="float: right;"><div class="ico-16"></div></a>`);
             const button = document.getElementById(delAllButtonId);
             button.addEventListener('click', async () => {
                 if (!confirm('Are you sure you want to delete these coins?')) {
@@ -159,7 +182,7 @@ export function checkSold() {
                     }
                     isFirstRequest = false;
 
-                    const {href} = (<HTMLAnchorElement>sold.querySelector('a.act'));
+                    const {href} = (<HTMLAnchorElement> sold.querySelector('a.act'));
                     await get(href);
 
                     const tree = document.getElementById('tree');
@@ -206,7 +229,7 @@ export function ignoreUnwanted() {
     if (!document.getElementById('need-swap-list')) {
         const tables = document.querySelectorAll('table.swap-coin');
         for (const table of tables) {
-            const rows = <NodeListOf<HTMLTableRowElement>>table.querySelectorAll('tr');
+            const rows = <NodeListOf<HTMLTableRowElement>> table.querySelectorAll('tr');
             for (const tr of rows) {
                 const markedElement = tr.querySelector('td span[class^="marked-"]');
                 const marked = markedElement && markedElement.classList;

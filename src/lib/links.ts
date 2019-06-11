@@ -24,7 +24,7 @@ export function updateLinkHref(a: HTMLAnchorElement) {
     a.href = newUrl.href;
 }
 
-export function updateOnClickHref(div: HTMLDivElement) {
+export function updateOnClickHref(div: HTMLDivElement, remove?: string[]) {
     const match = div.getAttribute('onclick').match(/location.href='([^']+)';/);
     if (match) {
         const oldUrl = new URL(match[1], loc);
@@ -49,6 +49,13 @@ export function updateOnClickHref(div: HTMLDivElement) {
                 newParams.delete(new URL(a.href, loc).searchParams.get('view'));
             }
         }
+
+        if (remove && remove.length) {
+            for (const name of remove) {
+                newParams.delete(name);
+            }
+        }
+
         div.setAttribute('onclick', `location.href='${newUrl.href}';`);
     }
 }
