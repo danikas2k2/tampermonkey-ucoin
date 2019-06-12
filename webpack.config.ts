@@ -22,7 +22,7 @@ const config: webpack.Configuration = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].js'
+        filename: '[name].user.js'
     },
     optimization: {
         minimize: false
