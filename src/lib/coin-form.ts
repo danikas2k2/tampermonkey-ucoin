@@ -34,15 +34,14 @@ export function addSyncConditionToColorTable() {
     const CL = new Map([...CN.entries()].map(([k, v]) => [v, k])); // switch conditions and colors
 
     if (coinForm) {
-        const markedDivs = coinForm.querySelectorAll('table div[class^="marked-"]');
+        const markedDivs = coinForm.querySelectorAll<HTMLDivElement>('table div[class^="marked-"]');
         for (const div of markedDivs) {
             if (div.id === 'set-color') {
                 continue;
             }
-            div.addEventListener('click', e => {
-                const div = <HTMLDivElement> e.target;
+            div.addEventListener('click', function () {
                 let color = null;
-                for (const c of div.classList) {
+                for (const c of this.classList) {
                     if (c.startsWith('marked-')) {
                         color = c.split('-', 3)[1];
                     }
@@ -58,9 +57,9 @@ export function addSyncConditionToColorTable() {
     const tableColor = <HTMLInputElement> document.getElementById('edit-table-color');
     const setColor = document.getElementById('edit-set-color');
 
-    cond.addEventListener('change', e => {
+    cond.addEventListener('change', function () {
         setColor.classList.remove(`marked-${tableColor.value}`);
-        const condition = (<HTMLSelectElement> e.target).value;
+        const condition = this.value;
         if (CN.has(condition)) {
             tableColor.value = CN.get(condition);
         }
@@ -71,16 +70,16 @@ export function addSyncConditionToColorTable() {
 export function addPublicityToggle() {
     const view = <HTMLDivElement> document.getElementById('ucid-block');
     const buttons = view.querySelector('.func-button');
-    const edit = <HTMLButtonElement> buttons.querySelector('button.btn-blue');
-    const status = <HTMLDivElement> view.querySelector('.status-line .left');
+    const edit = buttons.querySelector<HTMLButtonElement>('button.btn-blue');
+    const status = view.querySelector<HTMLDivElement>('.status-line .left');
 
     for (const button of buttons.querySelectorAll('.btn-l')) {
         button.classList.add('btn-narrow');
     }
 
-    const form = <HTMLFormElement> document.getElementById('edit-coin-form').querySelector('form');
+    const form = document.getElementById('edit-coin-form').querySelector<HTMLFormElement>('form');
 
-    const publicCheckbox = <HTMLInputElement> form.querySelector('input[name=public]');
+    const publicCheckbox = form.querySelector<HTMLInputElement>('input[name=public]');
     let checked = publicCheckbox && publicCheckbox.checked;
 
     const visibilityButton = <HTMLButtonElement> edit.cloneNode();
@@ -131,10 +130,10 @@ export function addPublicityToggle() {
 export function addReplacementToggle() {
     const view = <HTMLDivElement> document.getElementById('ucid-block');
     const funcButtons = view.querySelector('.func-button');
-    const edit = <HTMLButtonElement> funcButtons.querySelector('button.btn-blue');
+    const edit = funcButtons.querySelector<HTMLButtonElement>('button.btn-blue');
 
     let replaceStatus: HTMLTableRowElement;
-    const statusRows = <NodeListOf<HTMLTableRowElement>> view.querySelectorAll('.status-line + table tr');
+    const statusRows = view.querySelectorAll<HTMLTableRowElement>('.status-line + table tr');
     for (const tr of statusRows) {
         if (tr.querySelector('span.status2')) {
             replaceStatus = tr;
@@ -146,9 +145,9 @@ export function addReplacementToggle() {
         button.classList.add('btn-narrow');
     }
 
-    const form = <HTMLFormElement> document.getElementById('edit-coin-form').querySelector('form');
+    const form = document.getElementById('edit-coin-form').querySelector<HTMLFormElement>('form');
 
-    const replaceCheckbox = <HTMLInputElement> form.querySelector('input[name=replace]');
+    const replaceCheckbox = form.querySelector<HTMLInputElement>('input[name=replace]');
     let replace = replaceCheckbox && replaceCheckbox.checked;
 
     const replacementButton = <HTMLButtonElement> edit.cloneNode();
@@ -181,7 +180,7 @@ export function addReplacementToggle() {
         if (replace) {
             replacementButton.classList.replace('btn-blue', 'btn-gray');
             if (!replaceStatus) {
-                const tbody = <HTMLTableElement> view.querySelector('.status-line + table tbody');
+                const tbody = view.querySelector<HTMLTableElement>('.status-line + table tbody');
                 if (tbody) {
                     tbody.insertAdjacentHTML("beforeend", `<tr><td class="lgray-12" colspan="2"><span class="set status2 wrap" style="max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;">Need to replace</span></td></tr>`);
                     replaceStatus = tbody.querySelector('tr:last-child');

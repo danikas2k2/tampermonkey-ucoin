@@ -1,8 +1,8 @@
 declare var CoinSwapFormOn: (...args: string[]) => void;
 
-import {CoinSwapFormOnMatcher, getSwapLinks, getSwapLinksWithMatches} from "./swap-links";
-import {randomDelay} from "./delay";
-import {get, post} from "./ajax";
+import {get, post} from './ajax';
+import {randomDelay} from './delay';
+import {CoinSwapFormOnMatcher, getSwapLinks, getSwapLinksWithMatches} from './swap-links';
 import {UID} from './uid';
 
 export function addSwapComments() {
@@ -26,7 +26,7 @@ interface CoinSwapVariant extends CoinSwapVariantData {
 }
 
 export async function addSwapButtons() {
-    const mySwap = <HTMLElement>document.getElementById('my-swap-block');
+    const mySwap = <HTMLElement> document.getElementById('my-swap-block');
     if (!mySwap) {
         return;
     }
@@ -35,20 +35,20 @@ export async function addSwapButtons() {
         mySwap.classList.remove('hide');
         mySwap.style.display = '';
 
-        const showButton = <HTMLElement>mySwap.previousSibling;
+        const showButton = <HTMLElement> mySwap.previousSibling;
         showButton.classList.add('hide');
         showButton.style.display = 'none';
     }
 
-    const swapBlock = <HTMLElement>mySwap.querySelector('#swap-block');
+    const swapBlock = mySwap.querySelector<HTMLElement>('#swap-block');
 
     const div = document.createElement('div');
     div.style.maxHeight = '400px';
     div.style.overflowX = 'hidden';
     div.style.overflowY = 'auto';
-    swapBlock.insertAdjacentElement("afterbegin", div);
+    swapBlock.insertAdjacentElement('afterbegin', div);
     for (const {a} of getSwapLinksWithMatches()) {
-        div.insertAdjacentElement("beforeend", a);
+        div.insertAdjacentElement('beforeend', a);
     }
 
     const buttonSet = swapBlock.querySelector('center');
@@ -105,7 +105,7 @@ export async function addSwapButtons() {
         }
         if (qty > 1) {
             for (const span of a.querySelectorAll('span.left.gray-13.wrap')) {
-                span.insertAdjacentHTML("afterend", `<span class="left dblue-13"><span>&times;</span>${qty}</span>`);
+                span.insertAdjacentHTML('afterend', `<span class="left dblue-13"><span>&times;</span>${qty}</span>`);
             }
         }
     }
@@ -150,7 +150,7 @@ export async function addSwapButtons() {
                         continue;
                     }
 
-                    const m = <CoinSwapFormOnMatchResult>l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+                    const m = <CoinSwapFormOnMatchResult> l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
                     if (m && m.groups) {
                         links.add(m.groups.usid);
                     }
@@ -160,14 +160,14 @@ export async function addSwapButtons() {
                     if (!l.hasAttribute('onClick')) {
                         continue;
                     }
-                    const m = <CoinSwapFormOnMatchResult>l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+                    const m = <CoinSwapFormOnMatchResult> l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
                     const usid = m && m.groups && m.groups.usid;
                     if (!usid || links.has(usid)) {
                         continue;
                     }
                     links.add(usid);
                     styleSwapLink(l);
-                    a.insertAdjacentElement("afterend", l);
+                    a.insertAdjacentElement('afterend', l);
                     addSwapComment(l);
                 }
 
@@ -207,9 +207,9 @@ export async function addSwapButtons() {
         if (expand) {
             expand.style.display = '';
         } else {
-            buttonSet.insertAdjacentHTML("beforeend",
+            buttonSet.insertAdjacentHTML('beforeend',
                 `<button id="${id}" type="button" class="btn--expander btn-s btn-blue">${text}</button>`);
-            document.getElementById(id).addEventListener("click", clickHandler);
+            document.getElementById(id).addEventListener('click', clickHandler);
         }
     }
 
@@ -333,21 +333,21 @@ export async function addSwapButtons() {
         if (combine) {
             combine.style.display = '';
         } else {
-            buttonSet.insertAdjacentHTML("beforeend",
+            buttonSet.insertAdjacentHTML('beforeend',
                 `<button id="${id}" type="button" class="btn--combiner btn-s btn-blue" style="margin: 8px 2px 0">&raquo;&middot;&laquo;</button>`);
-            document.getElementById(id).addEventListener("click", () => combineClicked());
+            document.getElementById(id).addEventListener('click', () => combineClicked());
         }
     }
 
     function removeExpandButtons() {
-        const buttons = <NodeListOf<HTMLButtonElement>>buttonSet.querySelectorAll('button.btn--expander');
+        const buttons = buttonSet.querySelectorAll<HTMLButtonElement>('button.btn--expander');
         for (const b of buttons) {
             b.style.display = 'none';
         }
     }
 
     function removeCombineButtons() {
-        const buttons = <NodeListOf<HTMLButtonElement>>buttonSet.querySelectorAll('button.btn--combiner');
+        const buttons = buttonSet.querySelectorAll<HTMLButtonElement>('button.btn--combiner');
         for (const b of buttons) {
             b.style.display = 'none';
         }
@@ -391,7 +391,7 @@ export async function addSwapButtons() {
     }
 
     async function updSwapCoin(usid: string, {cond, qty, vid, info, price}: CoinSwapVariantData, action: SwapFormAction = 'editswapcoin'): Promise<DocumentFragment> {
-        const swapForm = <HTMLFormElement>document.getElementById('swap-form');
+        const swapForm = <HTMLFormElement> document.getElementById('swap-form');
 
         const data = new FormData(swapForm);
         data.set('usid', `${usid || ''}`);
@@ -427,11 +427,11 @@ export async function addSwapButtons() {
 
 function addSwapComment(a: HTMLAnchorElement): void {
     if (a.hasAttribute('onClick')) {
-        const m = <CoinSwapFormOnMatchResult>a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+        const m = <CoinSwapFormOnMatchResult> a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
         if (m && m.groups) {
             const {info} = m.groups;
             if (info && !a.querySelector('.comments')) {
-                a.insertAdjacentHTML("beforeend",
+                a.insertAdjacentHTML('beforeend',
                     `<span class="right dgray-11 wrap comments" title="${info}"><div class="ico-16"></div> ${info}</span>`);
             }
         }
@@ -439,14 +439,16 @@ function addSwapComment(a: HTMLAnchorElement): void {
 }
 
 export function addSwapFormQtyButtons() {
-    const qty = <HTMLInputElement>document.getElementById('swap-qty');
+    const qty = <HTMLInputElement> document.getElementById('swap-qty');
     qty.setAttribute('inputmode', 'numeric');
-    qty.addEventListener("focus", e => (<HTMLInputElement>e.target).setSelectionRange(0, (<HTMLInputElement>e.target).value.length));
+    qty.addEventListener('focus', function () {
+        this.setSelectionRange(0, this.value.length);
+    });
 
-    addQtyCtrlButton("afterend", 'minus', '&minus;', v => v - 1);
-    addQtyCtrlButton("beforebegin", 'plus10', '+10', v => v + 10);
-    addQtyCtrlButton("beforebegin", 'plus5', '+5', v => v + 5);
-    addQtyCtrlButton("beforebegin", 'plus', '+', v => v + 1);
+    addQtyCtrlButton('afterend', 'minus', '&minus;', v => v - 1);
+    addQtyCtrlButton('beforebegin', 'plus10', '+10', v => v + 10);
+    addQtyCtrlButton('beforebegin', 'plus5', '+5', v => v + 5);
+    addQtyCtrlButton('beforebegin', 'plus', '+', v => v + 1);
 
     function addQtyCtrlButton(where: InsertPosition, id: string, text: string, valueChanger: (prevValue: number) => number): void {
         const qtyId = `swap-qty-${id}`;
@@ -460,7 +462,8 @@ export function addSwapFormQtyButtons() {
 export function addSwapColorMarkers() {
     const id = 'swap-cond-fieldset';
     const cond = document.getElementById('swap-cond');
-    cond.insertAdjacentHTML("afterend", `<fieldset id="${id}"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
+    cond.insertAdjacentHTML('afterend',
+        `<fieldset id="${id}"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
     const fieldset = document.getElementById(id);
 
     const options = cond.querySelectorAll('option');
@@ -469,7 +472,8 @@ export function addSwapColorMarkers() {
         const text = val ? o.textContent : 'Without condition';
         const checked = (val === '3') ? 'checked' : '';
         const style = o.getAttribute('style') || '';
-        fieldset.insertAdjacentHTML("beforeend", `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${val}" ${checked} type="radio"/>${text}</label>`);
+        fieldset.insertAdjacentHTML('beforeend',
+            `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${val}" ${checked} type="radio"/>${text}</label>`);
     }
 
     cond.remove();
@@ -481,18 +485,18 @@ export function addSwapColorMarkers() {
 
     CoinSwapFormOn = function (...args: any[]) {
         _onCoinSwapForm(...args);
-        (<HTMLInputElement>fieldset.querySelector(`input[name="condition"][value="${args[1]}"]`)).checked = true;
+        fieldset.querySelector<HTMLInputElement>(`input[name="condition"][value="${args[1]}"]`).checked = true;
     };
 
-    const mySwap = <HTMLElement>document.getElementById('my-swap-block');
-    const swapBlock = <HTMLElement>mySwap.querySelector('#swap-block');
+    const mySwap = <HTMLElement> document.getElementById('my-swap-block');
+    const swapBlock = mySwap.querySelector<HTMLElement>('#swap-block');
     const addButton = swapBlock.querySelector('center button.btn-s.btn-gray');
     if (!addButton) {
         return;
     }
 
     const buttonSetId = 'swap-button-set';
-    addButton.insertAdjacentHTML("afterend", `<div id="${buttonSetId}" class="btn-set"/>`);
+    addButton.insertAdjacentHTML('afterend', `<div id="${buttonSetId}" class="btn-set"/>`);
     addButton.remove();
 
     const buttonSet = document.getElementById(buttonSetId);
@@ -513,8 +517,8 @@ export function addSwapColorMarkers() {
     function addSwapMarker(text: string, color: number, value: number): void {
         const markerId = `marked-${value}`;
         const markerClass = `marked-${color}`;
-        buttonSet.insertAdjacentHTML("beforeend", `<div id="${markerId}" class="${markerClass}">${text}</div>`);
-        document.getElementById(markerId).addEventListener("click", () => CoinSwapFormOn('', `${value}`));
+        buttonSet.insertAdjacentHTML('beforeend', `<div id="${markerId}" class="${markerClass}">${text}</div>`);
+        document.getElementById(markerId).addEventListener('click', () => CoinSwapFormOn('', `${value}`));
     }
 }
 
@@ -540,12 +544,12 @@ export function styleSwapLink(a: HTMLAnchorElement) {
     const y = parts.shift();
     if (parts.length) {
         mintBlock.textContent = y;
-        mintBlock.insertAdjacentHTML("beforeend", ` <span class="lgray-11">${parts.join(' ')}</span>`);
+        mintBlock.insertAdjacentHTML('beforeend', ` <span class="lgray-11">${parts.join(' ')}</span>`);
     }
 }
 
 export function styleSwapLists() {
-    const listOfLinks = <NodeListOf<HTMLAnchorElement>>document.querySelectorAll('#swap-block a.list-link');
+    const listOfLinks = document.querySelectorAll<HTMLAnchorElement>('#swap-block a.list-link');
     for (const a of listOfLinks) {
         styleSwapLink(a);
     }

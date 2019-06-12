@@ -25,7 +25,7 @@ export function duplicatePagination(): void {
         return;
     }
 
-    const pages = <NodeListOf<HTMLDivElement>> swapList.querySelectorAll('div.pages');
+    const pages = swapList.querySelectorAll<HTMLDivElement>('div.pages');
     if (pages.length > 1) {
         return;
     }
@@ -35,7 +35,7 @@ export function duplicatePagination(): void {
         return;
     }
 
-    const table = <HTMLTableElement> swapList.querySelector('table.swap-coin');
+    const table = swapList.querySelector<HTMLTableElement>('table.swap-coin');
     if (!table) {
         return;
     }
@@ -56,7 +56,7 @@ export function duplicatePagination(): void {
 }
 
 export function showAllPrices() {
-    const swapRows = <NodeListOf<HTMLTableRowElement>> document.querySelectorAll('table.swap-coin tr');
+    const swapRows = document.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr');
     for (const tr of swapRows) {
         const td = tr.querySelector('.td-cond + *');
         const myPrice = +td.querySelector('span.blue-13').textContent;
@@ -121,7 +121,7 @@ function highlightConflicts() {
         });
         const heading = <HTMLHeadingElement> table.previousElementSibling;
         if (heading.tagName.toLowerCase() === 'h2') {
-            const all = <HTMLInputElement> heading.querySelector('input.swap-country-checkbox, input.edit-country-checkbox');
+            const all = heading.querySelector<HTMLInputElement>('input.swap-country-checkbox, input.edit-country-checkbox');
             all.checked = checked.length === rows.length;
         }
         if (!needSwapList) {
@@ -130,7 +130,7 @@ function highlightConflicts() {
 
         for (const r of rows) {
             const data = r.dataset;
-            const {tooltipName, tooltipSubject, tooltipVariety, tooltipKm} = <TooltipDataset> (data || {});
+            const {tooltipName, tooltipSubject, tooltipVariety, tooltipKm} = <TooltipDataset> {...data};
             // const selector = `tr[data-tooltip-name=${JSON.stringify(tooltipName)}]` +
             //     `[data-tooltip-subject=${JSON.stringify(tooltipSubject)}]` +
             //     `[data-tooltip-variety=${JSON.stringify(tooltipVariety)}]` +
@@ -182,7 +182,7 @@ export function checkSold() {
                     }
                     isFirstRequest = false;
 
-                    const {href} = (<HTMLAnchorElement> sold.querySelector('a.act'));
+                    const {href} = sold.querySelector<HTMLAnchorElement>('a.act');
                     await get(href);
 
                     const tree = document.getElementById('tree');
@@ -229,7 +229,7 @@ export function ignoreUnwanted() {
     if (!document.getElementById('need-swap-list')) {
         const tables = document.querySelectorAll('table.swap-coin');
         for (const table of tables) {
-            const rows = <NodeListOf<HTMLTableRowElement>> table.querySelectorAll('tr');
+            const rows = table.querySelectorAll<HTMLTableRowElement>('tr');
             for (const tr of rows) {
                 const markedElement = tr.querySelector('td span[class^="marked-"]');
                 const marked = markedElement && markedElement.classList;

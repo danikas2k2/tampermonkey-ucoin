@@ -43,7 +43,7 @@ export function updateOnClickHref(div: HTMLDivElement, remove?: string[]) {
         if (document.getElementById('status-filter')) {
             newParams.delete('status');
         } else {
-            const a = <HTMLAnchorElement> div.querySelector('a.switcher');
+            const a = div.querySelector<HTMLAnchorElement>('a.switcher');
             if (a) {
                 newParams.delete('view');
                 newParams.delete(new URL(a.href, loc).searchParams.get('view'));

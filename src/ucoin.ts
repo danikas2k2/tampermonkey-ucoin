@@ -105,14 +105,14 @@ async function handleSwapPage() {
 
     const tree = <HTMLDivElement> document.getElementById('tree');
     if (tree) {
-        const filterLinks = <NodeListOf<HTMLAnchorElement>> tree.querySelectorAll('.filter-container .list-link');
+        const filterLinks = tree.querySelectorAll<HTMLAnchorElement>('.filter-container .list-link');
         for (const a of filterLinks) {
             updateLinkHref(a);
         }
-        const filterBoxes = <NodeListOf<HTMLDivElement>> tree.querySelectorAll('.filter-container .filter-box-active');
+        const filterBoxes = tree.querySelectorAll<HTMLDivElement>('.filter-container .filter-box-active');
         for (const filter of filterBoxes) {
             const name = filter.getAttribute('id').replace(/-filter/, '');
-            const div = <HTMLDivElement> filter.querySelector('.close');
+            const div = filter.querySelector<HTMLDivElement>('.close');
             if (div) {
                 updateOnClickHref(div, [name]);
             }

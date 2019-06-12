@@ -403,10 +403,9 @@ function addSyncConditionToColorTable() {
             if (div.id === 'set-color') {
                 continue;
             }
-            div.addEventListener('click', e => {
-                const div = e.target;
+            div.addEventListener('click', function () {
                 let color = null;
-                for (const c of div.classList) {
+                for (const c of this.classList) {
                     if (c.startsWith('marked-')) {
                         color = c.split('-', 3)[1];
                     }
@@ -419,9 +418,9 @@ function addSyncConditionToColorTable() {
     }
     const tableColor = document.getElementById('edit-table-color');
     const setColor = document.getElementById('edit-set-color');
-    cond.addEventListener('change', e => {
+    cond.addEventListener('change', function () {
         setColor.classList.remove(`marked-${tableColor.value}`);
-        const condition = e.target.value;
+        const condition = this.value;
         if (CN.has(condition)) {
             tableColor.value = CN.get(condition);
         }
@@ -564,13 +563,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // @ts-ignore
-const success_svg_1 = __importDefault(__webpack_require__(8));
+const error_svg_1 = __importDefault(__webpack_require__(8));
 // @ts-ignore
-const error_svg_1 = __importDefault(__webpack_require__(9));
+const info_svg_1 = __importDefault(__webpack_require__(9));
 // @ts-ignore
-const info_svg_1 = __importDefault(__webpack_require__(10));
+const minus_svg_1 = __importDefault(__webpack_require__(10));
 // @ts-ignore
-const minus_svg_1 = __importDefault(__webpack_require__(11));
+const success_svg_1 = __importDefault(__webpack_require__(11));
 function notify(title, body, icon) {
     const options = {};
     if (body) {
@@ -581,35 +580,34 @@ function notify(title, body, icon) {
     }
     new Notification(title, options);
 }
-function request(title, body, icon) {
-    if (!("Notification" in window)) {
+async function request(title, body, icon) {
+    if (!('Notification' in window)) {
         alert(title);
     }
     else if (Notification.permission === 'granted') {
         notify(title, body, icon);
     }
     else if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                notify(title, body, icon);
-            }
-        });
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+            notify(title, body, icon);
+        }
     }
 }
-function info(title, body) {
-    request(title, body, info_svg_1.default);
+async function info(title, body) {
+    await request(title, body, info_svg_1.default);
 }
 exports.info = info;
-function err(title, body) {
-    request(title, body, error_svg_1.default);
+async function err(title, body) {
+    await request(title, body, error_svg_1.default);
 }
 exports.err = err;
-function warn(title, body) {
-    request(title, body, minus_svg_1.default);
+async function warn(title, body) {
+    await request(title, body, minus_svg_1.default);
 }
 exports.warn = warn;
-function ok(title, body) {
-    request(title, body, success_svg_1.default);
+async function ok(title, body) {
+    await request(title, body, success_svg_1.default);
 }
 exports.ok = ok;
 
@@ -618,25 +616,25 @@ exports.ok = ok;
 /* 8 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#25ae88\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"M38 15L22 33l-10-8\"></path></svg>"
+module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#d75a4a\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M16 34l9-9 9-9m-18 0l9 9 9 9\"></path></svg>"
 
 /***/ }),
 /* 9 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#d75a4a\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M16 34l9-9 9-9m-18 0l9 9 9 9\"></path></svg>"
+module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#48a0dc\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M25 37v2m-7-23a7 7 0 0 1 7.1-7 7.1 7.1 0 0 1 6.9 6.9 7 7 0 0 1-3.21 5.99A8.6 8.6 0 0 0 25 29.16V32\"></path></svg>"
 
 /***/ }),
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#48a0dc\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M25 37v2m-7-23a7 7 0 0 1 7.1-7 7.1 7.1 0 0 1 6.9 6.9 7 7 0 0 1-3.21 5.99A8.6 8.6 0 0 0 25 29.16V32\"></path></svg>"
+module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#ed8a19\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"M38 25H12\"></path></svg>"
 
 /***/ }),
 /* 11 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#ed8a19\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"M38 25H12\"></path></svg>"
+module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#25ae88\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"M38 15L22 33l-10-8\"></path></svg>"
 
 /***/ }),
 /* 12 */
@@ -649,11 +647,12 @@ const ajax_1 = __webpack_require__(0);
 const delay_1 = __webpack_require__(1);
 function addGalleryVisibilityToggle() {
     const gallery = document.getElementById('gallery');
-    let privateStatus, publicStatus;
+    let privateStatus;
+    let publicStatus;
     updateStatusElements();
     const buttonContainerId = 'button-container';
     const sortFilter = document.getElementById('sort-filter').parentElement;
-    sortFilter.insertAdjacentHTML("afterend", `<div id="${buttonContainerId}" class="left filter-container" style="float:right">`);
+    sortFilter.insertAdjacentHTML('afterend', `<div id="${buttonContainerId}" class="left filter-container" style="float:right">`);
     const container = document.getElementById(buttonContainerId);
     const showButton = addVisibilityToggleButton('Show', 'btn-blue', true);
     const showButtonCount = showButton.querySelector('small');
@@ -662,9 +661,9 @@ function addGalleryVisibilityToggle() {
     toggleButtonVisibility();
     function addVisibilityToggleButton(text, className, visibility) {
         const buttonId = `button-${text.toLowerCase()}`;
-        container.insertAdjacentHTML("beforeend", `<button id="${buttonId}" class="btn-l ${className}" style="padding: 0 14px; height: 26px">${text} <small></small></button>`);
+        container.insertAdjacentHTML('beforeend', `<button id="${buttonId}" class="btn-l ${className}" style="padding: 0 14px; height: 26px">${text} <small></small></button>`);
         const button = document.getElementById(buttonId);
-        button.addEventListener("click", () => toggleGroupVisibility(visibility));
+        button.addEventListener('click', () => toggleGroupVisibility(visibility));
         return button;
     }
     function toggleButtonVisibility() {
@@ -884,9 +883,9 @@ exports.estimateSwapPrices = estimateSwapPrices;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const swap_links_1 = __webpack_require__(16);
-const delay_1 = __webpack_require__(1);
 const ajax_1 = __webpack_require__(0);
+const delay_1 = __webpack_require__(1);
+const swap_links_1 = __webpack_require__(16);
 const uid_1 = __webpack_require__(2);
 function addSwapComments() {
     for (const a of swap_links_1.getSwapLinks()) {
@@ -911,9 +910,9 @@ async function addSwapButtons() {
     div.style.maxHeight = '400px';
     div.style.overflowX = 'hidden';
     div.style.overflowY = 'auto';
-    swapBlock.insertAdjacentElement("afterbegin", div);
+    swapBlock.insertAdjacentElement('afterbegin', div);
     for (const { a } of swap_links_1.getSwapLinksWithMatches()) {
-        div.insertAdjacentElement("beforeend", a);
+        div.insertAdjacentElement('beforeend', a);
     }
     const buttonSet = swapBlock.querySelector('center');
     const variants = new Map();
@@ -960,7 +959,7 @@ async function addSwapButtons() {
         }
         if (qty > 1) {
             for (const span of a.querySelectorAll('span.left.gray-13.wrap')) {
-                span.insertAdjacentHTML("afterend", `<span class="left dblue-13"><span>&times;</span>${qty}</span>`);
+                span.insertAdjacentHTML('afterend', `<span class="left dblue-13"><span>&times;</span>${qty}</span>`);
             }
         }
     }
@@ -1012,7 +1011,7 @@ async function addSwapButtons() {
                     }
                     links.add(usid);
                     styleSwapLink(l);
-                    a.insertAdjacentElement("afterend", l);
+                    a.insertAdjacentElement('afterend', l);
                     addSwapComment(l);
                 }
                 if (!isFirstQuery) {
@@ -1048,8 +1047,8 @@ async function addSwapButtons() {
             expand.style.display = '';
         }
         else {
-            buttonSet.insertAdjacentHTML("beforeend", `<button id="${id}" type="button" class="btn--expander btn-s btn-blue">${text}</button>`);
-            document.getElementById(id).addEventListener("click", clickHandler);
+            buttonSet.insertAdjacentHTML('beforeend', `<button id="${id}" type="button" class="btn--expander btn-s btn-blue">${text}</button>`);
+            document.getElementById(id).addEventListener('click', clickHandler);
         }
     }
     function addExpandButtons() {
@@ -1160,8 +1159,8 @@ async function addSwapButtons() {
             combine.style.display = '';
         }
         else {
-            buttonSet.insertAdjacentHTML("beforeend", `<button id="${id}" type="button" class="btn--combiner btn-s btn-blue" style="margin: 8px 2px 0">&raquo;&middot;&laquo;</button>`);
-            document.getElementById(id).addEventListener("click", () => combineClicked());
+            buttonSet.insertAdjacentHTML('beforeend', `<button id="${id}" type="button" class="btn--combiner btn-s btn-blue" style="margin: 8px 2px 0">&raquo;&middot;&laquo;</button>`);
+            document.getElementById(id).addEventListener('click', () => combineClicked());
         }
     }
     function removeExpandButtons() {
@@ -1242,7 +1241,7 @@ function addSwapComment(a) {
         if (m && m.groups) {
             const { info } = m.groups;
             if (info && !a.querySelector('.comments')) {
-                a.insertAdjacentHTML("beforeend", `<span class="right dgray-11 wrap comments" title="${info}"><div class="ico-16"></div> ${info}</span>`);
+                a.insertAdjacentHTML('beforeend', `<span class="right dgray-11 wrap comments" title="${info}"><div class="ico-16"></div> ${info}</span>`);
             }
         }
     }
@@ -1250,11 +1249,13 @@ function addSwapComment(a) {
 function addSwapFormQtyButtons() {
     const qty = document.getElementById('swap-qty');
     qty.setAttribute('inputmode', 'numeric');
-    qty.addEventListener("focus", e => e.target.setSelectionRange(0, e.target.value.length));
-    addQtyCtrlButton("afterend", 'minus', '&minus;', v => v - 1);
-    addQtyCtrlButton("beforebegin", 'plus10', '+10', v => v + 10);
-    addQtyCtrlButton("beforebegin", 'plus5', '+5', v => v + 5);
-    addQtyCtrlButton("beforebegin", 'plus', '+', v => v + 1);
+    qty.addEventListener('focus', function () {
+        this.setSelectionRange(0, this.value.length);
+    });
+    addQtyCtrlButton('afterend', 'minus', '&minus;', v => v - 1);
+    addQtyCtrlButton('beforebegin', 'plus10', '+10', v => v + 10);
+    addQtyCtrlButton('beforebegin', 'plus5', '+5', v => v + 5);
+    addQtyCtrlButton('beforebegin', 'plus', '+', v => v + 1);
     function addQtyCtrlButton(where, id, text, valueChanger) {
         const qtyId = `swap-qty-${id}`;
         qty.insertAdjacentHTML(where, `<button id="${qtyId}" type="button" class="btn-s btn-gray btn-ctrl">${text}</button>`);
@@ -1267,7 +1268,7 @@ exports.addSwapFormQtyButtons = addSwapFormQtyButtons;
 function addSwapColorMarkers() {
     const id = 'swap-cond-fieldset';
     const cond = document.getElementById('swap-cond');
-    cond.insertAdjacentHTML("afterend", `<fieldset id="${id}"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
+    cond.insertAdjacentHTML('afterend', `<fieldset id="${id}"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
     const fieldset = document.getElementById(id);
     const options = cond.querySelectorAll('option');
     for (const o of options) {
@@ -1275,7 +1276,7 @@ function addSwapColorMarkers() {
         const text = val ? o.textContent : 'Without condition';
         const checked = (val === '3') ? 'checked' : '';
         const style = o.getAttribute('style') || '';
-        fieldset.insertAdjacentHTML("beforeend", `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${val}" ${checked} type="radio"/>${text}</label>`);
+        fieldset.insertAdjacentHTML('beforeend', `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${val}" ${checked} type="radio"/>${text}</label>`);
     }
     cond.remove();
     const _onCoinSwapForm = CoinSwapFormOn;
@@ -1293,7 +1294,7 @@ function addSwapColorMarkers() {
         return;
     }
     const buttonSetId = 'swap-button-set';
-    addButton.insertAdjacentHTML("afterend", `<div id="${buttonSetId}" class="btn-set"/>`);
+    addButton.insertAdjacentHTML('afterend', `<div id="${buttonSetId}" class="btn-set"/>`);
     addButton.remove();
     const buttonSet = document.getElementById(buttonSetId);
     if (!buttonSet) {
@@ -1311,8 +1312,8 @@ function addSwapColorMarkers() {
     function addSwapMarker(text, color, value) {
         const markerId = `marked-${value}`;
         const markerClass = `marked-${color}`;
-        buttonSet.insertAdjacentHTML("beforeend", `<div id="${markerId}" class="${markerClass}">${text}</div>`);
-        document.getElementById(markerId).addEventListener("click", () => CoinSwapFormOn('', `${value}`));
+        buttonSet.insertAdjacentHTML('beforeend', `<div id="${markerId}" class="${markerClass}">${text}</div>`);
+        document.getElementById(markerId).addEventListener('click', () => CoinSwapFormOn('', `${value}`));
     }
 }
 exports.addSwapColorMarkers = addSwapColorMarkers;
@@ -1336,7 +1337,7 @@ function styleSwapLink(a) {
     const y = parts.shift();
     if (parts.length) {
         mintBlock.textContent = y;
-        mintBlock.insertAdjacentHTML("beforeend", ` <span class="lgray-11">${parts.join(' ')}</span>`);
+        mintBlock.insertAdjacentHTML('beforeend', ` <span class="lgray-11">${parts.join(' ')}</span>`);
     }
 }
 exports.styleSwapLink = styleSwapLink;
@@ -1459,32 +1460,38 @@ function showAllPrices() {
 exports.showAllPrices = showAllPrices;
 function addConflictHandling() {
     highlightConflicts();
-    if (!document.getElementById('need-swap-list')) {
-        const tables = document.querySelectorAll('table.swap-coin');
-        for (const table of tables) {
-            const checkboxes = table.querySelectorAll('input.swap-checkbox, input.swap-country-checkbox');
-            for (const checkbox of checkboxes) {
-                checkbox.addEventListener('click', e => {
-                    const input = e.target;
-                    if (!input.checked) {
-                        let parent = input.parentElement;
-                        while (parent && parent.tagName !== 'tr') {
-                            parent = parent.parentElement;
-                        }
-                        if (parent) {
-                            parent.classList.remove('conflict');
-                        }
-                    }
-                    highlightConflicts();
-                });
+    const checkboxes = document.querySelectorAll('#swap-list table.swap-coin input.swap-checkbox');
+    for (const checkbox of checkboxes) {
+        checkbox.addEventListener('click', function () {
+            if (!this.checked) {
+                const row = this.closest('tr');
+                if (row) {
+                    row.classList.remove('conflict');
+                }
             }
-        }
+            highlightConflicts();
+        });
+    }
+    const countryCheckboxes = document.querySelectorAll('#swap-list h2 input.swap-country-checkbox');
+    for (const checkbox of countryCheckboxes) {
+        checkbox.addEventListener('click', function () {
+            if (!this.checked) {
+                const country = this.closest('h2');
+                if (country) {
+                    const rows = country.nextElementSibling.querySelectorAll('tr');
+                    for (const row of rows) {
+                        row.classList.remove('conflict');
+                    }
+                }
+            }
+            highlightConflicts();
+        });
     }
 }
 exports.addConflictHandling = addConflictHandling;
 function highlightConflicts() {
     const needSwapList = !!document.getElementById('need-swap-list');
-    const tables = document.querySelectorAll('table.swap-coin');
+    const tables = document.querySelectorAll('#swap-list table.swap-coin');
     for (const table of tables) {
         let rows = [...table.querySelectorAll('tr')];
         const checked = rows.filter((r) => {
@@ -1503,7 +1510,7 @@ function highlightConflicts() {
         }
         for (const r of rows) {
             const data = r.dataset;
-            const { tooltipName, tooltipSubject, tooltipVariety, tooltipKm } = (data || {});
+            const { tooltipName, tooltipSubject, tooltipVariety, tooltipKm } = { ...data };
             // const selector = `tr[data-tooltip-name=${JSON.stringify(tooltipName)}]` +
             //     `[data-tooltip-subject=${JSON.stringify(tooltipSubject)}]` +
             //     `[data-tooltip-variety=${JSON.stringify(tooltipVariety)}]` +

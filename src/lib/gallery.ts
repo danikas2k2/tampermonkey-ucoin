@@ -1,17 +1,17 @@
-import {get, post} from "./ajax";
-import {randomDelay} from "./delay";
+import {get, post} from './ajax';
+import {randomDelay} from './delay';
 
 export function addGalleryVisibilityToggle() {
     const gallery = <HTMLElement> document.getElementById('gallery');
 
-    let privateStatus: NodeListOf<HTMLDivElement>,
-        publicStatus: NodeListOf<HTMLDivElement>;
+    let privateStatus: NodeListOf<HTMLDivElement>;
+    let publicStatus: NodeListOf<HTMLDivElement>;
 
     updateStatusElements();
 
     const buttonContainerId = 'button-container';
     const sortFilter = document.getElementById('sort-filter').parentElement;
-    sortFilter.insertAdjacentHTML("afterend", `<div id="${buttonContainerId}" class="left filter-container" style="float:right">`);
+    sortFilter.insertAdjacentHTML('afterend', `<div id="${buttonContainerId}" class="left filter-container" style="float:right">`);
     const container = document.getElementById(buttonContainerId);
 
     const showButton = addVisibilityToggleButton('Show', 'btn-blue', true);
@@ -23,9 +23,9 @@ export function addGalleryVisibilityToggle() {
 
     function addVisibilityToggleButton(text: string, className: string, visibility: boolean): HTMLButtonElement {
         const buttonId = `button-${text.toLowerCase()}`;
-        container.insertAdjacentHTML("beforeend", `<button id="${buttonId}" class="btn-l ${className}" style="padding: 0 14px; height: 26px">${text} <small></small></button>`);
+        container.insertAdjacentHTML('beforeend', `<button id="${buttonId}" class="btn-l ${className}" style="padding: 0 14px; height: 26px">${text} <small></small></button>`);
         const button = <HTMLButtonElement> document.getElementById(buttonId);
-        button.addEventListener("click", () => toggleGroupVisibility(visibility));
+        button.addEventListener('click', () => toggleGroupVisibility(visibility));
         return button;
     }
 
@@ -43,7 +43,7 @@ export function addGalleryVisibilityToggle() {
 
         const statusList = checked ? privateStatus : publicStatus;
         for await (const status of statusList) {
-            const url = (<HTMLAnchorElement> status.parentElement.querySelector(`.coin-desc div a`)).href;
+            const url = status.parentElement.querySelector<HTMLAnchorElement>(`.coin-desc div a`).href;
 
             const response = await get(url);
             const responseText = await response.text();
@@ -67,12 +67,12 @@ export function addGalleryVisibilityToggle() {
     }
 
     function updateStatusElements() {
-        privateStatus = gallery.querySelectorAll('.coin .desc-block span.status0');
-        publicStatus = gallery.querySelectorAll('.coin .desc-block span.status1');
+        privateStatus = gallery.querySelectorAll<HTMLDivElement>('.coin .desc-block span.status0');
+        publicStatus = gallery.querySelectorAll<HTMLDivElement>('.coin .desc-block span.status1');
     }
 
     async function postPublicityForm(url: RequestInfo, form: HTMLFormElement, checked: boolean) {
-        (<HTMLInputElement> form.querySelector('input[name=public]')).checked = checked;
+        form.querySelector<HTMLInputElement>('input[name=public]').checked = checked;
         return await post(url, new FormData(form));
     }
 }

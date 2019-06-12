@@ -3,7 +3,7 @@ export const CoinSwapFormOnMatcher = /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond
 export function* getSwapLinks(d: DocumentFragment = document): IterableIterator<HTMLAnchorElement> {
     const swapBlock = d.getElementById('swap-block');
     if (swapBlock) {
-        const listOfLinks = <NodeListOf<HTMLAnchorElement>> swapBlock.querySelectorAll('a.list-link');
+        const listOfLinks = swapBlock.querySelectorAll<HTMLAnchorElement>('a.list-link');
         for (const a of listOfLinks) {
             yield a;
         }
