@@ -75,26 +75,33 @@ export function showAllPrices() {
 export function addConflictHandling() {
     highlightConflicts();
 
-    if (!document.getElementById('need-swap-list')) {
-        const tables = <NodeListOf<HTMLTableElement>> document.querySelectorAll('table.swap-coin');
-        for (const table of tables) {
-            const checkboxes = <NodeListOf<HTMLInputElement>> table.querySelectorAll('input.swap-checkbox, input.swap-country-checkbox');
-            for (const checkbox of checkboxes) {
-                checkbox.addEventListener('click', e => {
-                    const input = <HTMLInputElement> e.target;
-                    if (!input.checked) {
-                        let parent = input.parentElement;
-                        while (parent && parent.tagName !== 'tr') {
-                            parent = parent.parentElement;
-                        }
-                        if (parent) {
-                            parent.classList.remove('conflict');
-                        }
-                    }
-                    highlightConflicts();
-                });
+    const checkboxes = document.querySelectorAll<HTMLInputElement>('#swap-list table.swap-coin input.swap-checkbox');
+    for (const checkbox of checkboxes) {
+        checkbox.addEventListener('click', function () {
+            if (!this.checked) {
+                const row = this.closest('tr');
+                if (row) {
+                    row.classList.remove('conflict');
+                }
             }
-        }
+            highlightConflicts();
+        });
+    }
+
+    const countryCheckboxes = document.querySelectorAll<HTMLInputElement>('#swap-list h2 input.swap-country-checkbox');
+    for (const checkbox of countryCheckboxes) {
+        checkbox.addEventListener('click', function () {
+            if (!this.checked) {
+                const country = this.closest('h2');
+                if (country) {
+                    const rows = country.nextElementSibling.querySelectorAll('tr');
+                    for (const row of rows) {
+                        row.classList.remove('conflict');
+                    }
+                }
+            }
+            highlightConflicts();
+        });
     }
 }
 
@@ -110,7 +117,7 @@ type TooltipDataset = {
 
 function highlightConflicts() {
     const needSwapList = !!document.getElementById('need-swap-list');
-    const tables = document.querySelectorAll('table.swap-coin');
+    const tables = document.querySelectorAll('#swap-list table.swap-coin');
     for (const table of tables) {
         let rows = [...table.querySelectorAll('tr')];
         const checked = rows.filter((r: HTMLTableRowElement) => {
