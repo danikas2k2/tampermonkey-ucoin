@@ -131,7 +131,16 @@ exports.randomDelay = randomDelay;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UID = '28609';
+exports.UID = (() => {
+    const a = document.querySelector('.header .partition .menu-l a[href^="/uid"');
+    if (a) {
+        const m = a.href.match(/\/uid(\d+)/);
+        if (m) {
+            return m[1];
+        }
+    }
+    return null;
+})();
 
 
 /***/ }),
