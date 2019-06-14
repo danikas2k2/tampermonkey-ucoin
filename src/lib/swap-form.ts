@@ -226,7 +226,6 @@ export async function addSwapButtons() {
 
         let isDelFailed = false;
         let isUpdFailed = false;
-        let isFirstQuery = true;
 
 
         console.log(variants);
@@ -237,11 +236,6 @@ export async function addSwapButtons() {
                 continue;
             }
 
-
-            /*if (!isFirstQuery) {
-                await randomDelay();
-            }
-            isFirstQuery = false;*/
 
             const remove = new Set<string>(usids);
             remove.delete(usid);
@@ -483,9 +477,31 @@ export function addSwapColorMarkers() {
         return;
     }
 
+    function getCurrentVarietyId() {
+        const vid = new URL(document.location.href).searchParams.get('vid');
+        if (vid) {
+            return vid;
+        }
+
+        const form = document.querySelector<HTMLFormElement>('#edit-coin-form form');
+        if (form) {
+            const variety = new FormData(form).get('variety');
+            if (variety) {
+                return variety.toString();
+            }
+        }
+
+        return null;
+    }
+
     CoinSwapFormOn = function (...args: any[]) {
         _onCoinSwapForm(...args);
         fieldset.querySelector<HTMLInputElement>(`input[name="condition"][value="${args[1]}"]`).checked = true;
+
+        const vid = getCurrentVarietyId();
+        if (vid) {
+            document.querySelector<HTMLInputElement>(`input[name="swap-variety"][value="${vid}"]`).checked = true;
+        }
     };
 
     const mySwap = <HTMLElement> document.getElementById('my-swap-block');
