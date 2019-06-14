@@ -262,54 +262,6 @@ export async function addSwapButtons() {
             }
         }
 
-
-        /*for await (const {a, m} of getSwapLinksWithMatches()) {
-            const {uniq, usid, cond, price, info, vid, strqty} = m;
-            const qty = +strqty;
-
-            if (!variants.has(uniq)) {
-                console.log(`IGNORING ${usid}`);
-                continue;
-            }
-
-            const variant = variants.get(uniq);
-            const {usid: vusid} = variant;
-
-            if (usid != vusid) {
-                if (!isFirstQuery) {
-                    await randomDelay();
-                }
-                isFirstQuery = false;
-
-                console.log(`REMOVING ${usid}`);
-                const delR = await delSwapCoin(usid);
-                if (!delR) {
-                    isDelFailed = true;
-                    break;
-                }
-
-                a.remove();
-
-                if (!isFirstQuery) {
-                    await randomDelay();
-                }
-                isFirstQuery = false;
-
-                let {qty: vqty} = variant;
-                vqty += qty;
-                console.log(`UPDATING ${vusid} -> ${vqty}`);
-                const updR = await updSwapCoin(vusid, cond, vqty, vid, info, price);
-                if (!updR) {
-                    isUpdFailed = true;
-                    break;
-                }
-
-                const {a: va} = variant;
-                updateLinkQty(va, vqty);
-                variant.qty = vqty;
-            }
-        }*/
-
         if (isDelFailed) {
             console.log('ADD FAILED :(');
         } else if (isUpdFailed) {
@@ -494,13 +446,17 @@ export function addSwapColorMarkers() {
         return null;
     }
 
+    const swapForm = <HTMLFormElement> document.getElementById('swap-form');
+
     CoinSwapFormOn = function (...args: any[]) {
         _onCoinSwapForm(...args);
         fieldset.querySelector<HTMLInputElement>(`input[name="condition"][value="${args[1]}"]`).checked = true;
 
-        const vid = getCurrentVarietyId();
-        if (vid) {
-            document.querySelector<HTMLInputElement>(`input[name="swap-variety"][value="${vid}"]`).checked = true;
+        if (!new FormData(swapForm).has('swap-variety')) {
+            const vid = getCurrentVarietyId();
+            if (vid) {
+                document.querySelector<HTMLInputElement>(`input[name="swap-variety"][value="${vid}"]`).checked = true;
+            }
         }
     };
 
