@@ -1,6 +1,6 @@
-type StringObject = { [key: string]: string };
+type Dictionary = { [key: string]: string };
 
-interface CoinSwapFormOnMatchGroups extends StringObject {
+interface CoinSwapFormOnMatchGroups extends Dictionary {
     uniq?: string,
     usid?: string,
     cond?: string,

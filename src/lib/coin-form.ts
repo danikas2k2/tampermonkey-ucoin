@@ -1,12 +1,26 @@
-import {err, info, ok} from "./notify";
-import {post} from "./ajax";
+// @ts-ignore
+import HIDE from '../../images/hide.svg';
+// @ts-ignore
+import LEAVE from '../../images/leave.svg';
+// @ts-ignore
+import REPLACE from '../../images/replace.svg';
+// @ts-ignore
+import SHOW from '../../images/show.svg';
+import {post} from './ajax';
+import {err, info, ok} from './notify';
+
+function getCurrentForm(): HTMLFormElement {
+    return <HTMLFormElement> document.getElementById('edit-coin-form')
+        || <HTMLFormElement> document.getElementById('add-coin-form');
+}
 
 export function addBuyDateResetButton() {
-    const buyYear = <HTMLInputElement> document.getElementById('buy_year');
-    const buyMonth = <HTMLInputElement> document.getElementById('buy_month');
-    buyMonth.insertAdjacentHTML("beforebegin", `<a id="buy_reset" href="#">&#x21BB;</a>`);
-    const buyReset = document.getElementById('buy_reset');
-    buyReset.addEventListener("click", () => {
+    const coinForm = getCurrentForm();
+    const buyYear = coinForm.querySelector<HTMLInputElement>('#buy_year');
+    const buyMonth = coinForm.querySelector<HTMLInputElement>('#buy_month');
+    buyMonth.insertAdjacentHTML('beforebegin', `<a id="buy_reset" href="#">${REPLACE}</a>`);
+    const buyReset = coinForm.querySelector<HTMLInputElement>('#buy_reset');
+    buyReset.addEventListener('click', () => {
         const d = new Date();
         const y = d.getFullYear();
         const m = d.getMonth() + 1;
@@ -17,8 +31,8 @@ export function addBuyDateResetButton() {
 }
 
 export function addSyncConditionToColorTable() {
-    const coinForm = document.getElementById('edit-coin-form') || document.getElementById('add-coin-form');
-    const cond = <HTMLSelectElement>(coinForm.querySelector('#condition'));
+    const coinForm = getCurrentForm();
+    const cond = coinForm.querySelector<HTMLSelectElement>('#condition');
 
     const CN = new Map([
         ['6', '7'],  // G
@@ -67,15 +81,23 @@ export function addSyncConditionToColorTable() {
     });
 }
 
+export function updateFormStyles() {
+    const view = <HTMLDivElement> document.getElementById('ucid-block');
+
+    const buttons = view.querySelector('.func-button');
+    for (const button of buttons.querySelectorAll('.btn-l')) {
+        button.classList.add('btn-narrow');
+    }
+
+    const remove = buttons.querySelector<HTMLAnchorElement>('a.btn-gray');
+    remove.classList.replace('btn-gray', 'btn-red');
+}
+
 export function addPublicityToggle() {
     const view = <HTMLDivElement> document.getElementById('ucid-block');
     const buttons = view.querySelector('.func-button');
     const edit = buttons.querySelector<HTMLButtonElement>('button.btn-blue');
     const status = view.querySelector<HTMLDivElement>('.status-line .left');
-
-    for (const button of buttons.querySelectorAll('.btn-l')) {
-        button.classList.add('btn-narrow');
-    }
 
     const form = document.getElementById('edit-coin-form').querySelector<HTMLFormElement>('form');
 
@@ -83,10 +105,10 @@ export function addPublicityToggle() {
     let checked = publicCheckbox && publicCheckbox.checked;
 
     const visibilityButton = <HTMLButtonElement> edit.cloneNode();
-    edit.insertAdjacentElement("beforebegin", visibilityButton);
+    edit.insertAdjacentElement('beforebegin', visibilityButton);
     visibilityButton.removeAttribute('onClick');
-    visibilityButton.classList.add('btn-narrow');
-    visibilityButton.addEventListener("click", async () => {
+    visibilityButton.classList.add('btn-i', 'btn-narrow');
+    visibilityButton.addEventListener('click', async () => {
         await postPublicityForm(document.location.href, form, !checked);
         checked = !checked;
         updatePublicityStatus();
@@ -94,7 +116,7 @@ export function addPublicityToggle() {
     });
 
     let prevKeyCode = -1;
-    document.body.addEventListener("keydown", e => {
+    document.body.addEventListener('keydown', e => {
         if (e.keyCode === prevKeyCode) {
             if (e.keyCode === 72 || e.keyCode === 83) {
                 visibilityButton.click();
@@ -107,7 +129,7 @@ export function addPublicityToggle() {
 
     function updatePublicityStatus() {
         visibilityButton.title = checked ? 'Hide' : 'Show';
-        visibilityButton.innerText = checked ? 'H' : 'S';
+        visibilityButton.innerHTML = checked ? HIDE : SHOW;
         status.innerText = checked ? 'Public' : 'Private';
         if (checked) {
             visibilityButton.classList.replace('btn-blue', 'btn-gray');
@@ -140,30 +162,25 @@ export function addReplacementToggle() {
         }
     }
 
-    const buttons = funcButtons.querySelectorAll('.btn-l');
-    for (const button of buttons) {
-        button.classList.add('btn-narrow');
-    }
-
     const form = document.getElementById('edit-coin-form').querySelector<HTMLFormElement>('form');
 
     const replaceCheckbox = form.querySelector<HTMLInputElement>('input[name=replace]');
-    let replace = replaceCheckbox && replaceCheckbox.checked;
+    let leave = replaceCheckbox && replaceCheckbox.checked;
 
     const replacementButton = <HTMLButtonElement> edit.cloneNode();
-    edit.insertAdjacentElement("beforebegin", replacementButton);
+    edit.insertAdjacentElement('beforebegin', replacementButton);
     replacementButton.removeAttribute('onClick');
-    replacementButton.classList.add('btn-narrow');
-    replacementButton.addEventListener("click", () => {
-        postReplacementForm(document.location.href, form, !replace).then(() => {
-            replace = !replace;
+    replacementButton.classList.add('btn-i', 'btn-narrow');
+    replacementButton.addEventListener('click', () => {
+        postReplacementForm(document.location.href, form, !leave).then(() => {
+            leave = !leave;
             updateReplacementStatus();
-            replace ? err('Should be replaced') : info('No replace required');
+            leave ? err('Should be replaced') : info('No replace required');
         });
     });
 
     let prevKeyCode = -1;
-    document.body.addEventListener("keydown", e => {
+    document.body.addEventListener('keydown', e => {
         if (e.keyCode === prevKeyCode) {
             if (e.keyCode === 82) {
                 replacementButton.click();
@@ -175,14 +192,15 @@ export function addReplacementToggle() {
     updateReplacementStatus();
 
     function updateReplacementStatus() {
-        replacementButton.title = replace ? `Don't replace` : `Replace`;
+        replacementButton.title = leave ? `Don't replace` : `Replace`;
         replacementButton.innerText = 'R';
-        if (replace) {
+        replacementButton.innerHTML = leave ? LEAVE : REPLACE;
+        if (leave) {
             replacementButton.classList.replace('btn-blue', 'btn-gray');
             if (!replaceStatus) {
                 const tbody = view.querySelector<HTMLTableElement>('.status-line + table tbody');
                 if (tbody) {
-                    tbody.insertAdjacentHTML("beforeend", `<tr><td class="lgray-12" colspan="2"><span class="set status2 wrap" style="max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;">Need to replace</span></td></tr>`);
+                    tbody.insertAdjacentHTML('beforeend', `<tr><td class="lgray-12" colspan="2"><span class="set status2 wrap" style="max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;">Need to replace</span></td></tr>`);
                     replaceStatus = tbody.querySelector('tr:last-child');
                 }
             }

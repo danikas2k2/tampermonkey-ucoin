@@ -1,15 +1,9 @@
-declare var CoinSwapFormOn: (...args: string[]) => void;
-
 import {get, post} from './ajax';
 import {randomDelay} from './delay';
 import {CoinSwapFormOnMatcher, getSwapLinks, getSwapLinksWithMatches} from './swap-links';
 import {UID} from './uid';
 
-export function addSwapComments() {
-    for (const a of getSwapLinks()) {
-        addSwapComment(a);
-    }
-}
+declare var CoinSwapFormOn: (...args: string[]) => void;
 
 interface CoinSwapVariantData {
     cond?: string,
@@ -23,6 +17,23 @@ interface CoinSwapVariant extends CoinSwapVariantData {
     usid: string,
     usids: Set<string>,
     total: number,
+}
+
+const ConditionColors = new Map([
+    ['G', 7],
+    ['VG', 8],
+    ['F', 9],
+    ['VF', 10],
+    ['XF', 11],
+    ['UNC', 12],
+    ['PRF', 3],
+    ['BU', 4],
+]);
+
+export function addSwapComments() {
+    for (const a of getSwapLinks()) {
+        addSwapComment(a);
+    }
 }
 
 export async function addSwapButtons() {
@@ -462,7 +473,7 @@ export function addSwapColorMarkers() {
 
     const mySwap = <HTMLElement> document.getElementById('my-swap-block');
     const swapBlock = mySwap.querySelector<HTMLElement>('#swap-block');
-    const addButton = swapBlock.querySelector('center button.btn-s.btn-gray');
+    const addButton = swapBlock.querySelector<HTMLButtonElement>('center button.btn-s.btn-gray');
     if (!addButton) {
         return;
     }
@@ -493,17 +504,6 @@ export function addSwapColorMarkers() {
         document.getElementById(markerId).addEventListener('click', () => CoinSwapFormOn('', `${value}`));
     }
 }
-
-const ConditionColors = new Map([
-    ['G', 7],
-    ['VG', 8],
-    ['F', 9],
-    ['VF', 10],
-    ['XF', 11],
-    ['UNC', 12],
-    ['PRF', 3],
-    ['BU', 4],
-]);
 
 export function styleSwapLink(a: HTMLAnchorElement) {
     const condBlock = a.querySelector(`.left.dgray-11`);

@@ -4,12 +4,33 @@
     width: 22px;
     height: 22px;
     display: inline-block;
-    text-align: center;
+
+    svg {
+        width: 14px;
+        height: 14px;
+    }
 }
 
-#ucid-block .btn-narrow {
-    padding-left: 14px;
-    padding-right: 14px;
+#ucid-block {
+    .btn-narrow {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .btn-red {
+        background-color: #CC0000;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        color: #F5F5F5;
+    }
+
+    .btn-i {
+        padding: 10px;
+
+        svg {
+            width: 15px;
+            height: 15px;
+        }
+    }
 }
 
 .estimated-prices-widget {
@@ -42,8 +63,10 @@
         max-width: 64px;
     }
 
-    .blue-13 {
+    .right {
         max-width: 120px;
+        font-size: 11px;
+        line-height: 19px;
     }
 }
 

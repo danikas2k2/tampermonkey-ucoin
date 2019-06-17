@@ -91,16 +91,16 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-async function ajax(url, method = "GET", body) {
+async function ajax(url, method = 'GET', body) {
     return await fetch(url, { method, body });
 }
 exports.ajax = ajax;
 async function get(url, body) {
-    return await ajax(url, "GET", body);
+    return await ajax(url, 'GET', body);
 }
 exports.get = get;
 async function post(url, body) {
-    return await ajax(url, "POST", body);
+    return await ajax(url, 'POST', body);
 }
 exports.post = post;
 
@@ -167,11 +167,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // @ts-ignore
 const ucoin_less_1 = __importDefault(__webpack_require__(4));
 const coin_form_1 = __webpack_require__(6);
-const gallery_1 = __webpack_require__(12);
-const links_1 = __webpack_require__(13);
-const prices_1 = __webpack_require__(14);
-const swap_form_1 = __webpack_require__(15);
-const swap_list_1 = __webpack_require__(17);
+const gallery_1 = __webpack_require__(16);
+const links_1 = __webpack_require__(17);
+const prices_1 = __webpack_require__(18);
+const swap_form_1 = __webpack_require__(19);
+const swap_list_1 = __webpack_require__(21);
 const uid_1 = __webpack_require__(2);
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${ucoin_less_1.default}</style>`);
 (async function () {
@@ -198,6 +198,7 @@ async function handleCoinPage(loc) {
     coin_form_1.addBuyDateResetButton();
     coin_form_1.addSyncConditionToColorTable();
     if (loc.includes('ucid=')) {
+        coin_form_1.updateFormStyles();
         coin_form_1.addPublicityToggle();
         coin_form_1.addReplacementToggle();
     }
@@ -264,7 +265,7 @@ async function handleSwapPage() {
 
 exports = module.exports = __webpack_require__(5)(false);
 // Module
-exports.push([module.i, "#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n  text-align: center;\n}\n#ucid-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n#estimated-prices {\n  overflow-x: hidden;\n  max-height: 400px;\n}\n#estimated-prices .list-link {\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #E9EDF1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .blue-13 {\n  max-width: 120px;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 1em;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  flex: 0 0 20px;\n  width: 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n}\n#my-swap-block #swap-block .btn--combiner,\n#my-swap-block #swap-block .btn--expander {\n  margin: 8px 2px 0;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #fdd;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #fed;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n", ""]);
+exports.push([module.i, "#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#ucid-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#ucid-block .btn-red {\n  background-color: #CC0000;\n  border: 1px solid rgba(0, 0, 0, 0.2);\n  color: #F5F5F5;\n}\n#ucid-block .btn-i {\n  padding: 10px;\n}\n#ucid-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n#estimated-prices {\n  overflow-x: hidden;\n  max-height: 400px;\n}\n#estimated-prices .list-link {\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #E9EDF1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n  font-size: 11px;\n  line-height: 19px;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 1em;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  flex: 0 0 20px;\n  width: 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n}\n#my-swap-block #swap-block .btn--combiner,\n#my-swap-block #swap-block .btn--expander {\n  margin: 8px 2px 0;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #fdd;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #fed;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n", ""]);
 
 
 
@@ -365,15 +366,31 @@ function toComment(sourceMap) {
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const notify_1 = __webpack_require__(7);
+// @ts-ignore
+const hide_svg_1 = __importDefault(__webpack_require__(7));
+// @ts-ignore
+const leave_svg_1 = __importDefault(__webpack_require__(8));
+// @ts-ignore
+const replace_svg_1 = __importDefault(__webpack_require__(9));
+// @ts-ignore
+const show_svg_1 = __importDefault(__webpack_require__(10));
 const ajax_1 = __webpack_require__(0);
+const notify_1 = __webpack_require__(11);
+function getCurrentForm() {
+    return document.getElementById('edit-coin-form')
+        || document.getElementById('add-coin-form');
+}
 function addBuyDateResetButton() {
-    const buyYear = document.getElementById('buy_year');
-    const buyMonth = document.getElementById('buy_month');
-    buyMonth.insertAdjacentHTML("beforebegin", `<a id="buy_reset" href="#">&#x21BB;</a>`);
-    const buyReset = document.getElementById('buy_reset');
-    buyReset.addEventListener("click", () => {
+    const coinForm = getCurrentForm();
+    const buyYear = coinForm.querySelector('#buy_year');
+    const buyMonth = coinForm.querySelector('#buy_month');
+    buyMonth.insertAdjacentHTML('beforebegin', `<a id="buy_reset" href="#">${replace_svg_1.default}</a>`);
+    const buyReset = coinForm.querySelector('#buy_reset');
+    buyReset.addEventListener('click', () => {
         const d = new Date();
         const y = d.getFullYear();
         const m = d.getMonth() + 1;
@@ -384,8 +401,8 @@ function addBuyDateResetButton() {
 }
 exports.addBuyDateResetButton = addBuyDateResetButton;
 function addSyncConditionToColorTable() {
-    const coinForm = document.getElementById('edit-coin-form') || document.getElementById('add-coin-form');
-    const cond = (coinForm.querySelector('#condition'));
+    const coinForm = getCurrentForm();
+    const cond = coinForm.querySelector('#condition');
     const CN = new Map([
         ['6', '7'],
         ['5', '8'],
@@ -428,29 +445,36 @@ function addSyncConditionToColorTable() {
     });
 }
 exports.addSyncConditionToColorTable = addSyncConditionToColorTable;
+function updateFormStyles() {
+    const view = document.getElementById('ucid-block');
+    const buttons = view.querySelector('.func-button');
+    for (const button of buttons.querySelectorAll('.btn-l')) {
+        button.classList.add('btn-narrow');
+    }
+    const remove = buttons.querySelector('a.btn-gray');
+    remove.classList.replace('btn-gray', 'btn-red');
+}
+exports.updateFormStyles = updateFormStyles;
 function addPublicityToggle() {
     const view = document.getElementById('ucid-block');
     const buttons = view.querySelector('.func-button');
     const edit = buttons.querySelector('button.btn-blue');
     const status = view.querySelector('.status-line .left');
-    for (const button of buttons.querySelectorAll('.btn-l')) {
-        button.classList.add('btn-narrow');
-    }
     const form = document.getElementById('edit-coin-form').querySelector('form');
     const publicCheckbox = form.querySelector('input[name=public]');
     let checked = publicCheckbox && publicCheckbox.checked;
     const visibilityButton = edit.cloneNode();
-    edit.insertAdjacentElement("beforebegin", visibilityButton);
+    edit.insertAdjacentElement('beforebegin', visibilityButton);
     visibilityButton.removeAttribute('onClick');
-    visibilityButton.classList.add('btn-narrow');
-    visibilityButton.addEventListener("click", async () => {
+    visibilityButton.classList.add('btn-i', 'btn-narrow');
+    visibilityButton.addEventListener('click', async () => {
         await postPublicityForm(document.location.href, form, !checked);
         checked = !checked;
         updatePublicityStatus();
         checked ? notify_1.ok('Coin public') : notify_1.info('Coin private');
     });
     let prevKeyCode = -1;
-    document.body.addEventListener("keydown", e => {
+    document.body.addEventListener('keydown', e => {
         if (e.keyCode === prevKeyCode) {
             if (e.keyCode === 72 || e.keyCode === 83) {
                 visibilityButton.click();
@@ -461,7 +485,7 @@ function addPublicityToggle() {
     updatePublicityStatus();
     function updatePublicityStatus() {
         visibilityButton.title = checked ? 'Hide' : 'Show';
-        visibilityButton.innerText = checked ? 'H' : 'S';
+        visibilityButton.innerHTML = checked ? hide_svg_1.default : show_svg_1.default;
         status.innerText = checked ? 'Public' : 'Private';
         if (checked) {
             visibilityButton.classList.replace('btn-blue', 'btn-gray');
@@ -492,26 +516,22 @@ function addReplacementToggle() {
             replaceStatus = tr;
         }
     }
-    const buttons = funcButtons.querySelectorAll('.btn-l');
-    for (const button of buttons) {
-        button.classList.add('btn-narrow');
-    }
     const form = document.getElementById('edit-coin-form').querySelector('form');
     const replaceCheckbox = form.querySelector('input[name=replace]');
-    let replace = replaceCheckbox && replaceCheckbox.checked;
+    let leave = replaceCheckbox && replaceCheckbox.checked;
     const replacementButton = edit.cloneNode();
-    edit.insertAdjacentElement("beforebegin", replacementButton);
+    edit.insertAdjacentElement('beforebegin', replacementButton);
     replacementButton.removeAttribute('onClick');
-    replacementButton.classList.add('btn-narrow');
-    replacementButton.addEventListener("click", () => {
-        postReplacementForm(document.location.href, form, !replace).then(() => {
-            replace = !replace;
+    replacementButton.classList.add('btn-i', 'btn-narrow');
+    replacementButton.addEventListener('click', () => {
+        postReplacementForm(document.location.href, form, !leave).then(() => {
+            leave = !leave;
             updateReplacementStatus();
-            replace ? notify_1.err('Should be replaced') : notify_1.info('No replace required');
+            leave ? notify_1.err('Should be replaced') : notify_1.info('No replace required');
         });
     });
     let prevKeyCode = -1;
-    document.body.addEventListener("keydown", e => {
+    document.body.addEventListener('keydown', e => {
         if (e.keyCode === prevKeyCode) {
             if (e.keyCode === 82) {
                 replacementButton.click();
@@ -521,14 +541,15 @@ function addReplacementToggle() {
     });
     updateReplacementStatus();
     function updateReplacementStatus() {
-        replacementButton.title = replace ? `Don't replace` : `Replace`;
+        replacementButton.title = leave ? `Don't replace` : `Replace`;
         replacementButton.innerText = 'R';
-        if (replace) {
+        replacementButton.innerHTML = leave ? leave_svg_1.default : replace_svg_1.default;
+        if (leave) {
             replacementButton.classList.replace('btn-blue', 'btn-gray');
             if (!replaceStatus) {
                 const tbody = view.querySelector('.status-line + table tbody');
                 if (tbody) {
-                    tbody.insertAdjacentHTML("beforeend", `<tr><td class="lgray-12" colspan="2"><span class="set status2 wrap" style="max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;">Need to replace</span></td></tr>`);
+                    tbody.insertAdjacentHTML('beforeend', `<tr><td class="lgray-12" colspan="2"><span class="set status2 wrap" style="max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;">Need to replace</span></td></tr>`);
                     replaceStatus = tbody.querySelector('tr:last-child');
                 }
             }
@@ -554,6 +575,30 @@ exports.addReplacementToggle = addReplacementToggle;
 
 /***/ }),
 /* 7 */
+/***/ (function(module, exports) {
+
+module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 512\"><path fill=\"currentColor\" d=\"M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z\"></path></svg>"
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><path fill=\"currentColor\" d=\"M500.33 0h-47.41a12 12 0 0 0-12 12.57l4 82.76A247.42 247.42 0 0 0 256 8C119.34 8 7.9 119.53 8 256.19 8.1 393.07 119.1 504 256 504a247.1 247.1 0 0 0 166.18-63.91 12 12 0 0 0 .48-17.43l-34-34a12 12 0 0 0-16.38-.55A176 176 0 1 1 402.1 157.8l-101.53-4.87a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12h200.33a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12m-17.99 504.97l22.63-22.63a24 24 0 0 0 0-33.94L63.6 7.03a24 24 0 0 0-33.94 0L7.03 29.66a24 24 0 0 0 0 33.94L448.4 504.97a24 24 0 0 0 33.94 0z\"></path></svg>"
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><path fill=\"currentColor\" d=\"M500.33 0h-47.41a12 12 0 0 0-12 12.57l4 82.76A247.42 247.42 0 0 0 256 8C119.34 8 7.9 119.53 8 256.19 8.1 393.07 119.1 504 256 504a247.1 247.1 0 0 0 166.18-63.91 12 12 0 0 0 .48-17.43l-34-34a12 12 0 0 0-16.38-.55A176 176 0 1 1 402.1 157.8l-101.53-4.87a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12h200.33a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12z\"></path></svg>"
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 576 512\"><path fill=\"currentColor\" d=\"M288 144a110.94 110.94 0 0 0-31.24 5 55.4 55.4 0 0 1 7.24 27 56 56 0 0 1-56 56 55.4 55.4 0 0 1-27-7.24A111.71 111.71 0 1 0 288 144zm284.52 97.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400c-98.65 0-189.09-55-237.93-144C98.91 167 189.34 112 288 112s189.09 55 237.93 144C477.1 345 386.66 400 288 400z\"></path></svg>"
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -563,13 +608,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // @ts-ignore
-const error_svg_1 = __importDefault(__webpack_require__(8));
+const error_svg_1 = __importDefault(__webpack_require__(12));
 // @ts-ignore
-const info_svg_1 = __importDefault(__webpack_require__(9));
+const info_svg_1 = __importDefault(__webpack_require__(13));
 // @ts-ignore
-const minus_svg_1 = __importDefault(__webpack_require__(10));
+const minus_svg_1 = __importDefault(__webpack_require__(14));
 // @ts-ignore
-const success_svg_1 = __importDefault(__webpack_require__(11));
+const success_svg_1 = __importDefault(__webpack_require__(15));
 function notify(title, body, icon) {
     const options = {};
     if (body) {
@@ -613,31 +658,31 @@ exports.ok = ok;
 
 
 /***/ }),
-/* 8 */
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#d75a4a\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M16 34l9-9 9-9m-18 0l9 9 9 9\"></path></svg>"
 
 /***/ }),
-/* 9 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#48a0dc\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M25 37v2m-7-23a7 7 0 0 1 7.1-7 7.1 7.1 0 0 1 6.9 6.9 7 7 0 0 1-3.21 5.99A8.6 8.6 0 0 0 25 29.16V32\"></path></svg>"
 
 /***/ }),
-/* 10 */
+/* 14 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#ed8a19\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"M38 25H12\"></path></svg>"
 
 /***/ }),
-/* 11 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#25ae88\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"M38 15L22 33l-10-8\"></path></svg>"
 
 /***/ }),
-/* 12 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -707,7 +752,7 @@ exports.addGalleryVisibilityToggle = addGalleryVisibilityToggle;
 
 
 /***/ }),
-/* 13 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -768,7 +813,7 @@ exports.updateOnClickHref = updateOnClickHref;
 
 
 /***/ }),
-/* 14 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -827,14 +872,14 @@ function estimateSwapPrices() {
         pm.set(cond, pc);
         byMint.set(mint, pm);
     }
-    swapBlock.parentElement.insertAdjacentHTML("beforebegin", `<div class="widget estimated-prices-widget"><a class="widget-header">Estimated prices</a><div id="estimated-prices"></div></div>`);
+    swapBlock.parentElement.insertAdjacentHTML('beforebegin', `<div class="widget estimated-prices-widget"><a class="widget-header">Estimated prices</a><div id="estimated-prices"></div></div>`);
     const estimatedPrices = document.getElementById('estimated-prices');
     if (byMint.size > 1) {
         addPricesByType(byType);
     }
     for (const [mint, byType] of byMint) {
         if (byMint.size > 1) {
-            estimatedPrices.insertAdjacentHTML("beforeend", `<div class="list-sep"></div>`);
+            estimatedPrices.insertAdjacentHTML('beforeend', `<div class="list-sep"></div>`);
         }
         addPricesByType(byType, mint);
     }
@@ -866,7 +911,7 @@ function estimateSwapPrices() {
             const parts = mint.split(' ');
             const y = parts.shift();
             const m = parts.length ? ` <span class="lgray-11">${parts.join(' ')}</span>` : '';
-            estimatedPrices.insertAdjacentHTML("beforeend", `<a class="list-link"><span class="left dgray-11 marked-${ConditionColors.get(cond)}">${cond}</span><span class="left gray-13">${y}${m}</span><span class="right blue-13">${price}</span></a>`);
+            estimatedPrices.insertAdjacentHTML('beforeend', `<a class="list-link"><span class="left dgray-11 marked-${ConditionColors.get(cond)}">${cond}</span><span class="left gray-13">${y}${m}</span><span class="right blue-13">${price}</span></a>`);
         }
     }
     function sortByCond(a, b) {
@@ -877,7 +922,7 @@ exports.estimateSwapPrices = estimateSwapPrices;
 
 
 /***/ }),
-/* 15 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -885,8 +930,18 @@ exports.estimateSwapPrices = estimateSwapPrices;
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
 const delay_1 = __webpack_require__(1);
-const swap_links_1 = __webpack_require__(16);
+const swap_links_1 = __webpack_require__(20);
 const uid_1 = __webpack_require__(2);
+const ConditionColors = new Map([
+    ['G', 7],
+    ['VG', 8],
+    ['F', 9],
+    ['VF', 10],
+    ['XF', 11],
+    ['UNC', 12],
+    ['PRF', 3],
+    ['BU', 4],
+]);
 function addSwapComments() {
     for (const a of swap_links_1.getSwapLinks()) {
         addSwapComment(a);
@@ -1287,16 +1342,6 @@ function addSwapColorMarkers() {
     }
 }
 exports.addSwapColorMarkers = addSwapColorMarkers;
-const ConditionColors = new Map([
-    ['G', 7],
-    ['VG', 8],
-    ['F', 9],
-    ['VF', 10],
-    ['XF', 11],
-    ['UNC', 12],
-    ['PRF', 3],
-    ['BU', 4],
-]);
 function styleSwapLink(a) {
     const condBlock = a.querySelector(`.left.dgray-11`);
     const cond = condBlock.textContent;
@@ -1321,7 +1366,7 @@ exports.styleSwapLists = styleSwapLists;
 
 
 /***/ }),
-/* 16 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1356,7 +1401,7 @@ exports.getSwapLinksWithMatches = getSwapLinksWithMatches;
 
 
 /***/ }),
-/* 17 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

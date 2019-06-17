@@ -14,7 +14,7 @@
 // @ts-ignore
 import style from '../styles/ucoin.less';
 
-import {addBuyDateResetButton, addPublicityToggle, addReplacementToggle, addSyncConditionToColorTable} from './lib/coin-form';
+import {addBuyDateResetButton, addPublicityToggle, addReplacementToggle, addSyncConditionToColorTable, updateFormStyles} from './lib/coin-form';
 import {addGalleryVisibilityToggle} from './lib/gallery';
 import {updateLinkHref, updateOnClickHref} from './lib/links';
 import {estimateSwapPrices} from './lib/prices';
@@ -54,6 +54,7 @@ async function handleCoinPage(loc: string) {
     addSyncConditionToColorTable();
 
     if (loc.includes('ucid=')) {
+        updateFormStyles();
         addPublicityToggle();
         addReplacementToggle();
     }
@@ -99,7 +100,6 @@ async function handleSwapPage() {
     duplicatePagination();
     showAllPrices();
     addConflictHandling();
-
     checkSold();
     ignoreUnwanted();
 
@@ -109,6 +109,7 @@ async function handleSwapPage() {
         for (const a of filterLinks) {
             updateLinkHref(a);
         }
+
         const filterBoxes = tree.querySelectorAll<HTMLDivElement>('.filter-container .filter-box-active');
         for (const filter of filterBoxes) {
             const name = filter.getAttribute('id').replace(/-filter/, '');
