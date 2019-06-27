@@ -1537,7 +1537,7 @@ function addSortingOptions() {
         template.innerHTML = html;
         const opt = template.content.querySelector('div.left');
         opt.classList.add('wrap');
-        opt.innerHTML = `Sorting:&nbsp;${opt.innerHTML}`;
+        // opt.innerHTML = `Sorting:&nbsp;${opt.innerHTML}`;
         return template.innerHTML;
     }
     // add sorting index to all rows
@@ -1615,15 +1615,16 @@ function addSortingOptions() {
     sortDialog.addEventListener('click', e => {
         e.stopPropagation();
         sortDialog.style.display = 'none';
-        const a = e.target;
-        if (a.matches('a')) {
-            sortFilter.innerHTML = c(a.innerHTML);
-            const { option, order } = a.dataset;
-            currentOption = option;
-            currentOrder = order;
-            setActiveSortOption(currentOption, currentOrder);
-            sortBy(currentOption, currentOrder);
+        const a = e.target.closest('a');
+        if (!a) {
+            return;
         }
+        sortFilter.innerHTML = c(a.innerHTML);
+        const { option, order } = a.dataset;
+        currentOption = option;
+        currentOrder = order;
+        setActiveSortOption(currentOption, currentOrder);
+        sortBy(currentOption, currentOrder);
     });
 }
 exports.addSortingOptions = addSortingOptions;

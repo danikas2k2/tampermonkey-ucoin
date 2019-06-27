@@ -159,7 +159,7 @@ export function addSortingOptions(): void {
 
         const opt = template.content.querySelector<HTMLDivElement>('div.left');
         opt.classList.add('wrap');
-        opt.innerHTML = `Sorting:&nbsp;${opt.innerHTML}`;
+        // opt.innerHTML = `Sorting:&nbsp;${opt.innerHTML}`;
 
         return template.innerHTML;
     }
@@ -241,25 +241,25 @@ export function addSortingOptions(): void {
 
     sortFilter.addEventListener('click', e => {
         e.stopPropagation();
-
         sortDialog.style.display = 'block';
     });
 
     sortDialog.addEventListener('click', e => {
         e.stopPropagation();
-
         sortDialog.style.display = 'none';
 
-        const a = <HTMLAnchorElement> e.target;
-        if (a.matches('a')) {
-            sortFilter.innerHTML = c(a.innerHTML);
-
-            const {option, order} = a.dataset;
-            currentOption = <SortOption> option;
-            currentOrder = <SortOrder> order;
-            setActiveSortOption(currentOption, currentOrder);
-            sortBy(currentOption, currentOrder);
+        const a = (<HTMLElement> e.target).closest('a');
+        if (!a) {
+            return;
         }
+
+        sortFilter.innerHTML = c(a.innerHTML);
+
+        const {option, order} = a.dataset;
+        currentOption = <SortOption> option;
+        currentOrder = <SortOrder> order;
+        setActiveSortOption(currentOption, currentOrder);
+        sortBy(currentOption, currentOrder);
     });
 }
 
