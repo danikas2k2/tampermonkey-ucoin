@@ -153,10 +153,10 @@
         transition: opacity .25s, background .25s;
 
         &.conflict {
-            background: #fdd;
+            background: #FDD;
 
             &.mark {
-                background: #fed;
+                background: #FED;
             }
         }
 
@@ -168,5 +168,27 @@
                 opacity: .75;
             }
         }
+    }
+
+    .action-board,
+    .filter-container {
+        margin: 15px 0 20px;
+        height: 30px;
+        width: auto;
+    }
+
+    #sort-filter {
+        border-color: #3B7BEA;
+        width: 190px;
+        padding: 4px 12px 7px;
+
+        .left {
+            max-width: 170px;
+        }
+    }
+
+    #sort-filter-dialog {
+        width: 214px;
+        display: none;
     }
 }

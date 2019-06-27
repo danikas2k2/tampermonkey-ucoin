@@ -19,7 +19,16 @@ import {addGalleryVisibilityToggle} from './lib/gallery';
 import {updateLinkHref, updateOnClickHref} from './lib/links';
 import {estimateSwapPrices} from './lib/prices';
 import {addSwapButtons, addSwapColorMarkers, addSwapComments, addSwapFormQtyButtons, styleSwapLists} from './lib/swap-form';
-import {addConflictHandling, addTrackingLinks, checkSold, duplicatePagination, ignoreUnwanted, showAllPrices} from './lib/swap-list';
+import {
+    addConflictHandling,
+    addOpenedTabsHandler,
+    addSortingOptions,
+    addTrackingLinks,
+    checkSold,
+    duplicatePagination,
+    ignoreUnwanted,
+    showAllPrices
+} from './lib/swap-list';
 import {UID} from './lib/uid';
 
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${style}</style>`);
@@ -97,6 +106,8 @@ async function handleGalleryPage() {
 
 async function handleSwapPage() {
     addTrackingLinks();
+    addOpenedTabsHandler();
+    addSortingOptions();
     duplicatePagination();
     showAllPrices();
     addConflictHandling();

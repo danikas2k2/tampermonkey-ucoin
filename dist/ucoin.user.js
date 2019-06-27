@@ -236,6 +236,8 @@ async function handleGalleryPage() {
 }
 async function handleSwapPage() {
     swap_list_1.addTrackingLinks();
+    swap_list_1.addOpenedTabsHandler();
+    swap_list_1.addSortingOptions();
     swap_list_1.duplicatePagination();
     swap_list_1.showAllPrices();
     swap_list_1.addConflictHandling();
@@ -265,7 +267,7 @@ async function handleSwapPage() {
 
 exports = module.exports = __webpack_require__(5)(false);
 // Module
-exports.push([module.i, "#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#ucid-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#ucid-block .btn-red {\n  background-color: #CC0000;\n  border: 1px solid rgba(0, 0, 0, 0.2);\n  color: #F5F5F5;\n}\n#ucid-block .btn-i {\n  padding: 10px;\n}\n#ucid-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n#estimated-prices {\n  overflow-x: hidden;\n  max-height: 400px;\n}\n#estimated-prices .list-link {\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #E9EDF1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n  font-size: 11px;\n  line-height: 19px;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 1em;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  flex: 0 0 20px;\n  width: 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n}\n#my-swap-block #swap-block .btn--combiner,\n#my-swap-block #swap-block .btn--expander {\n  margin: 8px 2px 0;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #fdd;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #fed;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n", ""]);
+exports.push([module.i, "#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#ucid-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#ucid-block .btn-red {\n  background-color: #CC0000;\n  border: 1px solid rgba(0, 0, 0, 0.2);\n  color: #F5F5F5;\n}\n#ucid-block .btn-i {\n  padding: 10px;\n}\n#ucid-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n#estimated-prices {\n  overflow-x: hidden;\n  max-height: 400px;\n}\n#estimated-prices .list-link {\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #E9EDF1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n  font-size: 11px;\n  line-height: 19px;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 1em;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  flex: 0 0 20px;\n  width: 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n}\n#my-swap-block #swap-block .btn--combiner,\n#my-swap-block #swap-block .btn--expander {\n  margin: 8px 2px 0;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #FDD;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #FED;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n#swap-list .action-board,\n#swap-mgr .action-board,\n#swap-list .filter-container,\n#swap-mgr .filter-container {\n  margin: 15px 0 20px;\n  height: 30px;\n  width: auto;\n}\n#swap-list #sort-filter,\n#swap-mgr #sort-filter {\n  border-color: #3B7BEA;\n  width: 190px;\n  padding: 4px 12px 7px;\n}\n#swap-list #sort-filter .left,\n#swap-mgr #sort-filter .left {\n  max-width: 170px;\n}\n#swap-list #sort-filter-dialog,\n#swap-mgr #sort-filter-dialog {\n  width: 214px;\n  display: none;\n}\n", ""]);
 
 
 
@@ -1409,6 +1411,8 @@ exports.getSwapLinksWithMatches = getSwapLinksWithMatches;
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
 const delay_1 = __webpack_require__(1);
+const utils_1 = __webpack_require__(22);
+const { location: loc } = document;
 function addTrackingLinks() {
     const swapMgr = document.getElementById('swap-mgr');
     if (swapMgr) {
@@ -1426,6 +1430,25 @@ function addTrackingLinks() {
     }
 }
 exports.addTrackingLinks = addTrackingLinks;
+function setActiveSwapTab(tab) {
+    const parts = loc.hash.split(';');
+    parts[0] = tab;
+    loc.hash = parts.join(';');
+}
+function addOpenedTabsHandler() {
+    const tabs = document.querySelectorAll('#swap-mgr > div.widerightCol > ul.region-list > li.region');
+    const needTab = tabs.item(0);
+    needTab.addEventListener('click', () => setActiveSwapTab('need'));
+    const takeTab = tabs.item(1);
+    takeTab.addEventListener('click', () => setActiveSwapTab('take'));
+    if (loc.hash.startsWith('#take')) {
+        takeTab.click();
+    }
+    else {
+        needTab.click();
+    }
+}
+exports.addOpenedTabsHandler = addOpenedTabsHandler;
 function duplicatePagination() {
     const swapList = document.getElementById('swap-list');
     if (!swapList) {
@@ -1456,6 +1479,154 @@ function duplicatePagination() {
     heading.insertAdjacentElement('beforebegin', clone);
 }
 exports.duplicatePagination = duplicatePagination;
+function addSortingOptions() {
+    const swapList = document.getElementById('take-swap-list');
+    if (!swapList) {
+        return;
+    }
+    const leftControls = swapList.querySelector('div.left.action-board');
+    if (!leftControls) {
+        return;
+    }
+    function cmp(a, b) {
+        return -(a < b) || +(a > b);
+    }
+    function cmpField(a, b, field) {
+        const f = `sort${utils_1.tt(field)}`;
+        return cmp(a[f], b[f]);
+    }
+    function cmpYear(a, b, o = 1) {
+        return o * cmpField(a, b, 'year')
+            || cmpField(a, b, 'mm');
+    }
+    function cmpKm(a, b, o = 1) {
+        return o * cmpField(a, b, 'km')
+            || cmpYear(a, b, -1);
+    }
+    function cmpFace(a, b, o = 1) {
+        return o * cmpField(a, b, 'face')
+            || cmpKm(a, b);
+    }
+    function cmpCond(a, b, o = 1) {
+        return o * cmpField(a, b, 'cond')
+            || cmpFace(a, b);
+    }
+    function cmpValue(a, b, o = 1) {
+        return o * cmpField(a, b, 'value')
+            || cmpCond(a, b, -1);
+    }
+    const sortOptionParams = new Map([
+        ['Year', { index: 0, field: 'year', sort: cmpYear }],
+        ['Facial value', { index: 1, field: 'face', sort: cmpFace }],
+        ['Condition', { index: 3, field: 'cond', sort: cmpCond }],
+        ['Value', { index: 4, field: 'value', sort: cmpValue }],
+        ['Krause number', { index: 6, field: 'km', sort: cmpKm }],
+    ]);
+    function a(asc = 'a') {
+        const arrClass = asc === 'a' ? 'at' : 'ab';
+        return `<div class="right"><span class="arrow ${arrClass}"></span></div>`;
+    }
+    function d(asc = 'd') {
+        return a(asc);
+    }
+    function o(opt) {
+        return `<div class="left gray-13">${opt}</div>`;
+    }
+    function c(html) {
+        const template = document.createElement('template');
+        template.innerHTML = html;
+        const opt = template.content.querySelector('div.left');
+        opt.classList.add('wrap');
+        opt.innerHTML = `Sorting:&nbsp;${opt.innerHTML}`;
+        return template.innerHTML;
+    }
+    // add sorting index to all rows
+    const rows = document.querySelectorAll('table.swap-coin tbody tr');
+    for (const row of rows) {
+        const c = row.querySelectorAll('td');
+        const d = row.dataset;
+        for (const [option, { index, field }] of sortOptionParams) {
+            const name = `sort${utils_1.tt(field)}`;
+            if (option === 'Year') {
+                const [year, ...mm] = c[index].textContent.split('&nbsp;');
+                d[name] = year;
+                d.sortMm = mm.join(' ');
+            }
+            else {
+                d[name] = c[index].textContent;
+            }
+        }
+    }
+    function sortBy(option, order) {
+        const ord = order === 'a' ? 1 : -1;
+        const { sort } = sortOptionParams.get(option);
+        const sections = document.querySelectorAll('table.swap-coin tbody');
+        for (const section of sections) {
+            const rows = [...section.querySelectorAll('tr')];
+            if (rows.length > 1) {
+                rows.sort(({ dataset: a }, { dataset: b }) => sort(a, b, ord));
+                section.append(...rows);
+            }
+        }
+    }
+    const sortOptions = ['Year', 'Facial value', 'Condition', 'Value', 'Krause number'];
+    let currentOption = 'Year';
+    let currentOrder = 'd';
+    getActiveSortOption();
+    sortBy(currentOption, currentOrder);
+    function getActiveSortOption() {
+        const parts = loc.hash.split(';');
+        if (parts[1]) {
+            const [field = 'year', order = 'd'] = parts[1].split(':');
+            currentOrder = order;
+            for (const [option, { field: f }] of sortOptionParams.entries()) {
+                if (f === field) {
+                    currentOption = option;
+                }
+            }
+        }
+    }
+    function setActiveSortOption(option, order) {
+        const parts = loc.hash.split(';');
+        parts[0] = parts[0];
+        parts[1] = `${sortOptionParams.get(option).field}:${order}`;
+        loc.hash = parts.join(';');
+    }
+    leftControls.removeAttribute('style');
+    leftControls.insertAdjacentHTML('afterend', `
+        <div class="right filter-container">
+            <div class="filter-box" id="sort-filter">
+                ${c(`${o(currentOption)}${a(currentOrder)}`)}
+            </div>
+            <div class="drop hide filter-dialog" id="sort-filter-dialog">
+            ${sortOptions.map(opt => `
+                <a class="list-link" data-option="${opt}" data-order="a">${o(opt)}${a()}</a>
+                <a class="list-link" data-option="${opt}" data-order="d">${o(opt)}${d()}</a>
+            `).join('')}
+            </div>
+        </div>
+    `);
+    const sortFilter = swapList.querySelector('#sort-filter');
+    const sortDialog = swapList.querySelector('#sort-filter-dialog');
+    sortFilter.addEventListener('click', e => {
+        e.stopPropagation();
+        sortDialog.style.display = 'block';
+    });
+    sortDialog.addEventListener('click', e => {
+        e.stopPropagation();
+        sortDialog.style.display = 'none';
+        const a = e.target;
+        if (a.matches('a')) {
+            sortFilter.innerHTML = c(a.innerHTML);
+            const { option, order } = a.dataset;
+            currentOption = option;
+            currentOrder = order;
+            setActiveSortOption(currentOption, currentOrder);
+            sortBy(currentOption, currentOrder);
+        }
+    });
+}
+exports.addSortingOptions = addSortingOptions;
 function showAllPrices() {
     const swapRows = document.querySelectorAll('table.swap-coin tr');
     for (const tr of swapRows) {
@@ -1633,6 +1804,24 @@ function ignoreUnwanted() {
     }
 }
 exports.ignoreUnwanted = ignoreUnwanted;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function sp(str) {
+    return `${str || ''}`.replace(/\u{00A0}+/gu, ' ').replace(/\s+/g, ' ').trim();
+}
+exports.sp = sp;
+function tt(str) {
+    str = `${str || ''}`;
+    return `${str.charAt(0).toUpperCase()}${str.substr(1)}`;
+}
+exports.tt = tt;
 
 
 /***/ })
