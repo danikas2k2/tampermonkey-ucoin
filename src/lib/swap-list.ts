@@ -118,7 +118,7 @@ export function addSortingOptions(): void {
 
     function cmpFace(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
         return o * cmpField(a, b, 'face')
-            || cmpKm(a, b);
+            || cmpKm(a, b, -1);
     }
 
     function cmpCond(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
@@ -140,13 +140,13 @@ export function addSortingOptions(): void {
     ]);
 
 
-    function a(asc: SortOrder = 'a') {
-        const arrClass = asc === 'a' ? 'at' : 'ab';
+    function a(ord: SortOrder = 'a') {
+        const arrClass = ord === 'a' ? 'at' : 'ab';
         return `<div class="right"><span class="arrow ${arrClass}"></span></div>`;
     }
 
-    function d(asc: SortOrder = 'd') {
-        return a(asc);
+    function d(ord: SortOrder = 'd') {
+        return a(ord);
     }
 
     function o(opt: SortOption) {
@@ -159,7 +159,6 @@ export function addSortingOptions(): void {
 
         const opt = template.content.querySelector<HTMLDivElement>('div.left');
         opt.classList.add('wrap');
-        // opt.innerHTML = `Sorting:&nbsp;${opt.innerHTML}`;
 
         return template.innerHTML;
     }
@@ -171,12 +170,15 @@ export function addSortingOptions(): void {
         const d = row.dataset;
         for (const [option, {index, field}] of sortOptionParams) {
             const name = `sort${tt(field)}`;
+            const t = c[index].textContent;
             if (option === 'Year') {
-                const [year, ...mm] = c[index].textContent.split('&nbsp;');
+                const [year, ...mm] = t.split(/(?:\s|&nbsp;)+/);
                 d[name] = year;
                 d.sortMm = mm.join(' ');
+            } else if (option === 'Condition') {
+                d[name] = `${CM.get(t)}`;
             } else {
-                d[name] = c[index].textContent;
+                d[name] = t;
             }
         }
     }
