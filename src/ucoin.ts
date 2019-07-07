@@ -18,7 +18,7 @@ import {addBuyDateResetButton, addPublicityToggle, addReplacementToggle, addSync
 import {addGalleryVisibilityToggle} from './lib/gallery';
 import {updateLinkHref, updateOnClickHref} from './lib/links';
 import {estimateSwapPrices} from './lib/prices';
-import {addSwapButtons, addSwapColorMarkers, addSwapComments, addSwapFormQtyButtons, styleSwapLists} from './lib/swap-form';
+import {addSwapButtons, addSwapColorMarkers, addSwapComments, addSwapFormQtyButtons, styleSwapLists,} from './lib/swap-form';
 import {
     addConflictHandling,
     addOpenedTabsHandler,
@@ -27,24 +27,26 @@ import {
     checkSold,
     duplicatePagination,
     ignoreUnwanted,
+    removeRowHrefFromSwapList,
     showAllPrices
 } from './lib/swap-list';
 import {UID} from './lib/uid';
+import {addWishColorMarkers, styleWishLists} from './lib/wish-form';
 
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${style}</style>`);
 
 (async function () {
     const loc = document.location.href;
 
-    if (loc.includes('/coin/')) {
+    if (loc.includes('/coin')) {
         await handleCoinPage(loc);
     }
 
-    if (loc.includes('/gallery/') && loc.includes(`uid=${UID}`)) {
+    if (loc.includes('/gallery') && loc.includes(`uid=${UID}`)) {
         await handleGalleryPage();
     }
 
-    if (loc.includes('/swap-mgr/') || loc.includes('/swap-list/')) {
+    if (loc.includes('/swap-')) {
         await handleSwapPage();
     }
 })();
@@ -75,11 +77,17 @@ async function handleCoinPage(loc: string) {
         addSwapComments();
         await addSwapButtons();
     }
-
     styleSwapLists();
+
     const theySwap = document.getElementById('swap');
     if (theySwap && theySwap.nextElementSibling.id === 'swap-block') {
         estimateSwapPrices();
+    }
+
+    const myWish = document.getElementById('my-wish-block');
+    if (myWish && myWish.querySelector('#wish-block')) {
+        addWishColorMarkers();
+        styleWishLists();
     }
 }
 
@@ -113,6 +121,7 @@ async function handleSwapPage() {
     addConflictHandling();
     checkSold();
     ignoreUnwanted();
+    removeRowHrefFromSwapList();
 
     const tree = <HTMLDivElement> document.getElementById('tree');
     if (tree) {

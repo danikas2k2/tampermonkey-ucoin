@@ -1,7 +1,8 @@
 import {get, post} from './ajax';
 import {randomDelay} from './delay';
-import {CoinSwapFormOnMatcher, getSwapLinks, getSwapLinksWithMatches} from './swap-links';
+import {CoinSwapFormOnMatcher, getSwapLinks, getSwapLinksWithMatches, styleSwapLink} from './swap-links';
 import {UID} from './uid';
+import {getCurrentVarietyId} from './vid';
 
 declare var CoinSwapFormOn: (...args: string[]) => void;
 
@@ -19,16 +20,18 @@ interface CoinSwapVariant extends CoinSwapVariantData {
     total: number,
 }
 
-const ConditionColors = new Map([
-    ['G', 7],
-    ['VG', 8],
-    ['F', 9],
-    ['VF', 10],
-    ['XF', 11],
-    ['UNC', 12],
-    ['PRF', 3],
-    ['BU', 4],
-]);
+function addSwapComment(a: HTMLAnchorElement): void {
+    if (a.hasAttribute('onClick')) {
+        const m = <CoinSwapFormOnMatchResult> a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+        if (m && m.groups) {
+            const {info} = m.groups;
+            if (info && !a.querySelector('.comments')) {
+                a.insertAdjacentHTML('beforeend',
+                    `<span class="right dgray-11 wrap comments" title="${info}"><div class="ico-16"></div> ${info}</span>`);
+            }
+        }
+    }
+}
 
 export function addSwapComments() {
     for (const a of getSwapLinks()) {
@@ -125,7 +128,7 @@ export async function addSwapButtons() {
     async function expandClicked(expandTo = 0) {
         removeButtons();
 
-        console.log(`EXPANDING...`);
+        console.debug(`EXPANDING...`);
 
         let isAddFailed = false;
         let isUpdFailed = false;
@@ -137,7 +140,7 @@ export async function addSwapButtons() {
 
             const n = expandTo > 0 ? Math.min(qty, expandTo) : qty;
             if (n <= 1) {
-                console.log(`IGNORING ${uniq} ${usid}`);
+                console.debug(`IGNORING ${uniq} ${usid}`);
                 continue; // return?
             }
 
@@ -148,7 +151,7 @@ export async function addSwapButtons() {
                 }
                 isFirstQuery = false;
 
-                console.log(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
+                console.debug(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
                 const addR = await addSwapCoin({cond, qty: q, vid, info, price});
                 if (!addR) {
                     isAddFailed = true;
@@ -187,7 +190,7 @@ export async function addSwapButtons() {
                 }
                 isFirstQuery = false;
 
-                console.log(`UPDATING ${uniq} ${usid} -> ${qq}`);
+                console.debug(`UPDATING ${uniq} ${usid} -> ${qq}`);
                 const updR = await updSwapCoin(usid, {cond, qty: qq, vid, info, price});
                 if (!updR) {
                     isUpdFailed = true;
@@ -203,11 +206,11 @@ export async function addSwapButtons() {
         }
 
         if (isAddFailed) {
-            console.log('ADD FAILED :(');
+            console.debug('ADD FAILED :(');
         } else if (isUpdFailed) {
-            console.log('UPDATE FAILED :(');
+            console.debug('UPDATE FAILED :(');
         } else {
-            console.log('DONE!');
+            console.debug('DONE!');
         }
 
         updateButtons();
@@ -233,13 +236,10 @@ export async function addSwapButtons() {
     async function combineClicked() {
         removeButtons();
 
-        console.log(`COMBINING...`);
+        console.debug(`COMBINING...`);
 
         let isDelFailed = false;
         let isUpdFailed = false;
-
-
-        console.log(variants);
 
         for (const variant of variants.values()) {
             const {usid, usids, qty, total} = variant;
@@ -251,14 +251,14 @@ export async function addSwapButtons() {
             const remove = new Set<string>(usids);
             remove.delete(usid);
 
-            console.log(`REMOVING ${remove}`);
+            console.debug(`REMOVING ${remove}`);
             const delR = await delSwapCoin(remove);
             if (!delR) {
                 isDelFailed = true;
                 break;
             }
 
-            console.log(`UPDATING ${usid}`);
+            console.debug(`UPDATING ${usid}`);
             const updR = await updSwapCoin(usid, {...variant, qty: total});
             if (updR) {
                 const rSwapBlock = updR.getElementById('my-swap-block');
@@ -274,11 +274,11 @@ export async function addSwapButtons() {
         }
 
         if (isDelFailed) {
-            console.log('ADD FAILED :(');
+            console.debug('ADD FAILED :(');
         } else if (isUpdFailed) {
-            console.log('UPDATE FAILED :(');
+            console.debug('UPDATE FAILED :(');
         } else {
-            console.log('DONE!');
+            console.debug('DONE!');
         }
 
         updateButtons();
@@ -326,7 +326,6 @@ export async function addSwapButtons() {
         p.set('usid', usid);
 
         const response = await get(url.href);
-        console.log(response);
         if (response.status !== 200) {
             return null;
         }
@@ -342,8 +341,6 @@ export async function addSwapButtons() {
             window.location.reload();
             return null;
         }
-
-        console.log(mySwapBlock.innerHTML);
         return content;
     }
 
@@ -360,7 +357,6 @@ export async function addSwapButtons() {
         data.set('action', `${action || ''}`);
 
         const response = await post(document.location.href, data);
-        console.log(response);
         if (response.status !== 200) {
             return null;
         }
@@ -376,22 +372,7 @@ export async function addSwapButtons() {
             window.location.reload();
             return null;
         }
-
-        console.log(mySwapBlock.innerHTML);
         return content;
-    }
-}
-
-function addSwapComment(a: HTMLAnchorElement): void {
-    if (a.hasAttribute('onClick')) {
-        const m = <CoinSwapFormOnMatchResult> a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
-        if (m && m.groups) {
-            const {info} = m.groups;
-            if (info && !a.querySelector('.comments')) {
-                a.insertAdjacentHTML('beforeend',
-                    `<span class="right dgray-11 wrap comments" title="${info}"><div class="ico-16"></div> ${info}</span>`);
-            }
-        }
     }
 }
 
@@ -440,28 +421,16 @@ export function addSwapColorMarkers() {
         return;
     }
 
-    function getCurrentVarietyId() {
-        const vid = new URL(document.location.href).searchParams.get('vid');
-        if (vid) {
-            return vid;
-        }
-
-        const form = document.querySelector<HTMLFormElement>('#edit-coin-form form');
-        if (form) {
-            const variety = new FormData(form).get('variety');
-            if (variety) {
-                return variety.toString();
-            }
-        }
-
-        return null;
-    }
-
     const swapForm = <HTMLFormElement> document.getElementById('swap-form');
 
     CoinSwapFormOn = function (...args: any[]) {
         _onCoinSwapForm(...args);
-        fieldset.querySelector<HTMLInputElement>(`input[name="condition"][value="${args[1]}"]`).checked = true;
+
+        const [, cond] = args;
+        const checkbox = fieldset.querySelector<HTMLInputElement>(`input[name="condition"][value="${cond}"]`);
+        if (checkbox) {
+            checkbox.checked = true;
+        }
 
         if (!new FormData(swapForm).has('swap-variety')) {
             const vid = getCurrentVarietyId();
@@ -498,25 +467,10 @@ export function addSwapColorMarkers() {
     addSwapMarker('CP', 5, 100);
 
     function addSwapMarker(text: string, color: number, value: number): void {
-        const markerId = `marked-${value}`;
+        const markerId = `swap-marker-${value}`;
         const markerClass = `marked-${color}`;
         buttonSet.insertAdjacentHTML('beforeend', `<div id="${markerId}" class="${markerClass}">${text}</div>`);
         document.getElementById(markerId).addEventListener('click', () => CoinSwapFormOn('', `${value}`));
-    }
-}
-
-export function styleSwapLink(a: HTMLAnchorElement) {
-    const condBlock = a.querySelector(`.left.dgray-11`);
-    const cond = condBlock.textContent;
-    condBlock.classList.add(`marked-${ConditionColors.get(cond)}`);
-
-    const mintBlock = a.querySelector(`.left.gray-13`);
-    const mint = mintBlock.textContent;
-    const parts = mint.split(' ');
-    const y = parts.shift();
-    if (parts.length) {
-        mintBlock.textContent = y;
-        mintBlock.insertAdjacentHTML('beforeend', ` <span class="lgray-11">${parts.join(' ')}</span>`);
     }
 }
 

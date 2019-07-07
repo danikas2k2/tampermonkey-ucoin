@@ -16,6 +16,10 @@ function getCurrentForm(): HTMLFormElement {
 
 export function addBuyDateResetButton() {
     const coinForm = getCurrentForm();
+    if (!coinForm) {
+        return;
+    }
+
     const buyYear = coinForm.querySelector<HTMLInputElement>('#buy_year');
     const buyMonth = coinForm.querySelector<HTMLInputElement>('#buy_month');
     buyMonth.insertAdjacentHTML('beforebegin', `<a id="buy_reset" href="#">${REPLACE}</a>`);
@@ -32,6 +36,10 @@ export function addBuyDateResetButton() {
 
 export function addSyncConditionToColorTable() {
     const coinForm = getCurrentForm();
+    if (!coinForm) {
+        return;
+    }
+
     const cond = coinForm.querySelector<HTMLSelectElement>('#condition');
 
     const CN = new Map([

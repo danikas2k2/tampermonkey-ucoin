@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -118,7 +118,7 @@ async function delay(time) {
 exports.delay = delay;
 async function randomDelay(rndDelay = 1000, minDelay = 500) {
     const time = Math.round(minDelay + Math.random() * rndDelay);
-    console.log(`DELAY FOR ${time} MS`);
+    console.debug(`DELAY FOR ${time} MS`);
     return await delay(time);
 }
 exports.randomDelay = randomDelay;
@@ -126,6 +126,98 @@ exports.randomDelay = randomDelay;
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ConditionColors = new Map([
+    ['G', 7],
+    ['VG', 8],
+    ['F', 9],
+    ['VF', 10],
+    ['VF+', 10],
+    ['XF', 11],
+    ['XF+', 11],
+    ['UNC', 12],
+    ['PRF', 3],
+    ['BU', 4],
+]);
+exports.ConditionValues = new Map([
+    ['G', 1],
+    ['VG', 2],
+    ['F', 3],
+    ['VF', 4],
+    ['XF', 5],
+    ['UNC', 6],
+    ['PRF', 7],
+    ['BU', 8],
+]);
+exports.ColorValues = new Map([
+    ['7', 1],
+    ['8', 2],
+    ['9', 3],
+    ['10', 4],
+    ['11', 5],
+    ['12', 6],
+    ['3', 7],
+    ['2', 8],
+    ['1', 9],
+]);
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const cond_1 = __webpack_require__(2);
+exports.CoinSwapFormOnMatcher = /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
+function* getSwapLinks(d = document) {
+    const swapBlock = d.getElementById('swap-block');
+    if (swapBlock) {
+        const listOfLinks = swapBlock.querySelectorAll('a.list-link');
+        for (const a of listOfLinks) {
+            yield a;
+        }
+    }
+}
+exports.getSwapLinks = getSwapLinks;
+function* getSwapLinksWithMatches() {
+    for (const a of getSwapLinks()) {
+        if (a.querySelector(`div.ico-16`)) {
+            continue;
+        }
+        if (a.hasAttribute('onClick')) {
+            const m = a.getAttribute('onClick').match(exports.CoinSwapFormOnMatcher);
+            if (m && m.groups) {
+                const { cond, info, vid } = m.groups;
+                yield { a, m: { ...m.groups, uniq: `${cond} ${vid} ${info}` } };
+            }
+        }
+    }
+}
+exports.getSwapLinksWithMatches = getSwapLinksWithMatches;
+function styleSwapLink(a) {
+    const condBlock = a.querySelector(`.left.dgray-11`);
+    const cond = condBlock.textContent.trim();
+    condBlock.classList.add(`marked-${cond_1.ConditionColors.get(cond)}`);
+    const mintBlock = a.querySelector(`.left.gray-13`);
+    const mint = mintBlock.textContent;
+    const parts = mint.split(' ');
+    const y = parts.shift();
+    if (parts.length) {
+        mintBlock.textContent = y;
+        mintBlock.insertAdjacentHTML('beforeend', ` <span class="lgray-11">${parts.join(' ')}</span>`);
+    }
+}
+exports.styleSwapLink = styleSwapLink;
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -144,7 +236,7 @@ exports.UID = (() => {
 
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -165,24 +257,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // @ts-ignore
-const ucoin_less_1 = __importDefault(__webpack_require__(4));
-const coin_form_1 = __webpack_require__(6);
-const gallery_1 = __webpack_require__(16);
-const links_1 = __webpack_require__(17);
-const prices_1 = __webpack_require__(18);
-const swap_form_1 = __webpack_require__(19);
-const swap_list_1 = __webpack_require__(21);
-const uid_1 = __webpack_require__(2);
+const ucoin_less_1 = __importDefault(__webpack_require__(6));
+const coin_form_1 = __webpack_require__(8);
+const gallery_1 = __webpack_require__(18);
+const links_1 = __webpack_require__(19);
+const prices_1 = __webpack_require__(20);
+const swap_form_1 = __webpack_require__(21);
+const swap_list_1 = __webpack_require__(23);
+const uid_1 = __webpack_require__(4);
+const wish_form_1 = __webpack_require__(25);
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${ucoin_less_1.default}</style>`);
 (async function () {
     const loc = document.location.href;
-    if (loc.includes('/coin/')) {
+    if (loc.includes('/coin')) {
         await handleCoinPage(loc);
     }
-    if (loc.includes('/gallery/') && loc.includes(`uid=${uid_1.UID}`)) {
+    if (loc.includes('/gallery') && loc.includes(`uid=${uid_1.UID}`)) {
         await handleGalleryPage();
     }
-    if (loc.includes('/swap-mgr/') || loc.includes('/swap-list/')) {
+    if (loc.includes('/swap-')) {
         await handleSwapPage();
     }
 })();
@@ -214,6 +307,11 @@ async function handleCoinPage(loc) {
     if (theySwap && theySwap.nextElementSibling.id === 'swap-block') {
         prices_1.estimateSwapPrices();
     }
+    const myWish = document.getElementById('my-wish-block');
+    if (myWish && myWish.querySelector('#wish-block')) {
+        wish_form_1.addWishColorMarkers();
+        wish_form_1.styleWishLists();
+    }
 }
 async function handleGalleryPage() {
     const gallery = document.getElementById('gallery');
@@ -243,6 +341,7 @@ async function handleSwapPage() {
     swap_list_1.addConflictHandling();
     swap_list_1.checkSold();
     swap_list_1.ignoreUnwanted();
+    swap_list_1.removeRowHrefFromSwapList();
     const tree = document.getElementById('tree');
     if (tree) {
         const filterLinks = tree.querySelectorAll('.filter-container .list-link');
@@ -262,17 +361,17 @@ async function handleSwapPage() {
 
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(5)(false);
+exports = module.exports = __webpack_require__(7)(false);
 // Module
-exports.push([module.i, "#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#ucid-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#ucid-block .btn-red {\n  background-color: #CC0000;\n  border: 1px solid rgba(0, 0, 0, 0.2);\n  color: #F5F5F5;\n}\n#ucid-block .btn-i {\n  padding: 10px;\n}\n#ucid-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n#estimated-prices {\n  overflow-x: hidden;\n  max-height: 400px;\n}\n#estimated-prices .list-link {\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #E9EDF1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n  font-size: 11px;\n  line-height: 19px;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 1em;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  flex: 0 0 20px;\n  width: 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n}\n#my-swap-block #swap-block .btn--combiner,\n#my-swap-block #swap-block .btn--expander {\n  margin: 8px 2px 0;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #FDD;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #FED;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n#swap-list .action-board,\n#swap-mgr .action-board,\n#swap-list .filter-container,\n#swap-mgr .filter-container {\n  margin: 15px 0 20px;\n  height: 30px;\n  width: auto;\n}\n#swap-list #sort-filter,\n#swap-mgr #sort-filter {\n  border-color: #3B7BEA;\n  width: 150px;\n  padding: 4px 12px 7px;\n}\n#swap-list #sort-filter .left,\n#swap-mgr #sort-filter .left {\n  max-width: 170px;\n}\n#swap-list #sort-filter-dialog,\n#swap-mgr #sort-filter-dialog {\n  width: 174px;\n  display: none;\n}\n", ""]);
+exports.push([module.i, "#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#ucid-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#ucid-block .btn-red {\n  background-color: #CC0000;\n  border: 1px solid rgba(0, 0, 0, 0.2);\n  color: #F5F5F5;\n}\n#ucid-block .btn-i {\n  padding: 10px;\n}\n#ucid-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n#estimated-prices {\n  overflow-x: hidden;\n  max-height: 400px;\n}\n#estimated-prices .list-link {\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #E9EDF1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n  font-size: 11px;\n  line-height: 19px;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a,\n#my-wish-block #wish-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments,\n#my-wish-block #wish-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16,\n#my-wish-block #wish-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-wish-block #wish-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-wish-block #wish-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover,\n#my-wish-block #wish-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-wish-block #wish-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-wish-block #wish-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments,\n#my-wish-block #wish-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set,\n#my-wish-block #wish-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-swap-block #swap-block center div.btn-set div,\n#my-wish-block #wish-block center div.btn-set div {\n  flex: 0 0 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-swap-block #swap-block .btn--combiner,\n#my-wish-block #wish-block .btn--combiner,\n#my-swap-block #swap-block .btn--expander,\n#my-wish-block #wish-block .btn--expander {\n  margin: 8px 2px 0;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #FDD;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #FED;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n#swap-list .action-board,\n#swap-mgr .action-board,\n#swap-list .filter-container,\n#swap-mgr .filter-container {\n  margin: 15px 0 20px;\n  height: 30px;\n  width: auto;\n}\n#swap-list #sort-filter,\n#swap-mgr #sort-filter {\n  border-color: #3B7BEA;\n  width: 150px !important;\n  padding: 4px 12px 7px;\n}\n#swap-list #sort-filter .left,\n#swap-mgr #sort-filter .left {\n  max-width: 140px !important;\n}\n#swap-list #sort-filter-dialog,\n#swap-mgr #sort-filter-dialog {\n  width: 174px;\n  display: none;\n}\n#swap-mgr table.offer-list tr.str {\n  cursor: default;\n}\n#swap-list .pages {\n  padding-right: 0 !important;\n}\n#swap-list .filter-container {\n  margin: 0 !important;\n}\n", ""]);
 
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -363,7 +462,7 @@ function toComment(sourceMap) {
 }
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -373,21 +472,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // @ts-ignore
-const hide_svg_1 = __importDefault(__webpack_require__(7));
+const hide_svg_1 = __importDefault(__webpack_require__(9));
 // @ts-ignore
-const leave_svg_1 = __importDefault(__webpack_require__(8));
+const leave_svg_1 = __importDefault(__webpack_require__(10));
 // @ts-ignore
-const replace_svg_1 = __importDefault(__webpack_require__(9));
+const replace_svg_1 = __importDefault(__webpack_require__(11));
 // @ts-ignore
-const show_svg_1 = __importDefault(__webpack_require__(10));
+const show_svg_1 = __importDefault(__webpack_require__(12));
 const ajax_1 = __webpack_require__(0);
-const notify_1 = __webpack_require__(11);
+const notify_1 = __webpack_require__(13);
 function getCurrentForm() {
     return document.getElementById('edit-coin-form')
         || document.getElementById('add-coin-form');
 }
 function addBuyDateResetButton() {
     const coinForm = getCurrentForm();
+    if (!coinForm) {
+        return;
+    }
     const buyYear = coinForm.querySelector('#buy_year');
     const buyMonth = coinForm.querySelector('#buy_month');
     buyMonth.insertAdjacentHTML('beforebegin', `<a id="buy_reset" href="#">${replace_svg_1.default}</a>`);
@@ -404,6 +506,9 @@ function addBuyDateResetButton() {
 exports.addBuyDateResetButton = addBuyDateResetButton;
 function addSyncConditionToColorTable() {
     const coinForm = getCurrentForm();
+    if (!coinForm) {
+        return;
+    }
     const cond = coinForm.querySelector('#condition');
     const CN = new Map([
         ['6', '7'],
@@ -576,31 +681,31 @@ exports.addReplacementToggle = addReplacementToggle;
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 512\"><path fill=\"currentColor\" d=\"M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z\"></path></svg>"
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><path fill=\"currentColor\" d=\"M500.33 0h-47.41a12 12 0 0 0-12 12.57l4 82.76A247.42 247.42 0 0 0 256 8C119.34 8 7.9 119.53 8 256.19 8.1 393.07 119.1 504 256 504a247.1 247.1 0 0 0 166.18-63.91 12 12 0 0 0 .48-17.43l-34-34a12 12 0 0 0-16.38-.55A176 176 0 1 1 402.1 157.8l-101.53-4.87a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12h200.33a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12m-17.99 504.97l22.63-22.63a24 24 0 0 0 0-33.94L63.6 7.03a24 24 0 0 0-33.94 0L7.03 29.66a24 24 0 0 0 0 33.94L448.4 504.97a24 24 0 0 0 33.94 0z\"></path></svg>"
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><path fill=\"currentColor\" d=\"M500.33 0h-47.41a12 12 0 0 0-12 12.57l4 82.76A247.42 247.42 0 0 0 256 8C119.34 8 7.9 119.53 8 256.19 8.1 393.07 119.1 504 256 504a247.1 247.1 0 0 0 166.18-63.91 12 12 0 0 0 .48-17.43l-34-34a12 12 0 0 0-16.38-.55A176 176 0 1 1 402.1 157.8l-101.53-4.87a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12h200.33a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12z\"></path></svg>"
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 576 512\"><path fill=\"currentColor\" d=\"M288 144a110.94 110.94 0 0 0-31.24 5 55.4 55.4 0 0 1 7.24 27 56 56 0 0 1-56 56 55.4 55.4 0 0 1-27-7.24A111.71 111.71 0 1 0 288 144zm284.52 97.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400c-98.65 0-189.09-55-237.93-144C98.91 167 189.34 112 288 112s189.09 55 237.93 144C477.1 345 386.66 400 288 400z\"></path></svg>"
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -610,13 +715,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // @ts-ignore
-const error_svg_1 = __importDefault(__webpack_require__(12));
+const error_svg_1 = __importDefault(__webpack_require__(14));
 // @ts-ignore
-const info_svg_1 = __importDefault(__webpack_require__(13));
+const info_svg_1 = __importDefault(__webpack_require__(15));
 // @ts-ignore
-const minus_svg_1 = __importDefault(__webpack_require__(14));
+const minus_svg_1 = __importDefault(__webpack_require__(16));
 // @ts-ignore
-const success_svg_1 = __importDefault(__webpack_require__(15));
+const success_svg_1 = __importDefault(__webpack_require__(17));
 function notify(title, body, icon) {
     const options = {};
     if (body) {
@@ -660,31 +765,31 @@ exports.ok = ok;
 
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#d75a4a\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M16 34l9-9 9-9m-18 0l9 9 9 9\"></path></svg>"
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#48a0dc\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" d=\"M25 37v2m-7-23a7 7 0 0 1 7.1-7 7.1 7.1 0 0 1 6.9 6.9 7 7 0 0 1-3.21 5.99A8.6 8.6 0 0 0 25 29.16V32\"></path></svg>"
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#ed8a19\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"M38 25H12\"></path></svg>"
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\"><circle cx=\"25\" cy=\"25\" r=\"25\" fill=\"#25ae88\"></circle><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" d=\"M38 15L22 33l-10-8\"></path></svg>"
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -710,7 +815,7 @@ function addGalleryVisibilityToggle() {
         const buttonId = `button-${text.toLowerCase()}`;
         container.insertAdjacentHTML('beforeend', `<button id="${buttonId}" class="btn-l ${className}" style="padding: 0 14px; height: 26px">${text} <small></small></button>`);
         const button = document.getElementById(buttonId);
-        button.addEventListener('click', () => toggleGroupVisibility(visibility));
+        button.addEventListener('click', () => confirm(`Are you sure to ${text.toLowerCase()}?`) && toggleGroupVisibility(visibility));
         return button;
     }
     function toggleButtonVisibility() {
@@ -754,7 +859,7 @@ exports.addGalleryVisibilityToggle = addGalleryVisibilityToggle;
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -815,32 +920,13 @@ exports.updateOnClickHref = updateOnClickHref;
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const ConditionValues = new Map([
-    ['G', 1],
-    ['VG', 2],
-    ['F', 3],
-    ['VF', 4],
-    ['XF', 5],
-    ['UNC', 6],
-    ['PRF', 7],
-    ['BU', 8],
-]);
-const ConditionColors = new Map([
-    ['G', 7],
-    ['VG', 8],
-    ['F', 9],
-    ['VF', 10],
-    ['XF', 11],
-    ['UNC', 12],
-    ['PRF', 3],
-    ['BU', 4],
-]);
+const cond_1 = __webpack_require__(2);
 function estimateSwapPrices() {
     const theySwap = document.getElementById('swap');
     const swapBlock = theySwap && theySwap.nextElementSibling;
@@ -913,18 +999,18 @@ function estimateSwapPrices() {
             const parts = mint.split(' ');
             const y = parts.shift();
             const m = parts.length ? ` <span class="lgray-11">${parts.join(' ')}</span>` : '';
-            estimatedPrices.insertAdjacentHTML('beforeend', `<a class="list-link"><span class="left dgray-11 marked-${ConditionColors.get(cond)}">${cond}</span><span class="left gray-13">${y}${m}</span><span class="right blue-13">${price}</span></a>`);
+            estimatedPrices.insertAdjacentHTML('beforeend', `<a class="list-link"><span class="left dgray-11 marked-${cond_1.ConditionColors.get(cond)}">${cond}</span><span class="left gray-13">${y}${m}</span><span class="right blue-13">${price}</span></a>`);
         }
     }
     function sortByCond(a, b) {
-        return ConditionValues.get(b) - ConditionValues.get(a);
+        return cond_1.ConditionValues.get(b) - cond_1.ConditionValues.get(a);
     }
 }
 exports.estimateSwapPrices = estimateSwapPrices;
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -932,18 +1018,20 @@ exports.estimateSwapPrices = estimateSwapPrices;
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
 const delay_1 = __webpack_require__(1);
-const swap_links_1 = __webpack_require__(20);
-const uid_1 = __webpack_require__(2);
-const ConditionColors = new Map([
-    ['G', 7],
-    ['VG', 8],
-    ['F', 9],
-    ['VF', 10],
-    ['XF', 11],
-    ['UNC', 12],
-    ['PRF', 3],
-    ['BU', 4],
-]);
+const swap_links_1 = __webpack_require__(3);
+const uid_1 = __webpack_require__(4);
+const vid_1 = __webpack_require__(22);
+function addSwapComment(a) {
+    if (a.hasAttribute('onClick')) {
+        const m = a.getAttribute('onClick').match(swap_links_1.CoinSwapFormOnMatcher);
+        if (m && m.groups) {
+            const { info } = m.groups;
+            if (info && !a.querySelector('.comments')) {
+                a.insertAdjacentHTML('beforeend', `<span class="right dgray-11 wrap comments" title="${info}"><div class="ico-16"></div> ${info}</span>`);
+            }
+        }
+    }
+}
 function addSwapComments() {
     for (const a of swap_links_1.getSwapLinks()) {
         addSwapComment(a);
@@ -1023,7 +1111,7 @@ async function addSwapButtons() {
     // expandTo - number of links (0 for unlimited)
     async function expandClicked(expandTo = 0) {
         removeButtons();
-        console.log(`EXPANDING...`);
+        console.debug(`EXPANDING...`);
         let isAddFailed = false;
         let isUpdFailed = false;
         let isFirstQuery = true;
@@ -1032,7 +1120,7 @@ async function addSwapButtons() {
             const qty = +strqty;
             const n = expandTo > 0 ? Math.min(qty, expandTo) : qty;
             if (n <= 1) {
-                console.log(`IGNORING ${uniq} ${usid}`);
+                console.debug(`IGNORING ${uniq} ${usid}`);
                 continue; // return?
             }
             for (let i = n, qq = qty, q = Math.floor(qq / i); i > 1; i--, q = Math.floor(qq / i)) {
@@ -1041,7 +1129,7 @@ async function addSwapButtons() {
                     await delay_1.randomDelay();
                 }
                 isFirstQuery = false;
-                console.log(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
+                console.debug(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
                 const addR = await addSwapCoin({ cond, qty: q, vid, info, price });
                 if (!addR) {
                     isAddFailed = true;
@@ -1067,7 +1155,7 @@ async function addSwapButtons() {
                         continue;
                     }
                     links.add(usid);
-                    styleSwapLink(l);
+                    swap_links_1.styleSwapLink(l);
                     a.insertAdjacentElement('afterend', l);
                     addSwapComment(l);
                 }
@@ -1075,7 +1163,7 @@ async function addSwapButtons() {
                     await delay_1.randomDelay();
                 }
                 isFirstQuery = false;
-                console.log(`UPDATING ${uniq} ${usid} -> ${qq}`);
+                console.debug(`UPDATING ${uniq} ${usid} -> ${qq}`);
                 const updR = await updSwapCoin(usid, { cond, qty: qq, vid, info, price });
                 if (!updR) {
                     isUpdFailed = true;
@@ -1088,13 +1176,13 @@ async function addSwapButtons() {
             }
         }
         if (isAddFailed) {
-            console.log('ADD FAILED :(');
+            console.debug('ADD FAILED :(');
         }
         else if (isUpdFailed) {
-            console.log('UPDATE FAILED :(');
+            console.debug('UPDATE FAILED :(');
         }
         else {
-            console.log('DONE!');
+            console.debug('DONE!');
         }
         updateButtons();
     }
@@ -1115,10 +1203,9 @@ async function addSwapButtons() {
     }
     async function combineClicked() {
         removeButtons();
-        console.log(`COMBINING...`);
+        console.debug(`COMBINING...`);
         let isDelFailed = false;
         let isUpdFailed = false;
-        console.log(variants);
         for (const variant of variants.values()) {
             const { usid, usids, qty, total } = variant;
             if (total <= qty) {
@@ -1126,13 +1213,13 @@ async function addSwapButtons() {
             }
             const remove = new Set(usids);
             remove.delete(usid);
-            console.log(`REMOVING ${remove}`);
+            console.debug(`REMOVING ${remove}`);
             const delR = await delSwapCoin(remove);
             if (!delR) {
                 isDelFailed = true;
                 break;
             }
-            console.log(`UPDATING ${usid}`);
+            console.debug(`UPDATING ${usid}`);
             const updR = await updSwapCoin(usid, { ...variant, qty: total });
             if (updR) {
                 const rSwapBlock = updR.getElementById('my-swap-block');
@@ -1148,13 +1235,13 @@ async function addSwapButtons() {
             }
         }
         if (isDelFailed) {
-            console.log('ADD FAILED :(');
+            console.debug('ADD FAILED :(');
         }
         else if (isUpdFailed) {
-            console.log('UPDATE FAILED :(');
+            console.debug('UPDATE FAILED :(');
         }
         else {
-            console.log('DONE!');
+            console.debug('DONE!');
         }
         updateButtons();
     }
@@ -1194,7 +1281,6 @@ async function addSwapButtons() {
         p.set('uid', uid_1.UID);
         p.set('usid', usid);
         const response = await ajax_1.get(url.href);
-        console.log(response);
         if (response.status !== 200) {
             return null;
         }
@@ -1208,7 +1294,6 @@ async function addSwapButtons() {
             window.location.reload();
             return null;
         }
-        console.log(mySwapBlock.innerHTML);
         return content;
     }
     async function updSwapCoin(usid, { cond, qty, vid, info, price }, action = 'editswapcoin') {
@@ -1222,7 +1307,6 @@ async function addSwapButtons() {
         data.set('price', `${price || ''}`);
         data.set('action', `${action || ''}`);
         const response = await ajax_1.post(document.location.href, data);
-        console.log(response);
         if (response.status !== 200) {
             return null;
         }
@@ -1236,22 +1320,10 @@ async function addSwapButtons() {
             window.location.reload();
             return null;
         }
-        console.log(mySwapBlock.innerHTML);
         return content;
     }
 }
 exports.addSwapButtons = addSwapButtons;
-function addSwapComment(a) {
-    if (a.hasAttribute('onClick')) {
-        const m = a.getAttribute('onClick').match(swap_links_1.CoinSwapFormOnMatcher);
-        if (m && m.groups) {
-            const { info } = m.groups;
-            if (info && !a.querySelector('.comments')) {
-                a.insertAdjacentHTML('beforeend', `<span class="right dgray-11 wrap comments" title="${info}"><div class="ico-16"></div> ${info}</span>`);
-            }
-        }
-    }
-}
 function addSwapFormQtyButtons() {
     const qty = document.getElementById('swap-qty');
     qty.setAttribute('inputmode', 'numeric');
@@ -1289,26 +1361,16 @@ function addSwapColorMarkers() {
     if (!_onCoinSwapForm) {
         return;
     }
-    function getCurrentVarietyId() {
-        const vid = new URL(document.location.href).searchParams.get('vid');
-        if (vid) {
-            return vid;
-        }
-        const form = document.querySelector('#edit-coin-form form');
-        if (form) {
-            const variety = new FormData(form).get('variety');
-            if (variety) {
-                return variety.toString();
-            }
-        }
-        return null;
-    }
     const swapForm = document.getElementById('swap-form');
     CoinSwapFormOn = function (...args) {
         _onCoinSwapForm(...args);
-        fieldset.querySelector(`input[name="condition"][value="${args[1]}"]`).checked = true;
+        const [, cond] = args;
+        const checkbox = fieldset.querySelector(`input[name="condition"][value="${cond}"]`);
+        if (checkbox) {
+            checkbox.checked = true;
+        }
         if (!new FormData(swapForm).has('swap-variety')) {
-            const vid = getCurrentVarietyId();
+            const vid = vid_1.getCurrentVarietyId();
             if (vid) {
                 document.querySelector(`input[name="swap-variety"][value="${vid}"]`).checked = true;
             }
@@ -1337,81 +1399,57 @@ function addSwapColorMarkers() {
     addSwapMarker('PR', 3, 7);
     addSwapMarker('CP', 5, 100);
     function addSwapMarker(text, color, value) {
-        const markerId = `marked-${value}`;
+        const markerId = `swap-marker-${value}`;
         const markerClass = `marked-${color}`;
         buttonSet.insertAdjacentHTML('beforeend', `<div id="${markerId}" class="${markerClass}">${text}</div>`);
         document.getElementById(markerId).addEventListener('click', () => CoinSwapFormOn('', `${value}`));
     }
 }
 exports.addSwapColorMarkers = addSwapColorMarkers;
-function styleSwapLink(a) {
-    const condBlock = a.querySelector(`.left.dgray-11`);
-    const cond = condBlock.textContent;
-    condBlock.classList.add(`marked-${ConditionColors.get(cond)}`);
-    const mintBlock = a.querySelector(`.left.gray-13`);
-    const mint = mintBlock.textContent;
-    const parts = mint.split(' ');
-    const y = parts.shift();
-    if (parts.length) {
-        mintBlock.textContent = y;
-        mintBlock.insertAdjacentHTML('beforeend', ` <span class="lgray-11">${parts.join(' ')}</span>`);
-    }
-}
-exports.styleSwapLink = styleSwapLink;
 function styleSwapLists() {
     const listOfLinks = document.querySelectorAll('#swap-block a.list-link');
     for (const a of listOfLinks) {
-        styleSwapLink(a);
+        swap_links_1.styleSwapLink(a);
     }
 }
 exports.styleSwapLists = styleSwapLists;
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CoinSwapFormOnMatcher = /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
-function* getSwapLinks(d = document) {
-    const swapBlock = d.getElementById('swap-block');
-    if (swapBlock) {
-        const listOfLinks = swapBlock.querySelectorAll('a.list-link');
-        for (const a of listOfLinks) {
-            yield a;
+function getCurrentVarietyId() {
+    const vid = new URL(document.location.href).searchParams.get('vid');
+    if (vid) {
+        return vid;
+    }
+    const form = document.querySelector('#edit-coin-form form');
+    if (form) {
+        const variety = new FormData(form).get('variety');
+        if (variety) {
+            return variety.toString();
         }
     }
+    return null;
 }
-exports.getSwapLinks = getSwapLinks;
-function* getSwapLinksWithMatches() {
-    for (const a of getSwapLinks()) {
-        if (a.querySelector(`div.ico-16`)) {
-            continue;
-        }
-        if (a.hasAttribute('onClick')) {
-            const m = a.getAttribute('onClick').match(exports.CoinSwapFormOnMatcher);
-            if (m && m.groups) {
-                const { cond, info, vid } = m.groups;
-                yield { a, m: { ...m.groups, uniq: `${cond} ${vid} ${info}` } };
-            }
-        }
-    }
-}
-exports.getSwapLinksWithMatches = getSwapLinksWithMatches;
+exports.getCurrentVarietyId = getCurrentVarietyId;
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
+const cond_1 = __webpack_require__(2);
 const delay_1 = __webpack_require__(1);
-const utils_1 = __webpack_require__(22);
+const utils_1 = __webpack_require__(24);
 const { location: loc } = document;
 function addTrackingLinks() {
     const swapMgr = document.getElementById('swap-mgr');
@@ -1437,15 +1475,21 @@ function setActiveSwapTab(tab) {
 }
 function addOpenedTabsHandler() {
     const tabs = document.querySelectorAll('#swap-mgr > div.widerightCol > ul.region-list > li.region');
-    const needTab = tabs.item(0);
-    needTab.addEventListener('click', () => setActiveSwapTab('need'));
-    const takeTab = tabs.item(1);
-    takeTab.addEventListener('click', () => setActiveSwapTab('take'));
-    if (loc.hash.startsWith('#take')) {
-        takeTab.click();
-    }
-    else {
-        needTab.click();
+    if (tabs.length) {
+        const needTab = tabs.item(0);
+        if (needTab) {
+            needTab.addEventListener('click', () => setActiveSwapTab('need'));
+            if (loc.hash.startsWith('#need')) {
+                needTab.click();
+            }
+        }
+        const takeTab = tabs.item(1);
+        if (takeTab) {
+            takeTab.addEventListener('click', () => setActiveSwapTab('take'));
+            if (loc.hash.startsWith('#take')) {
+                takeTab.click();
+            }
+        }
     }
 }
 exports.addOpenedTabsHandler = addOpenedTabsHandler;
@@ -1488,33 +1532,6 @@ function addSortingOptions() {
     if (!leftControls) {
         return;
     }
-    function cmp(a, b) {
-        return -(a < b) || +(a > b);
-    }
-    function cmpField(a, b, field) {
-        const f = `sort${utils_1.tt(field)}`;
-        return cmp(a[f], b[f]);
-    }
-    function cmpYear(a, b, o = 1) {
-        return o * cmpField(a, b, 'year')
-            || cmpField(a, b, 'mm');
-    }
-    function cmpKm(a, b, o = 1) {
-        return o * cmpField(a, b, 'km')
-            || cmpYear(a, b, -1);
-    }
-    function cmpFace(a, b, o = 1) {
-        return o * cmpField(a, b, 'face')
-            || cmpKm(a, b, -1);
-    }
-    function cmpCond(a, b, o = 1) {
-        return o * cmpField(a, b, 'cond')
-            || cmpFace(a, b);
-    }
-    function cmpValue(a, b, o = 1) {
-        return o * cmpField(a, b, 'value')
-            || cmpCond(a, b, -1);
-    }
     const sortOptionParams = new Map([
         ['Year', { index: 0, field: 'year', sort: cmpYear }],
         ['Facial value', { index: 1, field: 'face', sort: cmpFace }],
@@ -1522,25 +1539,11 @@ function addSortingOptions() {
         ['Value', { index: 4, field: 'value', sort: cmpValue }],
         ['Krause number', { index: 6, field: 'km', sort: cmpKm }],
     ]);
-    function a(ord = 'a') {
-        const arrClass = ord === 'a' ? 'at' : 'ab';
-        return `<div class="right"><span class="arrow ${arrClass}"></span></div>`;
-    }
-    function d(ord = 'd') {
-        return a(ord);
-    }
-    function o(opt) {
-        return `<div class="left gray-13">${opt}</div>`;
-    }
-    function c(html) {
-        const template = document.createElement('template');
-        template.innerHTML = html;
-        const opt = template.content.querySelector('div.left');
-        opt.classList.add('wrap');
-        return template.innerHTML;
-    }
+    const sortOptions = ['Year', 'Facial value', 'Condition', 'Value', 'Krause number'];
+    let currentOption = 'Year';
+    let currentOrder = 'd';
     // add sorting index to all rows
-    const rows = document.querySelectorAll('table.swap-coin tbody tr');
+    const rows = swapList.querySelectorAll('table.swap-coin tbody tr');
     for (const row of rows) {
         const c = row.querySelectorAll('td');
         const d = row.dataset;
@@ -1553,48 +1556,29 @@ function addSortingOptions() {
                 d.sortMm = mm.join(' ');
             }
             else if (option === 'Condition') {
-                d[name] = `${CM.get(t)}`;
+                d[name] = `${cond_1.ConditionValues.get(t)}`;
+            }
+            else if (option === 'Krause number') {
+                const m = t.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?(?:[a-zA-Z]*))/i);
+                if (m && m.groups) {
+                    const { cat, num, prefix, suffix } = m.groups;
+                    d.sortKmc = cat;
+                    d[name] = num;
+                    d.sortKma = `${prefix}${suffix}`;
+                }
+                else {
+                    d.sortKmc = '';
+                    d[name] = t;
+                    d.sortKma = '';
+                }
             }
             else {
                 d[name] = t;
             }
         }
     }
-    function sortBy(option, order) {
-        const ord = order === 'a' ? 1 : -1;
-        const { sort } = sortOptionParams.get(option);
-        const sections = document.querySelectorAll('table.swap-coin tbody');
-        for (const section of sections) {
-            const rows = [...section.querySelectorAll('tr')];
-            if (rows.length > 1) {
-                rows.sort(({ dataset: a }, { dataset: b }) => sort(a, b, ord));
-                section.append(...rows);
-            }
-        }
-    }
-    const sortOptions = ['Year', 'Facial value', 'Condition', 'Value', 'Krause number'];
-    let currentOption = 'Year';
-    let currentOrder = 'd';
     getActiveSortOption();
     sortBy(currentOption, currentOrder);
-    function getActiveSortOption() {
-        const parts = loc.hash.split(';');
-        if (parts[1]) {
-            const [field = 'year', order = 'd'] = parts[1].split(':');
-            currentOrder = order;
-            for (const [option, { field: f }] of sortOptionParams.entries()) {
-                if (f === field) {
-                    currentOption = option;
-                }
-            }
-        }
-    }
-    function setActiveSortOption(option, order) {
-        const parts = loc.hash.split(';');
-        parts[0] = parts[0];
-        parts[1] = `${sortOptionParams.get(option).field}:${order}`;
-        loc.hash = parts.join(';');
-    }
     leftControls.removeAttribute('style');
     leftControls.insertAdjacentHTML('afterend', `
         <div class="right filter-container">
@@ -1629,6 +1613,86 @@ function addSortingOptions() {
         setActiveSortOption(currentOption, currentOrder);
         sortBy(currentOption, currentOrder);
     });
+    function cmp(a, b) {
+        return -(a < b) || +(a > b);
+    }
+    function cmpNum(a, b, field) {
+        const f = `sort${utils_1.tt(field)}`;
+        return cmp(+a[f], +b[f]);
+    }
+    function cmpStr(a, b, field) {
+        const f = `sort${utils_1.tt(field)}`;
+        return cmp(a[f], b[f]);
+    }
+    function cmpYear(a, b, o = 1) {
+        return o * cmpNum(a, b, 'year')
+            || cmpStr(a, b, 'mm');
+    }
+    function cmpKm(a, b, o = 1) {
+        return o * cmpStr(a, b, 'kmc')
+            || o * cmpNum(a, b, 'km')
+            || o * cmpStr(a, b, 'kma')
+            || cmpYear(a, b, -1);
+    }
+    function cmpFace(a, b, o = 1) {
+        return o * cmpStr(a, b, 'face')
+            || cmpKm(a, b, -1);
+    }
+    function cmpCond(a, b, o = 1) {
+        return o * cmpNum(a, b, 'cond')
+            || cmpFace(a, b);
+    }
+    function cmpValue(a, b, o = 1) {
+        return o * cmpNum(a, b, 'value')
+            || cmpCond(a, b, -1);
+    }
+    function a(ord = 'a') {
+        const arrClass = ord === 'a' ? 'at' : 'ab';
+        return `<div class="right"><span class="arrow ${arrClass}"></span></div>`;
+    }
+    function d(ord = 'd') {
+        return a(ord);
+    }
+    function o(opt) {
+        return `<div class="left gray-13">${opt}</div>`;
+    }
+    function c(html) {
+        const template = document.createElement('template');
+        template.innerHTML = html;
+        const opt = template.content.querySelector('div.left');
+        opt.classList.add('wrap');
+        return template.innerHTML;
+    }
+    function sortBy(option, order) {
+        const ord = order === 'a' ? 1 : -1;
+        const { sort } = sortOptionParams.get(option);
+        const sections = swapList.querySelectorAll('table.swap-coin tbody');
+        for (const section of sections) {
+            const rows = [...section.querySelectorAll('tr')];
+            if (rows.length > 1) {
+                rows.sort(({ dataset: a }, { dataset: b }) => sort(a, b, ord));
+                section.append(...rows);
+            }
+        }
+    }
+    function getActiveSortOption() {
+        const parts = loc.hash.split(';');
+        if (parts[1]) {
+            const [field = 'year', order = 'd'] = parts[1].split(':');
+            currentOrder = order;
+            for (const [option, { field: f }] of sortOptionParams.entries()) {
+                if (f === field) {
+                    currentOption = option;
+                }
+            }
+        }
+    }
+    function setActiveSortOption(option, order) {
+        const parts = loc.hash.split(';');
+        parts[0] = parts[0];
+        parts[1] = `${sortOptionParams.get(option).field}:${order}`;
+        loc.hash = parts.join(';');
+    }
 }
 exports.addSortingOptions = addSortingOptions;
 function showAllPrices() {
@@ -1731,64 +1795,50 @@ function highlightConflicts() {
 }
 function checkSold() {
     const needSwapList = document.getElementById('need-swap-list');
-    if (needSwapList) {
-        const table = document.querySelector('table.swap-coin');
-        const soldList = table.querySelectorAll('tr.del');
-        let soldCount = soldList.length;
-        if (soldCount) {
-            const delAllButtonId = 'act-d-all';
-            const actionBoard = needSwapList.querySelector('.action-board');
-            actionBoard.insertAdjacentHTML('beforeend', `<a class="btn-s btn-gray ico-del" id="${delAllButtonId}" style="float: right;"><div class="ico-16"></div></a>`);
-            const button = document.getElementById(delAllButtonId);
-            button.addEventListener('click', async () => {
-                if (!confirm('Are you sure you want to delete these coins?')) {
-                    return false;
-                }
-                let isFirstRequest = true;
-                for await (const sold of soldList) {
-                    if (!isFirstRequest) {
-                        await delay_1.randomDelay();
-                    }
-                    isFirstRequest = false;
-                    const { href } = sold.querySelector('a.act');
-                    await ajax_1.get(href);
-                    const tree = document.getElementById('tree');
-                    const soldCountElement = tree.querySelector('a.region.list-link div.right.blue-13 sup');
-                    if (--soldCount) {
-                        soldCountElement.textContent = `&nbsp;-${soldCount}`;
-                    }
-                    else {
-                        soldCountElement.remove();
-                    }
-                    sold.remove();
-                }
-                button.remove();
-            });
-        }
+    if (!needSwapList) {
+        return;
     }
+    const soldList = needSwapList.querySelectorAll('table.swap-coin tr.del');
+    let soldCount = soldList.length;
+    if (!soldCount) {
+        return;
+    }
+    const delAllButtonId = 'act-d-all';
+    const actionBoard = needSwapList.querySelector('.action-board');
+    if (!actionBoard) {
+        return;
+    }
+    actionBoard.insertAdjacentHTML('beforeend', `<a class="btn-s btn-gray ico-del" id="${delAllButtonId}" style="float: right;"><div class="ico-16"></div></a>`);
+    const button = document.getElementById(delAllButtonId);
+    if (!button) {
+        return;
+    }
+    button.addEventListener('click', async () => {
+        if (!confirm('Are you sure you want to delete these coins?')) {
+            return false;
+        }
+        let isFirstRequest = true;
+        for await (const sold of soldList) {
+            if (!isFirstRequest) {
+                await delay_1.randomDelay();
+            }
+            isFirstRequest = false;
+            const { href } = sold.querySelector('a.act');
+            await ajax_1.get(href);
+            const tree = document.getElementById('tree');
+            const soldCountElement = tree.querySelector('a.region.list-link div.right.blue-13 sup');
+            if (--soldCount) {
+                soldCountElement.textContent = `&nbsp;-${soldCount}`;
+            }
+            else {
+                soldCountElement.remove();
+            }
+            sold.remove();
+        }
+        button.remove();
+    });
 }
 exports.checkSold = checkSold;
-const CN = new Map([
-    ['7', 1],
-    ['8', 2],
-    ['9', 3],
-    ['10', 4],
-    ['11', 5],
-    ['12', 6],
-    ['3', 7],
-    ['2', 8],
-    ['1', 9],
-]);
-const CM = new Map([
-    ['G', 1],
-    ['VG', 2],
-    ['F', 3],
-    ['VF', 4],
-    ['XF', 5],
-    ['UNC', 6],
-    ['PRF', 7],
-    ['BU', 8],
-]);
 function ignoreUnwanted() {
     if (!document.getElementById('need-swap-list')) {
         const tables = document.querySelectorAll('table.swap-coin');
@@ -1796,10 +1846,10 @@ function ignoreUnwanted() {
             const rows = table.querySelectorAll('tr');
             for (const tr of rows) {
                 const markedElement = tr.querySelector('td span[class^="marked-"]');
-                const marked = markedElement && markedElement.classList;
-                const myCond = marked && CN.get(marked.item(0).split('marked-').pop()) || 0;
+                const markedClass = markedElement && markedElement.classList.item(0);
+                const myCond = markedClass && cond_1.ColorValues.get(markedClass.split('marked-').pop()) || 0;
                 const condElement = tr.querySelector('td.td-cond');
-                const cond = condElement && CM.get(condElement.textContent) || 0;
+                const cond = condElement && cond_1.ConditionValues.get(condElement.textContent) || 0;
                 if (myCond && (!cond || cond <= myCond)) {
                     tr.classList.add('ignore');
                 }
@@ -1808,10 +1858,21 @@ function ignoreUnwanted() {
     }
 }
 exports.ignoreUnwanted = ignoreUnwanted;
+function removeRowHrefFromSwapList() {
+    const swapMgr = document.getElementById('swap-mgr');
+    if (!swapMgr) {
+        return;
+    }
+    const rows = swapMgr.querySelectorAll('table.offer-list tr[data-href]');
+    for (const row of rows) {
+        row.removeAttribute('data-href');
+    }
+}
+exports.removeRowHrefFromSwapList = removeRowHrefFromSwapList;
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1826,6 +1887,84 @@ function tt(str) {
     return `${str.charAt(0).toUpperCase()}${str.substr(1)}`;
 }
 exports.tt = tt;
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const swap_links_1 = __webpack_require__(3);
+function addWishColorMarkers() {
+    const id = 'wish-cond-fieldset';
+    const cond = document.getElementById('wish-cond');
+    cond.insertAdjacentHTML('afterend', `<fieldset id="${id}"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
+    const fieldset = document.getElementById(id);
+    const options = cond.querySelectorAll('option');
+    for (const o of options) {
+        const val = o.value;
+        const text = o.textContent;
+        if (val || text.includes('ANY')) {
+            const checked = (val === '3') ? 'checked' : '';
+            const style = o.getAttribute('style') || '';
+            fieldset.insertAdjacentHTML('beforeend', `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${val}" ${checked} type="radio"/>${text}</label>`);
+        }
+    }
+    cond.remove();
+    const _onCoinWishForm = CoinWishFormOn;
+    if (!_onCoinWishForm) {
+        return;
+    }
+    const wishForm = document.getElementById('wish-form');
+    CoinWishFormOn = function (...args) {
+        _onCoinWishForm(...args);
+        const [, cond] = args;
+        const checkbox = fieldset.querySelector(`input[name="condition"][value="${cond}"]`);
+        if (checkbox) {
+            checkbox.checked = true;
+        }
+        wishForm.querySelector(`#wish-type`).checked = true;
+        /*if (!new FormData(wishForm).has('wish-variety')) {
+            const vid = getCurrentVarietyId();
+            if (vid) {
+                document.querySelector<HTMLInputElement>(`input[name="wish-variety"][value="${vid}"]`).checked = true;
+            }
+        }*/
+    };
+    const myWish = document.getElementById('my-wish-block');
+    const wishBlock = myWish.querySelector('#wish-block');
+    const addButton = wishBlock.querySelector('center button.btn-s.btn-gray');
+    if (!addButton) {
+        return;
+    }
+    const buttonSetId = 'wish-button-set';
+    addButton.insertAdjacentHTML('afterend', `<div id="${buttonSetId}" class="btn-set"/>`);
+    addButton.remove();
+    const buttonSet = document.getElementById(buttonSetId);
+    if (!buttonSet) {
+        return;
+    }
+    addWishMarker('*', 1, 0);
+    addWishMarker('VF+', 10, 3);
+    addWishMarker('XF+', 11, 2);
+    addWishMarker('UN', 12, 1);
+    function addWishMarker(text, color, value) {
+        const markerId = `wish-marker-${value}`;
+        const markerClass = `marked-${color}`;
+        buttonSet.insertAdjacentHTML('beforeend', `<div id="${markerId}" class="${markerClass}">${text}</div>`);
+        document.getElementById(markerId).addEventListener('click', () => CoinWishFormOn('', `${value}`));
+    }
+}
+exports.addWishColorMarkers = addWishColorMarkers;
+function styleWishLists() {
+    const listOfLinks = document.querySelectorAll('#wish-block a.list-link');
+    for (const a of listOfLinks) {
+        swap_links_1.styleSwapLink(a);
+    }
+}
+exports.styleWishLists = styleWishLists;
 
 
 /***/ })

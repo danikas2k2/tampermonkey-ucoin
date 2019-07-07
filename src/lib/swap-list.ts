@@ -1,4 +1,5 @@
 import {get} from './ajax';
+import {ColorValues, ConditionValues} from './cond';
 import {randomDelay} from './delay';
 import {tt} from './utils';
 
@@ -30,17 +31,22 @@ function setActiveSwapTab(tab: string) {
 
 export function addOpenedTabsHandler(): void {
     const tabs = document.querySelectorAll<HTMLLIElement>('#swap-mgr > div.widerightCol > ul.region-list > li.region');
+    if (tabs.length) {
+        const needTab = tabs.item(0);
+        if (needTab) {
+            needTab.addEventListener('click', () => setActiveSwapTab('need'));
+            if (loc.hash.startsWith('#need')) {
+                needTab.click();
+            }
+        }
 
-    const needTab = tabs.item(0);
-    needTab.addEventListener('click', () => setActiveSwapTab('need'));
-
-    const takeTab = tabs.item(1);
-    takeTab.addEventListener('click', () => setActiveSwapTab('take'));
-
-    if (loc.hash.startsWith('#take')) {
-        takeTab.click();
-    } else {
-        needTab.click();
+        const takeTab = tabs.item(1);
+        if (takeTab) {
+            takeTab.addEventListener('click', () => setActiveSwapTab('take'));
+            if (loc.hash.startsWith('#take')) {
+                takeTab.click();
+            }
+        }
     }
 }
 
@@ -93,45 +99,11 @@ export function addSortingOptions(): void {
 
     type SortOption = 'Year' | 'Facial value' | 'Condition' | 'Value' | 'Krause number';
     type SortOrder = 'a' | 'd';
-    type SortField = 'year' | 'mm' | 'face' | 'cond' | 'value' | 'km';
-
+    type SortField = 'year' | 'mm' | 'face' | 'cond' | 'value' | 'km' | 'kma' | 'kmc';
     type SortFunction = (a: DOMStringMap, b: DOMStringMap, o: number) => number;
+    type SortOptionParam = { index: number, field: SortField, sort: SortFunction };
 
-    function cmp(a: string, b: string): number {
-        return -(a < b) || +(a > b);
-    }
-
-    function cmpField(a: DOMStringMap, b: DOMStringMap, field: SortField): number {
-        const f = `sort${tt(field)}`;
-        return cmp(a[f], b[f]);
-    }
-
-    function cmpYear(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
-        return o * cmpField(a, b, 'year')
-            || cmpField(a, b, 'mm');
-    }
-
-    function cmpKm(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
-        return o * cmpField(a, b, 'km')
-            || cmpYear(a, b, -1);
-    }
-
-    function cmpFace(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
-        return o * cmpField(a, b, 'face')
-            || cmpKm(a, b, -1);
-    }
-
-    function cmpCond(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
-        return o * cmpField(a, b, 'cond')
-            || cmpFace(a, b);
-    }
-
-    function cmpValue(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
-        return o * cmpField(a, b, 'value')
-            || cmpCond(a, b, -1);
-    }
-
-    const sortOptionParams = new Map<SortOption, { index: number, field: SortField, sort: SortFunction }>([
+    const sortOptionParams = new Map<SortOption, SortOptionParam>([
         ['Year', {index: 0, field: 'year', sort: cmpYear}],
         ['Facial value', {index: 1, field: 'face', sort: cmpFace}],
         ['Condition', {index: 3, field: 'cond', sort: cmpCond}],
@@ -139,32 +111,13 @@ export function addSortingOptions(): void {
         ['Krause number', {index: 6, field: 'km', sort: cmpKm}],
     ]);
 
+    const sortOptions: SortOption[] = ['Year', 'Facial value', 'Condition', 'Value', 'Krause number'];
 
-    function a(ord: SortOrder = 'a') {
-        const arrClass = ord === 'a' ? 'at' : 'ab';
-        return `<div class="right"><span class="arrow ${arrClass}"></span></div>`;
-    }
-
-    function d(ord: SortOrder = 'd') {
-        return a(ord);
-    }
-
-    function o(opt: SortOption) {
-        return `<div class="left gray-13">${opt}</div>`;
-    }
-
-    function c(html: string) {
-        const template = document.createElement('template');
-        template.innerHTML = html;
-
-        const opt = template.content.querySelector<HTMLDivElement>('div.left');
-        opt.classList.add('wrap');
-
-        return template.innerHTML;
-    }
+    let currentOption: SortOption = 'Year';
+    let currentOrder: SortOrder = 'd';
 
     // add sorting index to all rows
-    const rows = document.querySelectorAll<HTMLTableRowElement>('table.swap-coin tbody tr');
+    const rows = swapList.querySelectorAll<HTMLTableRowElement>('table.swap-coin tbody tr');
     for (const row of rows) {
         const c = row.querySelectorAll('td');
         const d = row.dataset;
@@ -176,52 +129,27 @@ export function addSortingOptions(): void {
                 d[name] = year;
                 d.sortMm = mm.join(' ');
             } else if (option === 'Condition') {
-                d[name] = `${CM.get(t)}`;
+                d[name] = `${ConditionValues.get(t)}`;
+            } else if (option === 'Krause number') {
+                const m = t.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?(?:[a-zA-Z]*))/i);
+                if (m && m.groups) {
+                    const {cat, num, prefix, suffix} = m.groups;
+                    d.sortKmc = cat;
+                    d[name] = num;
+                    d.sortKma = `${prefix}${suffix}`;
+                } else {
+                    d.sortKmc = '';
+                    d[name] = t;
+                    d.sortKma = '';
+                }
             } else {
                 d[name] = t;
             }
         }
     }
 
-    function sortBy(option: SortOption, order: SortOrder) {
-        const ord = order === 'a' ? 1 : -1;
-        const {sort} = sortOptionParams.get(option);
-        const sections = document.querySelectorAll<HTMLTableSectionElement>('table.swap-coin tbody');
-        for (const section of sections) {
-            const rows = [...section.querySelectorAll('tr')];
-            if (rows.length > 1) {
-                rows.sort(({dataset: a}, {dataset: b}) => sort(a, b, ord));
-                section.append(...rows);
-            }
-        }
-    }
-
-    const sortOptions: SortOption[] = ['Year', 'Facial value', 'Condition', 'Value', 'Krause number'];
-
-    let currentOption: SortOption = 'Year';
-    let currentOrder: SortOrder = 'd';
     getActiveSortOption();
     sortBy(currentOption, currentOrder);
-
-    function getActiveSortOption() {
-        const parts = loc.hash.split(';');
-        if (parts[1]) {
-            const [field = 'year', order = 'd'] = parts[1].split(':');
-            currentOrder = <SortOrder> order;
-            for (const [option, {field: f}] of sortOptionParams.entries()) {
-                if (f === field) {
-                    currentOption = option;
-                }
-            }
-        }
-    }
-
-    function setActiveSortOption(option: SortOption, order: SortOrder) {
-        const parts = loc.hash.split(';');
-        parts[0] = parts[0];
-        parts[1] = `${sortOptionParams.get(option).field}:${order}`;
-        loc.hash = parts.join(';');
-    }
 
     leftControls.removeAttribute('style');
     leftControls.insertAdjacentHTML('afterend', `
@@ -263,6 +191,104 @@ export function addSortingOptions(): void {
         setActiveSortOption(currentOption, currentOrder);
         sortBy(currentOption, currentOrder);
     });
+
+
+    function cmp<T = string | number>(a: T, b: T): number {
+        return -(a < b) || +(a > b);
+    }
+
+    function cmpNum(a: DOMStringMap, b: DOMStringMap, field: SortField): number {
+        const f = `sort${tt(field)}`;
+        return cmp(+a[f], +b[f]);
+    }
+
+    function cmpStr(a: DOMStringMap, b: DOMStringMap, field: SortField): number {
+        const f = `sort${tt(field)}`;
+        return cmp(a[f], b[f]);
+    }
+
+    function cmpYear(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
+        return o * cmpNum(a, b, 'year')
+            || cmpStr(a, b, 'mm');
+    }
+
+    function cmpKm(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
+        return o * cmpStr(a, b, 'kmc')
+            || o * cmpNum(a, b, 'km')
+            || o * cmpStr(a, b, 'kma')
+            || cmpYear(a, b, -1);
+    }
+
+    function cmpFace(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
+        return o * cmpStr(a, b, 'face')
+            || cmpKm(a, b, -1);
+    }
+
+    function cmpCond(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
+        return o * cmpNum(a, b, 'cond')
+            || cmpFace(a, b);
+    }
+
+    function cmpValue(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
+        return o * cmpNum(a, b, 'value')
+            || cmpCond(a, b, -1);
+    }
+
+    function a(ord: SortOrder = 'a') {
+        const arrClass = ord === 'a' ? 'at' : 'ab';
+        return `<div class="right"><span class="arrow ${arrClass}"></span></div>`;
+    }
+
+    function d(ord: SortOrder = 'd') {
+        return a(ord);
+    }
+
+    function o(opt: SortOption) {
+        return `<div class="left gray-13">${opt}</div>`;
+    }
+
+    function c(html: string) {
+        const template = document.createElement('template');
+        template.innerHTML = html;
+
+        const opt = template.content.querySelector<HTMLDivElement>('div.left');
+        opt.classList.add('wrap');
+
+        return template.innerHTML;
+    }
+
+    function sortBy(option: SortOption, order: SortOrder) {
+        const ord = order === 'a' ? 1 : -1;
+        const {sort} = sortOptionParams.get(option);
+        const sections = swapList.querySelectorAll<HTMLTableSectionElement>('table.swap-coin tbody');
+        for (const section of sections) {
+            const rows = [...section.querySelectorAll('tr')];
+            if (rows.length > 1) {
+                rows.sort(({dataset: a}, {dataset: b}) => sort(a, b, ord));
+                section.append(...rows);
+            }
+        }
+    }
+
+    function getActiveSortOption() {
+        const parts = loc.hash.split(';');
+        if (parts[1]) {
+            const [field = 'year', order = 'd'] = parts[1].split(':');
+            currentOrder = <SortOrder> order;
+            for (const [option, {field: f}] of sortOptionParams.entries()) {
+                if (f === field) {
+                    currentOption = option;
+                }
+            }
+        }
+    }
+
+    function setActiveSortOption(option: SortOption, order: SortOrder) {
+        const parts = loc.hash.split(';');
+        parts[0] = parts[0];
+        parts[1] = `${sortOptionParams.get(option).field}:${order}`;
+        loc.hash = parts.join(';');
+    }
 }
 
 export function showAllPrices() {
@@ -378,69 +404,60 @@ function highlightConflicts() {
 
 export function checkSold() {
     const needSwapList = document.getElementById('need-swap-list');
-    if (needSwapList) {
-        const table = document.querySelector('table.swap-coin');
-        const soldList = table.querySelectorAll('tr.del');
-        let soldCount = soldList.length;
-        if (soldCount) {
-            const delAllButtonId = 'act-d-all';
-            const actionBoard = needSwapList.querySelector('.action-board');
-            actionBoard.insertAdjacentHTML('beforeend', `<a class="btn-s btn-gray ico-del" id="${delAllButtonId}" style="float: right;"><div class="ico-16"></div></a>`);
-            const button = document.getElementById(delAllButtonId);
-            button.addEventListener('click', async () => {
-                if (!confirm('Are you sure you want to delete these coins?')) {
-                    return false;
-                }
-
-                let isFirstRequest = true;
-                for await (const sold of soldList) {
-                    if (!isFirstRequest) {
-                        await randomDelay();
-                    }
-                    isFirstRequest = false;
-
-                    const {href} = sold.querySelector<HTMLAnchorElement>('a.act');
-                    await get(href);
-
-                    const tree = document.getElementById('tree');
-                    const soldCountElement = tree.querySelector('a.region.list-link div.right.blue-13 sup');
-                    if (--soldCount) {
-                        soldCountElement.textContent = `&nbsp;-${soldCount}`;
-                    } else {
-                        soldCountElement.remove();
-                    }
-                    sold.remove();
-                }
-
-                button.remove();
-            });
-        }
+    if (!needSwapList) {
+        return;
     }
+
+    const soldList = needSwapList.querySelectorAll('table.swap-coin tr.del');
+    let soldCount = soldList.length;
+    if (!soldCount) {
+        return;
+    }
+
+    const delAllButtonId = 'act-d-all';
+
+    const actionBoard = needSwapList.querySelector('.action-board');
+    if (!actionBoard) {
+        return;
+    }
+
+    actionBoard.insertAdjacentHTML('beforeend',
+        `<a class="btn-s btn-gray ico-del" id="${delAllButtonId}" style="float: right;"><div class="ico-16"></div></a>`);
+
+    const button = document.getElementById(delAllButtonId);
+    if (!button) {
+        return;
+    }
+
+    button.addEventListener('click', async () => {
+        if (!confirm('Are you sure you want to delete these coins?')) {
+            return false;
+        }
+
+        let isFirstRequest = true;
+        for await (const sold of soldList) {
+            if (!isFirstRequest) {
+                await randomDelay();
+            }
+            isFirstRequest = false;
+
+            const {href} = sold.querySelector<HTMLAnchorElement>('a.act');
+            await get(href);
+
+            const tree = document.getElementById('tree');
+            const soldCountElement = tree.querySelector('a.region.list-link div.right.blue-13 sup');
+            if (--soldCount) {
+                soldCountElement.textContent = `&nbsp;-${soldCount}`;
+            } else {
+                soldCountElement.remove();
+            }
+            sold.remove();
+        }
+
+        button.remove();
+    });
 }
 
-
-const CN = new Map([
-    ['7', 1],
-    ['8', 2],
-    ['9', 3],
-    ['10', 4],
-    ['11', 5],
-    ['12', 6],
-    ['3', 7],
-    ['2', 8],
-    ['1', 9],
-]);
-
-const CM = new Map([
-    ['G', 1],
-    ['VG', 2],
-    ['F', 3],
-    ['VF', 4],
-    ['XF', 5],
-    ['UNC', 6],
-    ['PRF', 7],
-    ['BU', 8],
-]);
 
 export function ignoreUnwanted() {
     if (!document.getElementById('need-swap-list')) {
@@ -449,14 +466,26 @@ export function ignoreUnwanted() {
             const rows = table.querySelectorAll<HTMLTableRowElement>('tr');
             for (const tr of rows) {
                 const markedElement = tr.querySelector('td span[class^="marked-"]');
-                const marked = markedElement && markedElement.classList;
-                const myCond = marked && CN.get(marked.item(0).split('marked-').pop()) || 0;
+                const markedClass = markedElement && markedElement.classList.item(0);
+                const myCond = markedClass && ColorValues.get(markedClass.split('marked-').pop()) || 0;
                 const condElement = tr.querySelector('td.td-cond');
-                const cond = condElement && CM.get(condElement.textContent) || 0;
+                const cond = condElement && ConditionValues.get(condElement.textContent) || 0;
                 if (myCond && (!cond || cond <= myCond)) {
                     tr.classList.add('ignore');
                 }
             }
         }
+    }
+}
+
+export function removeRowHrefFromSwapList() {
+    const swapMgr = document.getElementById('swap-mgr');
+    if (!swapMgr) {
+        return;
+    }
+
+    const rows = swapMgr.querySelectorAll('table.offer-list tr[data-href]');
+    for (const row of rows) {
+        row.removeAttribute('data-href');
     }
 }

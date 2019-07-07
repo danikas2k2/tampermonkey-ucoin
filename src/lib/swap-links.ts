@@ -1,3 +1,5 @@
+import {ConditionColors} from './cond';
+
 export const CoinSwapFormOnMatcher = /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
 
 export function* getSwapLinks(d: DocumentFragment = document): IterableIterator<HTMLAnchorElement> {
@@ -22,5 +24,20 @@ export function* getSwapLinksWithMatches(): IterableIterator<CoinSwapAnchorAndMa
                 yield {a, m: {...m.groups, uniq: `${cond} ${vid} ${info}`}};
             }
         }
+    }
+}
+
+export function styleSwapLink(a: HTMLAnchorElement) {
+    const condBlock = a.querySelector(`.left.dgray-11`);
+    const cond = condBlock.textContent.trim();
+    condBlock.classList.add(`marked-${ConditionColors.get(cond)}`);
+
+    const mintBlock = a.querySelector(`.left.gray-13`);
+    const mint = mintBlock.textContent;
+    const parts = mint.split(' ');
+    const y = parts.shift();
+    if (parts.length) {
+        mintBlock.textContent = y;
+        mintBlock.insertAdjacentHTML('beforeend', ` <span class="lgray-11">${parts.join(' ')}</span>`);
     }
 }

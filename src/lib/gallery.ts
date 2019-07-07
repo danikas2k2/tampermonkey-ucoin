@@ -25,7 +25,7 @@ export function addGalleryVisibilityToggle() {
         const buttonId = `button-${text.toLowerCase()}`;
         container.insertAdjacentHTML('beforeend', `<button id="${buttonId}" class="btn-l ${className}" style="padding: 0 14px; height: 26px">${text} <small></small></button>`);
         const button = <HTMLButtonElement> document.getElementById(buttonId);
-        button.addEventListener('click', () => toggleGroupVisibility(visibility));
+        button.addEventListener('click', () => confirm(`Are you sure to ${text.toLowerCase()}?`) && toggleGroupVisibility(visibility));
         return button;
     }
 

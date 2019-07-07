@@ -1,25 +1,4 @@
-const ConditionValues = new Map([
-    ['G', 1],
-    ['VG', 2],
-    ['F', 3],
-    ['VF', 4],
-    ['XF', 5],
-    ['UNC', 6],
-    ['PRF', 7],
-    ['BU', 8],
-]);
-
-const ConditionColors = new Map([
-    ['G', 7],
-    ['VG', 8],
-    ['F', 9],
-    ['VF', 10],
-    ['XF', 11],
-    ['UNC', 12],
-    ['PRF', 3],
-    ['BU', 4],
-]);
-
+import {ConditionColors, ConditionValues} from './cond';
 
 export function estimateSwapPrices() {
     const theySwap = document.getElementById('swap');
