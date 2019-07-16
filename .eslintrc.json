@@ -4,7 +4,10 @@
         "es6": true
     },
     "extends": [
-        "standard"
+        "node",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -14,9 +17,22 @@
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
+    "settings": {
+        "import/extensions": [
+            ".ts",
+            ".tsx",
+            ".js",
+            ".jsx"
+        ]
+    },
     "rules": {
+        "comma-dangle": ["error", "only-multiline"],
+        "import/no-nodejs-modules": "off",
+        "import/no-unresolved": ["error", {"commonjs": true, "caseSensitive": true}],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
         "no-console": "error",
         "no-useless-rename": "error",
-        "padded-blocks": "error"
+        "padded-blocks": ["error", "never"],
+        "semi": ["error", "always"]
     }
 }
