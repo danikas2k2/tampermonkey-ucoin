@@ -264,21 +264,10 @@ const links_1 = __webpack_require__(19);
 const prices_1 = __webpack_require__(20);
 const swap_form_1 = __webpack_require__(21);
 const swap_list_1 = __webpack_require__(23);
+const swap_list_sort_1 = __webpack_require__(26);
 const uid_1 = __webpack_require__(4);
 const wish_form_1 = __webpack_require__(25);
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${ucoin_less_1.default}</style>`);
-(async function () {
-    const loc = document.location.href;
-    if (loc.includes('/coin')) {
-        await handleCoinPage(loc);
-    }
-    if (loc.includes('/gallery') && loc.includes(`uid=${uid_1.UID}`)) {
-        await handleGalleryPage();
-    }
-    if (loc.includes('/swap-')) {
-        await handleSwapPage();
-    }
-})();
 async function handleCoinPage(loc) {
     const tags = document.getElementById('tags');
     if (tags) {
@@ -335,7 +324,7 @@ async function handleGalleryPage() {
 async function handleSwapPage() {
     swap_list_1.addTrackingLinks();
     swap_list_1.addOpenedTabsHandler();
-    swap_list_1.addSortingOptions();
+    swap_list_sort_1.addSortingOptions();
     swap_list_1.duplicatePagination();
     swap_list_1.showAllPrices();
     swap_list_1.addConflictHandling();
@@ -358,6 +347,18 @@ async function handleSwapPage() {
         }
     }
 }
+(async function () {
+    const loc = document.location.href;
+    if (loc.includes('/coin')) {
+        await handleCoinPage(loc);
+    }
+    if (loc.includes('/gallery') && loc.includes(`uid=${uid_1.UID}`)) {
+        await handleGalleryPage();
+    }
+    if (loc.includes('/swap-')) {
+        await handleSwapPage();
+    }
+})();
 
 
 /***/ }),
@@ -797,63 +798,70 @@ module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
 const delay_1 = __webpack_require__(1);
+const gallery = document.getElementById('gallery');
+let privateStatus;
+let publicStatus;
+function updateStatusElements() {
+    privateStatus = gallery.querySelectorAll('.coin .desc-block span.status0');
+    publicStatus = gallery.querySelectorAll('.coin .desc-block span.status1');
+}
+async function postPublicityForm(url, form, checked) {
+    form.querySelector('input[name=public]').checked = checked;
+    return await ajax_1.post(url, new FormData(form));
+}
+function addVisibilityToggleButton(container, text, className, visibility, count, callback) {
+    const buttonId = `button-${text.toLowerCase()}`;
+    let button = document.getElementById(buttonId);
+    if (!button) {
+        container.insertAdjacentHTML('beforeend', `<button id="${buttonId}" class="btn-l ${className}" style="padding: 0 14px; height: 26px">${text} <small></small></button>`);
+        button = document.getElementById(buttonId);
+        button.addEventListener('click', () => confirm(`Are you sure to ${text.toLowerCase()}?`) &&
+            callback(container, visibility));
+    }
+    const small = button.querySelector('small');
+    small.textContent = `(${count})`;
+    button.style.display = count ? 'block' : 'none';
+    return button;
+}
+function toggleButtonVisibility(container, callback) {
+    addVisibilityToggleButton(container, 'Show', 'btn-blue', true, privateStatus.length, callback);
+    addVisibilityToggleButton(container, 'Hide', 'btn-gray', false, publicStatus.length, callback);
+}
+async function toggleGroupVisibility(container, checked) {
+    const addClass = `status${checked ? 1 : 0}`;
+    const removeClass = `status${checked ? 0 : 1}`;
+    const statusText = checked ? 'Public' : 'Private';
+    const statusList = checked ? privateStatus : publicStatus;
+    for await (const status of statusList) {
+        const url = status.parentElement.querySelector(`.coin-desc div a`).href;
+        const response = await ajax_1.get(url);
+        const responseText = await response.text();
+        const temp = document.createElement('template');
+        temp.innerHTML = responseText;
+        const fragment = temp.content;
+        const coinForm = fragment.getElementById('edit-coin-form') || document.getElementById('add-coin-form');
+        if (!coinForm) {
+            continue;
+        }
+        const form = coinForm.querySelector('form');
+        if (!form) {
+            continue;
+        }
+        await postPublicityForm(url, form, checked);
+        status.classList.replace(removeClass, addClass);
+        status.textContent = statusText;
+        updateStatusElements();
+        toggleButtonVisibility(container, toggleGroupVisibility);
+        await delay_1.randomDelay();
+    }
+}
 function addGalleryVisibilityToggle() {
-    const gallery = document.getElementById('gallery');
-    let privateStatus;
-    let publicStatus;
     updateStatusElements();
     const buttonContainerId = 'button-container';
     const sortFilter = document.getElementById('sort-filter').parentElement;
     sortFilter.insertAdjacentHTML('afterend', `<div id="${buttonContainerId}" class="left filter-container" style="float:right">`);
     const container = document.getElementById(buttonContainerId);
-    const showButton = addVisibilityToggleButton('Show', 'btn-blue', true);
-    const showButtonCount = showButton.querySelector('small');
-    const hideButton = addVisibilityToggleButton('Hide', 'btn-gray', false);
-    const hideButtonCount = hideButton.querySelector('small');
-    toggleButtonVisibility();
-    function addVisibilityToggleButton(text, className, visibility) {
-        const buttonId = `button-${text.toLowerCase()}`;
-        container.insertAdjacentHTML('beforeend', `<button id="${buttonId}" class="btn-l ${className}" style="padding: 0 14px; height: 26px">${text} <small></small></button>`);
-        const button = document.getElementById(buttonId);
-        button.addEventListener('click', () => confirm(`Are you sure to ${text.toLowerCase()}?`) && toggleGroupVisibility(visibility));
-        return button;
-    }
-    function toggleButtonVisibility() {
-        showButtonCount.textContent = `(${privateStatus.length})`;
-        showButton.style.display = privateStatus.length ? 'block' : 'none';
-        hideButtonCount.textContent = `(${publicStatus.length})`;
-        hideButton.style.display = publicStatus.length ? 'block' : 'none';
-    }
-    async function toggleGroupVisibility(checked) {
-        let addClass = `status${checked ? 1 : 0}`;
-        let removeClass = `status${checked ? 0 : 1}`;
-        let statusText = checked ? 'Public' : 'Private';
-        const statusList = checked ? privateStatus : publicStatus;
-        for await (const status of statusList) {
-            const url = status.parentElement.querySelector(`.coin-desc div a`).href;
-            const response = await ajax_1.get(url);
-            const responseText = await response.text();
-            const temp = document.createElement('template');
-            temp.innerHTML = responseText;
-            const fragment = temp.content;
-            const coinForm = fragment.getElementById('edit-coin-form') || document.getElementById('add-coin-form');
-            const form = coinForm.querySelector('form');
-            await postPublicityForm(url, form, checked);
-            status.classList.replace(removeClass, addClass);
-            status.textContent = statusText;
-            updateStatusElements();
-            toggleButtonVisibility();
-            await delay_1.randomDelay();
-        }
-    }
-    function updateStatusElements() {
-        privateStatus = gallery.querySelectorAll('.coin .desc-block span.status0');
-        publicStatus = gallery.querySelectorAll('.coin .desc-block span.status1');
-    }
-    async function postPublicityForm(url, form, checked) {
-        form.querySelector('input[name=public]').checked = checked;
-        return await ajax_1.post(url, new FormData(form));
-    }
+    toggleButtonVisibility(container, toggleGroupVisibility);
 }
 exports.addGalleryVisibilityToggle = addGalleryVisibilityToggle;
 
@@ -1449,7 +1457,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
 const cond_1 = __webpack_require__(2);
 const delay_1 = __webpack_require__(1);
-const utils_1 = __webpack_require__(24);
 const { location: loc } = document;
 function addTrackingLinks() {
     const swapMgr = document.getElementById('swap-mgr');
@@ -1474,7 +1481,7 @@ function setActiveSwapTab(tab) {
     loc.hash = parts.join(';');
 }
 function addOpenedTabsHandler() {
-    const tabs = document.querySelectorAll('#swap-mgr > div.widerightCol > ul.region-list > li.region');
+    const tabs = document.querySelectorAll(`#swap-mgr > div.widerightCol > ul.region-list > li.region`);
     if (tabs.length) {
         const needTab = tabs.item(0);
         if (needTab) {
@@ -1510,7 +1517,7 @@ function duplicatePagination() {
     if (!table) {
         return;
     }
-    let heading = table.previousElementSibling;
+    const heading = table.previousElementSibling;
     if (!heading || !heading.matches('h2')) {
         return;
     }
@@ -1523,178 +1530,6 @@ function duplicatePagination() {
     heading.insertAdjacentElement('beforebegin', clone);
 }
 exports.duplicatePagination = duplicatePagination;
-function addSortingOptions() {
-    const swapList = document.getElementById('take-swap-list');
-    if (!swapList) {
-        return;
-    }
-    const leftControls = swapList.querySelector('div.left.action-board');
-    if (!leftControls) {
-        return;
-    }
-    const sortOptionParams = new Map([
-        ['Year', { index: 0, field: 'year', sort: cmpYear }],
-        ['Facial value', { index: 1, field: 'face', sort: cmpFace }],
-        ['Condition', { index: 3, field: 'cond', sort: cmpCond }],
-        ['Value', { index: 4, field: 'value', sort: cmpValue }],
-        ['Krause number', { index: 6, field: 'km', sort: cmpKm }],
-    ]);
-    const sortOptions = ['Year', 'Facial value', 'Condition', 'Value', 'Krause number'];
-    let currentOption = 'Year';
-    let currentOrder = 'd';
-    // add sorting index to all rows
-    const rows = swapList.querySelectorAll('table.swap-coin tbody tr');
-    for (const row of rows) {
-        const c = row.querySelectorAll('td');
-        const d = row.dataset;
-        for (const [option, { index, field }] of sortOptionParams) {
-            const name = `sort${utils_1.tt(field)}`;
-            const t = c[index].textContent;
-            if (option === 'Year') {
-                const [year, ...mm] = t.split(/(?:\s|&nbsp;)+/);
-                d[name] = year;
-                d.sortMm = mm.join(' ');
-            }
-            else if (option === 'Condition') {
-                d[name] = `${cond_1.ConditionValues.get(t)}`;
-            }
-            else if (option === 'Krause number') {
-                const m = t.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?(?:[a-zA-Z]*))/i);
-                if (m && m.groups) {
-                    const { cat, num, prefix, suffix } = m.groups;
-                    d.sortKmc = cat;
-                    d[name] = num;
-                    d.sortKma = `${prefix}${suffix}`;
-                }
-                else {
-                    d.sortKmc = '';
-                    d[name] = t;
-                    d.sortKma = '';
-                }
-            }
-            else {
-                d[name] = t;
-            }
-        }
-    }
-    getActiveSortOption();
-    sortBy(currentOption, currentOrder);
-    leftControls.removeAttribute('style');
-    leftControls.insertAdjacentHTML('afterend', `
-        <div class="right filter-container">
-            <div class="filter-box" id="sort-filter">
-                ${c(`${o(currentOption)}${a(currentOrder)}`)}
-            </div>
-            <div class="drop hide filter-dialog" id="sort-filter-dialog">
-            ${sortOptions.map(opt => `
-                <a class="list-link" data-option="${opt}" data-order="a">${o(opt)}${a()}</a>
-                <a class="list-link" data-option="${opt}" data-order="d">${o(opt)}${d()}</a>
-            `).join('')}
-            </div>
-        </div>
-    `);
-    const sortFilter = swapList.querySelector('#sort-filter');
-    const sortDialog = swapList.querySelector('#sort-filter-dialog');
-    sortFilter.addEventListener('click', e => {
-        e.stopPropagation();
-        sortDialog.style.display = 'block';
-    });
-    sortDialog.addEventListener('click', e => {
-        e.stopPropagation();
-        sortDialog.style.display = 'none';
-        const a = e.target.closest('a');
-        if (!a) {
-            return;
-        }
-        sortFilter.innerHTML = c(a.innerHTML);
-        const { option, order } = a.dataset;
-        currentOption = option;
-        currentOrder = order;
-        setActiveSortOption(currentOption, currentOrder);
-        sortBy(currentOption, currentOrder);
-    });
-    function cmp(a, b) {
-        return -(a < b) || +(a > b);
-    }
-    function cmpNum(a, b, field) {
-        const f = `sort${utils_1.tt(field)}`;
-        return cmp(+a[f], +b[f]);
-    }
-    function cmpStr(a, b, field) {
-        const f = `sort${utils_1.tt(field)}`;
-        return cmp(a[f], b[f]);
-    }
-    function cmpYear(a, b, o = 1) {
-        return o * cmpNum(a, b, 'year')
-            || cmpStr(a, b, 'mm');
-    }
-    function cmpKm(a, b, o = 1) {
-        return o * cmpStr(a, b, 'kmc')
-            || o * cmpNum(a, b, 'km')
-            || o * cmpStr(a, b, 'kma')
-            || cmpYear(a, b, -1);
-    }
-    function cmpFace(a, b, o = 1) {
-        return o * cmpStr(a, b, 'face')
-            || cmpKm(a, b, -1);
-    }
-    function cmpCond(a, b, o = 1) {
-        return o * cmpNum(a, b, 'cond')
-            || cmpFace(a, b);
-    }
-    function cmpValue(a, b, o = 1) {
-        return o * cmpNum(a, b, 'value')
-            || cmpCond(a, b, -1);
-    }
-    function a(ord = 'a') {
-        const arrClass = ord === 'a' ? 'at' : 'ab';
-        return `<div class="right"><span class="arrow ${arrClass}"></span></div>`;
-    }
-    function d(ord = 'd') {
-        return a(ord);
-    }
-    function o(opt) {
-        return `<div class="left gray-13">${opt}</div>`;
-    }
-    function c(html) {
-        const template = document.createElement('template');
-        template.innerHTML = html;
-        const opt = template.content.querySelector('div.left');
-        opt.classList.add('wrap');
-        return template.innerHTML;
-    }
-    function sortBy(option, order) {
-        const ord = order === 'a' ? 1 : -1;
-        const { sort } = sortOptionParams.get(option);
-        const sections = swapList.querySelectorAll('table.swap-coin tbody');
-        for (const section of sections) {
-            const rows = [...section.querySelectorAll('tr')];
-            if (rows.length > 1) {
-                rows.sort(({ dataset: a }, { dataset: b }) => sort(a, b, ord));
-                section.append(...rows);
-            }
-        }
-    }
-    function getActiveSortOption() {
-        const parts = loc.hash.split(';');
-        if (parts[1]) {
-            const [field = 'year', order = 'd'] = parts[1].split(':');
-            currentOrder = order;
-            for (const [option, { field: f }] of sortOptionParams.entries()) {
-                if (f === field) {
-                    currentOption = option;
-                }
-            }
-        }
-    }
-    function setActiveSortOption(option, order) {
-        const parts = loc.hash.split(';');
-        parts[0] = parts[0];
-        parts[1] = `${sortOptionParams.get(option).field}:${order}`;
-        loc.hash = parts.join(';');
-    }
-}
-exports.addSortingOptions = addSortingOptions;
 function showAllPrices() {
     const swapRows = document.querySelectorAll('table.swap-coin tr');
     for (const tr of swapRows) {
@@ -1712,37 +1547,6 @@ function showAllPrices() {
     }
 }
 exports.showAllPrices = showAllPrices;
-function addConflictHandling() {
-    highlightConflicts();
-    const checkboxes = document.querySelectorAll('#swap-list table.swap-coin input.swap-checkbox');
-    for (const checkbox of checkboxes) {
-        checkbox.addEventListener('click', function () {
-            if (!this.checked) {
-                const row = this.closest('tr');
-                if (row) {
-                    row.classList.remove('conflict');
-                }
-            }
-            highlightConflicts();
-        });
-    }
-    const countryCheckboxes = document.querySelectorAll('#swap-list h2 input.swap-country-checkbox');
-    for (const checkbox of countryCheckboxes) {
-        checkbox.addEventListener('click', function () {
-            if (!this.checked) {
-                const country = this.closest('h2');
-                if (country) {
-                    const rows = country.nextElementSibling.querySelectorAll('tr');
-                    for (const row of rows) {
-                        row.classList.remove('conflict');
-                    }
-                }
-            }
-            highlightConflicts();
-        });
-    }
-}
-exports.addConflictHandling = addConflictHandling;
 function highlightConflicts() {
     const needSwapList = !!document.getElementById('need-swap-list');
     const tables = document.querySelectorAll('#swap-list table.swap-coin');
@@ -1793,6 +1597,37 @@ function highlightConflicts() {
         }
     }
 }
+function addConflictHandling() {
+    highlightConflicts();
+    const checkboxes = document.querySelectorAll('#swap-list table.swap-coin input.swap-checkbox');
+    for (const checkbox of checkboxes) {
+        checkbox.addEventListener('click', function () {
+            if (!this.checked) {
+                const row = this.closest('tr');
+                if (row) {
+                    row.classList.remove('conflict');
+                }
+            }
+            highlightConflicts();
+        });
+    }
+    const countryCheckboxes = document.querySelectorAll('#swap-list h2 input.swap-country-checkbox');
+    for (const checkbox of countryCheckboxes) {
+        checkbox.addEventListener('click', function () {
+            if (!this.checked) {
+                const country = this.closest('h2');
+                if (country) {
+                    const rows = country.nextElementSibling.querySelectorAll('tr');
+                    for (const row of rows) {
+                        row.classList.remove('conflict');
+                    }
+                }
+            }
+            highlightConflicts();
+        });
+    }
+}
+exports.addConflictHandling = addConflictHandling;
 function checkSold() {
     const needSwapList = document.getElementById('need-swap-list');
     if (!needSwapList) {
@@ -1965,6 +1800,196 @@ function styleWishLists() {
     }
 }
 exports.styleWishLists = styleWishLists;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const cond_1 = __webpack_require__(2);
+const utils_1 = __webpack_require__(24);
+const { location: loc } = document;
+function num(s) {
+    return +(s.replace(/[^.\d]/g, ''));
+}
+function cmp(a, b) {
+    return -(a < b) || +(a > b);
+}
+function cmpNum(a, b, field) {
+    const f = `sort${utils_1.tt(field)}`;
+    return cmp(num(a[f]), num(b[f]));
+}
+function cmpStr(a, b, field) {
+    const f = `sort${utils_1.tt(field)}`;
+    return cmp(a[f], b[f]);
+}
+function cmpYear(a, b, o = 1) {
+    return o * cmpNum(a, b, 'year')
+        || cmpStr(a, b, 'mm');
+}
+function cmpKm(a, b, o = 1) {
+    return o * cmpStr(a, b, 'kmc')
+        || o * cmpNum(a, b, 'km')
+        || o * cmpStr(a, b, 'kma')
+        || cmpYear(a, b, -1);
+}
+function cmpFace(a, b, o = 1) {
+    return o * cmpStr(a, b, 'face')
+        || cmpKm(a, b, -1);
+}
+function cmpCond(a, b, o = 1) {
+    return o * cmpNum(a, b, 'cond')
+        || cmpFace(a, b);
+}
+function cmpValue(a, b, o = 1) {
+    return o * cmpNum(a, b, 'value')
+        || cmpCond(a, b, -1);
+}
+const sortOptionParams = new Map([
+    ['Year', { index: 0, field: 'year', sort: cmpYear }],
+    ['Facial value', { index: 1, field: 'face', sort: cmpFace }],
+    ['Condition', { index: 3, field: 'cond', sort: cmpCond }],
+    ['Value', { index: 4, field: 'value', sort: cmpValue }],
+    ['Krause number', { index: 6, field: 'km', sort: cmpKm }],
+]);
+const sortOptions = ['Year', 'Facial value', 'Condition', 'Value', 'Krause number'];
+let currentOption = 'Year';
+let currentOrder = 'd';
+function a(ord = 'a') {
+    const arrClass = ord === 'a' ? 'at' : 'ab';
+    return `<div class="right"><span class="arrow ${arrClass}"></span></div>`;
+}
+function d(ord = 'd') {
+    return a(ord);
+}
+function o(opt) {
+    return `<div class="left gray-13">${opt}</div>`;
+}
+function c(html) {
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    const opt = template.content.querySelector('div.left');
+    opt.classList.add('wrap');
+    return template.innerHTML;
+}
+function sortBy(sections, option, order) {
+    const ord = order === 'a' ? 1 : -1;
+    const { sort } = sortOptionParams.get(option);
+    for (const section of sections) {
+        const rows = [...section.querySelectorAll('tr')];
+        if (rows.length > 1) {
+            rows.sort(({ dataset: a }, { dataset: b }) => sort(a, b, ord));
+            section.append(...rows);
+        }
+    }
+}
+function getActiveSortOption() {
+    const parts = loc.hash.split(';');
+    if (parts[1]) {
+        const [field = 'year', order = 'd'] = parts[1].split(':');
+        currentOrder = order;
+        for (const [option, { field: f }] of sortOptionParams.entries()) {
+            if (f === field) {
+                currentOption = option;
+            }
+        }
+    }
+}
+function setActiveSortOption(option, order) {
+    const parts = loc.hash.split(';');
+    parts[1] = `${sortOptionParams.get(option).field}:${order}`;
+    loc.hash = parts.join(';');
+}
+function addSortingOptions() {
+    const swapList = document.getElementById('take-swap-list');
+    if (!swapList) {
+        return;
+    }
+    const leftControls = swapList.querySelector('div.left.action-board');
+    if (!leftControls) {
+        return;
+    }
+    const sections = swapList.querySelectorAll('table.swap-coin tbody');
+    if (!sections || !sections.length) {
+        return;
+    }
+    // add sorting index to all rows
+    const rows = swapList.querySelectorAll('table.swap-coin tbody tr');
+    for (const row of rows) {
+        const offset = row.querySelectorAll('td.ico-star').length;
+        const c = row.querySelectorAll('td');
+        const d = row.dataset;
+        for (const [option, { index, field }] of sortOptionParams) {
+            const name = `sort${utils_1.tt(field)}`;
+            const t = c[index + offset].textContent;
+            if (option === 'Year') {
+                const [year, ...mm] = t.split(/(?:\s|&nbsp;)+/);
+                d[name] = year;
+                d.sortMm = mm.join(' ');
+            }
+            else if (option === 'Condition') {
+                d[name] = `${cond_1.ConditionValues.get(t)}`;
+            }
+            else if (option === 'Krause number') {
+                const m = t.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?(?:[a-zA-Z]*))/i);
+                if (m && m.groups) {
+                    const { cat, num, prefix, suffix } = m.groups;
+                    d.sortKmc = cat;
+                    d[name] = num;
+                    d.sortKma = `${prefix}${suffix}`;
+                }
+                else {
+                    d.sortKmc = '';
+                    d[name] = t;
+                    d.sortKma = '';
+                }
+            }
+            else {
+                d[name] = t;
+            }
+        }
+    }
+    getActiveSortOption();
+    sortBy(sections, currentOption, currentOrder);
+    leftControls.removeAttribute('style');
+    leftControls.insertAdjacentHTML('afterend', `
+        <div class="right filter-container">
+            <div class="filter-box" id="sort-filter">
+                ${c(`${o(currentOption)}${a(currentOrder)}`)}
+            </div>
+            <div class="drop hide filter-dialog" id="sort-filter-dialog">
+            ${sortOptions.map(opt => `
+                <a class="list-link" data-option="${opt}" data-order="a">${o(opt)}${a()}</a>
+                <a class="list-link" data-option="${opt}" data-order="d">${o(opt)}${d()}</a>
+            `).join('')}
+            </div>
+        </div>
+    `);
+    const sortFilter = swapList.querySelector('#sort-filter');
+    const sortDialog = swapList.querySelector('#sort-filter-dialog');
+    sortFilter.addEventListener('click', e => {
+        e.stopPropagation();
+        sortDialog.style.display = 'block';
+    });
+    sortDialog.addEventListener('click', e => {
+        e.stopPropagation();
+        sortDialog.style.display = 'none';
+        const a = e.target.closest('a');
+        if (!a) {
+            return;
+        }
+        sortFilter.innerHTML = c(a.innerHTML);
+        const { option, order } = a.dataset;
+        currentOption = option;
+        currentOrder = order;
+        setActiveSortOption(currentOption, currentOrder);
+        sortBy(sections, currentOption, currentOrder);
+    });
+}
+exports.addSortingOptions = addSortingOptions;
 
 
 /***/ })

@@ -1,7 +1,6 @@
 import {get} from './ajax';
 import {ColorValues, ConditionValues} from './cond';
 import {randomDelay} from './delay';
-import {tt} from './utils';
 
 const {location: loc} = document;
 
@@ -30,7 +29,7 @@ function setActiveSwapTab(tab: string) {
 }
 
 export function addOpenedTabsHandler(): void {
-    const tabs = document.querySelectorAll<HTMLLIElement>('#swap-mgr > div.widerightCol > ul.region-list > li.region');
+    const tabs = document.querySelectorAll<HTMLLIElement>(`#swap-mgr > div.widerightCol > ul.region-list > li.region`);
     if (tabs.length) {
         const needTab = tabs.item(0);
         if (needTab) {
@@ -71,7 +70,7 @@ export function duplicatePagination(): void {
         return;
     }
 
-    let heading = <HTMLHeadingElement> table.previousElementSibling;
+    const heading = <HTMLHeadingElement> table.previousElementSibling;
     if (!heading || !heading.matches('h2')) {
         return;
     }
@@ -86,211 +85,6 @@ export function duplicatePagination(): void {
     heading.insertAdjacentElement('beforebegin', clone);
 }
 
-export function addSortingOptions(): void {
-    const swapList = <HTMLDivElement> document.getElementById('take-swap-list');
-    if (!swapList) {
-        return;
-    }
-
-    const leftControls = swapList.querySelector<HTMLDivElement>('div.left.action-board');
-    if (!leftControls) {
-        return;
-    }
-
-    type SortOption = 'Year' | 'Facial value' | 'Condition' | 'Value' | 'Krause number';
-    type SortOrder = 'a' | 'd';
-    type SortField = 'year' | 'mm' | 'face' | 'cond' | 'value' | 'km' | 'kma' | 'kmc';
-    type SortFunction = (a: DOMStringMap, b: DOMStringMap, o: number) => number;
-    type SortOptionParam = { index: number, field: SortField, sort: SortFunction };
-
-    const sortOptionParams = new Map<SortOption, SortOptionParam>([
-        ['Year', {index: 0, field: 'year', sort: cmpYear}],
-        ['Facial value', {index: 1, field: 'face', sort: cmpFace}],
-        ['Condition', {index: 3, field: 'cond', sort: cmpCond}],
-        ['Value', {index: 4, field: 'value', sort: cmpValue}],
-        ['Krause number', {index: 6, field: 'km', sort: cmpKm}],
-    ]);
-
-    const sortOptions: SortOption[] = ['Year', 'Facial value', 'Condition', 'Value', 'Krause number'];
-
-    let currentOption: SortOption = 'Year';
-    let currentOrder: SortOrder = 'd';
-
-    // add sorting index to all rows
-    const rows = swapList.querySelectorAll<HTMLTableRowElement>('table.swap-coin tbody tr');
-    for (const row of rows) {
-        const c = row.querySelectorAll('td');
-        const d = row.dataset;
-        for (const [option, {index, field}] of sortOptionParams) {
-            const name = `sort${tt(field)}`;
-            const t = c[index].textContent;
-            if (option === 'Year') {
-                const [year, ...mm] = t.split(/(?:\s|&nbsp;)+/);
-                d[name] = year;
-                d.sortMm = mm.join(' ');
-            } else if (option === 'Condition') {
-                d[name] = `${ConditionValues.get(t)}`;
-            } else if (option === 'Krause number') {
-                const m = t.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?(?:[a-zA-Z]*))/i);
-                if (m && m.groups) {
-                    const {cat, num, prefix, suffix} = m.groups;
-                    d.sortKmc = cat;
-                    d[name] = num;
-                    d.sortKma = `${prefix}${suffix}`;
-                } else {
-                    d.sortKmc = '';
-                    d[name] = t;
-                    d.sortKma = '';
-                }
-            } else {
-                d[name] = t;
-            }
-        }
-    }
-
-    getActiveSortOption();
-    sortBy(currentOption, currentOrder);
-
-    leftControls.removeAttribute('style');
-    leftControls.insertAdjacentHTML('afterend', `
-        <div class="right filter-container">
-            <div class="filter-box" id="sort-filter">
-                ${c(`${o(currentOption)}${a(currentOrder)}`)}
-            </div>
-            <div class="drop hide filter-dialog" id="sort-filter-dialog">
-            ${sortOptions.map(opt => `
-                <a class="list-link" data-option="${opt}" data-order="a">${o(opt)}${a()}</a>
-                <a class="list-link" data-option="${opt}" data-order="d">${o(opt)}${d()}</a>
-            `).join('')}
-            </div>
-        </div>
-    `);
-
-    const sortFilter = swapList.querySelector<HTMLDivElement>('#sort-filter');
-    const sortDialog = swapList.querySelector<HTMLDivElement>('#sort-filter-dialog');
-
-    sortFilter.addEventListener('click', e => {
-        e.stopPropagation();
-        sortDialog.style.display = 'block';
-    });
-
-    sortDialog.addEventListener('click', e => {
-        e.stopPropagation();
-        sortDialog.style.display = 'none';
-
-        const a = (<HTMLElement> e.target).closest('a');
-        if (!a) {
-            return;
-        }
-
-        sortFilter.innerHTML = c(a.innerHTML);
-
-        const {option, order} = a.dataset;
-        currentOption = <SortOption> option;
-        currentOrder = <SortOrder> order;
-        setActiveSortOption(currentOption, currentOrder);
-        sortBy(currentOption, currentOrder);
-    });
-
-
-    function cmp<T = string | number>(a: T, b: T): number {
-        return -(a < b) || +(a > b);
-    }
-
-    function cmpNum(a: DOMStringMap, b: DOMStringMap, field: SortField): number {
-        const f = `sort${tt(field)}`;
-        return cmp(+a[f], +b[f]);
-    }
-
-    function cmpStr(a: DOMStringMap, b: DOMStringMap, field: SortField): number {
-        const f = `sort${tt(field)}`;
-        return cmp(a[f], b[f]);
-    }
-
-    function cmpYear(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
-        return o * cmpNum(a, b, 'year')
-            || cmpStr(a, b, 'mm');
-    }
-
-    function cmpKm(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
-        return o * cmpStr(a, b, 'kmc')
-            || o * cmpNum(a, b, 'km')
-            || o * cmpStr(a, b, 'kma')
-            || cmpYear(a, b, -1);
-    }
-
-    function cmpFace(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
-        return o * cmpStr(a, b, 'face')
-            || cmpKm(a, b, -1);
-    }
-
-    function cmpCond(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
-        return o * cmpNum(a, b, 'cond')
-            || cmpFace(a, b);
-    }
-
-    function cmpValue(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
-        return o * cmpNum(a, b, 'value')
-            || cmpCond(a, b, -1);
-    }
-
-    function a(ord: SortOrder = 'a') {
-        const arrClass = ord === 'a' ? 'at' : 'ab';
-        return `<div class="right"><span class="arrow ${arrClass}"></span></div>`;
-    }
-
-    function d(ord: SortOrder = 'd') {
-        return a(ord);
-    }
-
-    function o(opt: SortOption) {
-        return `<div class="left gray-13">${opt}</div>`;
-    }
-
-    function c(html: string) {
-        const template = document.createElement('template');
-        template.innerHTML = html;
-
-        const opt = template.content.querySelector<HTMLDivElement>('div.left');
-        opt.classList.add('wrap');
-
-        return template.innerHTML;
-    }
-
-    function sortBy(option: SortOption, order: SortOrder) {
-        const ord = order === 'a' ? 1 : -1;
-        const {sort} = sortOptionParams.get(option);
-        const sections = swapList.querySelectorAll<HTMLTableSectionElement>('table.swap-coin tbody');
-        for (const section of sections) {
-            const rows = [...section.querySelectorAll('tr')];
-            if (rows.length > 1) {
-                rows.sort(({dataset: a}, {dataset: b}) => sort(a, b, ord));
-                section.append(...rows);
-            }
-        }
-    }
-
-    function getActiveSortOption() {
-        const parts = loc.hash.split(';');
-        if (parts[1]) {
-            const [field = 'year', order = 'd'] = parts[1].split(':');
-            currentOrder = <SortOrder> order;
-            for (const [option, {field: f}] of sortOptionParams.entries()) {
-                if (f === field) {
-                    currentOption = option;
-                }
-            }
-        }
-    }
-
-    function setActiveSortOption(option: SortOption, order: SortOrder) {
-        const parts = loc.hash.split(';');
-        parts[0] = parts[0];
-        parts[1] = `${sortOptionParams.get(option).field}:${order}`;
-        loc.hash = parts.join(';');
-    }
-}
-
 export function showAllPrices() {
     const swapRows = document.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr');
     for (const tr of swapRows) {
@@ -303,6 +97,67 @@ export function showAllPrices() {
             const price = +tooltipPrice.replace(prefix, '').replace(suffix, '');
             if (!isNaN(price) && myPrice !== price) {
                 td.insertAdjacentHTML('beforeend', `<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
+            }
+        }
+    }
+}
+
+interface TooltipDataset extends DOMStringMap {
+    tooltipImgpath: string;
+    tooltipCode: string;
+    tooltipName: string;
+    tooltipSubject: string;
+    tooltipVariety: string;
+    tooltipKm: string;
+    tooltipPrice: string;
+}
+
+function highlightConflicts() {
+    const needSwapList = !!document.getElementById('need-swap-list');
+    const tables = document.querySelectorAll('#swap-list table.swap-coin');
+    for (const table of tables) {
+        let rows = [...table.querySelectorAll('tr')];
+        const checked = rows.filter((r: HTMLTableRowElement) => {
+            if (r.querySelector('input.swap-checkbox:checked')) {
+                return true;
+            }
+            r.classList.remove('conflict');
+        });
+        const heading = <HTMLHeadingElement> table.previousElementSibling;
+        if (heading.tagName.toLowerCase() === 'h2') {
+            const all = heading.querySelector<HTMLInputElement>('input.swap-country-checkbox, input.edit-country-checkbox');
+            all.checked = checked.length === rows.length;
+        }
+        if (!needSwapList) {
+            rows = checked;
+        }
+
+        for (const r of rows) {
+            const data = <TooltipDataset> r.dataset;
+            const {tooltipName, tooltipSubject, tooltipVariety, tooltipKm} = {...data};
+            // const selector = `tr[data-tooltip-name=${JSON.stringify(tooltipName)}]` +
+            //     `[data-tooltip-subject=${JSON.stringify(tooltipSubject)}]` +
+            //     `[data-tooltip-variety=${JSON.stringify(tooltipVariety)}]` +
+            //     `[data-tooltip-km=${JSON.stringify(tooltipKm)}]`;
+            let selector = ``;
+            if (tooltipKm) {
+                selector = `${selector}[data-tooltip-km=${JSON.stringify(tooltipKm)}]`;
+            } else {
+                selector = `${selector}tr[data-tooltip-name=${JSON.stringify(tooltipName)}]`;
+                if (tooltipSubject) {
+                    selector = `${selector}[data-tooltip-subject=${JSON.stringify(tooltipSubject)}]`;
+                }
+            }
+            if (tooltipVariety) {
+                selector = `${selector}[data-tooltip-variety=${JSON.stringify(tooltipVariety)}]`;
+            }
+            let rows = [...table.querySelectorAll(selector)];
+            if (!needSwapList) {
+                rows = rows.filter(r => !!r.querySelector('input.swap-checkbox:checked'));
+            }
+            const hasConflicts = rows.length > 1;
+            for (const r of rows) {
+                r.classList.toggle('conflict', hasConflicts);
             }
         }
     }
@@ -338,67 +193,6 @@ export function addConflictHandling() {
             }
             highlightConflicts();
         });
-    }
-}
-
-type TooltipDataset = {
-    tooltipImgpath: string;
-    tooltipCode: string;
-    tooltipName: string;
-    tooltipSubject: string;
-    tooltipVariety: string;
-    tooltipKm: string;
-    tooltipPrice: string;
-};
-
-function highlightConflicts() {
-    const needSwapList = !!document.getElementById('need-swap-list');
-    const tables = document.querySelectorAll('#swap-list table.swap-coin');
-    for (const table of tables) {
-        let rows = [...table.querySelectorAll('tr')];
-        const checked = rows.filter((r: HTMLTableRowElement) => {
-            if (r.querySelector('input.swap-checkbox:checked')) {
-                return true;
-            }
-            r.classList.remove('conflict');
-        });
-        const heading = <HTMLHeadingElement> table.previousElementSibling;
-        if (heading.tagName.toLowerCase() === 'h2') {
-            const all = heading.querySelector<HTMLInputElement>('input.swap-country-checkbox, input.edit-country-checkbox');
-            all.checked = checked.length === rows.length;
-        }
-        if (!needSwapList) {
-            rows = checked;
-        }
-
-        for (const r of rows) {
-            const data = r.dataset;
-            const {tooltipName, tooltipSubject, tooltipVariety, tooltipKm} = <TooltipDataset> {...data};
-            // const selector = `tr[data-tooltip-name=${JSON.stringify(tooltipName)}]` +
-            //     `[data-tooltip-subject=${JSON.stringify(tooltipSubject)}]` +
-            //     `[data-tooltip-variety=${JSON.stringify(tooltipVariety)}]` +
-            //     `[data-tooltip-km=${JSON.stringify(tooltipKm)}]`;
-            let selector = ``;
-            if (tooltipKm) {
-                selector = `${selector}[data-tooltip-km=${JSON.stringify(tooltipKm)}]`;
-            } else {
-                selector = `${selector}tr[data-tooltip-name=${JSON.stringify(tooltipName)}]`;
-                if (tooltipSubject) {
-                    selector = `${selector}[data-tooltip-subject=${JSON.stringify(tooltipSubject)}]`;
-                }
-            }
-            if (tooltipVariety) {
-                selector = `${selector}[data-tooltip-variety=${JSON.stringify(tooltipVariety)}]`;
-            }
-            let rows = [...table.querySelectorAll(selector)];
-            if (!needSwapList) {
-                rows = rows.filter(r => !!r.querySelector('input.swap-checkbox:checked'));
-            }
-            const hasConflicts = rows.length > 1;
-            for (const r of rows) {
-                r.classList.toggle('conflict', hasConflicts);
-            }
-        }
     }
 }
 

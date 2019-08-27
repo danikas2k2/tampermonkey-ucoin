@@ -23,16 +23,29 @@
             ".tsx",
             ".js",
             ".jsx"
-        ]
+        ],
+        "import/resolver":  {
+            "node": {
+                "extensions": [
+                    ".ts",
+                    ".tsx",
+                    ".js",
+                    ".jsx"
+                ]
+            }
+        }
     },
     "rules": {
         "comma-dangle": ["error", "only-multiline"],
         "import/no-nodejs-modules": "off",
         "import/no-unresolved": ["error", {"commonjs": true, "caseSensitive": true}],
+        "import/prefer-default-export": "warn",
         "indent": ["error", 4, { "SwitchCase": 1 }],
         "no-console": "error",
         "no-useless-rename": "error",
         "padded-blocks": ["error", "never"],
-        "semi": ["error", "always"]
+        "semi": ["error", "always"],
+        "@typescript-eslint/explicit-function-return-type": {"allowExpressions": true},
+        "@typescript-eslint/no-angle-bracket-type-assertion": "off"
     }
 }

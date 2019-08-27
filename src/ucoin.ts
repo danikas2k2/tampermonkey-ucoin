@@ -18,11 +18,10 @@ import {addBuyDateResetButton, addPublicityToggle, addReplacementToggle, addSync
 import {addGalleryVisibilityToggle} from './lib/gallery';
 import {updateLinkHref, updateOnClickHref} from './lib/links';
 import {estimateSwapPrices} from './lib/prices';
-import {addSwapButtons, addSwapColorMarkers, addSwapComments, addSwapFormQtyButtons, styleSwapLists,} from './lib/swap-form';
+import {addSwapButtons, addSwapColorMarkers, addSwapComments, addSwapFormQtyButtons, styleSwapLists} from './lib/swap-form';
 import {
     addConflictHandling,
     addOpenedTabsHandler,
-    addSortingOptions,
     addTrackingLinks,
     checkSold,
     duplicatePagination,
@@ -30,26 +29,11 @@ import {
     removeRowHrefFromSwapList,
     showAllPrices
 } from './lib/swap-list';
+import {addSortingOptions} from './lib/swap-list-sort';
 import {UID} from './lib/uid';
 import {addWishColorMarkers, styleWishLists} from './lib/wish-form';
 
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${style}</style>`);
-
-(async function () {
-    const loc = document.location.href;
-
-    if (loc.includes('/coin')) {
-        await handleCoinPage(loc);
-    }
-
-    if (loc.includes('/gallery') && loc.includes(`uid=${UID}`)) {
-        await handleGalleryPage();
-    }
-
-    if (loc.includes('/swap-')) {
-        await handleSwapPage();
-    }
-})();
 
 async function handleCoinPage(loc: string) {
     const tags = document.getElementById('tags');
@@ -140,3 +124,19 @@ async function handleSwapPage() {
         }
     }
 }
+
+(async function () {
+    const loc = document.location.href;
+
+    if (loc.includes('/coin')) {
+        await handleCoinPage(loc);
+    }
+
+    if (loc.includes('/gallery') && loc.includes(`uid=${UID}`)) {
+        await handleGalleryPage();
+    }
+
+    if (loc.includes('/swap-')) {
+        await handleSwapPage();
+    }
+})();
