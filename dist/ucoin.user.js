@@ -112,25 +112,6 @@ exports.post = post;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-async function delay(time) {
-    return await new Promise(resolve => setTimeout(() => resolve(), time));
-}
-exports.delay = delay;
-async function randomDelay(rndDelay = 1000, minDelay = 500) {
-    const time = Math.round(minDelay + Math.random() * rndDelay);
-    console.debug(`DELAY FOR ${time} MS`);
-    return await delay(time);
-}
-exports.randomDelay = randomDelay;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConditionColors = new Map([
     ['G', 7],
     ['VG', 8],
@@ -167,13 +148,32 @@ exports.ColorValues = new Map([
 
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+async function delay(time) {
+    return await new Promise(resolve => setTimeout(() => resolve(), time));
+}
+exports.delay = delay;
+async function randomDelay(rndDelay = 1000, minDelay = 500) {
+    const time = Math.round(minDelay + Math.random() * rndDelay);
+    console.debug(`DELAY FOR ${time} MS`);
+    return await delay(time);
+}
+exports.randomDelay = randomDelay;
+
+
+/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const cond_1 = __webpack_require__(2);
+const cond_1 = __webpack_require__(1);
 exports.CoinSwapFormOnMatcher = /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
 function* getSwapLinks(d = document) {
     const swapBlock = d.getElementById('swap-block');
@@ -244,7 +244,7 @@ exports.UID = (() => {
 // ==UserScript==
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/
-// @version      1.4.1
+// @version      1.4.2
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
 // @downloadURL  https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js
@@ -264,9 +264,9 @@ const links_1 = __webpack_require__(19);
 const prices_1 = __webpack_require__(20);
 const swap_form_1 = __webpack_require__(21);
 const swap_list_1 = __webpack_require__(23);
-const swap_list_sort_1 = __webpack_require__(26);
+const swap_list_sort_1 = __webpack_require__(24);
 const uid_1 = __webpack_require__(4);
-const wish_form_1 = __webpack_require__(25);
+const wish_form_1 = __webpack_require__(26);
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${ucoin_less_1.default}</style>`);
 async function handleCoinPage(loc) {
     const tags = document.getElementById('tags');
@@ -797,7 +797,7 @@ module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 50 50\
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
-const delay_1 = __webpack_require__(1);
+const delay_1 = __webpack_require__(2);
 const gallery = document.getElementById('gallery');
 let privateStatus;
 let publicStatus;
@@ -934,7 +934,7 @@ exports.updateOnClickHref = updateOnClickHref;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const cond_1 = __webpack_require__(2);
+const cond_1 = __webpack_require__(1);
 function estimateSwapPrices() {
     const theySwap = document.getElementById('swap');
     const swapBlock = theySwap && theySwap.nextElementSibling;
@@ -1025,7 +1025,7 @@ exports.estimateSwapPrices = estimateSwapPrices;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
-const delay_1 = __webpack_require__(1);
+const delay_1 = __webpack_require__(2);
 const swap_links_1 = __webpack_require__(3);
 const uid_1 = __webpack_require__(4);
 const vid_1 = __webpack_require__(22);
@@ -1455,8 +1455,8 @@ exports.getCurrentVarietyId = getCurrentVarietyId;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(0);
-const cond_1 = __webpack_require__(2);
-const delay_1 = __webpack_require__(1);
+const cond_1 = __webpack_require__(1);
+const delay_1 = __webpack_require__(2);
 const { location: loc } = document;
 function addTrackingLinks() {
     const swapMgr = document.getElementById('swap-mgr');
@@ -1713,104 +1713,8 @@ exports.removeRowHrefFromSwapList = removeRowHrefFromSwapList;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-function sp(str) {
-    return `${str || ''}`.replace(/\u{00A0}+/gu, ' ').replace(/\s+/g, ' ').trim();
-}
-exports.sp = sp;
-function tt(str) {
-    str = `${str || ''}`;
-    return `${str.charAt(0).toUpperCase()}${str.substr(1)}`;
-}
-exports.tt = tt;
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const swap_links_1 = __webpack_require__(3);
-function addWishColorMarkers() {
-    const id = 'wish-cond-fieldset';
-    const cond = document.getElementById('wish-cond');
-    cond.insertAdjacentHTML('afterend', `<fieldset id="${id}"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
-    const fieldset = document.getElementById(id);
-    const options = cond.querySelectorAll('option');
-    for (const o of options) {
-        const val = o.value;
-        const text = o.textContent;
-        if (val || text.includes('ANY')) {
-            const checked = (val === '3') ? 'checked' : '';
-            const style = o.getAttribute('style') || '';
-            fieldset.insertAdjacentHTML('beforeend', `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${val}" ${checked} type="radio"/>${text}</label>`);
-        }
-    }
-    cond.remove();
-    const _onCoinWishForm = CoinWishFormOn;
-    if (!_onCoinWishForm) {
-        return;
-    }
-    const wishForm = document.getElementById('wish-form');
-    CoinWishFormOn = function (...args) {
-        _onCoinWishForm(...args);
-        const [, cond] = args;
-        const checkbox = fieldset.querySelector(`input[name="condition"][value="${cond}"]`);
-        if (checkbox) {
-            checkbox.checked = true;
-        }
-        wishForm.querySelector(`#wish-type`).checked = true;
-        /*if (!new FormData(wishForm).has('wish-variety')) {
-            const vid = getCurrentVarietyId();
-            if (vid) {
-                document.querySelector<HTMLInputElement>(`input[name="wish-variety"][value="${vid}"]`).checked = true;
-            }
-        }*/
-    };
-    const myWish = document.getElementById('my-wish-block');
-    const wishBlock = myWish.querySelector('#wish-block');
-    const addButton = wishBlock.querySelector('center button.btn-s.btn-gray');
-    if (!addButton) {
-        return;
-    }
-    const buttonSetId = 'wish-button-set';
-    addButton.insertAdjacentHTML('afterend', `<div id="${buttonSetId}" class="btn-set"/>`);
-    addButton.remove();
-    const buttonSet = document.getElementById(buttonSetId);
-    if (!buttonSet) {
-        return;
-    }
-    addWishMarker('*', 1, 0);
-    addWishMarker('VF+', 10, 3);
-    addWishMarker('XF+', 11, 2);
-    addWishMarker('UN', 12, 1);
-    function addWishMarker(text, color, value) {
-        const markerId = `wish-marker-${value}`;
-        const markerClass = `marked-${color}`;
-        buttonSet.insertAdjacentHTML('beforeend', `<div id="${markerId}" class="${markerClass}">${text}</div>`);
-        document.getElementById(markerId).addEventListener('click', () => CoinWishFormOn('', `${value}`));
-    }
-}
-exports.addWishColorMarkers = addWishColorMarkers;
-function styleWishLists() {
-    const listOfLinks = document.querySelectorAll('#wish-block a.list-link');
-    for (const a of listOfLinks) {
-        swap_links_1.styleSwapLink(a);
-    }
-}
-exports.styleWishLists = styleWishLists;
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const cond_1 = __webpack_require__(2);
-const utils_1 = __webpack_require__(24);
+const cond_1 = __webpack_require__(1);
+const utils_1 = __webpack_require__(25);
 const { location: loc } = document;
 function num(s) {
     return +(s.replace(/[^.\d]/g, ''));
@@ -1990,6 +1894,102 @@ function addSortingOptions() {
     });
 }
 exports.addSortingOptions = addSortingOptions;
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function sp(str) {
+    return `${str || ''}`.replace(/\u{00A0}+/gu, ' ').replace(/\s+/g, ' ').trim();
+}
+exports.sp = sp;
+function tt(str) {
+    str = `${str || ''}`;
+    return `${str.charAt(0).toUpperCase()}${str.substr(1)}`;
+}
+exports.tt = tt;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const swap_links_1 = __webpack_require__(3);
+function addWishColorMarkers() {
+    const id = 'wish-cond-fieldset';
+    const cond = document.getElementById('wish-cond');
+    cond.insertAdjacentHTML('afterend', `<fieldset id="${id}"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
+    const fieldset = document.getElementById(id);
+    const options = cond.querySelectorAll('option');
+    for (const o of options) {
+        const val = o.value;
+        const text = o.textContent;
+        if (val || text.includes('ANY')) {
+            const checked = (val === '3') ? 'checked' : '';
+            const style = o.getAttribute('style') || '';
+            fieldset.insertAdjacentHTML('beforeend', `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${val}" ${checked} type="radio"/>${text}</label>`);
+        }
+    }
+    cond.remove();
+    const _onCoinWishForm = CoinWishFormOn;
+    if (!_onCoinWishForm) {
+        return;
+    }
+    const wishForm = document.getElementById('wish-form');
+    CoinWishFormOn = function (...args) {
+        _onCoinWishForm(...args);
+        const [, cond] = args;
+        const checkbox = fieldset.querySelector(`input[name="condition"][value="${cond}"]`);
+        if (checkbox) {
+            checkbox.checked = true;
+        }
+        wishForm.querySelector(`#wish-type`).checked = true;
+        /*if (!new FormData(wishForm).has('wish-variety')) {
+            const vid = getCurrentVarietyId();
+            if (vid) {
+                document.querySelector<HTMLInputElement>(`input[name="wish-variety"][value="${vid}"]`).checked = true;
+            }
+        }*/
+    };
+    const myWish = document.getElementById('my-wish-block');
+    const wishBlock = myWish.querySelector('#wish-block');
+    const addButton = wishBlock.querySelector('center button.btn-s.btn-gray');
+    if (!addButton) {
+        return;
+    }
+    const buttonSetId = 'wish-button-set';
+    addButton.insertAdjacentHTML('afterend', `<div id="${buttonSetId}" class="btn-set"/>`);
+    addButton.remove();
+    const buttonSet = document.getElementById(buttonSetId);
+    if (!buttonSet) {
+        return;
+    }
+    addWishMarker('*', 1, 0);
+    addWishMarker('VF+', 10, 3);
+    addWishMarker('XF+', 11, 2);
+    addWishMarker('UN', 12, 1);
+    function addWishMarker(text, color, value) {
+        const markerId = `wish-marker-${value}`;
+        const markerClass = `marked-${color}`;
+        buttonSet.insertAdjacentHTML('beforeend', `<div id="${markerId}" class="${markerClass}">${text}</div>`);
+        document.getElementById(markerId).addEventListener('click', () => CoinWishFormOn('', `${value}`));
+    }
+}
+exports.addWishColorMarkers = addWishColorMarkers;
+function styleWishLists() {
+    const listOfLinks = document.querySelectorAll('#wish-block a.list-link');
+    for (const a of listOfLinks) {
+        swap_links_1.styleSwapLink(a);
+    }
+}
+exports.styleWishLists = styleWishLists;
 
 
 /***/ })
