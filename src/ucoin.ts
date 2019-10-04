@@ -35,6 +35,18 @@ import {addWishColorMarkers, styleWishLists} from './lib/wish-form';
 
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${style}</style>`);
 
+async function handleHomePage(loc: string) {
+    const profile = document.getElementById('profile');
+    const curPrice = profile.querySelector<HTMLDivElement>('div.worth-cur-value span');
+    const colPrice = +curPrice.textContent.replace(/[^\d.]/g, '');
+    const swapPrice = +profile.querySelector(`a[href="/swap-list/?uid=${UID}"] span.right`).textContent.replace(/[^\d.]/g, '');
+    const price = colPrice + swapPrice;
+    curPrice.classList.add('price');
+    curPrice.insertAdjacentHTML('beforeend', `<br/><small class="total"><abbr class="cur">€</abbr> ${
+        new Intl.NumberFormat('en').format(price)
+    }</small>`);
+}
+
 async function handleCoinPage(loc: string) {
     const tags = document.getElementById('tags');
     if (tags) {
@@ -127,6 +139,10 @@ async function handleSwapPage() {
 
 (async function () {
     const loc = document.location.href;
+
+    if (loc.includes(`/uid${UID}`)) {
+        await handleHomePage(loc);
+    }
 
     if (loc.includes('/coin')) {
         await handleCoinPage(loc);

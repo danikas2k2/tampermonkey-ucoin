@@ -27,7 +27,8 @@
         "prefer-template": true,
         "quotemark": [true, "single", "jsx-double", "avoid-escape"],
         "unnecessary-else": true,
-        "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"]
+        "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
+        "semicolon": [true, "always", "ignore-bound-class-methods"]
     },
     "jsRules": {
         "quotemark": [true, "single", "jsx-double", "avoid-escape"],

@@ -38,7 +38,7 @@
 }
 
 #estimated-prices {
-    overflow-x: hidden;
+    //overflow-x: hidden;
     max-height: 400px;
 
     .list-link {
@@ -65,9 +65,15 @@
 
     .right {
         max-width: 120px;
-        font-size: 11px;
-        line-height: 19px;
     }
+}
+
+.widget .list-link .blue-13,
+#coin-list table .blue-13 {
+    font-size: 11px;
+    line-height: 19px;
+    letter-spacing: -1px;
+    white-space: nowrap;
 }
 
 #coin {
@@ -211,5 +217,25 @@
 
     .filter-container {
         margin: 0 !important;
+    }
+}
+
+#profile .price {
+    display: inline-block;
+
+    .total {
+        float: right;
+        color: #666;
+        font-size: 20px;
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: normal;
+        margin-top: 4px;
+        padding-top: 4px;
+        border-top: 1px solid #060;
+
+        .cur {
+            font-size: 16px;
+            padding-right: 6px;
+        }
     }
 }
