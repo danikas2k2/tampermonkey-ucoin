@@ -285,6 +285,19 @@ exports.postFragment = postFragment;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+function id(id) {
+    return `#${id}`;
+}
+exports.id = id;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 function sp(str) {
     return `${str || ''}`.replace(/\u{00A0}+/gu, ' ').replace(/\s+/g, ' ').trim();
 }
@@ -410,19 +423,6 @@ exports.todayMonth = todayMonth;
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-function id(id) {
-    return `#${id}`;
-}
-exports.id = id;
-
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -536,7 +536,7 @@ exports.AbstractForm = AbstractForm;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const cond_1 = __webpack_require__(0);
-const utils_1 = __webpack_require__(2);
+const utils_1 = __webpack_require__(3);
 const { location: loc } = document;
 function num(s) {
     return +(s.replace(/[^.\d]/g, ''));
@@ -728,9 +728,9 @@ exports.addSortingOptions = addSortingOptions;
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(1);
 const form_1 = __webpack_require__(6);
-const selectors_1 = __webpack_require__(3);
+const selectors_1 = __webpack_require__(2);
 const swap_links_1 = __webpack_require__(5);
-const utils_1 = __webpack_require__(2);
+const utils_1 = __webpack_require__(3);
 const vid_1 = __webpack_require__(22);
 class ListForm extends form_1.AbstractForm {
     constructor() {
@@ -944,7 +944,7 @@ exports.UID = (() => {
 // ==UserScript==
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/
-// @version      1.4.2
+// @version      1.5.0
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
 // @downloadURL  https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js
@@ -1228,8 +1228,8 @@ const show_svg_1 = __importDefault(__webpack_require__(17));
 const ajax_1 = __webpack_require__(1);
 const cond_1 = __webpack_require__(0);
 const form_1 = __webpack_require__(6);
-const selectors_1 = __webpack_require__(3);
-const utils_1 = __webpack_require__(2);
+const selectors_1 = __webpack_require__(2);
+const utils_1 = __webpack_require__(3);
 class CoinForm extends form_1.AbstractForm {
     constructor() {
         super(...arguments);
@@ -1713,7 +1713,7 @@ exports.estimateSwapPrices = estimateSwapPrices;
 Object.defineProperty(exports, "__esModule", { value: true });
 const cond_1 = __webpack_require__(0);
 const list_form_1 = __webpack_require__(8);
-const selectors_1 = __webpack_require__(3);
+const selectors_1 = __webpack_require__(2);
 const swap_links_1 = __webpack_require__(5);
 const swap_form_list_1 = __webpack_require__(23);
 // declare let CoinSwapFormOn: (usid: string, cond: string, price: string, info: string, vid: string, qty: string, replica: string, ...other: string[]) => void;
@@ -1833,10 +1833,10 @@ exports.getCurrentVarietyId = getCurrentVarietyId;
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(1);
 const delay_1 = __webpack_require__(4);
-const selectors_1 = __webpack_require__(3);
+const selectors_1 = __webpack_require__(2);
 const swap_links_1 = __webpack_require__(5);
 const uid_1 = __webpack_require__(9);
-const utils_1 = __webpack_require__(2);
+const utils_1 = __webpack_require__(3);
 class SwapFormList {
     constructor(listForm) {
         this.variants = new Map();
