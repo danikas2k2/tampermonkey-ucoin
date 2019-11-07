@@ -1,3 +1,88 @@
+@import (css) url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+@import (css) url('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css');
+
+
+
+//
+// Customize main site
+//
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+}
+
+.widget {
+    font-size: inherit;
+
+    &-header {
+        background-color: #CCCCCC;
+        color: #333333;
+        font-weight: 300;
+        font-size: inherit;
+    }
+}
+
+.btn-l {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+
+    &.hide {
+        display: none;
+    }
+}
+
+.btn-s {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+
+    &.hide {
+        display: none;
+    }
+}
+
+.btn-red {
+    background-color: #CC0000;
+    border: 1px solid #00000022;
+
+    &, &:hover {
+        color: #F5F5F5;
+    }
+}
+
+
+#table {
+    a.cell {
+        position: relative;
+
+        &.samekm {
+            z-index: 1;
+            background-color: #333333AA;
+            color: #CCCCCC;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+
+            &:hover {
+                background-color: #000000AA;
+                color: #FFFFFF;
+            }
+        }
+    }
+}
+
+
+//
+// Add extension styles
+//
+
+.btn-set {
+    .btn-marker:hover {
+        filter: brightness(1.2);
+    }
+}
+
 #buy_reset {
     font-size: 16px;
     font-weight: bold;
@@ -11,16 +96,29 @@
     }
 }
 
-#ucid-block {
+.input() {
+    background-color: #FFFFFF;
+    border: 1px solid #ACACAC;
+    border-radius: 2px;
+    transition: all 150ms ease-in-out 0s;
+    box-shadow: 0 2px 1px #0000000D inset;
+    color: #222222;
+    display: inline-block;
+    font-family: 'Open Sans', sans-serif;
+    padding: 2px 8px;
+    height: 28px;
+    box-sizing: border-box;
+}
+
+#buy_year_month {
+    .input();
+    width: 150px;
+}
+
+#my-func-block {
     .btn-narrow {
         padding-left: 14px;
         padding-right: 14px;
-    }
-
-    .btn-red {
-        background-color: #CC0000;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        color: #F5F5F5;
     }
 
     .btn-i {
@@ -35,19 +133,24 @@
 
 .estimated-prices-widget {
     margin: 30px 0;
+
+    .widget-header {
+        cursor: default;
+    }
 }
 
 #estimated-prices {
-    //overflow-x: hidden;
     max-height: 400px;
+    overflow-x: hidden;
 
     .list-link {
+        cursor: initial;
         padding: 6px 0 3px;
     }
 
     .list-sep {
         padding: 0;
-        border-bottom: 2px solid #E9EDF1;
+        border-bottom: 2px solid #e9edf1;
     }
 
     .dgray-11 {
@@ -77,11 +180,58 @@
 }
 
 #coin {
+    h1 {
+        color: #3B3B3B;
+    }
+
+    .pricewj {
+        border: none;
+
+        span {
+            font-size: 15px;
+        }
+    }
+
+    .tbl {
+        td, th {
+            border: none;
+        }
+    }
+
+    .coin-info {
+        th {
+            background-color: #EDF1F3;
+
+        }
+        tr + tr {
+            td {
+                border-top: 1px solid #EDF1F3;
+            }
+            th {
+                border-top: 1px solid #FFF;
+            }
+        }
+        thead + tbody {
+            border-top: 1px solid #FFF;
+        }
+    }
+
+    .coin-img td.i {
+        border: none;
+    }
+
     #swap-block,
     #wish-block {
         .dgray-11 {
             width: 32px !important;
             margin: 0 4px;
+        }
+    }
+
+    #swap-form,
+    #wish-form {
+        .btn-s {
+            margin: 0 0 0 5px;
         }
     }
 
@@ -102,8 +252,7 @@
     }
 }
 
-#my-swap-block #swap-block,
-#my-wish-block #wish-block {
+.button-block(@button-width) {
     a {
         position: relative;
 
@@ -140,8 +289,8 @@
         width: fit-content;
 
         div {
-            flex: 0 0 20px;
-            //width: 20px;
+            font-size: 11px;
+            flex: 0 0 @button-width;
             height: 20px;
             line-height: 20px;
             cursor: pointer;
@@ -150,10 +299,22 @@
         }
     }
 
-    .btn--combiner,
-    .btn--expander {
+    .btn--combine,
+    .btn--expand {
         margin: 8px 2px 0;
+
+        &.hide {
+            display: none;
+        }
     }
+}
+
+#my-swap-block #swap-block {
+    .button-block(20px);
+}
+
+#my-wish-block #wish-block {
+    .button-block(28px);
 }
 
 #swap-list,
@@ -225,17 +386,34 @@
 
     .total {
         float: right;
-        color: #666;
+        color: #666666;
         font-size: 20px;
-        font-family: Arial,Helvetica,sans-serif;
+        font-family: Arial, Helvetica, sans-serif;
         font-weight: normal;
         margin-top: 4px;
         padding-top: 4px;
-        border-top: 1px solid #060;
+        border-top: 1px solid #006600;
 
         .cur {
             font-size: 16px;
             padding-right: 6px;
+        }
+    }
+}
+
+#tree {
+    .tree-filter {
+        .input();
+        width: 100%;
+        margin-bottom: 3px;
+        font-size: 13px;
+    }
+
+    #catalog-tree {
+        .country, .period {
+            .hide {
+                display: none;
+            }
         }
     }
 }

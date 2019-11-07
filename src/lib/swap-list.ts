@@ -261,7 +261,7 @@ export function ignoreUnwanted() {
             for (const tr of rows) {
                 const markedElement = tr.querySelector('td span[class^="marked-"]');
                 const markedClass = markedElement && markedElement.classList.item(0);
-                const myCond = markedClass && ColorValues.get(markedClass.split('marked-').pop()) || 0;
+                const myCond = markedClass && ColorValues.get(+markedClass.split('marked-').pop()) || 0;
                 const condElement = tr.querySelector('td.td-cond');
                 const cond = condElement && ConditionValues.get(condElement.textContent) || 0;
                 if (myCond && (!cond || cond <= myCond)) {

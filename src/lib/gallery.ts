@@ -3,7 +3,7 @@ import {randomDelay} from './delay';
 
 type VisibilityToggleCallback = (container: HTMLElement, checked: boolean) => void;
 
-const gallery = <HTMLElement> document.getElementById('gallery');
+const gallery = document.getElementById('gallery');
 
 let privateStatus: NodeListOf<HTMLDivElement>;
 let publicStatus: NodeListOf<HTMLDivElement>;

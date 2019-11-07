@@ -6,6 +6,7 @@
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
 // @downloadURL  https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js
 // @updateURL    https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js
 // @match        https://*.ucoin.net/*
 // @run-at       document-end
 // ==/UserScript==
@@ -14,11 +15,11 @@
 // @ts-ignore
 import style from '../styles/ucoin.less';
 
-import {addBuyDateResetButton, addPublicityToggle, addReplacementToggle, addSyncConditionToColorTable, updateFormStyles} from './lib/coin-form';
+import {CoinForm} from './lib/coin-form';
 import {addGalleryVisibilityToggle} from './lib/gallery';
 import {updateLinkHref, updateOnClickHref} from './lib/links';
 import {estimateSwapPrices} from './lib/prices';
-import {addSwapButtons, addSwapColorMarkers, addSwapComments, addSwapFormQtyButtons, styleSwapLists} from './lib/swap-form';
+import {SwapForm} from './lib/swap-form';
 import {
     addConflictHandling,
     addOpenedTabsHandler,
@@ -31,7 +32,7 @@ import {
 } from './lib/swap-list';
 import {addSortingOptions} from './lib/swap-list-sort';
 import {UID} from './lib/uid';
-import {addWishColorMarkers, styleWishLists} from './lib/wish-form';
+import {WishForm} from './lib/wish-form';
 
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${style}</style>`);
 
@@ -57,34 +58,10 @@ async function handleCoinPage(loc: string) {
         }
     }
 
-    addBuyDateResetButton();
-    addSyncConditionToColorTable();
-
-    if (loc.includes('ucid=')) {
-        updateFormStyles();
-        addPublicityToggle();
-        addReplacementToggle();
-    }
-
-    const mySwap = document.getElementById('my-swap-block');
-    if (mySwap && mySwap.querySelector('#swap-block')) {
-        addSwapFormQtyButtons();
-        addSwapColorMarkers();
-        addSwapComments();
-        await addSwapButtons();
-    }
-    styleSwapLists();
-
-    const theySwap = document.getElementById('swap');
-    if (theySwap && theySwap.nextElementSibling.id === 'swap-block') {
-        estimateSwapPrices();
-    }
-
-    const myWish = document.getElementById('my-wish-block');
-    if (myWish && myWish.querySelector('#wish-block')) {
-        addWishColorMarkers();
-        styleWishLists();
-    }
+    await new CoinForm().handle();
+    await new SwapForm().handle();
+    await estimateSwapPrices();
+    await new WishForm().handle();
 }
 
 async function handleGalleryPage() {
@@ -154,5 +131,57 @@ async function handleSwapPage() {
 
     if (loc.includes('/swap-')) {
         await handleSwapPage();
+    }
+
+
+    const tree = document.getElementById('tree');
+    if (tree) {
+        const treeSearchId = 'tree-search';
+        const treeSearch = document.getElementById(treeSearchId);
+        if (treeSearch) {
+            treeSearch.closest('div').remove();
+        }
+
+        const searchInputId = 'search-input-id';
+        tree.insertAdjacentHTML('afterbegin', `<input id="${searchInputId}" class="tree-filter" placeholder="Search"/>`);
+        const searchInput = <HTMLInputElement> document.getElementById(searchInputId);
+        searchInput.addEventListener('input', (e: Event) => {
+            const pattern = new RegExp([...searchInput.value].join('.*?'), 'i');
+            for (const a of tree.querySelectorAll('a.country-name')) {
+                const country = a.closest('div.country');
+                const countryVisible: boolean = pattern.test(a.textContent);
+                let visiblePeriods = 0;
+                const periods = country.querySelectorAll('a.period');
+                for (const p of periods) {
+                    if (!countryVisible) {
+                        const periodVisible: boolean = pattern.test(p.textContent);
+                        p.classList.toggle('hide', !periodVisible);
+                        if (periodVisible) {
+                            visiblePeriods += 1;
+                        }
+                    } else {
+                        p.classList.remove('hide');
+                    }
+                }
+                country.classList.toggle('hide', !countryVisible && !visiblePeriods);
+                const showPeriods: boolean = visiblePeriods > 0 && visiblePeriods < 6;
+                const periodsBlock = country.querySelector<HTMLDivElement>('.periods');
+                if (periodsBlock) {
+                    periodsBlock.style.display = showPeriods ? 'block' : 'none';
+                }
+                const plusMinus = country.querySelector<HTMLImageElement>('img');
+                plusMinus.src = showPeriods ? '/i/bg/minus.gif' : '/i/bg/plus.gif';
+            }
+
+            for (const reg of tree.querySelectorAll('div.reg')) {
+                const {length} = reg.querySelectorAll('div.country:not(.hide)');
+                reg.classList.toggle('hide', !length);
+
+                const region = reg.querySelector('.region');
+                const countries = reg.querySelector('.countries');
+                const visibleRegion: boolean = length > 0 && length <= 5 || region.matches('.open');
+                countries.classList.toggle('hide', !visibleRegion);
+            }
+        });
     }
 })();

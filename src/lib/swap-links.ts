@@ -41,3 +41,29 @@ export function styleSwapLink(a: HTMLAnchorElement) {
         mintBlock.insertAdjacentHTML('beforeend', ` <span class="lgray-11">${parts.join(' ')}</span>`);
     }
 }
+
+export function styleListLinks(list: HTMLElement) {
+    const listOfLinks = list.querySelectorAll<HTMLAnchorElement>('a.list-link');
+    for (const a of listOfLinks) {
+        styleSwapLink(a);
+    }
+}
+
+export function addComment(a: HTMLAnchorElement): void {
+    if (a.hasAttribute('onClick')) {
+        const m = <CoinSwapFormOnMatchResult> a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+        if (m && m.groups) {
+            const {info} = m.groups;
+            if (info && !a.querySelector('.comments')) {
+                a.insertAdjacentHTML('beforeend',
+                    `<span class="right dgray-11 wrap comments" title="${info}"><div class="ico-16"></div> ${info}</span>`);
+            }
+        }
+    }
+}
+
+export function addLinkComments() {
+    for (const a of getSwapLinks()) {
+        addComment(a);
+    }
+}

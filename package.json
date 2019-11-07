@@ -26,12 +26,13 @@
     "license": "ISC",
     "homepage": "https://bitbucket.org/danikas2k2/ucoin.userscripts#readme",
     "devDependencies": {
+        "@types/chart.js": "^2.8.10",
         "@types/core-js": "^2.5.2",
         "@types/md5": "^2.1.33",
-        "@types/node": "^10.14.16",
-        "@types/react": "^16.9.2",
+        "@types/node": "^10.17.4",
+        "@types/react": "^16.9.11",
         "@types/uglifyjs-webpack-plugin": "^1.1.0",
-        "@types/webpack": "^4.39.1",
+        "@types/webpack": "^4.39.8",
         "@typescript-eslint/eslint-plugin": "^1.13.0",
         "@typescript-eslint/parser": "^1.13.0",
         "css-loader": "^2.1.1",
@@ -39,7 +40,7 @@
         "eslint-config-node": "^4.0.0",
         "eslint-config-standard": "^12.0.0",
         "eslint-plugin-import": "^2.18.2",
-        "eslint-plugin-node": "^9.1.0",
+        "eslint-plugin-node": "^9.2.0",
         "eslint-plugin-promise": "^4.2.1",
         "eslint-plugin-standard": "^4.0.1",
         "less": "^3.10.3",
@@ -53,11 +54,14 @@
         "ts-loader": "^5.4.5",
         "ts-node": "^7.0.1",
         "typed-css-modules": "^0.3.7",
-        "typescript": "^3.5.3",
+        "typescript": "^3.7.2",
         "typings-for-css-modules-loader": "^1.7.0",
-        "webpack": "^4.39.2",
+        "webpack": "^4.41.2",
         "webpack-auto-inject-version": "^1.2.2",
-        "webpack-cli": "^3.3.7"
+        "webpack-cli": "^3.3.10"
     },
-    "dependencies": {}
+    "dependencies": {
+        "chart.js": "^2.9.2",
+        "moment": "^2.24.0"
+    }
 }

@@ -39,7 +39,7 @@
         "comma-dangle": ["error", "only-multiline"],
         "import/no-nodejs-modules": "off",
         "import/no-unresolved": ["error", {"commonjs": true, "caseSensitive": true}],
-        "import/prefer-default-export": "warn",
+        "import/prefer-default-export": "off",
         "indent": ["error", 4, { "SwitchCase": 1 }],
         "no-console": "error",
         "no-useless-rename": "error",

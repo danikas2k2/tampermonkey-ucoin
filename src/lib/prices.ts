@@ -1,19 +1,34 @@
-import {ConditionColors, ConditionValues} from './cond';
+import {ColorStyle, Color, ConditionColors, ConditionValues} from './cond';
+import {cmp} from './swap-list-sort';
+
+type YearMap = Map<string, number[]>;
+type MintMap = Map<string, YearMap>;
+
+const SWAP_ID = 'swap';
+const SWAP_BLOCK_ID = 'swap-block';
+const ESTIMATED_PRICES_ID = 'estimated-prices';
+
+function sortByCondition(a: string, b: string): number {
+    return ConditionValues.get(b) - ConditionValues.get(a);
+}
 
 export function estimateSwapPrices() {
-    const theySwap = document.getElementById('swap');
-    const swapBlock = theySwap && theySwap.nextElementSibling;
-    if (!swapBlock || swapBlock.id !== 'swap-block') {
+    const theySwap = document.getElementById(SWAP_ID);
+    if (!theySwap) {
         return;
     }
 
-    const byType = new Map();
-    const byMint = new Map();
+    const swapBlock = theySwap.nextElementSibling;
+    if (!swapBlock || !swapBlock.matches(`#${SWAP_BLOCK_ID}`)) {
+        return;
+    }
+
+    const byType: YearMap = new Map();
+    const byMint: MintMap = new Map();
 
     let pricePrefix: string, priceSuffix: string;
     const listOfLinks = swapBlock.querySelectorAll(`a.list-link`);
     for (const a of listOfLinks) {
-
         const cond = a.querySelector(`.left.dgray-11`).textContent;
         const mint = a.querySelector(`.left.gray-13`).textContent;
 
@@ -43,58 +58,76 @@ export function estimateSwapPrices() {
         byMint.set(mint, pm);
     }
 
-    swapBlock.parentElement.insertAdjacentHTML('beforebegin', `<div class="widget estimated-prices-widget"><a class="widget-header">Estimated prices</a><div id="estimated-prices"></div></div>`);
+    swapBlock.parentElement.insertAdjacentHTML('beforebegin', `<div class="widget estimated-prices-widget"><a class="widget-header">Estimated prices</a><div id="${ESTIMATED_PRICES_ID}"></div></div>`);
 
-    const estimatedPrices = document.getElementById('estimated-prices');
-    if (byMint.size > 1) {
-        addPricesByType(byType);
-    }
-    for (const [mint, byType] of byMint) {
-        if (byMint.size > 1) {
-            estimatedPrices.insertAdjacentHTML('beforeend', `<div class="list-sep"></div>`);
-        }
-        addPricesByType(byType, mint);
-    }
+    const estimatedPrices = document.getElementById(ESTIMATED_PRICES_ID);
 
     function addPricesByType(byType: Map<string, number[]>, mint = '') {
-        const keys = [...byType.keys()].sort(sortByCond);
+        const keys = [...byType.keys()].sort(sortByCondition);
+
+        // @ts-ignore
+        const options: Chart.ChartConfiguration = {
+            type: 'line',
+            data: { datasets: [] },
+            options: {
+                title: { display: true, text: mint },
+                responsive: true,
+                hover: { mode: 'nearest', intersect: true },
+                scales: {
+                    xAxes: [],
+                    yAxes: [{
+                        type: 'linear',
+                        display: true,
+                        ticks: { beginAtZero: true },
+                    }],
+                },
+                legend: { display: false },
+                elements: { point: { radius: 1 } },
+            },
+        };
+
+        const maxLength = 100;
         for (const cond of keys) {
-            const p: number[] = byType.get(cond).sort();
-            const l = p.length - 1, r = l % 2, h = (l + r) / 2;
-
-            // const avg = p.reduce((sum: number, val: number): number => sum + val, 0) / p.length;
-            const med = r ? p[h] : (p[h] + p[h + 1]) / 2;
-            const min = Math.min(...p);
-            const max = Math.max(...p);
-
-            const prices = [];
-            prices.push(min.toFixed(2));
-            if (med > min) {
-                prices.push(med.toFixed(2));
+            const p: number[] = byType.get(cond).sort(cmp);
+            let {length} = p;
+            if (length === 1) {
+                p.push(p[0]);
+            } else {
+                length -= 1;
             }
-            if (max > med) {
-                prices.push(max.toFixed(2));
-            }
-
-            if (pricePrefix) {
-                prices[0] = `<span class="lgray-11">${pricePrefix}</span>${prices[0]}`;
-            }
-            if (priceSuffix) {
-                const n = prices.length - 1;
-                prices[n] = `${prices[n]}<span class="lgray-11">${priceSuffix}</span>`;
-            }
-
-            const price = `<nobr>${prices.join(`</nobr><nobr><small> &middot; </small>`)}</nobr>`;
-
-            const parts = mint.split(' ');
-            const y = parts.shift();
-            const m = parts.length ? ` <span class="lgray-11">${parts.join(' ')}</span>` : '';
-
-            estimatedPrices.insertAdjacentHTML('beforeend', `<a class="list-link"><span class="left dgray-11 marked-${ConditionColors.get(cond)}">${cond}</span><span class="left gray-13">${y}${m}</span><span class="right blue-13">${price}</span></a>`);
+            const color = ColorStyle.get(ConditionColors.get(cond));
+            const xAxisID = `x-axis-${cond}`;
+            options.data.datasets.push({
+                xAxisID,
+                label: cond,
+                data: p.map((v, i) => ({x: i * maxLength / length, y: v})),
+                backgroundColor: color,
+                borderColor: color,
+                borderWidth: 1,
+                fill: false,
+            });
+            options.options.scales.xAxes.push({
+                id: xAxisID,
+                type: 'linear',
+                display: false,
+            });
         }
+
+        const id = `${ESTIMATED_PRICES_ID}-${mint.trim()}`;
+        estimatedPrices.insertAdjacentHTML('beforeend', `<canvas id="${id}" width="239" height="119"/>`);
+        const ctx = (<HTMLCanvasElement> document.getElementById(id)).getContext('2d');
+        // @ts-ignore
+        new Chart(ctx, options);
     }
 
-    function sortByCond(a: string, b: string): number {
-        return ConditionValues.get(b) - ConditionValues.get(a);
+    if (byMint.size > 1) {
+        addPricesByType(byType);
+    } else {
+        for (const [mint, byType] of byMint) {
+            if (byMint.size > 1) {
+                estimatedPrices.insertAdjacentHTML('beforeend', `<div class="list-sep"></div>`);
+            }
+            addPricesByType(byType, mint);
+        }
     }
 }

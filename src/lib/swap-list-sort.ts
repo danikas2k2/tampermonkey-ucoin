@@ -18,7 +18,7 @@ function num(s: string): number {
     return +(s.replace(/[^.\d]/g, ''));
 }
 
-function cmp<T = string | number>(a: T, b: T): number {
+export function cmp<T = string | number>(a: T, b: T): number {
     return -(a < b) || +(a > b);
 }
 
