@@ -13,10 +13,14 @@ import {id} from './selectors';
 import {cancel, handleFormSubmit, handleLinkSubmit, hide, reload, show, todayMonth, updateOptionalElement, updateRequiredElement} from './utils';
 
 export class CoinForm extends AbstractForm {
+    protected addFormId = 'add-coin-form';
+    protected editFormId = 'edit-coin-form';
     protected funcId = 'my-func-block';
     protected viewId = 'ucid-block';
     protected coinChooserId = 'coin-chooser-dialog';
 
+    private addForm: HTMLFormElement;
+    private editForm: HTMLFormElement;
     private view: HTMLElement;
     private coinChooser: HTMLElement;
 
@@ -31,7 +35,10 @@ export class CoinForm extends AbstractForm {
 
         this.updateButtons();
 
-        this.form = this.func.querySelector<HTMLFormElement>('form');
+        this.addForm = this.func.querySelector<HTMLFormElement>(`#${this.addFormId} form`);
+        this.editForm = this.func.querySelector<HTMLFormElement>(`#${this.editFormId} form`);
+        this.form = this.editForm || this.addForm;
+
         if (this.form) {
             this.view = this.func.querySelector<HTMLDivElement>(id(this.viewId));
             if (this.view) {
@@ -45,12 +52,14 @@ export class CoinForm extends AbstractForm {
             await handleFormSubmit(this.form, async () => {
                 return await this.updateFragment(await postFragment(location.href, new FormData(this.form)));
             });
-        }
 
-        for (const link of this.form.querySelectorAll<HTMLAnchorElement>('a[type=submit]')) {
-            await handleLinkSubmit(link, async () => {
-                return await this.updateFragment(await getFragment(link.href));
-            });
+            if (this.view) {
+                for (const link of this.view.querySelectorAll<HTMLAnchorElement>('a[type=submit]')) {
+                    await handleLinkSubmit(link, async () => {
+                        return await this.updateFragment(await getFragment(link.href));
+                    });
+                }
+            }
         }
     }
 

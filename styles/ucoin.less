@@ -417,3 +417,28 @@ body {
         }
     }
 }
+
+#coin .rnav {
+    position: relative;
+}
+
+#coin-chooser-dialog {
+    @width: 200px;
+    @height: 36px;
+    @gap: 20px;
+    @columns: 3;
+    @rows: 20;
+
+    width: max-content;
+    min-width: @width;
+    max-width: (@width + @gap) * @columns - @gap;
+    max-height: @height * @rows !important;
+    column-width: @width;
+    column-gap: @gap;
+    right: 0;
+
+    .list-link {
+        display: inline-block;
+        width: @width - 24px;
+    }
+}

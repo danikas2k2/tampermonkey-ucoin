@@ -80,7 +80,7 @@ export abstract class ListForm extends AbstractForm {
         return `Coin${this.formTypeMethod}FormOff`;
     }
 
-    protected fillForm(uid?: string, cond?: string, price?: string, vid?: string) {
+    protected fillForm(uid: string = '', cond: string = '', price: string = '', vid: string = '') {
         this.form[this.formUid].value = uid;
         this.form.condition.value = cond;
         this.form.price.value = price;
@@ -123,8 +123,10 @@ export abstract class ListForm extends AbstractForm {
     };
 
     protected updateList() {
-        this.listBlock = this.main.querySelector<HTMLElement>(id(this.listId));
-        styleListLinks(this.listBlock);
+        this.listBlock = document.getElementById(this.listId);
+        if (this.listBlock) {
+            styleListLinks(this.listBlock);
+        }
     }
 
     protected removeOneButton() {
@@ -136,17 +138,19 @@ export abstract class ListForm extends AbstractForm {
 
     protected updateFormHandlers() {
         // @ts-ignore
-        window[this.formOnFunctionName] = this.formOnHandler;
+        global[this.formOnFunctionName] = this.formOnHandler;
         // @ts-ignore
-        window[this.formOffFunctionName] = this.formOffHandler;
+        global[this.formOffFunctionName] = this.formOffHandler;
     }
 
     protected async update(): Promise<void> {
-        show(this.main);
-        this.removeOneButton();
+        if (this.main) {
+            show(this.main);
+            this.removeOneButton();
+            this.updateWidget();
+            this.updateForm();
+        }
         this.updateList();
-        this.updateWidget();
-        this.updateForm();
     }
 
     protected updateButtonSet() {
@@ -233,14 +237,14 @@ export abstract class ListForm extends AbstractForm {
 
     public async handle(): Promise<void> {
         this.main = document.getElementById(this.mainId);
-        if (!this.main) {
-            return;
-        }
+        // if (!this.main) {
+        //     return;
+        // }
 
-        this.listBlock = this.main.querySelector(id(this.listId));
-        if (!this.listBlock) {
-            return;
-        }
+        // this.listBlock = document.getElementById(this.listId);
+        // if (!this.listBlock) {
+        //     return;
+        // }
 
         this.updateFormHandlers();
 

@@ -17,7 +17,7 @@ export class WishForm extends ListForm {
         ['UN', [Color.UNC, WishValue.UNC]],
     ]);
 
-    protected fillForm(uid?: string, cond?: string, price?: string, tid?: string, vid?: string) {
+    protected fillForm(uid: string = '', cond: string = '', price: string = '', tid: string = '', vid: string = '') {
         super.fillForm(uid, cond, price, vid);
         if (this.form.is_type) {
             this.form.is_type.checked = true;

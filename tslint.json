@@ -20,6 +20,7 @@
         "no-duplicate-variable": [true, "check-parameters"],
         "no-empty": [true, "allow-empty-catch"],
         "no-unnecessary-callback-wrapper": true,
+        "no-unused-variable": [true, "check-parameters"],
         "no-unused-expression": [true, "allow-fast-null-checks", "allow-new", "allow-tagged-template"],
         "object-literal-shorthand": true,
         "object-literal-sort-keys": [true, "ignore-case", "locale-compare", "match-declaration-order", "shorthand-first"],

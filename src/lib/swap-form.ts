@@ -27,7 +27,7 @@ export class SwapForm extends ListForm {
 
     private swapListManager = new SwapFormList(this);
 
-    protected fillForm(uid?: string, cond?: string, price?: string, info?: string, vid?: string, qty?: string, replica?: string) {
+    protected fillForm(uid: string = '', cond: string = '', price: string = '', info: string = '', vid: string = '', qty: string = '', replica: string = '') {
         super.fillForm(uid, cond || replica && '100', price, vid);
         this.form.comment.value = info;
         this.form.qty.value = qty || '1';
@@ -35,12 +35,14 @@ export class SwapForm extends ListForm {
     }
 
     protected updateList() {
-        this.listBlock = this.main.querySelector<HTMLElement>(id(this.listId));
-        this.swapListManager.update(this.listBlock);
-        for (const list of document.querySelectorAll<HTMLElement>(id(this.listId))) {
-            styleListLinks(list);
+        this.listBlock = document.getElementById(this.listId);
+        if (this.listBlock) {
+            this.swapListManager.update(this.listBlock);
+            for (const list of document.querySelectorAll<HTMLElement>(id(this.listId))) {
+                styleListLinks(list);
+            }
+            addLinkComments();
         }
-        addLinkComments();
     }
 
     protected async update(): Promise<void> {

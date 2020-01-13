@@ -26,13 +26,14 @@ export class SwapFormList {
     public update(listBlock: HTMLElement) {
         this.listBlock = listBlock;
         this.form = listBlock.querySelector(id(this.listForm.formId));
-
-        this.buttonSet = listBlock.querySelector('center');
-        this.addButton('expand', 0, '&laquo;*&raquo;', this.onExpand);
-        this.addButton('expand', 5, '&laquo;5&raquo;', this.onExpand);
-        this.addButton('expand', 10, '&laquo;10&raquo;', this.onExpand);
-        this.addButton('combine', 0, '&raquo;&middot;&laquo;', this.onCombine);
-        this.updateButtons();
+        if (this.form) {
+            this.buttonSet = listBlock.querySelector('center');
+            this.addButton('expand', 0, '&laquo;*&raquo;', this.onExpand);
+            this.addButton('expand', 5, '&laquo;5&raquo;', this.onExpand);
+            this.addButton('expand', 10, '&laquo;10&raquo;', this.onExpand);
+            this.addButton('combine', 0, '&raquo;&middot;&laquo;', this.onCombine);
+            this.updateButtons();
+        }
     }
 
     private addButton(role: SwapListManageRole, qty: number, text: string, clickHandler: (qty: number) => void) {

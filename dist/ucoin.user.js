@@ -724,14 +724,14 @@ exports.addSortingOptions = addSortingOptions;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(global) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(1);
 const form_1 = __webpack_require__(6);
 const selectors_1 = __webpack_require__(2);
 const swap_links_1 = __webpack_require__(5);
 const utils_1 = __webpack_require__(3);
-const vid_1 = __webpack_require__(22);
+const vid_1 = __webpack_require__(23);
 class ListForm extends form_1.AbstractForm {
     constructor() {
         super(...arguments);
@@ -803,7 +803,7 @@ class ListForm extends form_1.AbstractForm {
     get formOffFunctionName() {
         return `Coin${this.formTypeMethod}FormOff`;
     }
-    fillForm(uid, cond, price, vid) {
+    fillForm(uid = '', cond = '', price = '', vid = '') {
         this.form[this.formUid].value = uid;
         this.form.condition.value = cond;
         this.form.price.value = price;
@@ -812,8 +812,10 @@ class ListForm extends form_1.AbstractForm {
         }
     }
     updateList() {
-        this.listBlock = this.main.querySelector(selectors_1.id(this.listId));
-        swap_links_1.styleListLinks(this.listBlock);
+        this.listBlock = document.getElementById(this.listId);
+        if (this.listBlock) {
+            swap_links_1.styleListLinks(this.listBlock);
+        }
     }
     removeOneButton() {
         const oneButtonBlock = this.main.previousElementSibling;
@@ -823,16 +825,18 @@ class ListForm extends form_1.AbstractForm {
     }
     updateFormHandlers() {
         // @ts-ignore
-        window[this.formOnFunctionName] = this.formOnHandler;
+        global[this.formOnFunctionName] = this.formOnHandler;
         // @ts-ignore
-        window[this.formOffFunctionName] = this.formOffHandler;
+        global[this.formOffFunctionName] = this.formOffHandler;
     }
     async update() {
-        utils_1.show(this.main);
-        this.removeOneButton();
+        if (this.main) {
+            utils_1.show(this.main);
+            this.removeOneButton();
+            this.updateWidget();
+            this.updateForm();
+        }
         this.updateList();
-        this.updateWidget();
-        this.updateForm();
     }
     updateButtonSet() {
         const oneButton = this.listBlock.querySelector('center button.btn-s.btn-gray');
@@ -902,19 +906,20 @@ class ListForm extends form_1.AbstractForm {
     }
     async handle() {
         this.main = document.getElementById(this.mainId);
-        if (!this.main) {
-            return;
-        }
-        this.listBlock = this.main.querySelector(selectors_1.id(this.listId));
-        if (!this.listBlock) {
-            return;
-        }
+        // if (!this.main) {
+        //     return;
+        // }
+        // this.listBlock = document.getElementById(this.listId);
+        // if (!this.listBlock) {
+        //     return;
+        // }
         this.updateFormHandlers();
         await this.update();
     }
 }
 exports.ListForm = ListForm;
 
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(22)))
 
 /***/ }),
 /* 9 */
@@ -964,10 +969,10 @@ const gallery_1 = __webpack_require__(18);
 const links_1 = __webpack_require__(19);
 const prices_1 = __webpack_require__(20);
 const swap_form_1 = __webpack_require__(21);
-const swap_list_1 = __webpack_require__(24);
+const swap_list_1 = __webpack_require__(25);
 const swap_list_sort_1 = __webpack_require__(7);
 const uid_1 = __webpack_require__(9);
-const wish_form_1 = __webpack_require__(25);
+const wish_form_1 = __webpack_require__(26);
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${ucoin_less_1.default}</style>`);
 async function handleHomePage(loc) {
     const profile = document.getElementById('profile');
@@ -1112,7 +1117,7 @@ exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Ope
 exports.push([module.i, "@import url(https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css);", ""]);
 
 // Module
-exports.push([module.i, "body {\n  font-family: 'Open Sans', sans-serif;\n  font-size: 14px;\n}\n.widget {\n  font-size: inherit;\n}\n.widget-header {\n  background-color: #CCCCCC;\n  color: #333333;\n  font-weight: 300;\n  font-size: inherit;\n}\n.btn-l {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-l.hide {\n  display: none;\n}\n.btn-s {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-s.hide {\n  display: none;\n}\n.btn-red {\n  background-color: #CC0000;\n  border: 1px solid #00000022;\n}\n.btn-red,\n.btn-red:hover {\n  color: #F5F5F5;\n}\n#table a.cell {\n  position: relative;\n}\n#table a.cell.samekm {\n  z-index: 1;\n  background-color: #333333AA;\n  color: #CCCCCC;\n  box-shadow: none;\n  -webkit-box-shadow: none;\n}\n#table a.cell.samekm:hover {\n  background-color: #000000AA;\n  color: #FFFFFF;\n}\n.btn-set .btn-marker:hover {\n  filter: brightness(1.2);\n}\n#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#buy_year_month {\n  background-color: #FFFFFF;\n  border: 1px solid #ACACAC;\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: 0 2px 1px #0000000D inset;\n  color: #222222;\n  display: inline-block;\n  font-family: 'Open Sans', sans-serif;\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 150px;\n}\n#my-func-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#my-func-block .btn-i {\n  padding: 10px;\n}\n#my-func-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n.estimated-prices-widget .widget-header {\n  cursor: default;\n}\n#estimated-prices {\n  max-height: 400px;\n  overflow-x: hidden;\n}\n#estimated-prices .list-link {\n  cursor: initial;\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #e9edf1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n}\n.widget .list-link .blue-13,\n#coin-list table .blue-13 {\n  font-size: 11px;\n  line-height: 19px;\n  letter-spacing: -1px;\n  white-space: nowrap;\n}\n#coin h1 {\n  color: #3B3B3B;\n}\n#coin .pricewj {\n  border: none;\n}\n#coin .pricewj span {\n  font-size: 15px;\n}\n#coin .tbl td,\n#coin .tbl th {\n  border: none;\n}\n#coin .coin-info th {\n  background-color: #EDF1F3;\n}\n#coin .coin-info tr + tr td {\n  border-top: 1px solid #EDF1F3;\n}\n#coin .coin-info tr + tr th {\n  border-top: 1px solid #FFF;\n}\n#coin .coin-info thead + tbody {\n  border-top: 1px solid #FFF;\n}\n#coin .coin-img td.i {\n  border: none;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-s,\n#coin #wish-form .btn-s {\n  margin: 0 0 0 5px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-swap-block #swap-block .btn--combine,\n#my-swap-block #swap-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-swap-block #swap-block .btn--combine.hide,\n#my-swap-block #swap-block .btn--expand.hide {\n  display: none;\n}\n#my-wish-block #wish-block a {\n  position: relative;\n}\n#my-wish-block #wish-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-wish-block #wish-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-wish-block #wish-block a .comments:active,\n#my-wish-block #wish-block a .comments:focus,\n#my-wish-block #wish-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block a:active .comments,\n#my-wish-block #wish-block a:focus .comments,\n#my-wish-block #wish-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-wish-block #wish-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 28px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-wish-block #wish-block .btn--combine,\n#my-wish-block #wish-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-wish-block #wish-block .btn--combine.hide,\n#my-wish-block #wish-block .btn--expand.hide {\n  display: none;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #FDD;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #FED;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n#swap-list .action-board,\n#swap-mgr .action-board,\n#swap-list .filter-container,\n#swap-mgr .filter-container {\n  margin: 15px 0 20px;\n  height: 30px;\n  width: auto;\n}\n#swap-list #sort-filter,\n#swap-mgr #sort-filter {\n  border-color: #3B7BEA;\n  width: 150px !important;\n  padding: 4px 12px 7px;\n}\n#swap-list #sort-filter .left,\n#swap-mgr #sort-filter .left {\n  max-width: 140px !important;\n}\n#swap-list #sort-filter-dialog,\n#swap-mgr #sort-filter-dialog {\n  width: 174px;\n  display: none;\n}\n#swap-mgr table.offer-list tr.str {\n  cursor: default;\n}\n#swap-list .pages {\n  padding-right: 0 !important;\n}\n#swap-list .filter-container {\n  margin: 0 !important;\n}\n#profile .price {\n  display: inline-block;\n}\n#profile .price .total {\n  float: right;\n  color: #666666;\n  font-size: 20px;\n  font-family: Arial, Helvetica, sans-serif;\n  font-weight: normal;\n  margin-top: 4px;\n  padding-top: 4px;\n  border-top: 1px solid #006600;\n}\n#profile .price .total .cur {\n  font-size: 16px;\n  padding-right: 6px;\n}\n#tree .tree-filter {\n  background-color: #FFFFFF;\n  border: 1px solid #ACACAC;\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: 0 2px 1px #0000000D inset;\n  color: #222222;\n  display: inline-block;\n  font-family: 'Open Sans', sans-serif;\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 100%;\n  margin-bottom: 3px;\n  font-size: 13px;\n}\n#tree #catalog-tree .country .hide,\n#tree #catalog-tree .period .hide {\n  display: none;\n}\n", ""]);
+exports.push([module.i, "body {\n  font-family: 'Open Sans', sans-serif;\n  font-size: 14px;\n}\n.widget {\n  font-size: inherit;\n}\n.widget-header {\n  background-color: #CCCCCC;\n  color: #333333;\n  font-weight: 300;\n  font-size: inherit;\n}\n.btn-l {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-l.hide {\n  display: none;\n}\n.btn-s {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-s.hide {\n  display: none;\n}\n.btn-red {\n  background-color: #CC0000;\n  border: 1px solid #00000022;\n}\n.btn-red,\n.btn-red:hover {\n  color: #F5F5F5;\n}\n#table a.cell {\n  position: relative;\n}\n#table a.cell.samekm {\n  z-index: 1;\n  background-color: #333333AA;\n  color: #CCCCCC;\n  box-shadow: none;\n  -webkit-box-shadow: none;\n}\n#table a.cell.samekm:hover {\n  background-color: #000000AA;\n  color: #FFFFFF;\n}\n.btn-set .btn-marker:hover {\n  filter: brightness(1.2);\n}\n#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#buy_year_month {\n  background-color: #FFFFFF;\n  border: 1px solid #ACACAC;\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: 0 2px 1px #0000000D inset;\n  color: #222222;\n  display: inline-block;\n  font-family: 'Open Sans', sans-serif;\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 150px;\n}\n#my-func-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#my-func-block .btn-i {\n  padding: 10px;\n}\n#my-func-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n.estimated-prices-widget .widget-header {\n  cursor: default;\n}\n#estimated-prices {\n  max-height: 400px;\n  overflow-x: hidden;\n}\n#estimated-prices .list-link {\n  cursor: initial;\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #e9edf1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n}\n.widget .list-link .blue-13,\n#coin-list table .blue-13 {\n  font-size: 11px;\n  line-height: 19px;\n  letter-spacing: -1px;\n  white-space: nowrap;\n}\n#coin h1 {\n  color: #3B3B3B;\n}\n#coin .pricewj {\n  border: none;\n}\n#coin .pricewj span {\n  font-size: 15px;\n}\n#coin .tbl td,\n#coin .tbl th {\n  border: none;\n}\n#coin .coin-info th {\n  background-color: #EDF1F3;\n}\n#coin .coin-info tr + tr td {\n  border-top: 1px solid #EDF1F3;\n}\n#coin .coin-info tr + tr th {\n  border-top: 1px solid #FFF;\n}\n#coin .coin-info thead + tbody {\n  border-top: 1px solid #FFF;\n}\n#coin .coin-img td.i {\n  border: none;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-s,\n#coin #wish-form .btn-s {\n  margin: 0 0 0 5px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-swap-block #swap-block .btn--combine,\n#my-swap-block #swap-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-swap-block #swap-block .btn--combine.hide,\n#my-swap-block #swap-block .btn--expand.hide {\n  display: none;\n}\n#my-wish-block #wish-block a {\n  position: relative;\n}\n#my-wish-block #wish-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-wish-block #wish-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-wish-block #wish-block a .comments:active,\n#my-wish-block #wish-block a .comments:focus,\n#my-wish-block #wish-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block a:active .comments,\n#my-wish-block #wish-block a:focus .comments,\n#my-wish-block #wish-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-wish-block #wish-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 28px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-wish-block #wish-block .btn--combine,\n#my-wish-block #wish-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-wish-block #wish-block .btn--combine.hide,\n#my-wish-block #wish-block .btn--expand.hide {\n  display: none;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #FDD;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #FED;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n#swap-list .action-board,\n#swap-mgr .action-board,\n#swap-list .filter-container,\n#swap-mgr .filter-container {\n  margin: 15px 0 20px;\n  height: 30px;\n  width: auto;\n}\n#swap-list #sort-filter,\n#swap-mgr #sort-filter {\n  border-color: #3B7BEA;\n  width: 150px !important;\n  padding: 4px 12px 7px;\n}\n#swap-list #sort-filter .left,\n#swap-mgr #sort-filter .left {\n  max-width: 140px !important;\n}\n#swap-list #sort-filter-dialog,\n#swap-mgr #sort-filter-dialog {\n  width: 174px;\n  display: none;\n}\n#swap-mgr table.offer-list tr.str {\n  cursor: default;\n}\n#swap-list .pages {\n  padding-right: 0 !important;\n}\n#swap-list .filter-container {\n  margin: 0 !important;\n}\n#profile .price {\n  display: inline-block;\n}\n#profile .price .total {\n  float: right;\n  color: #666666;\n  font-size: 20px;\n  font-family: Arial, Helvetica, sans-serif;\n  font-weight: normal;\n  margin-top: 4px;\n  padding-top: 4px;\n  border-top: 1px solid #006600;\n}\n#profile .price .total .cur {\n  font-size: 16px;\n  padding-right: 6px;\n}\n#tree .tree-filter {\n  background-color: #FFFFFF;\n  border: 1px solid #ACACAC;\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: 0 2px 1px #0000000D inset;\n  color: #222222;\n  display: inline-block;\n  font-family: 'Open Sans', sans-serif;\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 100%;\n  margin-bottom: 3px;\n  font-size: 13px;\n}\n#tree #catalog-tree .country .hide,\n#tree #catalog-tree .period .hide {\n  display: none;\n}\n#coin .rnav {\n  position: relative;\n}\n#coin-chooser-dialog {\n  width: max-content;\n  min-width: 200px;\n  max-width: 640px;\n  max-height: 720px !important;\n  column-width: 200px;\n  column-gap: 20px;\n  right: 0;\n}\n#coin-chooser-dialog .list-link {\n  display: inline-block;\n  width: 176px;\n}\n", ""]);
 
 
 
@@ -1233,6 +1238,8 @@ const utils_1 = __webpack_require__(3);
 class CoinForm extends form_1.AbstractForm {
     constructor() {
         super(...arguments);
+        this.addFormId = 'add-coin-form';
+        this.editFormId = 'edit-coin-form';
         this.funcId = 'my-func-block';
         this.viewId = 'ucid-block';
         this.coinChooserId = 'coin-chooser-dialog';
@@ -1245,7 +1252,9 @@ class CoinForm extends form_1.AbstractForm {
     async update() {
         utils_1.show(this.func);
         this.updateButtons();
-        this.form = this.func.querySelector('form');
+        this.addForm = this.func.querySelector(`#${this.addFormId} form`);
+        this.editForm = this.func.querySelector(`#${this.editFormId} form`);
+        this.form = this.editForm || this.addForm;
         if (this.form) {
             this.view = this.func.querySelector(selectors_1.id(this.viewId));
             if (this.view) {
@@ -1257,11 +1266,13 @@ class CoinForm extends form_1.AbstractForm {
             await utils_1.handleFormSubmit(this.form, async () => {
                 return await this.updateFragment(await ajax_1.postFragment(location.href, new FormData(this.form)));
             });
-        }
-        for (const link of this.form.querySelectorAll('a[type=submit]')) {
-            await utils_1.handleLinkSubmit(link, async () => {
-                return await this.updateFragment(await ajax_1.getFragment(link.href));
-            });
+            if (this.view) {
+                for (const link of this.view.querySelectorAll('a[type=submit]')) {
+                    await utils_1.handleLinkSubmit(link, async () => {
+                        return await this.updateFragment(await ajax_1.getFragment(link.href));
+                    });
+                }
+            }
         }
     }
     updateBuyDateInput() {
@@ -1715,7 +1726,7 @@ const cond_1 = __webpack_require__(0);
 const list_form_1 = __webpack_require__(8);
 const selectors_1 = __webpack_require__(2);
 const swap_links_1 = __webpack_require__(5);
-const swap_form_list_1 = __webpack_require__(23);
+const swap_form_list_1 = __webpack_require__(24);
 // declare let CoinSwapFormOn: (usid: string, cond: string, price: string, info: string, vid: string, qty: string, replica: string, ...other: string[]) => void;
 // declare let CoinSwapFormOff: (...other: string[]) => void;
 class SwapForm extends list_form_1.ListForm {
@@ -1738,19 +1749,21 @@ class SwapForm extends list_form_1.ListForm {
         ]);
         this.swapListManager = new swap_form_list_1.SwapFormList(this);
     }
-    fillForm(uid, cond, price, info, vid, qty, replica) {
+    fillForm(uid = '', cond = '', price = '', info = '', vid = '', qty = '', replica = '') {
         super.fillForm(uid, cond || replica && '100', price, vid);
         this.form.comment.value = info;
         this.form.qty.value = qty || '1';
         this.form.comment.value = info;
     }
     updateList() {
-        this.listBlock = this.main.querySelector(selectors_1.id(this.listId));
-        this.swapListManager.update(this.listBlock);
-        for (const list of document.querySelectorAll(selectors_1.id(this.listId))) {
-            swap_links_1.styleListLinks(list);
+        this.listBlock = document.getElementById(this.listId);
+        if (this.listBlock) {
+            this.swapListManager.update(this.listBlock);
+            for (const list of document.querySelectorAll(selectors_1.id(this.listId))) {
+                swap_links_1.styleListLinks(list);
+            }
+            swap_links_1.addLinkComments();
         }
-        swap_links_1.addLinkComments();
     }
     async update() {
         super.update();
@@ -1801,6 +1814,32 @@ exports.SwapForm = SwapForm;
 
 /***/ }),
 /* 22 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1824,7 +1863,7 @@ exports.getCurrentVarietyId = getCurrentVarietyId;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1847,12 +1886,14 @@ class SwapFormList {
     update(listBlock) {
         this.listBlock = listBlock;
         this.form = listBlock.querySelector(selectors_1.id(this.listForm.formId));
-        this.buttonSet = listBlock.querySelector('center');
-        this.addButton('expand', 0, '&laquo;*&raquo;', this.onExpand);
-        this.addButton('expand', 5, '&laquo;5&raquo;', this.onExpand);
-        this.addButton('expand', 10, '&laquo;10&raquo;', this.onExpand);
-        this.addButton('combine', 0, '&raquo;&middot;&laquo;', this.onCombine);
-        this.updateButtons();
+        if (this.form) {
+            this.buttonSet = listBlock.querySelector('center');
+            this.addButton('expand', 0, '&laquo;*&raquo;', this.onExpand);
+            this.addButton('expand', 5, '&laquo;5&raquo;', this.onExpand);
+            this.addButton('expand', 10, '&laquo;10&raquo;', this.onExpand);
+            this.addButton('combine', 0, '&raquo;&middot;&laquo;', this.onCombine);
+            this.updateButtons();
+        }
     }
     addButton(role, qty, text, clickHandler) {
         const buttonId = `${role}-qty`;
@@ -2085,7 +2126,7 @@ exports.SwapFormList = SwapFormList;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2344,7 +2385,7 @@ exports.removeRowHrefFromSwapList = removeRowHrefFromSwapList;
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2368,7 +2409,7 @@ class WishForm extends list_form_1.ListForm {
             ['UN', [cond_1.Color.UNC, cond_1.WishValue.UNC]],
         ]);
     }
-    fillForm(uid, cond, price, tid, vid) {
+    fillForm(uid = '', cond = '', price = '', tid = '', vid = '') {
         super.fillForm(uid, cond, price, vid);
         if (this.form.is_type) {
             this.form.is_type.checked = true;
