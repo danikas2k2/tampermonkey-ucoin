@@ -9,7 +9,7 @@
     "scripts": {
         "build": "webpack",
         "watch": "webpack --watch",
-        "postversion": "npm run build && git add --all && git commit -m \"v${npm_package_version} (dist)\" && git pull && git push"
+        "postversion": "npm run build && git add --all && git commit -m \"${npm_package_version} (dist)\" && git pull && git push"
     },
     "repository": {
         "type": "git",
