@@ -89,14 +89,16 @@ export function showAllPrices() {
     const swapRows = document.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr');
     for (const tr of swapRows) {
         const td = tr.querySelector('.td-cond + *');
-        const myPrice = +td.querySelector('span.blue-13').textContent;
-        const prefix = td.querySelector('span.gray-11:first-child').textContent;
-        const suffix = td.querySelector('span.gray-11:last-child').textContent;
-        const tooltipPrice = tr.dataset.tooltipPrice;
-        if (tooltipPrice) {
-            const price = +tooltipPrice.replace(prefix, '').replace(suffix, '');
-            if (!isNaN(price) && myPrice !== price) {
-                td.insertAdjacentHTML('beforeend', `<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
+        if (td) {
+            const myPrice = +td.querySelector('span.blue-13')?.textContent;
+            const prefix = td.querySelector('span.gray-11:first-child')?.textContent;
+            const suffix = td.querySelector('span.gray-11:last-child')?.textContent;
+            const tooltipPrice = tr.dataset?.tooltipPrice;
+            if (tooltipPrice) {
+                const price = +tooltipPrice.replace(prefix, '').replace(suffix, '');
+                if (!isNaN(price) && myPrice !== price) {
+                    td.insertAdjacentHTML('beforeend', `<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
+                }
             }
         }
     }

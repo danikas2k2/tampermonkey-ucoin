@@ -1111,14 +1111,15 @@ async function handleSwapPage() {
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(12)(false);
 // Imports
-exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Open+Sans&display=swap);", ""]);
-exports.push([module.i, "@import url(https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css);", ""]);
-
+var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(12);
+exports = ___CSS_LOADER_API_IMPORT___(false);
+exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Open+Sans&display=swap);"]);
+exports.push([module.i, "@import url(https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css);"]);
 // Module
 exports.push([module.i, "body {\n  font-family: 'Open Sans', sans-serif;\n  font-size: 14px;\n}\n.widget {\n  font-size: inherit;\n}\n.widget-header {\n  background-color: #CCCCCC;\n  color: #333333;\n  font-weight: 300;\n  font-size: inherit;\n}\n.btn-l {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-l.hide {\n  display: none;\n}\n.btn-s {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-s.hide {\n  display: none;\n}\n.btn-red {\n  background-color: #CC0000;\n  border: 1px solid #00000022;\n}\n.btn-red,\n.btn-red:hover {\n  color: #F5F5F5;\n}\n#table a.cell {\n  position: relative;\n}\n#table a.cell.samekm {\n  z-index: 1;\n  background-color: #333333AA;\n  color: #CCCCCC;\n  box-shadow: none;\n  -webkit-box-shadow: none;\n}\n#table a.cell.samekm:hover {\n  background-color: #000000AA;\n  color: #FFFFFF;\n}\n.btn-set .btn-marker:hover {\n  filter: brightness(1.2);\n}\n#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#buy_year_month {\n  background-color: #FFFFFF;\n  border: 1px solid #ACACAC;\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: 0 2px 1px #0000000D inset;\n  color: #222222;\n  display: inline-block;\n  font-family: 'Open Sans', sans-serif;\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 150px;\n}\n#my-func-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#my-func-block .btn-i {\n  padding: 10px;\n}\n#my-func-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n.estimated-prices-widget .widget-header {\n  cursor: default;\n}\n#estimated-prices {\n  max-height: 400px;\n  overflow-x: hidden;\n}\n#estimated-prices .list-link {\n  cursor: initial;\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #e9edf1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n}\n.widget .list-link .blue-13,\n#coin-list table .blue-13 {\n  font-size: 11px;\n  line-height: 19px;\n  letter-spacing: -1px;\n  white-space: nowrap;\n}\n#coin h1 {\n  color: #3B3B3B;\n}\n#coin .pricewj {\n  border: none;\n}\n#coin .pricewj span {\n  font-size: 15px;\n}\n#coin .tbl td,\n#coin .tbl th {\n  border: none;\n}\n#coin .coin-info th {\n  background-color: #EDF1F3;\n}\n#coin .coin-info tr + tr td {\n  border-top: 1px solid #EDF1F3;\n}\n#coin .coin-info tr + tr th {\n  border-top: 1px solid #FFF;\n}\n#coin .coin-info thead + tbody {\n  border-top: 1px solid #FFF;\n}\n#coin .coin-img td.i {\n  border: none;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-s,\n#coin #wish-form .btn-s {\n  margin: 0 0 0 5px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-swap-block #swap-block .btn--combine,\n#my-swap-block #swap-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-swap-block #swap-block .btn--combine.hide,\n#my-swap-block #swap-block .btn--expand.hide {\n  display: none;\n}\n#my-wish-block #wish-block a {\n  position: relative;\n}\n#my-wish-block #wish-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-wish-block #wish-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-wish-block #wish-block a .comments:active,\n#my-wish-block #wish-block a .comments:focus,\n#my-wish-block #wish-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block a:active .comments,\n#my-wish-block #wish-block a:focus .comments,\n#my-wish-block #wish-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-wish-block #wish-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 28px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-wish-block #wish-block .btn--combine,\n#my-wish-block #wish-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-wish-block #wish-block .btn--combine.hide,\n#my-wish-block #wish-block .btn--expand.hide {\n  display: none;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #FDD;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #FED;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n#swap-list .action-board,\n#swap-mgr .action-board,\n#swap-list .filter-container,\n#swap-mgr .filter-container {\n  margin: 15px 0 20px;\n  height: 30px;\n  width: auto;\n}\n#swap-list #sort-filter,\n#swap-mgr #sort-filter {\n  border-color: #3B7BEA;\n  width: 150px !important;\n  padding: 4px 12px 7px;\n}\n#swap-list #sort-filter .left,\n#swap-mgr #sort-filter .left {\n  max-width: 140px !important;\n}\n#swap-list #sort-filter-dialog,\n#swap-mgr #sort-filter-dialog {\n  width: 174px;\n  display: none;\n}\n#swap-mgr table.offer-list tr.str {\n  cursor: default;\n}\n#swap-list .pages {\n  padding-right: 0 !important;\n}\n#swap-list .filter-container {\n  margin: 0 !important;\n}\n#profile .price {\n  display: inline-block;\n}\n#profile .price .total {\n  float: right;\n  color: #666666;\n  font-size: 20px;\n  font-family: Arial, Helvetica, sans-serif;\n  font-weight: normal;\n  margin-top: 4px;\n  padding-top: 4px;\n  border-top: 1px solid #006600;\n}\n#profile .price .total .cur {\n  font-size: 16px;\n  padding-right: 6px;\n}\n#tree .tree-filter {\n  background-color: #FFFFFF;\n  border: 1px solid #ACACAC;\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: 0 2px 1px #0000000D inset;\n  color: #222222;\n  display: inline-block;\n  font-family: 'Open Sans', sans-serif;\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 100%;\n  margin-bottom: 3px;\n  font-size: 13px;\n}\n#tree #catalog-tree .country .hide,\n#tree #catalog-tree .period .hide {\n  display: none;\n}\n#coin .rnav {\n  position: relative;\n}\n#coin-chooser-dialog {\n  width: max-content;\n  min-width: 200px;\n  max-width: 640px;\n  max-height: 720px !important;\n  column-width: 200px;\n  column-gap: 20px;\n  right: 0;\n}\n#coin-chooser-dialog .list-link {\n  display: inline-block;\n  width: 176px;\n}\n", ""]);
-
+// Exports
+module.exports = exports;
 
 
 /***/ }),
@@ -1133,6 +1134,7 @@ exports.push([module.i, "body {\n  font-family: 'Open Sans', sans-serif;\n  font
   Author Tobias Koppers @sokra
 */
 // css base code, injected by the css-loader
+// eslint-disable-next-line func-names
 module.exports = function (useSourceMap) {
   var list = []; // return the list of modules as css string
 
@@ -1141,44 +1143,51 @@ module.exports = function (useSourceMap) {
       var content = cssWithMappingToString(item, useSourceMap);
 
       if (item[2]) {
-        return '@media ' + item[2] + '{' + content + '}';
-      } else {
-        return content;
+        return "@media ".concat(item[2], " {").concat(content, "}");
       }
+
+      return content;
     }).join('');
   }; // import a list of modules into the list
+  // eslint-disable-next-line func-names
 
 
-  list.i = function (modules, mediaQuery) {
+  list.i = function (modules, mediaQuery, dedupe) {
     if (typeof modules === 'string') {
+      // eslint-disable-next-line no-param-reassign
       modules = [[null, modules, '']];
     }
 
     var alreadyImportedModules = {};
 
-    for (var i = 0; i < this.length; i++) {
-      var id = this[i][0];
+    if (dedupe) {
+      for (var i = 0; i < this.length; i++) {
+        // eslint-disable-next-line prefer-destructuring
+        var id = this[i][0];
 
-      if (id != null) {
-        alreadyImportedModules[id] = true;
+        if (id != null) {
+          alreadyImportedModules[id] = true;
+        }
       }
     }
 
-    for (i = 0; i < modules.length; i++) {
-      var item = modules[i]; // skip already imported module
-      // this implementation is not 100% perfect for weird media query combinations
-      // when a module is imported multiple times with different media queries.
-      // I hope this will never occur (Hey this way we have smaller bundles)
+    for (var _i = 0; _i < modules.length; _i++) {
+      var item = [].concat(modules[_i]);
 
-      if (item[0] == null || !alreadyImportedModules[item[0]]) {
-        if (mediaQuery && !item[2]) {
-          item[2] = mediaQuery;
-        } else if (mediaQuery) {
-          item[2] = '(' + item[2] + ') and (' + mediaQuery + ')';
-        }
-
-        list.push(item);
+      if (dedupe && alreadyImportedModules[item[0]]) {
+        // eslint-disable-next-line no-continue
+        continue;
       }
+
+      if (mediaQuery) {
+        if (!item[2]) {
+          item[2] = mediaQuery;
+        } else {
+          item[2] = "".concat(mediaQuery, " and ").concat(item[2]);
+        }
+      }
+
+      list.push(item);
     }
   };
 
@@ -1186,7 +1195,8 @@ module.exports = function (useSourceMap) {
 };
 
 function cssWithMappingToString(item, useSourceMap) {
-  var content = item[1] || '';
+  var content = item[1] || ''; // eslint-disable-next-line prefer-destructuring
+
   var cssMapping = item[3];
 
   if (!cssMapping) {
@@ -1196,7 +1206,7 @@ function cssWithMappingToString(item, useSourceMap) {
   if (useSourceMap && typeof btoa === 'function') {
     var sourceMapping = toComment(cssMapping);
     var sourceURLs = cssMapping.sources.map(function (source) {
-      return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */';
+      return "/*# sourceURL=".concat(cssMapping.sourceRoot || '').concat(source, " */");
     });
     return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
   }
@@ -1208,8 +1218,8 @@ function cssWithMappingToString(item, useSourceMap) {
 function toComment(sourceMap) {
   // eslint-disable-next-line no-undef
   var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-  var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-  return '/*# ' + data + ' */';
+  var data = "sourceMappingURL=data:application/json;charset=utf-8;base64,".concat(base64);
+  return "/*# ".concat(data, " */");
 }
 
 /***/ }),
@@ -2209,17 +2219,20 @@ function duplicatePagination() {
 }
 exports.duplicatePagination = duplicatePagination;
 function showAllPrices() {
+    var _a, _b, _c, _d;
     const swapRows = document.querySelectorAll('table.swap-coin tr');
     for (const tr of swapRows) {
         const td = tr.querySelector('.td-cond + *');
-        const myPrice = +td.querySelector('span.blue-13').textContent;
-        const prefix = td.querySelector('span.gray-11:first-child').textContent;
-        const suffix = td.querySelector('span.gray-11:last-child').textContent;
-        const tooltipPrice = tr.dataset.tooltipPrice;
-        if (tooltipPrice) {
-            const price = +tooltipPrice.replace(prefix, '').replace(suffix, '');
-            if (!isNaN(price) && myPrice !== price) {
-                td.insertAdjacentHTML('beforeend', `<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
+        if (td) {
+            const myPrice = +((_a = td.querySelector('span.blue-13')) === null || _a === void 0 ? void 0 : _a.textContent);
+            const prefix = (_b = td.querySelector('span.gray-11:first-child')) === null || _b === void 0 ? void 0 : _b.textContent;
+            const suffix = (_c = td.querySelector('span.gray-11:last-child')) === null || _c === void 0 ? void 0 : _c.textContent;
+            const tooltipPrice = (_d = tr.dataset) === null || _d === void 0 ? void 0 : _d.tooltipPrice;
+            if (tooltipPrice) {
+                const price = +tooltipPrice.replace(prefix, '').replace(suffix, '');
+                if (!isNaN(price) && myPrice !== price) {
+                    td.insertAdjacentHTML('beforeend', `<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
+                }
             }
         }
     }
