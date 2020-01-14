@@ -4,8 +4,8 @@
         "es6": true
     },
     "extends": [
-        "node",
         "eslint:recommended",
+        "node",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended"
     ],
@@ -36,16 +36,21 @@
         }
     },
     "rules": {
+        "@typescript-eslint/explicit-function-return-type": {"allowExpressions": true},
+        "@typescript-eslint/no-angle-bracket-type-assertion": "off",
+        "@typescript-eslint/no-unused-expressions": "error",
+        "@typescript-eslint/no-unused-vars": "error",
         "comma-dangle": ["error", "only-multiline"],
         "import/no-nodejs-modules": "off",
         "import/no-unresolved": ["error", {"commonjs": true, "caseSensitive": true}],
         "import/prefer-default-export": "off",
         "indent": ["error", 4, { "SwitchCase": 1 }],
         "no-console": "error",
+        "no-unused-expressions": "error",
+        "no-unused-labels": "error",
+        "no-unused-vars": "error",
         "no-useless-rename": "error",
         "padded-blocks": ["error", "never"],
-        "semi": ["error", "always"],
-        "@typescript-eslint/explicit-function-return-type": {"allowExpressions": true},
-        "@typescript-eslint/no-angle-bracket-type-assertion": "off"
+        "semi": ["error", "always"]
     }
 }
