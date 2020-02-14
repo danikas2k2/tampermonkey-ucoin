@@ -224,20 +224,16 @@ exports.ColorStyle = new Map([
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-async function ajax(url, method = 'GET', body) {
-    return await fetch(url, { method, body });
-}
-exports.ajax = ajax;
 async function get(url, body) {
-    return await ajax(url, 'GET', body);
+    return await fetch(url, { method: 'GET', body });
 }
 exports.get = get;
 async function post(url, body) {
-    return await ajax(url, 'POST', body);
+    return await fetch(url, { method: 'POST', body });
 }
 exports.post = post;
 async function responseOrError(url, method = 'GET', body) {
-    const response = await ajax(url, method, body);
+    const response = await fetch(url, { method, body });
     if (!response.ok) {
         throw new Error(`${response.status}: ${response.statusText}`);
     }
@@ -435,7 +431,7 @@ async function delay(time) {
 exports.delay = delay;
 async function randomDelay(rndDelay = 1000, minDelay = 500) {
     const time = Math.round(minDelay + Math.random() * rndDelay);
-    console.debug(`DELAY FOR ${time} MS`);
+    // console.debug(`DELAY FOR ${time} MS`);
     return await delay(time);
 }
 exports.randomDelay = randomDelay;
@@ -736,30 +732,6 @@ class ListForm extends form_1.AbstractForm {
     constructor() {
         super(...arguments);
         this.funcId = 'my-coin-func-block';
-        this.formOnHandler = (uid, ...other) => {
-            utils_1.hide(this.listBlock);
-            utils_1.show(this.form, this.formClose);
-            utils_1.disable(this.func);
-            this.widgetHeader.removeEventListener('click', this.widgetHeaderRedirectHandler);
-            this.widgetHeader.addEventListener('click', this.widgetHeaderCloseHandler);
-            this.fillForm(uid, ...other);
-            utils_1.show(this.cancelButton);
-            utils_1.toggle(!uid, this.addButton);
-            utils_1.toggle(uid, this.editButton, this.deleteButton);
-            this.deleteButton.href = `?action=del${this.formType}coin&${this.formUid}=${uid}`;
-            this.form.action.value = uid ? `edit${this.formType}coin` : `add${this.formType}coin`;
-        };
-        this.formOffHandler = () => {
-            utils_1.hide(this.form, this.formClose);
-            utils_1.show(this.listBlock);
-            utils_1.enable(this.func);
-            this.widgetHeader.removeEventListener('click', this.widgetHeaderCloseHandler);
-            this.widgetHeader.addEventListener('click', this.widgetHeaderRedirectHandler);
-        };
-        this.widgetHeaderCloseHandler = (e) => {
-            utils_1.cancel(e);
-            this.formOffHandler();
-        };
     }
     get headerId() {
         return `widget-${this.formType}-header`;
@@ -810,6 +782,38 @@ class ListForm extends form_1.AbstractForm {
         if (this.form[this.formVariety]) {
             this.form[this.formVariety].value = vid || vid_1.getCurrentVarietyId();
         }
+        this.form.action.value = uid ? `edit${this.formType}coin` : `add${this.formType}coin`;
+    }
+    formOnHandler(uid, ...other) {
+        this.formClickTimeout = setTimeout(() => {
+            utils_1.hide(this.listBlock);
+            utils_1.show(this.form, this.formClose);
+            utils_1.disable(this.func);
+            this.widgetHeader.removeEventListener('click', e => this.widgetHeaderRedirectHandler(e));
+            this.widgetHeader.addEventListener('click', e => this.widgetHeaderCloseHandler(e));
+            this.fillForm(uid, ...other);
+            utils_1.show(this.cancelButton);
+            utils_1.toggle(!uid, this.addButton);
+            utils_1.toggle(uid, this.editButton, this.deleteButton);
+            this.deleteButton.href = `?action=del${this.formType}coin&${this.formUid}=${uid}`;
+            (uid ? this.editButton : this.addButton).focus();
+        }, 300);
+    }
+    formOnHandlerSubmit(uid, ...other) {
+        clearTimeout(this.formClickTimeout);
+        this.fillForm(uid, ...other);
+        this.form.submit();
+    }
+    formOffHandler() {
+        utils_1.hide(this.form, this.formClose);
+        utils_1.show(this.listBlock);
+        utils_1.enable(this.func);
+        this.widgetHeader.removeEventListener('click', e => this.widgetHeaderCloseHandler(e));
+        this.widgetHeader.addEventListener('click', e => this.widgetHeaderRedirectHandler(e));
+    }
+    widgetHeaderCloseHandler(e) {
+        utils_1.cancel(e);
+        this.formOffHandler();
     }
     updateList() {
         this.listBlock = document.getElementById(this.listId);
@@ -824,10 +828,12 @@ class ListForm extends form_1.AbstractForm {
         }
     }
     updateFormHandlers() {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
-        global[this.formOnFunctionName] = this.formOnHandler;
+        global[this.formOnFunctionName] = (...args) => this.formOnHandler(...args);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
-        global[this.formOffFunctionName] = this.formOffHandler;
+        global[this.formOffFunctionName] = (...args) => this.formOffHandler(...args);
     }
     async update() {
         if (this.main) {
@@ -853,7 +859,9 @@ class ListForm extends form_1.AbstractForm {
             const markerId = `${this.formType}-marker-${value}`;
             const markerClass = `btn-marker marked-${color}`;
             buttonSet.insertAdjacentHTML('beforeend', `<div id="${markerId}" class="${markerClass}">${text}</div>`);
-            buttonSet.querySelector(selectors_1.id(markerId)).addEventListener('click', () => this.formOnHandler('', `${value}`));
+            const marker = buttonSet.querySelector(selectors_1.id(markerId));
+            marker.addEventListener('click', () => this.formOnHandler('', `${value}`));
+            marker.addEventListener('dblclick', () => this.formOnHandlerSubmit('', `${value}`));
         };
         for (const [text, [color, value]] of this.buttonSetButtons) {
             addColorButton(text, color, value);
@@ -892,13 +900,9 @@ class ListForm extends form_1.AbstractForm {
         this.func = this.main.querySelector(selectors_1.id(this.funcId));
         this.form = this.main.querySelector(selectors_1.id(this.formId));
         this.formClose = this.main.querySelector(selectors_1.id(this.formCloseId));
-        await utils_1.handleFormSubmit(this.form, async () => {
-            return await this.updateFragment(await ajax_1.postFragment(location.href, new FormData(this.form)));
-        });
+        await utils_1.handleFormSubmit(this.form, async () => await this.updateFragment(await ajax_1.postFragment(location.href, new FormData(this.form))));
         for (const link of this.form.querySelectorAll('a[type=submit]')) {
-            await utils_1.handleLinkSubmit(link, async () => {
-                return await this.updateFragment(await ajax_1.getFragment(link.href));
-            });
+            await utils_1.handleLinkSubmit(link, async () => await this.updateFragment(await ajax_1.getFragment(link.href)));
         }
         this.updateFormButtons();
         this.updateCondition();
@@ -955,6 +959,7 @@ exports.UID = (() => {
 // @downloadURL  https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js
 // @updateURL    https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js
 // @match        https://*.ucoin.net/*
 // @run-at       document-end
 // ==/UserScript==
@@ -962,6 +967,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 const ucoin_less_1 = __importDefault(__webpack_require__(11));
 const coin_form_1 = __webpack_require__(13);
@@ -974,16 +980,36 @@ const swap_list_sort_1 = __webpack_require__(7);
 const uid_1 = __webpack_require__(9);
 const wish_form_1 = __webpack_require__(26);
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${ucoin_less_1.default}</style>`);
-async function handleHomePage(loc) {
+async function handleHomePage() {
     const profile = document.getElementById('profile');
-    const curPrice = profile.querySelector('div.worth-cur-value span');
-    const colPrice = +curPrice.textContent.replace(/[^\d.]/g, '');
-    const swapPrice = +profile.querySelector(`a[href="/swap-list/?uid=${uid_1.UID}"] span.right`).textContent.replace(/[^\d.]/g, '');
-    const price = colPrice + swapPrice;
-    curPrice.classList.add('price');
-    curPrice.insertAdjacentHTML('beforeend', `<br/><small class="total"><abbr class="cur">€</abbr> ${new Intl.NumberFormat('en').format(price)}</small>`);
+    if (profile) {
+        const curPriceElement = profile.querySelector('div.worth-cur-value span');
+        if (curPriceElement) {
+            const colPrice = +curPriceElement.textContent.replace(/[^\d.]/g, '');
+            const swapPriceElement = profile.querySelector(`a[href="/swap-list/?uid=${uid_1.UID}"] span.right`);
+            if (swapPriceElement) {
+                const swapPrice = +swapPriceElement.textContent.replace(/[^\d.]/g, '');
+                const price = colPrice + swapPrice;
+                curPriceElement.classList.add('price');
+                curPriceElement.insertAdjacentHTML('beforeend', `<br/><small class="total"><abbr class="cur">€</abbr> ${new Intl.NumberFormat('en').format(price)}</small>`);
+            }
+        }
+    }
 }
-async function handleCoinPage(loc) {
+async function handleProfile() {
+    const converter = new showdown.Converter();
+    const profile = document.getElementById('profile');
+    if (profile) {
+        const paragraphs = profile.querySelectorAll('p.dgray-13');
+        for (const p of paragraphs) {
+            p.innerHTML = converter.makeHtml(p.innerHTML
+                .replace(/<br\s*\/?>/gi, '\n')
+                .replace(/([\w.-]+@[\w.-]+)/gi, '<$1>')
+                .replace(/&gt;/gi, '>'));
+        }
+    }
+}
+async function handleCoinPage() {
     const tags = document.getElementById('tags');
     if (tags) {
         // fixTagLinks
@@ -995,6 +1021,7 @@ async function handleCoinPage(loc) {
     await new coin_form_1.CoinForm().handle();
     await new swap_form_1.SwapForm().handle();
     await prices_1.estimateSwapPrices();
+    await prices_1.estimateWeightPrice();
     await new wish_form_1.WishForm().handle();
 }
 async function handleGalleryPage() {
@@ -1015,6 +1042,37 @@ async function handleGalleryPage() {
         }
     }
     gallery_1.addGalleryVisibilityToggle();
+}
+async function handleTablePage() {
+    const sortFilter = document.getElementById('sort-filter');
+    if (sortFilter) {
+        const sortFilterDialog = document.getElementById('sort-filter-dialog');
+        const url = new URL(location.href);
+        const sp = url.searchParams;
+        sp.set('order', 'ka');
+        sortFilterDialog.insertAdjacentHTML('beforeend', `<a class="list-link" href="${url.href}"><div class="left gray-13">Krause</div><div class="right"><span class="arrow at"></span></div></a>`);
+        sp.set('order', 'kd');
+        sortFilterDialog.insertAdjacentHTML('beforeend', `<a class="list-link" href="${url.href}"><div class="left gray-13">Krause</div><div class="right"><span class="arrow ab"></span></div></a>`);
+        for (const a of sortFilterDialog.querySelectorAll('a.list-link')) {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // console.log(a.href);
+            });
+        }
+    }
+}
+async function handleMessagePage() {
+    var _a, _b;
+    const userList = document.getElementById('user-list');
+    for (const user of (_a = userList) === null || _a === void 0 ? void 0 : _a.querySelectorAll('table.user tr[onclick]')) {
+        const a = user.querySelector('td.user-container a');
+        const m = (_b = user.attributes.getNamedItem('onclick')) === null || _b === void 0 ? void 0 : _b.value.match(/href\s*=\s*'(.*?)'/);
+        if (m) {
+            a.href = m[1];
+            a.onclick = e => e.stopPropagation();
+        }
+    }
 }
 async function handleSwapPage() {
     swap_list_1.addTrackingLinks();
@@ -1044,17 +1102,26 @@ async function handleSwapPage() {
 }
 (async function () {
     const loc = document.location.href;
-    if (loc.includes(`/uid${uid_1.UID}`)) {
-        await handleHomePage(loc);
+    if (loc.includes(`/uid`)) {
+        if (loc.includes(`/uid${uid_1.UID}`)) {
+            await handleHomePage();
+        }
+        await handleProfile();
     }
     if (loc.includes('/coin')) {
-        await handleCoinPage(loc);
+        await handleCoinPage();
     }
     if (loc.includes('/gallery') && loc.includes(`uid=${uid_1.UID}`)) {
         await handleGalleryPage();
     }
     if (loc.includes('/swap-')) {
         await handleSwapPage();
+    }
+    if (loc.includes('/table/')) {
+        await handleTablePage();
+    }
+    if (loc.includes('/messages/')) {
+        await handleMessagePage();
     }
     const tree = document.getElementById('tree');
     if (tree) {
@@ -1066,7 +1133,7 @@ async function handleSwapPage() {
         const searchInputId = 'search-input-id';
         tree.insertAdjacentHTML('afterbegin', `<input id="${searchInputId}" class="tree-filter" placeholder="Search"/>`);
         const searchInput = document.getElementById(searchInputId);
-        searchInput.addEventListener('input', (e) => {
+        searchInput.addEventListener('input', () => {
             const pattern = new RegExp([...searchInput.value].join('.*?'), 'i');
             for (const a of tree.querySelectorAll('a.country-name')) {
                 const country = a.closest('div.country');
@@ -1114,7 +1181,7 @@ async function handleSwapPage() {
 // Imports
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(12);
 exports = ___CSS_LOADER_API_IMPORT___(false);
-exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Open+Sans&display=swap);"]);
+exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap);"]);
 exports.push([module.i, "@import url(https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css);"]);
 // Module
 exports.push([module.i, "body {\n  font-family: 'Open Sans', sans-serif;\n  font-size: 14px;\n}\n.widget {\n  font-size: inherit;\n}\n.widget-header {\n  background-color: #CCCCCC;\n  color: #333333;\n  font-weight: 300;\n  font-size: inherit;\n}\n.btn-l {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-l.hide {\n  display: none;\n}\n.btn-s {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-s.hide {\n  display: none;\n}\n.btn-red {\n  background-color: #CC0000;\n  border: 1px solid #00000022;\n}\n.btn-red,\n.btn-red:hover {\n  color: #F5F5F5;\n}\n#table a.cell {\n  position: relative;\n}\n#table a.cell.samekm {\n  z-index: 1;\n  background-color: #333333AA;\n  color: #CCCCCC;\n  box-shadow: none;\n  -webkit-box-shadow: none;\n}\n#table a.cell.samekm:hover {\n  background-color: #000000AA;\n  color: #FFFFFF;\n}\n.btn-set .btn-marker:hover {\n  filter: brightness(1.2);\n}\n#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#buy_year_month {\n  background-color: #FFFFFF;\n  border: 1px solid #ACACAC;\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: 0 2px 1px #0000000D inset;\n  color: #222222;\n  display: inline-block;\n  font-family: 'Open Sans', sans-serif;\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 150px;\n}\n#my-func-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#my-func-block .btn-i {\n  padding: 10px;\n}\n#my-func-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n.estimated-prices-widget .widget-header {\n  cursor: default;\n}\n#estimated-prices {\n  max-height: 400px;\n  overflow-x: hidden;\n}\n#estimated-prices .list-link {\n  cursor: initial;\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #e9edf1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n}\n.widget .list-link .blue-13,\n#coin-list table .blue-13 {\n  font-size: 11px;\n  line-height: 19px;\n  letter-spacing: -1px;\n  white-space: nowrap;\n}\n#coin h1 {\n  color: #3B3B3B;\n}\n#coin .pricewj {\n  border: none;\n}\n#coin .pricewj span {\n  font-size: 15px;\n}\n#coin .tbl td,\n#coin .tbl th {\n  border: none;\n}\n#coin .coin-info th {\n  background-color: #EDF1F3;\n}\n#coin .coin-info tr + tr td {\n  border-top: 1px solid #EDF1F3;\n}\n#coin .coin-info tr + tr th {\n  border-top: 1px solid #FFF;\n}\n#coin .coin-info thead + tbody {\n  border-top: 1px solid #FFF;\n}\n#coin .coin-img td.i {\n  border: none;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-s,\n#coin #wish-form .btn-s {\n  margin: 0 0 0 5px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-swap-block #swap-block .btn--combine,\n#my-swap-block #swap-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-swap-block #swap-block .btn--combine.hide,\n#my-swap-block #swap-block .btn--expand.hide {\n  display: none;\n}\n#my-wish-block #wish-block a {\n  position: relative;\n}\n#my-wish-block #wish-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-wish-block #wish-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-wish-block #wish-block a .comments:active,\n#my-wish-block #wish-block a .comments:focus,\n#my-wish-block #wish-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block a:active .comments,\n#my-wish-block #wish-block a:focus .comments,\n#my-wish-block #wish-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-wish-block #wish-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 28px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-wish-block #wish-block .btn--combine,\n#my-wish-block #wish-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-wish-block #wish-block .btn--combine.hide,\n#my-wish-block #wish-block .btn--expand.hide {\n  display: none;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #FDD;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #FED;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n#swap-list .action-board,\n#swap-mgr .action-board,\n#swap-list .filter-container,\n#swap-mgr .filter-container {\n  margin: 15px 0 20px;\n  height: 30px;\n  width: auto;\n}\n#swap-list #sort-filter,\n#swap-mgr #sort-filter {\n  border-color: #3B7BEA;\n  width: 150px !important;\n  padding: 4px 12px 7px;\n}\n#swap-list #sort-filter .left,\n#swap-mgr #sort-filter .left {\n  max-width: 140px !important;\n}\n#swap-list #sort-filter-dialog,\n#swap-mgr #sort-filter-dialog {\n  width: 174px;\n  display: none;\n}\n#swap-mgr table.offer-list tr.str {\n  cursor: default;\n}\n#swap-list .pages {\n  padding-right: 0 !important;\n}\n#swap-list .filter-container {\n  margin: 0 !important;\n}\n#profile .price {\n  display: inline-block;\n}\n#profile .price .total {\n  float: right;\n  color: #666666;\n  font-size: 20px;\n  font-family: Arial, Helvetica, sans-serif;\n  font-weight: normal;\n  margin-top: 4px;\n  padding-top: 4px;\n  border-top: 1px solid #006600;\n}\n#profile .price .total .cur {\n  font-size: 16px;\n  padding-right: 6px;\n}\n#tree .tree-filter {\n  background-color: #FFFFFF;\n  border: 1px solid #ACACAC;\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: 0 2px 1px #0000000D inset;\n  color: #222222;\n  display: inline-block;\n  font-family: 'Open Sans', sans-serif;\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 100%;\n  margin-bottom: 3px;\n  font-size: 13px;\n}\n#tree #catalog-tree .country .hide,\n#tree #catalog-tree .period .hide {\n  display: none;\n}\n#coin .rnav {\n  position: relative;\n}\n#coin-chooser-dialog {\n  width: max-content;\n  min-width: 200px;\n  max-width: 640px;\n  max-height: 720px !important;\n  column-width: 200px;\n  column-gap: 20px;\n  right: 0;\n}\n#coin-chooser-dialog .list-link {\n  display: inline-block;\n  width: 176px;\n}\n", ""]);
@@ -1232,12 +1299,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 const hide_svg_1 = __importDefault(__webpack_require__(14));
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 const leave_svg_1 = __importDefault(__webpack_require__(15));
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 const replace_svg_1 = __importDefault(__webpack_require__(16));
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 const show_svg_1 = __importDefault(__webpack_require__(17));
 const ajax_1 = __webpack_require__(1);
@@ -1273,14 +1344,10 @@ class CoinForm extends form_1.AbstractForm {
             }
             this.updateBuyDateInput();
             this.addSyncConditionToColorTable();
-            await utils_1.handleFormSubmit(this.form, async () => {
-                return await this.updateFragment(await ajax_1.postFragment(location.href, new FormData(this.form)));
-            });
+            await utils_1.handleFormSubmit(this.form, async () => await this.updateFragment(await ajax_1.postFragment(location.href, new FormData(this.form))));
             if (this.view) {
                 for (const link of this.view.querySelectorAll('a[type=submit]')) {
-                    await utils_1.handleLinkSubmit(link, async () => {
-                        return await this.updateFragment(await ajax_1.getFragment(link.href));
-                    });
+                    await utils_1.handleLinkSubmit(link, async () => await this.updateFragment(await ajax_1.getFragment(link.href)));
                 }
             }
         }
@@ -1611,9 +1678,20 @@ exports.updateOnClickHref = updateOnClickHref;
 Object.defineProperty(exports, "__esModule", { value: true });
 const cond_1 = __webpack_require__(0);
 const swap_list_sort_1 = __webpack_require__(7);
+const COIN_ID = 'coin';
 const SWAP_ID = 'swap';
 const SWAP_BLOCK_ID = 'swap-block';
 const ESTIMATED_PRICES_ID = 'estimated-prices';
+const RX_GRAMMS = /\([gг]/;
+const RX_COUNTRY = /Country|Страна|Valstybė/;
+const RX_RUSSIA = /Russia|Россия|Rusija|USSR|СССР|TSRS/;
+const RX_COMPOSITION = /Composition|Материал|Sudėtis/;
+const RX_SILVER = /Silver|Серебро|Sidabras/;
+const RX_GOLD = /Gold|Золото|Auksas/;
+const RU_PRICE = 0.0055; //       3-8e/kg
+const EU_PRICE = 0.0125; //     10-15e/kg
+const AG_PRICE = 0.5237; //   .47-.53e/g
+const AU_PRICE = 46.722; // 45.5-46.2e/g
 function sortByCondition(a, b) {
     return cond_1.ConditionValues.get(b) - cond_1.ConditionValues.get(a);
 }
@@ -1657,6 +1735,7 @@ function estimateSwapPrices() {
     const estimatedPrices = document.getElementById(ESTIMATED_PRICES_ID);
     function addPricesByType(byType, mint = '') {
         const keys = [...byType.keys()].sort(sortByCondition);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
         const options = {
             type: 'line',
@@ -1707,7 +1786,9 @@ function estimateSwapPrices() {
         const id = `${ESTIMATED_PRICES_ID}-${mint.trim()}`;
         estimatedPrices.insertAdjacentHTML('beforeend', `<canvas id="${id}" width="239" height="119"/>`);
         const ctx = document.getElementById(id).getContext('2d');
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
+        // eslint-disable-next-line
         new Chart(ctx, options);
     }
     if (byMint.size > 1) {
@@ -1723,6 +1804,90 @@ function estimateSwapPrices() {
     }
 }
 exports.estimateSwapPrices = estimateSwapPrices;
+function estimateWeightPrice() {
+    var _a, _b, _c;
+    const coinBlock = document.getElementById(COIN_ID);
+    const aPrice = (_a = coinBlock) === null || _a === void 0 ? void 0 : _a.querySelector('.right.pricewj');
+    const head = (_b = coinBlock) === null || _b === void 0 ? void 0 : _b.querySelector('h1');
+    const trs = (_c = coinBlock) === null || _c === void 0 ? void 0 : _c.querySelectorAll('.coin-info tr');
+    let weight = NaN;
+    let isRussia = false;
+    let isSilver = false;
+    let isGold = false;
+    let part = 1;
+    for (const tr of trs) {
+        const th = tr.querySelector('th');
+        const head = th && th.textContent || '';
+        const td = tr.querySelector('td');
+        if (td) {
+            const data = `${td.textContent}`;
+            if (head.match(RX_GRAMMS)) {
+                weight = +data;
+            }
+            else if (head.match(RX_COUNTRY)) {
+                isRussia = !!data.match(RX_RUSSIA);
+            }
+            else if (head.match(RX_COMPOSITION)) {
+                isSilver = !!data.match(RX_SILVER);
+                isGold = !!data.match(RX_GOLD);
+                if (isSilver || isGold) {
+                    part = +data.split(' ').pop();
+                }
+            }
+        }
+    }
+    let price;
+    let priceSource;
+    if (isGold) {
+        price = weight * (part || 1) * AU_PRICE;
+        priceSource = 'au';
+    }
+    else if (isSilver) {
+        price = weight * (part || 1) * AG_PRICE;
+        priceSource = 'ag';
+    }
+    else if (isRussia) {
+        price = weight * RU_PRICE;
+        priceSource = 'ru';
+    }
+    else {
+        price = weight * EU_PRICE;
+        priceSource = '--';
+    }
+    const weightPrice = `<br/><price class="right" title="${priceSource}: ${price.toFixed(5)}">€ ${price.toFixed(2)}</price>`;
+    if (!aPrice) {
+        let isAproximate = false;
+        const prices = [];
+        const all = coinBlock.querySelectorAll('#coin-list td.blue-13');
+        for (const td of all) {
+            const clone = td.cloneNode(true);
+            for (const child of clone.childNodes) {
+                child.remove();
+            }
+            const { textContent } = clone;
+            if (textContent) {
+                prices.push(+textContent);
+            }
+            else {
+                isAproximate = true;
+            }
+        }
+        const min = Math.min(...prices);
+        const max = Math.max(...prices);
+        const showPrices = [min.toFixed(2)];
+        if (max > min) {
+            showPrices.push(max.toFixed(2));
+        }
+        else if (isAproximate) {
+            showPrices.unshift('');
+        }
+        head.insertAdjacentHTML('beforebegin', `<a href="#price" class="gray-12 right pricewj">Value:&nbsp;€ <span>${showPrices.join(isAproximate ? '~' : '-')}</span>${weightPrice}</a>`);
+    }
+    else {
+        aPrice.insertAdjacentHTML('beforeend', weightPrice);
+    }
+}
+exports.estimateWeightPrice = estimateWeightPrice;
 
 
 /***/ }),
@@ -1735,8 +1900,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cond_1 = __webpack_require__(0);
 const list_form_1 = __webpack_require__(8);
 const selectors_1 = __webpack_require__(2);
-const swap_links_1 = __webpack_require__(5);
 const swap_form_list_1 = __webpack_require__(24);
+const swap_links_1 = __webpack_require__(5);
 // declare let CoinSwapFormOn: (usid: string, cond: string, price: string, info: string, vid: string, qty: string, replica: string, ...other: string[]) => void;
 // declare let CoinSwapFormOff: (...other: string[]) => void;
 class SwapForm extends list_form_1.ListForm {
@@ -1757,6 +1922,7 @@ class SwapForm extends list_form_1.ListForm {
             ['PR', [cond_1.Color.PROOF, cond_1.SwapValue.PROOF]],
             ['CP', [cond_1.Color.COPY, cond_1.SwapValue.COPY]],
         ]);
+        // eslint-disable-next-line no-invalid-this
         this.swapListManager = new swap_form_list_1.SwapFormList(this);
     }
     fillForm(uid = '', cond = '', price = '', info = '', vid = '', qty = '', replica = '') {
@@ -1787,6 +1953,7 @@ class SwapForm extends list_form_1.ListForm {
         }*/
         /// }}}
     }
+    // eslint-disable-next-line class-methods-use-this
     getConditionOption(o) {
         const { value, textContent } = o;
         return {
@@ -1878,7 +2045,6 @@ exports.getCurrentVarietyId = getCurrentVarietyId;
 
 "use strict";
 
-/* eslint-disable no-console */
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajax_1 = __webpack_require__(1);
 const delay_1 = __webpack_require__(4);
@@ -1886,6 +2052,7 @@ const selectors_1 = __webpack_require__(2);
 const swap_links_1 = __webpack_require__(5);
 const uid_1 = __webpack_require__(9);
 const utils_1 = __webpack_require__(3);
+const { debug } = console;
 class SwapFormList {
     constructor(listForm) {
         this.variants = new Map();
@@ -1896,12 +2063,12 @@ class SwapFormList {
     update(listBlock) {
         this.listBlock = listBlock;
         this.form = listBlock.querySelector(selectors_1.id(this.listForm.formId));
-        if (this.form) {
-            this.buttonSet = listBlock.querySelector('center');
-            this.addButton('expand', 0, '&laquo;*&raquo;', this.onExpand);
-            this.addButton('expand', 5, '&laquo;5&raquo;', this.onExpand);
-            this.addButton('expand', 10, '&laquo;10&raquo;', this.onExpand);
-            this.addButton('combine', 0, '&raquo;&middot;&laquo;', this.onCombine);
+        this.buttonSet = listBlock.querySelector('center');
+        if (this.buttonSet) {
+            this.addButton('expand', 0, '&laquo;*&raquo;', () => this.onExpand());
+            this.addButton('expand', 5, '&laquo;5&raquo;', () => this.onExpand());
+            this.addButton('expand', 10, '&laquo;10&raquo;', () => this.onExpand());
+            this.addButton('combine', 0, '&raquo;&middot;&laquo;', () => this.onCombine());
             this.updateButtons();
         }
     }
@@ -1963,14 +2130,24 @@ class SwapFormList {
     }
     updateButtons() {
         this.updateVariants();
-        this.expandAvailable ? this.showExpandButtons() : this.hideExpandButtons();
-        this.combineAvailable ? this.showCombineButtons() : this.hideCombineButtons();
+        if (this.expandAvailable) {
+            this.showExpandButtons();
+        }
+        else {
+            this.hideExpandButtons();
+        }
+        if (this.combineAvailable) {
+            this.showCombineButtons();
+        }
+        else {
+            this.hideCombineButtons();
+        }
     }
     /**
      * @param expandTo number of links (0 for unlimited)
      */
     async onExpand(expandTo = 0) {
-        console.debug(`EXPANDING...`);
+        debug(`EXPANDING...`);
         let isAddFailed = false;
         let isUpdFailed = false;
         let isFirstQuery = true;
@@ -1979,7 +2156,7 @@ class SwapFormList {
             const qty = +strqty;
             const n = expandTo > 0 ? Math.min(qty, expandTo) : qty;
             if (n <= 1) {
-                console.debug(`IGNORING ${uniq} ${usid}`);
+                debug(`IGNORING ${uniq} ${usid}`);
                 continue; // return?
             }
             for (let i = n, qq = qty, q = Math.floor(qq / i); i > 1; i--, q = Math.floor(qq / i)) {
@@ -1988,7 +2165,7 @@ class SwapFormList {
                     await delay_1.randomDelay();
                 }
                 isFirstQuery = false;
-                console.debug(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
+                debug(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
                 const addR = await this.addSwapCoin({ cond, qty: q, vid, info, price });
                 if (!addR) {
                     isAddFailed = true;
@@ -2022,7 +2199,7 @@ class SwapFormList {
                     await delay_1.randomDelay();
                 }
                 isFirstQuery = false;
-                console.debug(`UPDATING ${uniq} ${usid} -> ${qq}`);
+                debug(`UPDATING ${uniq} ${usid} -> ${qq}`);
                 const updR = await this.updateSwapCoin(usid, { cond, qty: qq, vid, info, price });
                 if (!updR) {
                     isUpdFailed = true;
@@ -2035,17 +2212,17 @@ class SwapFormList {
             }
         }
         if (isAddFailed) {
-            console.debug('ADD FAILED :(');
+            debug('ADD FAILED :(');
         }
         else if (isUpdFailed) {
-            console.debug('UPDATE FAILED :(');
+            debug('UPDATE FAILED :(');
         }
         else {
-            console.debug('DONE!');
+            debug('DONE!');
         }
     }
     async onCombine() {
-        console.debug(`COMBINING...`);
+        debug(`COMBINING...`);
         let isDelFailed = false;
         let isUpdFailed = false;
         for (const variant of this.variants.values()) {
@@ -2055,12 +2232,12 @@ class SwapFormList {
             }
             const remove = new Set(usids);
             remove.delete(usid);
-            console.debug(`REMOVING ${remove}`);
+            debug(`REMOVING ${remove}`);
             if (!await this.deleteSwapCoin(remove)) {
                 isDelFailed = true;
                 break;
             }
-            console.debug(`UPDATING ${usid}`);
+            debug(`UPDATING ${usid}`);
             const content = await this.updateSwapCoin(usid, { ...variant, qty: total });
             if (content) {
                 const newListBlock = content.getElementById(this.listForm.mainId);
@@ -2076,13 +2253,13 @@ class SwapFormList {
             }
         }
         if (isDelFailed) {
-            console.debug('ADD FAILED :(');
+            debug('ADD FAILED :(');
         }
         else if (isUpdFailed) {
-            console.debug('UPDATE FAILED :(');
+            debug('UPDATE FAILED :(');
         }
         else {
-            console.debug('DONE!');
+            debug('DONE!');
         }
     }
     async updateSwapCoin(usid, { cond, qty, vid, info, price }, action = 'editswapcoin') {
@@ -2095,6 +2272,12 @@ class SwapFormList {
         data.set('price', `${price || ''}`);
         data.set('action', `${action || ''}`);
         const fragment = await ajax_1.postFragment(location.href, data);
+        debug('fragment');
+        debug(fragment);
+        debug('this.listForm.mainId');
+        debug(this.listForm.mainId);
+        debug('fragment.getElementById(this.listForm.mainId)');
+        debug(fragment.getElementById(this.listForm.mainId));
         if (!fragment.getElementById(this.listForm.mainId)) {
             return utils_1.reload();
         }
@@ -2118,6 +2301,7 @@ class SwapFormList {
         }
         return fragment;
     }
+    // eslint-disable-next-line class-methods-use-this
     updateLinkQty(a, qty) {
         if (a.hasAttribute('onClick')) {
             a.setAttribute('onClick', a.getAttribute('onClick').replace(swap_links_1.CoinSwapFormOnMatcher, `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${qty}', '$<replica>'`));
@@ -2224,14 +2408,35 @@ function showAllPrices() {
     for (const tr of swapRows) {
         const td = tr.querySelector('.td-cond + *');
         if (td) {
-            const myPrice = +((_a = td.querySelector('span.blue-13')) === null || _a === void 0 ? void 0 : _a.textContent);
+            const myPriceElement = td.querySelector('span.blue-13');
+            const myPrice = +((_a = myPriceElement) === null || _a === void 0 ? void 0 : _a.textContent);
             const prefix = (_b = td.querySelector('span.gray-11:first-child')) === null || _b === void 0 ? void 0 : _b.textContent;
             const suffix = (_c = td.querySelector('span.gray-11:last-child')) === null || _c === void 0 ? void 0 : _c.textContent;
             const tooltipPrice = (_d = tr.dataset) === null || _d === void 0 ? void 0 : _d.tooltipPrice;
             if (tooltipPrice) {
                 const price = +tooltipPrice.replace(prefix, '').replace(suffix, '');
                 if (!isNaN(price) && myPrice !== price) {
-                    td.insertAdjacentHTML('beforeend', `<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
+                    const rel = myPrice / price;
+                    let percent;
+                    if (rel >= 2) {
+                        percent = `<span class="gray-11" style="color:darkred;font-weight:bold">&times;${rel
+                            .toFixed(rel >= 10 ? 0 : 1).replace('.0', '')}</span>`;
+                        myPriceElement.style.color = 'darkred';
+                        myPriceElement.style.fontWeight = 'bold';
+                    }
+                    else {
+                        const prel = (rel - 1) * 100;
+                        if (prel >= 50) {
+                            percent = `<span class="gray-11" style="color:darkred;font-weight:bold">+${prel.toFixed()}%</span>`;
+                        }
+                        else if (prel >= 0) {
+                            percent = `<span class="gray-11" style="color:brown">+${prel.toFixed()}%</span>`;
+                        }
+                        else {
+                            percent = `<span class="gray-11" style="color:green">&minus;${Math.abs(prel).toFixed()}%</span>`;
+                        }
+                    }
+                    td.insertAdjacentHTML('beforeend', ` ${percent}<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
                 }
             }
         }
@@ -2248,6 +2453,7 @@ function highlightConflicts() {
                 return true;
             }
             r.classList.remove('conflict');
+            return false;
         });
         const heading = table.previousElementSibling;
         if (heading.tagName.toLowerCase() === 'h2') {
@@ -2292,9 +2498,10 @@ function addConflictHandling() {
     highlightConflicts();
     const checkboxes = document.querySelectorAll('#swap-list table.swap-coin input.swap-checkbox');
     for (const checkbox of checkboxes) {
-        checkbox.addEventListener('click', function () {
-            if (!this.checked) {
-                const row = this.closest('tr');
+        checkbox.addEventListener('click', e => {
+            const target = e.target;
+            if (!target.checked) {
+                const row = target.closest('tr');
                 if (row) {
                     row.classList.remove('conflict');
                 }
@@ -2304,9 +2511,10 @@ function addConflictHandling() {
     }
     const countryCheckboxes = document.querySelectorAll('#swap-list h2 input.swap-country-checkbox');
     for (const checkbox of countryCheckboxes) {
-        checkbox.addEventListener('click', function () {
-            if (!this.checked) {
-                const country = this.closest('h2');
+        checkbox.addEventListener('click', e => {
+            const target = e.target;
+            if (!target.checked) {
+                const country = target.closest('h2');
                 if (country) {
                     const rows = country.nextElementSibling.querySelectorAll('tr');
                     for (const row of rows) {
@@ -2340,6 +2548,7 @@ function checkSold() {
         return;
     }
     button.addEventListener('click', async () => {
+        // eslint-disable-next-line no-alert
         if (!confirm('Are you sure you want to delete these coins?')) {
             return false;
         }
@@ -2422,12 +2631,13 @@ class WishForm extends list_form_1.ListForm {
             ['UN', [cond_1.Color.UNC, cond_1.WishValue.UNC]],
         ]);
     }
-    fillForm(uid = '', cond = '', price = '', tid = '', vid = '') {
+    fillForm(uid = '', cond = '', price = '', _tid, vid = '') {
         super.fillForm(uid, cond, price, vid);
         if (this.form.is_type) {
             this.form.is_type.checked = true;
         }
     }
+    // eslint-disable-next-line class-methods-use-this
     getConditionOption(o) {
         const { value, textContent } = o;
         if (value || textContent.includes('ANY')) {
