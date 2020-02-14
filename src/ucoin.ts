@@ -7,6 +7,7 @@
 // @downloadURL  https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js
 // @updateURL    https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js
 // @match        https://*.ucoin.net/*
 // @run-at       document-end
 // ==/UserScript==
@@ -39,14 +40,36 @@ document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${style}</
 
 async function handleHomePage(): Promise<void> {
     const profile = document.getElementById('profile');
-    const curPrice = profile.querySelector<HTMLDivElement>('div.worth-cur-value span');
-    const colPrice = +curPrice.textContent.replace(/[^\d.]/g, '');
-    const swapPrice = +profile.querySelector(`a[href="/swap-list/?uid=${UID}"] span.right`).textContent.replace(/[^\d.]/g, '');
-    const price = colPrice + swapPrice;
-    curPrice.classList.add('price');
-    curPrice.insertAdjacentHTML('beforeend', `<br/><small class="total"><abbr class="cur">€</abbr> ${
-        new Intl.NumberFormat('en').format(price)
-    }</small>`);
+    if (profile) {
+        const curPriceElement = profile.querySelector<HTMLDivElement>('div.worth-cur-value span');
+        if (curPriceElement) {
+            const colPrice = +curPriceElement.textContent.replace(/[^\d.]/g, '');
+            const swapPriceElement = profile.querySelector(`a[href="/swap-list/?uid=${UID}"] span.right`);
+            if (swapPriceElement) {
+                const swapPrice = +swapPriceElement.textContent.replace(/[^\d.]/g, '');
+                const price = colPrice + swapPrice;
+                curPriceElement.classList.add('price');
+                curPriceElement.insertAdjacentHTML('beforeend', `<br/><small class="total"><abbr class="cur">€</abbr> ${
+                    new Intl.NumberFormat('en').format(price)
+                }</small>`);
+            }
+        }
+    }
+}
+
+async function handleProfile(): Promise<void> {
+    const converter = new showdown.Converter();
+    const profile = document.getElementById('profile');
+    if (profile) {
+        const paragraphs = profile.querySelectorAll<HTMLParagraphElement>('p.dgray-13');
+        for (const p of paragraphs) {
+            p.innerHTML = converter.makeHtml(p.innerHTML
+                .replace(/<br\s*\/?>/gi, '\n')
+                .replace(/([\w.-]+@[\w.-]+)/gi, '<$1>')
+                .replace(/&gt;/gi, '>')
+            );
+        }
+    }
 }
 
 async function handleCoinPage(): Promise<void> {
@@ -99,6 +122,7 @@ async function handleMessagePage(): Promise<void> {
         }
     }
 }
+
 async function handleSwapPage(): Promise<void> {
     addTrackingLinks();
     addOpenedTabsHandler();
@@ -131,8 +155,11 @@ async function handleSwapPage(): Promise<void> {
 (async function () {
     const loc = document.location.href;
 
-    if (loc.includes(`/uid${UID}`)) {
-        await handleHomePage(loc);
+    if (loc.includes(`/uid`)) {
+        if (loc.includes(`/uid${UID}`)) {
+            await handleHomePage();
+        }
+        await handleProfile();
     }
 
     if (loc.includes('/coin')) {

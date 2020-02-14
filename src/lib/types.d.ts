@@ -68,3 +68,11 @@ interface ConditionOption {
     checked: string;
     style: string;
 }
+
+declare class Converter {
+    makeHtml(t: string): string;
+}
+
+declare const showdown: {
+    Converter: typeof Converter;
+};
