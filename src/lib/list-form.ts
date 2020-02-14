@@ -87,40 +87,48 @@ export abstract class ListForm extends AbstractForm {
         if (this.form[this.formVariety]) {
             this.form[this.formVariety].value = vid || getCurrentVarietyId();
         }
+        (<HTMLInputElement> <unknown> this.form.action).value = uid ? `edit${this.formType}coin` : `add${this.formType}coin`;
     }
 
-    protected formOnHandler = (uid?: string, ...other: string[]): void => {
-        hide(this.listBlock);
-        show(this.form, this.formClose);
-        disable(this.func);
+    private formClickTimeout: number;
 
-        this.widgetHeader.removeEventListener('click', this.widgetHeaderRedirectHandler);
-        this.widgetHeader.addEventListener('click', this.widgetHeaderCloseHandler);
+    protected formOnHandler(uid?: string, ...other: string[]): void {
+        this.formClickTimeout = <number> <unknown> setTimeout(() => {
+            hide(this.listBlock);
+            show(this.form, this.formClose);
+            disable(this.func);
+            this.widgetHeader.removeEventListener('click', e => this.widgetHeaderRedirectHandler(e));
+            this.widgetHeader.addEventListener('click', e => this.widgetHeaderCloseHandler(e));
+            this.fillForm(uid, ...other);
+            show(this.cancelButton);
+            toggle(!uid, this.addButton);
+            toggle(uid, this.editButton, this.deleteButton);
+            this.deleteButton.href = `?action=del${this.formType}coin&${this.formUid}=${uid}`;
+            (uid ? this.editButton : this.addButton).focus();
+        }, 300);
+    }
 
+    protected formOnHandlerSubmit(uid?: string, ...other: string[]): void {
+        clearTimeout(this.formClickTimeout);
         this.fillForm(uid, ...other);
+        this.form.submit();
+    }
 
-        show(this.cancelButton);
-        toggle(!uid, this.addButton);
-        toggle(uid, this.editButton, this.deleteButton);
-        this.deleteButton.href = `?action=del${this.formType}coin&${this.formUid}=${uid}`;
-        (<HTMLInputElement> <unknown> this.form.action).value = uid ? `edit${this.formType}coin` : `add${this.formType}coin`;
-    };
-
-    protected formOffHandler = (): void => {
+    protected formOffHandler(): void {
         hide(this.form, this.formClose);
         show(this.listBlock);
         enable(this.func);
 
-        this.widgetHeader.removeEventListener('click', this.widgetHeaderCloseHandler);
-        this.widgetHeader.addEventListener('click', this.widgetHeaderRedirectHandler);
-    };
+        this.widgetHeader.removeEventListener('click', e => this.widgetHeaderCloseHandler(e));
+        this.widgetHeader.addEventListener('click', e => this.widgetHeaderRedirectHandler(e));
+    }
 
     protected widgetHeaderRedirectHandler: EventHandler;
 
-    protected widgetHeaderCloseHandler: EventHandler = (e: Event) => {
+    protected widgetHeaderCloseHandler(e: Event): void {
         cancel(e);
         this.formOffHandler();
-    };
+    }
 
     protected updateList(): void {
         this.listBlock = document.getElementById(this.listId);
@@ -136,11 +144,13 @@ export abstract class ListForm extends AbstractForm {
         }
     }
 
-    protected updateFormHandlers() {
+    protected updateFormHandlers(): void {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
-        global[this.formOnFunctionName] = this.formOnHandler;
+        global[this.formOnFunctionName] = (...args) => this.formOnHandler(...args);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
-        global[this.formOffFunctionName] = this.formOffHandler;
+        global[this.formOffFunctionName] = (...args) => this.formOffHandler(...args);
     }
 
     protected async update(): Promise<void> {
@@ -170,7 +180,9 @@ export abstract class ListForm extends AbstractForm {
             const markerId = `${this.formType}-marker-${value}`;
             const markerClass = `btn-marker marked-${color}`;
             buttonSet.insertAdjacentHTML('beforeend', `<div id="${markerId}" class="${markerClass}">${text}</div>`);
-            buttonSet.querySelector(id(markerId)).addEventListener('click', () => this.formOnHandler('', `${value}`));
+            const marker = buttonSet.querySelector(id(markerId));
+            marker.addEventListener('click', () => this.formOnHandler('', `${value}`));
+            marker.addEventListener('dblclick', () => this.formOnHandlerSubmit('', `${value}`));
         };
 
         for (const [text, [color, value]] of this.buttonSetButtons) {

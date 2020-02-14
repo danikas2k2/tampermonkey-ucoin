@@ -171,9 +171,10 @@ export function addConflictHandling(): void {
 
     const checkboxes = document.querySelectorAll<HTMLInputElement>('#swap-list table.swap-coin input.swap-checkbox');
     for (const checkbox of checkboxes) {
-        checkbox.addEventListener('click', function () {
-            if (!this.checked) {
-                const row = this.closest('tr');
+        checkbox.addEventListener('click', e => {
+            const target = <HTMLInputElement> e.target;
+            if (!target.checked) {
+                const row = target.closest('tr');
                 if (row) {
                     row.classList.remove('conflict');
                 }
@@ -184,9 +185,10 @@ export function addConflictHandling(): void {
 
     const countryCheckboxes = document.querySelectorAll<HTMLInputElement>('#swap-list h2 input.swap-country-checkbox');
     for (const checkbox of countryCheckboxes) {
-        checkbox.addEventListener('click', function () {
-            if (!this.checked) {
-                const country = this.closest('h2');
+        checkbox.addEventListener('click', e => {
+            const target = <HTMLInputElement> e.target;
+            if (!target.checked) {
+                const country = target.closest('h2');
                 if (country) {
                     const rows = country.nextElementSibling.querySelectorAll('tr');
                     for (const row of rows) {

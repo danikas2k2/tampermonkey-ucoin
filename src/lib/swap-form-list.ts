@@ -25,12 +25,12 @@ export class SwapFormList {
     public update(listBlock: HTMLElement): void {
         this.listBlock = listBlock;
         this.form = listBlock.querySelector(id(this.listForm.formId));
-        if (this.form) {
-            this.buttonSet = listBlock.querySelector('center');
-            this.addButton('expand', 0, '&laquo;*&raquo;', this.onExpand);
-            this.addButton('expand', 5, '&laquo;5&raquo;', this.onExpand);
-            this.addButton('expand', 10, '&laquo;10&raquo;', this.onExpand);
-            this.addButton('combine', 0, '&raquo;&middot;&laquo;', this.onCombine);
+        this.buttonSet = listBlock.querySelector('center');
+        if (this.buttonSet) {
+            this.addButton('expand', 0, '&laquo;*&raquo;', () => this.onExpand());
+            this.addButton('expand', 5, '&laquo;5&raquo;', () => this.onExpand());
+            this.addButton('expand', 10, '&laquo;10&raquo;', () => this.onExpand());
+            this.addButton('combine', 0, '&raquo;&middot;&laquo;', () => this.onCombine());
             this.updateButtons();
         }
     }
@@ -102,8 +102,17 @@ export class SwapFormList {
 
     private updateButtons(): void {
         this.updateVariants();
-        this.expandAvailable ? this.showExpandButtons() : this.hideExpandButtons();
-        this.combineAvailable ? this.showCombineButtons() : this.hideCombineButtons();
+        if (this.expandAvailable) {
+            this.showExpandButtons();
+        } else {
+            this.hideExpandButtons();
+        }
+
+        if (this.combineAvailable) {
+            this.showCombineButtons();
+        } else {
+            this.hideCombineButtons();
+        }
     }
 
     /**
