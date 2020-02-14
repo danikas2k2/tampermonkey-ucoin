@@ -19,7 +19,7 @@ import style from '../styles/ucoin.less';
 import {CoinForm} from './lib/coin-form';
 import {addGalleryVisibilityToggle} from './lib/gallery';
 import {updateLinkHref, updateOnClickHref} from './lib/links';
-import {estimateSwapPrices} from './lib/prices';
+import {estimateSwapPrices, estimateWeightPrice} from './lib/prices';
 import {SwapForm} from './lib/swap-form';
 import {
     addConflictHandling,
@@ -62,6 +62,7 @@ async function handleCoinPage(): Promise<void> {
     await new CoinForm().handle();
     await new SwapForm().handle();
     await estimateSwapPrices();
+    await estimateWeightPrice();
     await new WishForm().handle();
 }
 

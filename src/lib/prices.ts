@@ -1,12 +1,26 @@
-import {ColorStyle, Color, ConditionColors, ConditionValues} from './cond';
+import {ColorStyle, ConditionColors, ConditionValues} from './cond';
 import {cmp} from './swap-list-sort';
 
 type YearMap = Map<string, number[]>;
 type MintMap = Map<string, YearMap>;
 
+const COIN_ID = 'coin';
+
 const SWAP_ID = 'swap';
 const SWAP_BLOCK_ID = 'swap-block';
 const ESTIMATED_PRICES_ID = 'estimated-prices';
+
+const RX_GRAMMS = /\([gг]/;
+const RX_COUNTRY = /Country|Страна|Valstybė/;
+const RX_RUSSIA = /Russia|Россия|Rusija|USSR|СССР|TSRS/;
+const RX_COMPOSITION = /Composition|Материал|Sudėtis/;
+const RX_SILVER = /Silver|Серебро|Sidabras/;
+const RX_GOLD = /Gold|Золото|Auksas/;
+
+const RU_PRICE = 0.0055; //       3-8e/kg
+const EU_PRICE = 0.0125; //     10-15e/kg
+const AG_PRICE = 0.5237; //   .47-.53e/g
+const AU_PRICE = 46.722; // 45.5-46.2e/g
 
 function sortByCondition(a: string, b: string): number {
     return ConditionValues.get(b) - ConditionValues.get(a);
@@ -133,5 +147,85 @@ export function estimateSwapPrices(): void {
             }
             addPricesByType(byType, mint);
         }
+    }
+}
+
+export function estimateWeightPrice(): void {
+    const coinBlock = document.getElementById(COIN_ID);
+    const aPrice = coinBlock?.querySelector('.right.pricewj');
+    const head = coinBlock?.querySelector('h1');
+    const trs = coinBlock?.querySelectorAll<HTMLTableHeaderCellElement>('.coin-info tr');
+
+    let weight = NaN;
+    let isRussia = false;
+    let isSilver = false;
+    let isGold = false;
+    let part = 1;
+
+    for (const tr of trs) {
+        const th = tr.querySelector('th');
+        const head = th && th.textContent || '';
+        const td = tr.querySelector('td');
+        if (td) {
+            const data = `${td.textContent}`;
+            if (head.match(RX_GRAMMS)) {
+                weight = +data;
+            } else if (head.match(RX_COUNTRY)) {
+                isRussia = !!data.match(RX_RUSSIA);
+            } else if (head.match(RX_COMPOSITION)) {
+                isSilver = !!data.match(RX_SILVER);
+                isGold = !!data.match(RX_GOLD);
+                if (isSilver || isGold) {
+                    part = +data.split(' ').pop();
+                }
+            }
+        }
+    }
+
+    let price;
+    let priceSource;
+    if (isGold) {
+        price = weight * (part || 1) * AU_PRICE;
+        priceSource = 'au';
+    } else if (isSilver) {
+        price = weight * (part || 1) * AG_PRICE;
+        priceSource = 'ag';
+    } else if (isRussia) {
+        price = weight * RU_PRICE;
+        priceSource = 'ru';
+    } else {
+        price = weight * EU_PRICE;
+        priceSource = '--';
+    }
+
+    const weightPrice = `<br/><price class="right" title="${priceSource}: ${price.toFixed(5)}">€ ${price.toFixed(2)}</price>`;
+
+    if (!aPrice) {
+        let isAproximate = false;
+        const prices: number[] = [];
+        const all = coinBlock.querySelectorAll('#coin-list td.blue-13');
+        for (const td of all) {
+            const clone = td.cloneNode(true);
+            for (const child of clone.childNodes) {
+                child.remove();
+            }
+            const {textContent} = clone;
+            if (textContent) {
+                prices.push(+textContent);
+            } else {
+                isAproximate = true;
+            }
+        }
+        const min = Math.min(...prices);
+        const max = Math.max(...prices);
+        const showPrices = [min.toFixed(2)];
+        if (max > min) {
+            showPrices.push(max.toFixed(2));
+        } else if (isAproximate) {
+            showPrices.unshift('');
+        }
+        head.insertAdjacentHTML('beforebegin', `<a href="#price" class="gray-12 right pricewj">Value:&nbsp;€ <span>${showPrices.join(isAproximate ? '~' : '-')}</span>${weightPrice}</a>`);
+    } else {
+        aPrice.insertAdjacentHTML('beforeend', weightPrice);
     }
 }
