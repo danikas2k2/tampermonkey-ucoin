@@ -90,14 +90,32 @@ export function showAllPrices(): void {
     for (const tr of swapRows) {
         const td = tr.querySelector('.td-cond + *');
         if (td) {
-            const myPrice = +td.querySelector('span.blue-13')?.textContent;
+            const myPriceElement = td.querySelector<HTMLSpanElement>('span.blue-13');
+            const myPrice = +myPriceElement?.textContent;
             const prefix = td.querySelector('span.gray-11:first-child')?.textContent;
             const suffix = td.querySelector('span.gray-11:last-child')?.textContent;
             const tooltipPrice = tr.dataset?.tooltipPrice;
             if (tooltipPrice) {
                 const price = +tooltipPrice.replace(prefix, '').replace(suffix, '');
                 if (!isNaN(price) && myPrice !== price) {
-                    td.insertAdjacentHTML('beforeend', `<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
+                    const rel = myPrice / price;
+                    let percent;
+                    if (rel >= 2) {
+                        percent = `<span class="gray-11" style="color:darkred;font-weight:bold">&times;${rel
+                            .toFixed(rel >= 10 ? 0 : 1).replace('.0', '')}</span>`;
+                        myPriceElement.style.color = 'darkred';
+                        myPriceElement.style.fontWeight = 'bold';
+                    } else {
+                        const prel = (rel - 1) * 100;
+                        if (prel >= 50) {
+                            percent = `<span class="gray-11" style="color:darkred;font-weight:bold">+${prel.toFixed()}%</span>`;
+                        } else if (prel >= 0) {
+                            percent = `<span class="gray-11" style="color:brown">+${prel.toFixed()}%</span>`;
+                        } else {
+                            percent = `<span class="gray-11" style="color:green">&minus;${Math.abs(prel).toFixed()}%</span>`;
+                        }
+                    }
+                    td.insertAdjacentHTML('beforeend', ` ${percent}<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
                 }
             }
         }
