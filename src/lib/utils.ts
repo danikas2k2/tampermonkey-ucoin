@@ -1,33 +1,33 @@
-export function sp(str: string) {
+export function sp(str: string): string {
     return `${str || ''}`.replace(/\u{00A0}+/gu, ' ').replace(/\s+/g, ' ').trim();
 }
 
-export function tt(str: string) {
+export function tt(str: string): string {
     str = `${str || ''}`;
     return `${str.charAt(0).toUpperCase()}${str.substr(1)}`;
 }
 
-export function show(...elements: HTMLElement[]) {
+export function show(...elements: HTMLElement[]): void {
     elements.forEach(element => element && element.classList.remove('hide'));
 }
 
-export function hide(...elements: HTMLElement[]) {
+export function hide(...elements: HTMLElement[]): void {
     elements.forEach(element => element && element.classList.add('hide'));
 }
 
-export function toggle(visible: string | boolean, ...elements: HTMLElement[]) {
+export function toggle(visible: string | boolean, ...elements: HTMLElement[]): void {
     elements.forEach(element => element && element.classList.toggle('hide', !visible));
 }
 
-export function enable(...elements: HTMLElement[]) {
+export function enable(...elements: HTMLElement[]): void {
     elements.forEach(element => element && element.classList.remove('disable'));
 }
 
-export function disable(...elements: HTMLElement[]) {
+export function disable(...elements: HTMLElement[]): void {
     elements.forEach(element => element && element.classList.add('disable'));
 }
 
-export function cancel(e: Event) {
+export function cancel(e: Event): void {
     if (e) {
         e.preventDefault();
         e.stopPropagation();

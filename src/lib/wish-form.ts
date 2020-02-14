@@ -17,13 +17,14 @@ export class WishForm extends ListForm {
         ['UN', [Color.UNC, WishValue.UNC]],
     ]);
 
-    protected fillForm(uid: string = '', cond: string = '', price: string = '', tid: string = '', vid: string = '') {
+    protected fillForm(uid = '', cond = '', price = '', _tid?: string, vid = ''): void {
         super.fillForm(uid, cond, price, vid);
         if (this.form.is_type) {
             this.form.is_type.checked = true;
         }
     }
 
+    // eslint-disable-next-line class-methods-use-this
     protected getConditionOption(o: HTMLOptionElement): ConditionOption {
         const {value, textContent} = o;
         if (value || textContent.includes('ANY')) {

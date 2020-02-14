@@ -27,7 +27,7 @@ export function* getSwapLinksWithMatches(): IterableIterator<CoinSwapAnchorAndMa
     }
 }
 
-export function styleSwapLink(a: HTMLAnchorElement) {
+export function styleSwapLink(a: HTMLAnchorElement): void {
     const condBlock = a.querySelector(`.left.dgray-11`);
     const cond = condBlock.textContent.trim();
     condBlock.classList.add(`marked-${ConditionColors.get(cond)}`);
@@ -42,7 +42,7 @@ export function styleSwapLink(a: HTMLAnchorElement) {
     }
 }
 
-export function styleListLinks(list: HTMLElement) {
+export function styleListLinks(list: HTMLElement): void {
     const listOfLinks = list.querySelectorAll<HTMLAnchorElement>('a.list-link');
     for (const a of listOfLinks) {
         styleSwapLink(a);
@@ -62,7 +62,7 @@ export function addComment(a: HTMLAnchorElement): void {
     }
 }
 
-export function addLinkComments() {
+export function addLinkComments(): void {
     for (const a of getSwapLinks()) {
         addComment(a);
     }

@@ -12,6 +12,7 @@
 // ==/UserScript==
 
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import style from '../styles/ucoin.less';
 
@@ -36,7 +37,7 @@ import {WishForm} from './lib/wish-form';
 
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${style}</style>`);
 
-async function handleHomePage(loc: string) {
+async function handleHomePage(): Promise<void> {
     const profile = document.getElementById('profile');
     const curPrice = profile.querySelector<HTMLDivElement>('div.worth-cur-value span');
     const colPrice = +curPrice.textContent.replace(/[^\d.]/g, '');
@@ -48,7 +49,7 @@ async function handleHomePage(loc: string) {
     }</small>`);
 }
 
-async function handleCoinPage(loc: string) {
+async function handleCoinPage(): Promise<void> {
     const tags = document.getElementById('tags');
     if (tags) {
         // fixTagLinks
@@ -64,7 +65,7 @@ async function handleCoinPage(loc: string) {
     await new WishForm().handle();
 }
 
-async function handleGalleryPage() {
+async function handleGalleryPage(): Promise<void> {
     const gallery = document.getElementById('gallery');
     if (gallery) {
         // fix gallery links
@@ -85,7 +86,7 @@ async function handleGalleryPage() {
     addGalleryVisibilityToggle();
 }
 
-async function handleSwapPage() {
+async function handleSwapPage(): Promise<void> {
     addTrackingLinks();
     addOpenedTabsHandler();
     addSortingOptions();
@@ -122,7 +123,7 @@ async function handleSwapPage() {
     }
 
     if (loc.includes('/coin')) {
-        await handleCoinPage(loc);
+        await handleCoinPage();
     }
 
     if (loc.includes('/gallery') && loc.includes(`uid=${UID}`)) {
@@ -145,7 +146,7 @@ async function handleSwapPage() {
         const searchInputId = 'search-input-id';
         tree.insertAdjacentHTML('afterbegin', `<input id="${searchInputId}" class="tree-filter" placeholder="Search"/>`);
         const searchInput = <HTMLInputElement> document.getElementById(searchInputId);
-        searchInput.addEventListener('input', (e: Event) => {
+        searchInput.addEventListener('input', () => {
             const pattern = new RegExp([...searchInput.value].join('.*?'), 'i');
             for (const a of tree.querySelectorAll('a.country-name')) {
                 const country = a.closest('div.country');

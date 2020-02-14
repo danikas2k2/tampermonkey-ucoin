@@ -22,53 +22,53 @@ export abstract class ListForm extends AbstractForm {
     protected abstract formTypePrefix: FormTypePrefix;
     protected abstract formUidPrefix: FormUidPrefix;
 
-    protected get headerId() {
+    protected get headerId(): string {
         return `widget-${this.formType}-header`;
     }
 
-    public get mainId() {
+    public get mainId(): string {
         return `my-${this.formType}-block`;
     }
 
-    public get formId() {
+    public get formId(): string {
         return `${this.formType}-form`;
     }
 
-    protected get formCloseId() {
+    protected get formCloseId(): string {
         return `${this.formType}-form-close`;
     }
 
-    protected get formUid() {
+    protected get formUid(): string {
         return `u${this.formUidPrefix}id`;
     }
 
-    protected get formVariety() {
+    protected get formVariety(): string {
         return `${this.formType}-variety`;
     }
 
     protected funcId = 'my-coin-func-block';
 
-    public get listId() {
+    public get listId(): string {
         return `${this.formType}-block`;
     }
 
-    protected get buttonSetId() {
+    protected get buttonSetId(): string {
         return `${this.formType}-button-set`;
     }
 
-    protected get cancelButtonId() {
+    protected get cancelButtonId(): string {
         return `btn-${this.formTypePrefix}cancel`;
     }
 
-    protected get addButtonId() {
+    protected get addButtonId(): string {
         return `btn-${this.formTypePrefix}add`;
     }
 
-    protected get editButtonId() {
+    protected get editButtonId(): string {
         return `btn-${this.formTypePrefix}edit`;
     }
 
-    protected get deleteButtonId() {
+    protected get deleteButtonId(): string {
         return `btn-${this.formTypePrefix}del`;
     }
 
@@ -80,7 +80,7 @@ export abstract class ListForm extends AbstractForm {
         return `Coin${this.formTypeMethod}FormOff`;
     }
 
-    protected fillForm(uid: string = '', cond: string = '', price: string = '', vid: string = '') {
+    protected fillForm(uid = '', cond = '', price = '', vid = ''): void {
         this.form[this.formUid].value = uid;
         this.form.condition.value = cond;
         this.form.price.value = price;
@@ -122,14 +122,14 @@ export abstract class ListForm extends AbstractForm {
         this.formOffHandler();
     };
 
-    protected updateList() {
+    protected updateList(): void {
         this.listBlock = document.getElementById(this.listId);
         if (this.listBlock) {
             styleListLinks(this.listBlock);
         }
     }
 
-    protected removeOneButton() {
+    protected removeOneButton(): void {
         const oneButtonBlock = this.main.previousElementSibling;
         if (oneButtonBlock.matches('center.action-btn')) {
             oneButtonBlock.remove();
@@ -153,7 +153,7 @@ export abstract class ListForm extends AbstractForm {
         this.updateList();
     }
 
-    protected updateButtonSet() {
+    protected updateButtonSet(): void {
         const oneButton = this.listBlock.querySelector<HTMLButtonElement>('center button.btn-s.btn-gray');
         if (!oneButton) {
             return;
@@ -180,7 +180,7 @@ export abstract class ListForm extends AbstractForm {
 
     protected abstract getConditionOption(o: HTMLOptionElement): ConditionOption;
 
-    protected updateCondition() {
+    protected updateCondition(): void {
         const condition: HTMLSelectElement = this.form.condition;
         condition.insertAdjacentHTML('afterend',
             `<fieldset name="conditionFieldset"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
@@ -196,7 +196,7 @@ export abstract class ListForm extends AbstractForm {
         condition.remove();
     }
 
-    protected updateFormButtons() {
+    protected updateFormButtons(): void {
         this.cancelButton = this.form.querySelector(id(this.cancelButtonId));
         this.addButton = this.form.querySelector(id(this.addButtonId));
         this.editButton = this.form.querySelector(id(this.editButtonId));
@@ -204,7 +204,7 @@ export abstract class ListForm extends AbstractForm {
         this.deleteButton.classList.add('btn-red');
     }
 
-    protected updateWidget() {
+    protected updateWidget(): void {
         this.widgetHeader = this.main.querySelector<HTMLElement>(id(this.headerId));
         this.widgetHeaderRedirectHandler = this.widgetHeader.onclick;
         this.widgetHeader.removeAttribute('onclick');
@@ -215,19 +215,15 @@ export abstract class ListForm extends AbstractForm {
         return await this.update();
     }
 
-    protected async updateForm() {
+    protected async updateForm(): Promise<void> {
         this.func = this.main.querySelector<HTMLElement>(id(this.funcId));
         this.form = this.main.querySelector<HTMLFormElement>(id(this.formId));
         this.formClose = this.main.querySelector<HTMLElement>(id(this.formCloseId));
 
-        await handleFormSubmit(this.form, async () => {
-            return await this.updateFragment(await postFragment(location.href, new FormData(this.form)));
-        });
+        await handleFormSubmit(this.form, async () => await this.updateFragment(await postFragment(location.href, new FormData(this.form))));
 
         for (const link of this.form.querySelectorAll<HTMLAnchorElement>('a[type=submit]')) {
-            await handleLinkSubmit(link, async () => {
-                return await this.updateFragment(await getFragment(link.href));
-            });
+            await handleLinkSubmit(link, async () => await this.updateFragment(await getFragment(link.href)));
         }
 
         this.updateFormButtons();

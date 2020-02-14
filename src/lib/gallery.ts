@@ -8,12 +8,12 @@ const gallery = document.getElementById('gallery');
 let privateStatus: NodeListOf<HTMLDivElement>;
 let publicStatus: NodeListOf<HTMLDivElement>;
 
-function updateStatusElements() {
+function updateStatusElements(): void {
     privateStatus = gallery.querySelectorAll<HTMLDivElement>('.coin .desc-block span.status0');
     publicStatus = gallery.querySelectorAll<HTMLDivElement>('.coin .desc-block span.status1');
 }
 
-async function postPublicityForm(url: RequestInfo, form: HTMLFormElement, checked: boolean) {
+async function postPublicityForm(url: RequestInfo, form: HTMLFormElement, checked: boolean): Promise<Response> {
     form.querySelector<HTMLInputElement>('input[name=public]').checked = checked;
     return await post(url, new FormData(form));
 }
@@ -37,12 +37,12 @@ function addVisibilityToggleButton(container: HTMLElement, text: string, classNa
     return button;
 }
 
-function toggleButtonVisibility(container: HTMLElement, callback: VisibilityToggleCallback) {
+function toggleButtonVisibility(container: HTMLElement, callback: VisibilityToggleCallback): void {
     addVisibilityToggleButton(container, 'Show', 'btn-blue', true, privateStatus.length, callback);
     addVisibilityToggleButton(container, 'Hide', 'btn-gray', false, publicStatus.length, callback);
 }
 
-async function toggleGroupVisibility(container: HTMLElement, checked: boolean) {
+async function toggleGroupVisibility(container: HTMLElement, checked: boolean): Promise<void> {
     const addClass = `status${checked ? 1 : 0}`;
     const removeClass = `status${checked ? 0 : 1}`;
     const statusText = checked ? 'Public' : 'Private';
@@ -79,7 +79,7 @@ async function toggleGroupVisibility(container: HTMLElement, checked: boolean) {
     }
 }
 
-export function addGalleryVisibilityToggle() {
+export function addGalleryVisibilityToggle(): void {
     updateStatusElements();
 
     const buttonContainerId = 'button-container';

@@ -1,9 +1,13 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import ERROR from '../../images/error.svg';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import INFO from '../../images/info.svg';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import WARNING from '../../images/minus.svg';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import OK from '../../images/success.svg';
 
@@ -15,11 +19,13 @@ function notify(title: string, body?: string, icon?: string): void {
     if (icon) {
         options.icon = `data:image/svg+xml;charset=utf-8,${encodeURI(icon)}`;
     }
+    // eslint-disable-next-line no-new
     new Notification(title, options);
 }
 
 async function request(title: string, body?: string, icon?: string): Promise<void> {
     if (!('Notification' in window)) {
+        // eslint-disable-next-line no-alert
         alert(title);
     } else if (Notification.permission === 'granted') {
         notify(title, body, icon);

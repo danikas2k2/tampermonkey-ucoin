@@ -12,7 +12,7 @@ function sortByCondition(a: string, b: string): number {
     return ConditionValues.get(b) - ConditionValues.get(a);
 }
 
-export function estimateSwapPrices() {
+export function estimateSwapPrices(): void {
     const theySwap = document.getElementById(SWAP_ID);
     if (!theySwap) {
         return;
@@ -62,27 +62,28 @@ export function estimateSwapPrices() {
 
     const estimatedPrices = document.getElementById(ESTIMATED_PRICES_ID);
 
-    function addPricesByType(byType: Map<string, number[]>, mint = '') {
+    function addPricesByType(byType: Map<string, number[]>, mint = ''): void {
         const keys = [...byType.keys()].sort(sortByCondition);
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
         const options: Chart.ChartConfiguration = {
             type: 'line',
-            data: { datasets: [] },
+            data: {datasets: []},
             options: {
-                title: { display: true, text: mint },
+                title: {display: true, text: mint},
                 responsive: true,
-                hover: { mode: 'nearest', intersect: true },
+                hover: {mode: 'nearest', intersect: true},
                 scales: {
                     xAxes: [],
                     yAxes: [{
                         type: 'linear',
                         display: true,
-                        ticks: { beginAtZero: true },
+                        ticks: {beginAtZero: true},
                     }],
                 },
-                legend: { display: false },
-                elements: { point: { radius: 1 } },
+                legend: {display: false},
+                elements: {point: {radius: 1}},
             },
         };
 
@@ -116,7 +117,10 @@ export function estimateSwapPrices() {
         const id = `${ESTIMATED_PRICES_ID}-${mint.trim()}`;
         estimatedPrices.insertAdjacentHTML('beforeend', `<canvas id="${id}" width="239" height="119"/>`);
         const ctx = (<HTMLCanvasElement> document.getElementById(id)).getContext('2d');
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
+        // eslint-disable-next-line
         new Chart(ctx, options);
     }
 

@@ -1,13 +1,12 @@
-/* eslint-disable no-console */
-
 import {getFragment, postFragment} from './ajax';
 import {randomDelay} from './delay';
-import {AbstractForm} from './form';
 import {ListForm} from './list-form';
 import {id} from './selectors';
 import {addComment, CoinSwapFormOnMatcher, getSwapLinks, getSwapLinksWithMatches, styleListLinks, styleSwapLink} from './swap-links';
 import {UID} from './uid';
 import {hide, reload, show} from './utils';
+
+const {debug} = console;
 
 export class SwapFormList {
     private variants = new Map<string, CoinSwapVariant>();
@@ -23,7 +22,7 @@ export class SwapFormList {
         this.listForm = listForm;
     }
 
-    public update(listBlock: HTMLElement) {
+    public update(listBlock: HTMLElement): void {
         this.listBlock = listBlock;
         this.form = listBlock.querySelector(id(this.listForm.formId));
         if (this.form) {
@@ -36,7 +35,7 @@ export class SwapFormList {
         }
     }
 
-    private addButton(role: SwapListManageRole, qty: number, text: string, clickHandler: (qty: number) => void) {
+    private addButton(role: SwapListManageRole, qty: number, text: string, clickHandler: (qty: number) => void): void {
         const buttonId = `${role}-qty`;
         const expand = this.buttonSet.querySelector<HTMLElement>(id(buttonId));
         if (expand) {
@@ -85,23 +84,23 @@ export class SwapFormList {
         hide(...this.buttonSet.querySelectorAll<HTMLButtonElement>(`button${role ? `.btn--${role}` : ''}`));
     }
 
-    private showExpandButtons() {
+    private showExpandButtons(): void {
         this.showButtons('expand');
     }
 
-    private showCombineButtons() {
+    private showCombineButtons(): void {
         this.showButtons('combine');
     }
 
-    private hideExpandButtons() {
+    private hideExpandButtons(): void {
         this.hideButtons('expand');
     }
 
-    private hideCombineButtons() {
+    private hideCombineButtons(): void {
         this.hideButtons('combine');
     }
 
-    private updateButtons() {
+    private updateButtons(): void {
         this.updateVariants();
         this.expandAvailable ? this.showExpandButtons() : this.hideExpandButtons();
         this.combineAvailable ? this.showCombineButtons() : this.hideCombineButtons();
@@ -110,8 +109,8 @@ export class SwapFormList {
     /**
      * @param expandTo number of links (0 for unlimited)
      */
-    private async onExpand(expandTo = 0) {
-        console.debug(`EXPANDING...`);
+    private async onExpand(expandTo = 0): Promise<void> {
+        debug(`EXPANDING...`);
 
         let isAddFailed = false;
         let isUpdFailed = false;
@@ -123,7 +122,7 @@ export class SwapFormList {
 
             const n = expandTo > 0 ? Math.min(qty, expandTo) : qty;
             if (n <= 1) {
-                console.debug(`IGNORING ${uniq} ${usid}`);
+                debug(`IGNORING ${uniq} ${usid}`);
                 continue; // return?
             }
 
@@ -134,7 +133,7 @@ export class SwapFormList {
                 }
                 isFirstQuery = false;
 
-                console.debug(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
+                debug(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
                 const addR = await this.addSwapCoin({cond, qty: q, vid, info, price});
                 if (!addR) {
                     isAddFailed = true;
@@ -173,7 +172,7 @@ export class SwapFormList {
                 }
                 isFirstQuery = false;
 
-                console.debug(`UPDATING ${uniq} ${usid} -> ${qq}`);
+                debug(`UPDATING ${uniq} ${usid} -> ${qq}`);
                 const updR = await this.updateSwapCoin(usid, {cond, qty: qq, vid, info, price});
                 if (!updR) {
                     isUpdFailed = true;
@@ -189,16 +188,16 @@ export class SwapFormList {
         }
 
         if (isAddFailed) {
-            console.debug('ADD FAILED :(');
+            debug('ADD FAILED :(');
         } else if (isUpdFailed) {
-            console.debug('UPDATE FAILED :(');
+            debug('UPDATE FAILED :(');
         } else {
-            console.debug('DONE!');
+            debug('DONE!');
         }
     }
 
-    private async onCombine() {
-        console.debug(`COMBINING...`);
+    private async onCombine(): Promise<void> {
+        debug(`COMBINING...`);
 
         let isDelFailed = false;
         let isUpdFailed = false;
@@ -212,13 +211,13 @@ export class SwapFormList {
             const remove = new Set<string>(usids);
             remove.delete(usid);
 
-            console.debug(`REMOVING ${remove}`);
+            debug(`REMOVING ${remove}`);
             if (!await this.deleteSwapCoin(remove)) {
                 isDelFailed = true;
                 break;
             }
 
-            console.debug(`UPDATING ${usid}`);
+            debug(`UPDATING ${usid}`);
             const content = await this.updateSwapCoin(usid, {...variant, qty: total});
             if (content) {
                 const newListBlock = content.getElementById(this.listForm.mainId);
@@ -234,11 +233,11 @@ export class SwapFormList {
         }
 
         if (isDelFailed) {
-            console.debug('ADD FAILED :(');
+            debug('ADD FAILED :(');
         } else if (isUpdFailed) {
-            console.debug('UPDATE FAILED :(');
+            debug('UPDATE FAILED :(');
         } else {
-            console.debug('DONE!');
+            debug('DONE!');
         }
     }
 
@@ -253,6 +252,14 @@ export class SwapFormList {
         data.set('action', `${action || ''}`);
 
         const fragment = await postFragment(location.href, data);
+
+        debug('fragment');
+        debug(fragment);
+        debug('this.listForm.mainId');
+        debug(this.listForm.mainId);
+        debug('fragment.getElementById(this.listForm.mainId)');
+        debug(fragment.getElementById(this.listForm.mainId));
+
         if (!fragment.getElementById(this.listForm.mainId)) {
             return reload();
         }
@@ -260,7 +267,7 @@ export class SwapFormList {
         return fragment;
     }
 
-    private async addSwapCoin(data: CoinSwapVariantData) {
+    private async addSwapCoin(data: CoinSwapVariantData): Promise<DocumentFragment> {
         return await this.updateSwapCoin('', data, 'addswapcoin');
     }
 
@@ -283,7 +290,8 @@ export class SwapFormList {
         return fragment;
     }
 
-    private updateLinkQty(a: HTMLAnchorElement, qty: number) {
+    // eslint-disable-next-line class-methods-use-this
+    private updateLinkQty(a: HTMLAnchorElement, qty: number): void {
         if (a.hasAttribute('onClick')) {
             a.setAttribute('onClick', a.getAttribute('onClick').replace(CoinSwapFormOnMatcher,
                 `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${qty}', '$<replica>'`));

@@ -4,7 +4,7 @@ import {randomDelay} from './delay';
 
 const {location: loc} = document;
 
-export function addTrackingLinks() {
+export function addTrackingLinks(): void {
     const swapMgr = document.getElementById('swap-mgr');
     if (swapMgr) {
         const trackingNumbers = swapMgr.querySelectorAll('div.left.lgray-11');
@@ -22,7 +22,7 @@ export function addTrackingLinks() {
     }
 }
 
-function setActiveSwapTab(tab: string) {
+function setActiveSwapTab(tab: string): void {
     const parts = loc.hash.split(';');
     parts[0] = tab;
     loc.hash = parts.join(';');
@@ -85,7 +85,7 @@ export function duplicatePagination(): void {
     heading.insertAdjacentElement('beforebegin', clone);
 }
 
-export function showAllPrices() {
+export function showAllPrices(): void {
     const swapRows = document.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr');
     for (const tr of swapRows) {
         const td = tr.querySelector('.td-cond + *');
@@ -114,16 +114,17 @@ interface TooltipDataset extends DOMStringMap {
     tooltipPrice: string;
 }
 
-function highlightConflicts() {
+function highlightConflicts(): void {
     const needSwapList = !!document.getElementById('need-swap-list');
     const tables = document.querySelectorAll('#swap-list table.swap-coin');
     for (const table of tables) {
         let rows = [...table.querySelectorAll('tr')];
-        const checked = rows.filter((r: HTMLTableRowElement) => {
+        const checked = rows.filter((r: HTMLTableRowElement): boolean => {
             if (r.querySelector('input.swap-checkbox:checked')) {
                 return true;
             }
             r.classList.remove('conflict');
+            return false;
         });
         const heading = <HTMLHeadingElement> table.previousElementSibling;
         if (heading.tagName.toLowerCase() === 'h2') {
@@ -165,7 +166,7 @@ function highlightConflicts() {
     }
 }
 
-export function addConflictHandling() {
+export function addConflictHandling(): void {
     highlightConflicts();
 
     const checkboxes = document.querySelectorAll<HTMLInputElement>('#swap-list table.swap-coin input.swap-checkbox');
@@ -198,7 +199,7 @@ export function addConflictHandling() {
     }
 }
 
-export function checkSold() {
+export function checkSold(): void {
     const needSwapList = document.getElementById('need-swap-list');
     if (!needSwapList) {
         return;
@@ -226,6 +227,7 @@ export function checkSold() {
     }
 
     button.addEventListener('click', async () => {
+        // eslint-disable-next-line no-alert
         if (!confirm('Are you sure you want to delete these coins?')) {
             return false;
         }
@@ -255,7 +257,7 @@ export function checkSold() {
 }
 
 
-export function ignoreUnwanted() {
+export function ignoreUnwanted(): void {
     if (!document.getElementById('need-swap-list')) {
         const tables = document.querySelectorAll('table.swap-coin');
         for (const table of tables) {
@@ -274,7 +276,7 @@ export function ignoreUnwanted() {
     }
 }
 
-export function removeRowHrefFromSwapList() {
+export function removeRowHrefFromSwapList(): void {
     const swapMgr = document.getElementById('swap-mgr');
     if (!swapMgr) {
         return;

@@ -1,9 +1,13 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import HIDE from '../../images/hide.svg';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import LEAVE from '../../images/leave.svg';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import REPLACE from '../../images/replace.svg';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import SHOW from '../../images/show.svg';
 import {getFragment, postFragment} from './ajax';
@@ -49,22 +53,18 @@ export class CoinForm extends AbstractForm {
             this.updateBuyDateInput();
             this.addSyncConditionToColorTable();
 
-            await handleFormSubmit(this.form, async () => {
-                return await this.updateFragment(await postFragment(location.href, new FormData(this.form)));
-            });
+            await handleFormSubmit(this.form, async () => await this.updateFragment(await postFragment(location.href, new FormData(this.form))));
 
             if (this.view) {
                 for (const link of this.view.querySelectorAll<HTMLAnchorElement>('a[type=submit]')) {
-                    await handleLinkSubmit(link, async () => {
-                        return await this.updateFragment(await getFragment(link.href));
-                    });
+                    await handleLinkSubmit(link, async () => await this.updateFragment(await getFragment(link.href)));
                 }
             }
         }
     }
 
 
-    private updateBuyDateInput() {
+    private updateBuyDateInput(): void {
         const {buy_month: buyMonth, buy_year: buyYear} = this.form;
         let {buy_year_month: buyYearMonth} = this.form;
         hide(buyYear, buyMonth);
@@ -82,7 +82,7 @@ export class CoinForm extends AbstractForm {
         });
     }
 
-    private addSyncConditionToColorTable() {
+    private addSyncConditionToColorTable(): void {
         const condition: HTMLSelectElement = this.form.condition;
         const tableColor: HTMLInputElement = this.form.color;
         tableColor.nextElementSibling.classList.add('btn-set');
@@ -121,14 +121,14 @@ export class CoinForm extends AbstractForm {
         });
     }
 
-    private async postForm() {
+    private async postForm(): Promise<boolean> {
         if (await postFragment(location.href, new FormData(this.form))) {
             return true;
         }
         return reload();
     }
 
-    private addPublicityToggle() {
+    private addPublicityToggle(): void {
         // const form = view.nextElementSibling.querySelector<HTMLFormElement>('form');
         const status = this.view.querySelector<HTMLDivElement>('.status-line .left');
 
@@ -165,7 +165,7 @@ export class CoinForm extends AbstractForm {
         updateStatus();
     }
 
-    private addReplacementToggle() {
+    private addReplacementToggle(): void {
         // const form = view.nextElementSibling.querySelector<HTMLFormElement>('form');
 
         let status: HTMLTableRowElement;
@@ -217,7 +217,7 @@ export class CoinForm extends AbstractForm {
         updateStatus();
     }
 
-    private updateButtons() {
+    private updateButtons(): void {
         // if (isPersonal) {
         for (const button of this.func.querySelectorAll<HTMLElement>('.func-button .btn-l')) {
             button.classList.add('btn-narrow');

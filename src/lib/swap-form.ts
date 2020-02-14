@@ -1,8 +1,8 @@
 import {Color, SwapValue} from './cond';
 import {ListForm} from './list-form';
 import {id} from './selectors';
-import {addLinkComments, styleListLinks} from './swap-links';
 import {SwapFormList} from './swap-form-list';
+import {addLinkComments, styleListLinks} from './swap-links';
 
 // declare let CoinSwapFormOn: (usid: string, cond: string, price: string, info: string, vid: string, qty: string, replica: string, ...other: string[]) => void;
 // declare let CoinSwapFormOff: (...other: string[]) => void;
@@ -25,16 +25,17 @@ export class SwapForm extends ListForm {
         ['CP', [Color.COPY, SwapValue.COPY]],
     ]);
 
+    // eslint-disable-next-line no-invalid-this
     private swapListManager = new SwapFormList(this);
 
-    protected fillForm(uid: string = '', cond: string = '', price: string = '', info: string = '', vid: string = '', qty: string = '', replica: string = '') {
+    protected fillForm(uid = '', cond = '', price = '', info = '', vid = '', qty = '', replica = ''): void {
         super.fillForm(uid, cond || replica && '100', price, vid);
         this.form.comment.value = info;
         this.form.qty.value = qty || '1';
         this.form.comment.value = info;
     }
 
-    protected updateList() {
+    protected updateList(): void {
         this.listBlock = document.getElementById(this.listId);
         if (this.listBlock) {
             this.swapListManager.update(this.listBlock);
@@ -59,7 +60,8 @@ export class SwapForm extends ListForm {
         /// }}}
     }
 
-    protected getConditionOption(o: HTMLOptionElement) {
+    // eslint-disable-next-line class-methods-use-this
+    protected getConditionOption(o: HTMLOptionElement): ConditionOption {
         const {value, textContent} = o;
         return {
             value,
@@ -69,12 +71,12 @@ export class SwapForm extends ListForm {
         };
     }
 
-    protected async updateForm() {
+    protected async updateForm(): Promise<void> {
         super.updateForm();
         this.updateQty();
     }
 
-    protected updateQty() {
+    protected updateQty(): void {
         const {form} = this;
         const {qty} = form;
 
