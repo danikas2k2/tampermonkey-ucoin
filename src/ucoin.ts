@@ -87,6 +87,18 @@ async function handleGalleryPage(): Promise<void> {
     addGalleryVisibilityToggle();
 }
 
+
+async function handleMessagePage(): Promise<void> {
+    const userList = document.getElementById('user-list');
+    for (const user of userList?.querySelectorAll<HTMLTableRowElement>('table.user tr[onclick]')) {
+        const a = user.querySelector<HTMLAnchorElement>('td.user-container a');
+        const m = user.attributes.getNamedItem('onclick')?.value.match(/href\s*=\s*'(.*?)'/);
+        if (m) {
+            a.href = m[1];
+            a.onclick = e => e.stopPropagation();
+        }
+    }
+}
 async function handleSwapPage(): Promise<void> {
     addTrackingLinks();
     addOpenedTabsHandler();
@@ -135,6 +147,10 @@ async function handleSwapPage(): Promise<void> {
         await handleSwapPage();
     }
 
+
+    if (loc.includes('/messages/')) {
+        await handleMessagePage();
+    }
 
     const tree = document.getElementById('tree');
     if (tree) {
