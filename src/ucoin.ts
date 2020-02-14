@@ -110,6 +110,26 @@ async function handleGalleryPage(): Promise<void> {
     addGalleryVisibilityToggle();
 }
 
+async function handleTablePage(): Promise<void> {
+    const sortFilter = document.getElementById('sort-filter');
+    if (sortFilter) {
+        const sortFilterDialog = document.getElementById('sort-filter-dialog');
+        const url = new URL(location.href);
+        const sp = url.searchParams;
+        sp.set('order', 'ka');
+        sortFilterDialog.insertAdjacentHTML('beforeend', `<a class="list-link" href="${url.href}"><div class="left gray-13">Krause</div><div class="right"><span class="arrow at"></span></div></a>`);
+        sp.set('order', 'kd');
+        sortFilterDialog.insertAdjacentHTML('beforeend', `<a class="list-link" href="${url.href}"><div class="left gray-13">Krause</div><div class="right"><span class="arrow ab"></span></div></a>`);
+
+        for (const a of <NodeListOf<HTMLAnchorElement>> sortFilterDialog.querySelectorAll('a.list-link')) {
+            a.addEventListener('click', (e: MouseEvent) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // console.log(a.href);
+            });
+        }
+    }
+}
 
 async function handleMessagePage(): Promise<void> {
     const userList = document.getElementById('user-list');
@@ -174,6 +194,9 @@ async function handleSwapPage(): Promise<void> {
         await handleSwapPage();
     }
 
+    if (loc.includes('/table/')) {
+        await handleTablePage();
+    }
 
     if (loc.includes('/messages/')) {
         await handleMessagePage();
