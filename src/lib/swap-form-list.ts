@@ -1,4 +1,4 @@
-import {getFragment, postFragment} from './ajax';
+import {getText, postFragment} from './ajax';
 import {randomDelay} from './delay';
 import {ListForm} from './list-form';
 import {id} from './selectors';
@@ -23,13 +23,23 @@ export class SwapFormList {
     }
 
     public update(listBlock: HTMLElement): void {
-        this.listBlock = listBlock;
-        this.form = listBlock.querySelector(id(this.listForm.formId));
+        if (this.listBlock) {
+            // this.listBlock.replaceWith(listBlock);
+            this.listBlock = listBlock;
+        } else {
+            this.listBlock = listBlock;
+        }
+        this.form = listBlock.querySelector(id(this.listForm.formId))
+            || document.querySelector(id(this.listForm.formId));
         this.buttonSet = listBlock.querySelector('center');
         if (this.buttonSet) {
-            this.addButton('expand', 0, '&laquo;*&raquo;', () => this.onExpand());
-            this.addButton('expand', 5, '&laquo;5&raquo;', () => this.onExpand());
-            this.addButton('expand', 10, '&laquo;10&raquo;', () => this.onExpand());
+            /*const oldButton = this.buttonSet.querySelector('button.btn-s.btn-gray');
+            if (oldButton) {
+                oldButton.remove();
+            }*/
+            this.addButton('expand', 0, '&laquo;*&raquo;', n => this.onExpand(n));
+            this.addButton('expand', 5, '&laquo;5&raquo;', n => this.onExpand(n));
+            this.addButton('expand', 10, '&laquo;10&raquo;', n => this.onExpand(n));
             this.addButton('combine', 0, '&raquo;&middot;&laquo;', () => this.onCombine());
             this.updateButtons();
         }
@@ -43,9 +53,9 @@ export class SwapFormList {
         } else {
             this.buttonSet.insertAdjacentHTML('beforeend',
                 `<button id="${buttonId}" type="button" class="btn--${role} btn-s btn-blue">${text}</button>`);
-            this.buttonSet.querySelector(id(buttonId)).addEventListener('click', () => {
+            this.buttonSet.querySelector(id(buttonId)).addEventListener('click', async () => {
                 this.hideButtons();
-                clickHandler(qty);
+                await clickHandler(qty);
                 this.updateButtons();
             });
         }
@@ -229,11 +239,10 @@ export class SwapFormList {
             debug(`UPDATING ${usid}`);
             const content = await this.updateSwapCoin(usid, {...variant, qty: total});
             if (content) {
-                const newListBlock = content.getElementById(this.listForm.mainId);
+                const newListBlock = content.getElementById(this.listForm.listId);
                 if (newListBlock && this.listBlock) {
-                    this.listBlock.replaceWith(newListBlock);
-                    styleListLinks(this.listBlock);
-                    this.listBlock = newListBlock;
+                    styleListLinks(newListBlock);
+                    this.update(newListBlock);
                 }
             } else {
                 isUpdFailed = true;
@@ -242,7 +251,7 @@ export class SwapFormList {
         }
 
         if (isDelFailed) {
-            debug('ADD FAILED :(');
+            debug('REMOVE FAILED :(');
         } else if (isUpdFailed) {
             debug('UPDATE FAILED :(');
         } else {
@@ -280,7 +289,7 @@ export class SwapFormList {
         return await this.updateSwapCoin('', data, 'addswapcoin');
     }
 
-    private async deleteSwapCoin(usid: string | Set<string>): Promise<DocumentFragment> {
+    private deleteSwapCoin = async (usid: string | Set<string>): Promise<boolean> => {
         if (usid instanceof Set) {
             usid = [...usid].join(',');
         }
@@ -288,19 +297,17 @@ export class SwapFormList {
         const url = new URL('/swap-list/', location.href);
         const p = url.searchParams;
         p.set('f', 'del');
-        p.set('uid', UID);
         p.set('usid', usid);
+        p.set('uid', UID);
 
-        const fragment = await getFragment(url.href);
-        if (!fragment.getElementById(this.listForm.listId)) {
+        const fragment = await getText(url.href, null, false);
+        if (!fragment) {
             return reload();
         }
+        return true;
+    };
 
-        return fragment;
-    }
-
-    // eslint-disable-next-line class-methods-use-this
-    private updateLinkQty(a: HTMLAnchorElement, qty: number): void {
+    private updateLinkQty = (a: HTMLAnchorElement, qty: number): void => {
         if (a.hasAttribute('onClick')) {
             a.setAttribute('onClick', a.getAttribute('onClick').replace(CoinSwapFormOnMatcher,
                 `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${qty}', '$<replica>'`));
@@ -314,5 +321,5 @@ export class SwapFormList {
                 span.insertAdjacentHTML('afterend', `<span class="left dblue-13"><span>&times;</span>${qty}</span>`);
             }
         }
-    }
+    };
 }
