@@ -92,9 +92,9 @@ export class SwapForm extends ListForm {
             });
         };
 
-        addQtyCtrlButton('afterend', 'minus', '&minus;', v => v - 1);
         addQtyCtrlButton('beforebegin', 'plus10', '+10', v => v + 10);
         addQtyCtrlButton('beforebegin', 'plus5', '+5', v => v + 5);
         addQtyCtrlButton('beforebegin', 'plus', '+', v => v + 1);
+        addQtyCtrlButton('beforebegin', 'minus', '&minus;', v => v - 1);
     }
 }
