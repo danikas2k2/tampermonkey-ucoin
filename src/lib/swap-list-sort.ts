@@ -32,29 +32,29 @@ function cmpStr(a: DOMStringMap, b: DOMStringMap, field: SortField): number {
     return cmp(a[f], b[f]);
 }
 
-function cmpYear(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
+function cmpYear(a: DOMStringMap, b: DOMStringMap, o = 1): number {
     return o * cmpNum(a, b, 'year')
         || cmpStr(a, b, 'mm');
 }
 
-function cmpKm(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
+function cmpKm(a: DOMStringMap, b: DOMStringMap, o = 1): number {
     return o * cmpStr(a, b, 'kmc')
         || o * cmpNum(a, b, 'km')
         || o * cmpStr(a, b, 'kma')
         || cmpYear(a, b, -1);
 }
 
-function cmpFace(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
+function cmpFace(a: DOMStringMap, b: DOMStringMap, o = 1): number {
     return o * cmpStr(a, b, 'face')
         || cmpKm(a, b, -1);
 }
 
-function cmpCond(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
+function cmpCond(a: DOMStringMap, b: DOMStringMap, o = 1): number {
     return o * cmpNum(a, b, 'cond')
         || cmpFace(a, b);
 }
 
-function cmpValue(a: DOMStringMap, b: DOMStringMap, o: number = 1): number {
+function cmpValue(a: DOMStringMap, b: DOMStringMap, o = 1): number {
     return o * cmpNum(a, b, 'value')
         || cmpCond(a, b, -1);
 }

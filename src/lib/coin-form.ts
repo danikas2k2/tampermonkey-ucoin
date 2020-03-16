@@ -55,7 +55,6 @@ export class CoinForm extends AbstractForm {
         }
     }
 
-
     private updateBuyDateInput(): void {
         const {buy_month: buyMonth, buy_year: buyYear} = this.form;
         let {buy_year_month: buyYearMonth} = this.form;
