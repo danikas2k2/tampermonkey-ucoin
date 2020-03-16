@@ -8,31 +8,31 @@ export async function post(url: RequestInfo, body?: BodyInit): Promise<Response>
     return await fetch(url, {method: 'POST', body});
 }
 
-async function responseOrError(url: RequestInfo, method: RequestMethod = 'GET', body?: BodyInit): Promise<Response> {
+async function responseOrError(url: RequestInfo, method: RequestMethod = 'GET', body?: BodyInit, autoRedirect = true): Promise<Response> {
     const response = await fetch(url, {method, body});
     if (!response.ok) {
         throw new Error(`${response.status}: ${response.statusText}`);
     }
-    if (response.redirected && location.href !== response.url) {
+    if (autoRedirect && response.redirected && location.href !== response.url) {
         history.pushState({}, null, response.url);
     }
     return response;
 }
 
-export async function getJson<T = any>(url: RequestInfo, body?: BodyInit): Promise<T> {
-    return await (await responseOrError(url, 'GET', body)).json();
+export async function getJson<T = any>(url: RequestInfo, body?: BodyInit, autoRedirect = true): Promise<T> {
+    return await (await responseOrError(url, 'GET', body, autoRedirect)).json();
 }
 
-export async function postJson<T = any>(url: RequestInfo, body?: BodyInit): Promise<T> {
-    return await (await responseOrError(url, 'POST', body)).json();
+export async function postJson<T = any>(url: RequestInfo, body?: BodyInit, autoRedirect = true): Promise<T> {
+    return await (await responseOrError(url, 'POST', body, autoRedirect)).json();
 }
 
-export async function getText(url: RequestInfo, body?: BodyInit): Promise<string> {
-    return await (await responseOrError(url, 'GET', body)).text();
+export async function getText(url: RequestInfo, body?: BodyInit, autoRedirect = true): Promise<string> {
+    return await (await responseOrError(url, 'GET', body, autoRedirect)).text();
 }
 
-export async function postText(url: RequestInfo, body?: BodyInit): Promise<string> {
-    return await (await responseOrError(url, 'POST', body)).text();
+export async function postText(url: RequestInfo, body?: BodyInit, autoRedirect = true): Promise<string> {
+    return await (await responseOrError(url, 'POST', body, autoRedirect)).text();
 }
 
 export function documentFragment(src: string): DocumentFragment {
