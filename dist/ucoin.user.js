@@ -232,30 +232,30 @@ async function post(url, body) {
     return await fetch(url, { method: 'POST', body });
 }
 exports.post = post;
-async function responseOrError(url, method = 'GET', body) {
+async function responseOrError(url, method = 'GET', body, autoRedirect = true) {
     const response = await fetch(url, { method, body });
     if (!response.ok) {
         throw new Error(`${response.status}: ${response.statusText}`);
     }
-    if (response.redirected && location.href !== response.url) {
+    if (autoRedirect && response.redirected && location.href !== response.url) {
         history.pushState({}, null, response.url);
     }
     return response;
 }
-async function getJson(url, body) {
-    return await (await responseOrError(url, 'GET', body)).json();
+async function getJson(url, body, autoRedirect = true) {
+    return await (await responseOrError(url, 'GET', body, autoRedirect)).json();
 }
 exports.getJson = getJson;
-async function postJson(url, body) {
-    return await (await responseOrError(url, 'POST', body)).json();
+async function postJson(url, body, autoRedirect = true) {
+    return await (await responseOrError(url, 'POST', body, autoRedirect)).json();
 }
 exports.postJson = postJson;
-async function getText(url, body) {
-    return await (await responseOrError(url, 'GET', body)).text();
+async function getText(url, body, autoRedirect = true) {
+    return await (await responseOrError(url, 'GET', body, autoRedirect)).text();
 }
 exports.getText = getText;
-async function postText(url, body) {
-    return await (await responseOrError(url, 'POST', body)).text();
+async function postText(url, body, autoRedirect = true) {
+    return await (await responseOrError(url, 'POST', body, autoRedirect)).text();
 }
 exports.postText = postText;
 function documentFragment(src) {
@@ -733,14 +733,17 @@ class ListForm extends form_1.AbstractForm {
         super(...arguments);
         this.funcId = 'my-coin-func-block';
     }
-    get headerId() {
-        return `widget-${this.formType}-header`;
-    }
     get mainId() {
         return `my-${this.formType}-block`;
     }
     get formId() {
         return `${this.formType}-form`;
+    }
+    get listId() {
+        return `${this.formType}-block`;
+    }
+    get headerId() {
+        return `widget-${this.formType}-header`;
     }
     get formCloseId() {
         return `${this.formType}-form-close`;
@@ -750,9 +753,6 @@ class ListForm extends form_1.AbstractForm {
     }
     get formVariety() {
         return `${this.formType}-variety`;
-    }
-    get listId() {
-        return `${this.formType}-block`;
     }
     get buttonSetId() {
         return `${this.formType}-button-set`;
@@ -775,10 +775,28 @@ class ListForm extends form_1.AbstractForm {
     get formOffFunctionName() {
         return `Coin${this.formTypeMethod}FormOff`;
     }
+    async handle() {
+        this.main = document.getElementById(this.mainId);
+        // if (!this.main) {
+        //     return;
+        // }
+        // this.listBlock = document.getElementById(this.listId);
+        // if (!this.listBlock) {
+        //     return;
+        // }
+        this.updateFormHandlers();
+        await this.update();
+    }
     fillForm(uid = '', cond = '', price = '', vid = '') {
-        this.form[this.formUid].value = uid;
-        this.form.condition.value = cond;
-        this.form.price.value = price;
+        if (this.form[this.formUid]) {
+            this.form[this.formUid].value = uid;
+        }
+        if (this.form.condition) {
+            this.form.condition.value = cond;
+        }
+        if (this.form.price) {
+            this.form.price.value = price;
+        }
         if (this.form[this.formVariety]) {
             this.form[this.formVariety].value = vid || vid_1.getCurrentVarietyId();
         }
@@ -907,18 +925,6 @@ class ListForm extends form_1.AbstractForm {
         this.updateFormButtons();
         this.updateCondition();
         this.updateButtonSet();
-    }
-    async handle() {
-        this.main = document.getElementById(this.mainId);
-        // if (!this.main) {
-        //     return;
-        // }
-        // this.listBlock = document.getElementById(this.listId);
-        // if (!this.listBlock) {
-        //     return;
-        // }
-        this.updateFormHandlers();
-        await this.update();
     }
 }
 exports.ListForm = ListForm;
@@ -1317,6 +1323,14 @@ class CoinForm extends form_1.AbstractForm {
         this.viewId = 'ucid-block';
         this.coinChooserId = 'coin-chooser-dialog';
     }
+    async handle( /*loc: string*/) {
+        this.func = document.getElementById(this.funcId);
+        if (!this.func) {
+            return;
+        }
+        this.coinChooser = document.getElementById(this.coinChooserId);
+        await this.update();
+    }
     async updateFragment(fragment) {
         this.func = utils_1.updateRequiredElement(fragment, this.func);
         this.coinChooser = utils_1.updateOptionalElement(fragment, this.coinChooser);
@@ -1486,14 +1500,6 @@ class CoinForm extends form_1.AbstractForm {
             }
         }
         // }
-    }
-    async handle( /*loc: string*/) {
-        this.func = document.getElementById(this.funcId);
-        if (!this.func) {
-            return;
-        }
-        this.coinChooser = document.getElementById(this.coinChooserId);
-        await this.update();
     }
 }
 exports.CoinForm = CoinForm;
@@ -1971,10 +1977,10 @@ class SwapForm extends list_form_1.ListForm {
                 qty.value = `${valueChanger(+qty.value)}`;
             });
         };
-        addQtyCtrlButton('afterend', 'minus', '&minus;', v => v - 1);
         addQtyCtrlButton('beforebegin', 'plus10', '+10', v => v + 10);
         addQtyCtrlButton('beforebegin', 'plus5', '+5', v => v + 5);
         addQtyCtrlButton('beforebegin', 'plus', '+', v => v + 1);
+        addQtyCtrlButton('beforebegin', 'minus', '&minus;', v => v - 1);
     }
 }
 exports.SwapForm = SwapForm;
@@ -2049,16 +2055,55 @@ class SwapFormList {
         this.variants = new Map();
         this.expandAvailable = false;
         this.combineAvailable = false;
+        this.deleteSwapCoin = async (usid) => {
+            if (usid instanceof Set) {
+                usid = [...usid].join(',');
+            }
+            const url = new URL('/swap-list/', location.href);
+            const p = url.searchParams;
+            p.set('f', 'del');
+            p.set('usid', usid);
+            p.set('uid', uid_1.UID);
+            const fragment = await ajax_1.getText(url.href, null, false);
+            if (!fragment) {
+                return utils_1.reload();
+            }
+            return true;
+        };
+        this.updateLinkQty = (a, qty) => {
+            if (a.hasAttribute('onClick')) {
+                a.setAttribute('onClick', a.getAttribute('onClick').replace(swap_links_1.CoinSwapFormOnMatcher, `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${qty}', '$<replica>'`));
+            }
+            for (const span of a.querySelectorAll('span.left.dblue-13')) {
+                span.remove();
+            }
+            if (qty > 1) {
+                for (const span of a.querySelectorAll('span.left.gray-13.wrap')) {
+                    span.insertAdjacentHTML('afterend', `<span class="left dblue-13"><span>&times;</span>${qty}</span>`);
+                }
+            }
+        };
         this.listForm = listForm;
     }
     update(listBlock) {
-        this.listBlock = listBlock;
-        this.form = listBlock.querySelector(selectors_1.id(this.listForm.formId));
+        if (this.listBlock) {
+            // this.listBlock.replaceWith(listBlock);
+            this.listBlock = listBlock;
+        }
+        else {
+            this.listBlock = listBlock;
+        }
+        this.form = listBlock.querySelector(selectors_1.id(this.listForm.formId))
+            || document.querySelector(selectors_1.id(this.listForm.formId));
         this.buttonSet = listBlock.querySelector('center');
         if (this.buttonSet) {
-            this.addButton('expand', 0, '&laquo;*&raquo;', () => this.onExpand());
-            this.addButton('expand', 5, '&laquo;5&raquo;', () => this.onExpand());
-            this.addButton('expand', 10, '&laquo;10&raquo;', () => this.onExpand());
+            /*const oldButton = this.buttonSet.querySelector('button.btn-s.btn-gray');
+            if (oldButton) {
+                oldButton.remove();
+            }*/
+            this.addButton('expand', 0, '&laquo;*&raquo;', n => this.onExpand(n));
+            this.addButton('expand', 5, '&laquo;5&raquo;', n => this.onExpand(n));
+            this.addButton('expand', 10, '&laquo;10&raquo;', n => this.onExpand(n));
             this.addButton('combine', 0, '&raquo;&middot;&laquo;', () => this.onCombine());
             this.updateButtons();
         }
@@ -2071,9 +2116,9 @@ class SwapFormList {
         }
         else {
             this.buttonSet.insertAdjacentHTML('beforeend', `<button id="${buttonId}" type="button" class="btn--${role} btn-s btn-blue">${text}</button>`);
-            this.buttonSet.querySelector(selectors_1.id(buttonId)).addEventListener('click', () => {
+            this.buttonSet.querySelector(selectors_1.id(buttonId)).addEventListener('click', async () => {
                 this.hideButtons();
-                clickHandler(qty);
+                await clickHandler(qty);
                 this.updateButtons();
             });
         }
@@ -2231,11 +2276,10 @@ class SwapFormList {
             debug(`UPDATING ${usid}`);
             const content = await this.updateSwapCoin(usid, { ...variant, qty: total });
             if (content) {
-                const newListBlock = content.getElementById(this.listForm.mainId);
+                const newListBlock = content.getElementById(this.listForm.listId);
                 if (newListBlock && this.listBlock) {
-                    this.listBlock.replaceWith(newListBlock);
-                    swap_links_1.styleListLinks(this.listBlock);
-                    this.listBlock = newListBlock;
+                    swap_links_1.styleListLinks(newListBlock);
+                    this.update(newListBlock);
                 }
             }
             else {
@@ -2244,7 +2288,7 @@ class SwapFormList {
             }
         }
         if (isDelFailed) {
-            debug('ADD FAILED :(');
+            debug('REMOVE FAILED :(');
         }
         else if (isUpdFailed) {
             debug('UPDATE FAILED :(');
@@ -2276,35 +2320,6 @@ class SwapFormList {
     }
     async addSwapCoin(data) {
         return await this.updateSwapCoin('', data, 'addswapcoin');
-    }
-    async deleteSwapCoin(usid) {
-        if (usid instanceof Set) {
-            usid = [...usid].join(',');
-        }
-        const url = new URL('/swap-list/', location.href);
-        const p = url.searchParams;
-        p.set('f', 'del');
-        p.set('uid', uid_1.UID);
-        p.set('usid', usid);
-        const fragment = await ajax_1.getFragment(url.href);
-        if (!fragment.getElementById(this.listForm.listId)) {
-            return utils_1.reload();
-        }
-        return fragment;
-    }
-    // eslint-disable-next-line class-methods-use-this
-    updateLinkQty(a, qty) {
-        if (a.hasAttribute('onClick')) {
-            a.setAttribute('onClick', a.getAttribute('onClick').replace(swap_links_1.CoinSwapFormOnMatcher, `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${qty}', '$<replica>'`));
-        }
-        for (const span of a.querySelectorAll('span.left.dblue-13')) {
-            span.remove();
-        }
-        if (qty > 1) {
-            for (const span of a.querySelectorAll('span.left.gray-13.wrap')) {
-                span.insertAdjacentHTML('afterend', `<span class="left dblue-13"><span>&times;</span>${qty}</span>`);
-            }
-        }
     }
 }
 exports.SwapFormList = SwapFormList;

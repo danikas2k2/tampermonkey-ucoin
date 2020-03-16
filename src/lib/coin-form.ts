@@ -20,6 +20,17 @@ export class CoinForm extends AbstractForm {
     private view: HTMLElement;
     private coinChooser: HTMLElement;
 
+    public async handle(/*loc: string*/): Promise<void> {
+        this.func = <HTMLElement> document.getElementById(this.funcId);
+        if (!this.func) {
+            return;
+        }
+
+        this.coinChooser = <HTMLElement> document.getElementById(this.coinChooserId);
+
+        await this.update();
+    }
+
     protected async updateFragment(fragment: DocumentFragment): Promise<void> {
         this.func = updateRequiredElement(fragment, this.func);
         this.coinChooser = updateOptionalElement(fragment, this.coinChooser);
@@ -218,16 +229,5 @@ export class CoinForm extends AbstractForm {
             }
         }
         // }
-    }
-
-    public async handle(/*loc: string*/): Promise<void> {
-        this.func = <HTMLElement> document.getElementById(this.funcId);
-        if (!this.func) {
-            return;
-        }
-
-        this.coinChooser = <HTMLElement> document.getElementById(this.coinChooserId);
-
-        await this.update();
     }
 }

@@ -21,10 +21,9 @@ export abstract class ListForm extends AbstractForm {
     protected abstract formTypeMethod: FormTypeMethod;
     protected abstract formTypePrefix: FormTypePrefix;
     protected abstract formUidPrefix: FormUidPrefix;
-
-    protected get headerId(): string {
-        return `widget-${this.formType}-header`;
-    }
+    protected funcId = 'my-coin-func-block';
+    protected widgetHeaderRedirectHandler: EventHandler;
+    private formClickTimeout: number;
 
     public get mainId(): string {
         return `my-${this.formType}-block`;
@@ -32,6 +31,14 @@ export abstract class ListForm extends AbstractForm {
 
     public get formId(): string {
         return `${this.formType}-form`;
+    }
+
+    public get listId(): string {
+        return `${this.formType}-block`;
+    }
+
+    protected get headerId(): string {
+        return `widget-${this.formType}-header`;
     }
 
     protected get formCloseId(): string {
@@ -44,12 +51,6 @@ export abstract class ListForm extends AbstractForm {
 
     protected get formVariety(): string {
         return `${this.formType}-variety`;
-    }
-
-    protected funcId = 'my-coin-func-block';
-
-    public get listId(): string {
-        return `${this.formType}-block`;
     }
 
     protected get buttonSetId(): string {
@@ -80,17 +81,37 @@ export abstract class ListForm extends AbstractForm {
         return `Coin${this.formTypeMethod}FormOff`;
     }
 
+    public async handle(): Promise<void> {
+        this.main = document.getElementById(this.mainId);
+        // if (!this.main) {
+        //     return;
+        // }
+
+        // this.listBlock = document.getElementById(this.listId);
+        // if (!this.listBlock) {
+        //     return;
+        // }
+
+        this.updateFormHandlers();
+
+        await this.update();
+    }
+
     protected fillForm(uid = '', cond = '', price = '', vid = ''): void {
-        this.form[this.formUid].value = uid;
-        this.form.condition.value = cond;
-        this.form.price.value = price;
+        if (this.form[this.formUid]) {
+            this.form[this.formUid].value = uid;
+        }
+        if (this.form.condition) {
+            this.form.condition.value = cond;
+        }
+        if (this.form.price) {
+            this.form.price.value = price;
+        }
         if (this.form[this.formVariety]) {
             this.form[this.formVariety].value = vid || getCurrentVarietyId();
         }
         (<HTMLInputElement> <unknown> this.form.action).value = uid ? `edit${this.formType}coin` : `add${this.formType}coin`;
     }
-
-    private formClickTimeout: number;
 
     protected formOnHandler(uid?: string, ...other: string[]): void {
         this.formClickTimeout = <number> <unknown> setTimeout(() => {
@@ -122,8 +143,6 @@ export abstract class ListForm extends AbstractForm {
         this.widgetHeader.removeEventListener('click', e => this.widgetHeaderCloseHandler(e));
         this.widgetHeader.addEventListener('click', e => this.widgetHeaderRedirectHandler(e));
     }
-
-    protected widgetHeaderRedirectHandler: EventHandler;
 
     protected widgetHeaderCloseHandler(e: Event): void {
         cancel(e);
@@ -241,21 +260,5 @@ export abstract class ListForm extends AbstractForm {
         this.updateFormButtons();
         this.updateCondition();
         this.updateButtonSet();
-    }
-
-    public async handle(): Promise<void> {
-        this.main = document.getElementById(this.mainId);
-        // if (!this.main) {
-        //     return;
-        // }
-
-        // this.listBlock = document.getElementById(this.listId);
-        // if (!this.listBlock) {
-        //     return;
-        // }
-
-        this.updateFormHandlers();
-
-        await this.update();
     }
 }

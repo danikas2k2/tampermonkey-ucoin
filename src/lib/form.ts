@@ -7,9 +7,9 @@ export abstract class AbstractForm {
     protected form: HTMLFormElement;
     protected func: HTMLElement;
 
+    public abstract async handle(): Promise<void>;
+
     protected abstract async updateFragment(fragment: DocumentFragment): Promise<void>;
 
     protected abstract async update(): Promise<void>;
-
-    public abstract async handle(): Promise<void>;
 }
