@@ -1063,11 +1063,11 @@ async function handleTablePage() {
     }
 }
 async function handleMessagePage() {
-    var _a, _b;
+    var _a;
     const userList = document.getElementById('user-list');
-    for (const user of (_a = userList) === null || _a === void 0 ? void 0 : _a.querySelectorAll('table.user tr[onclick]')) {
+    for (const user of userList === null || userList === void 0 ? void 0 : userList.querySelectorAll('table.user tr[onclick]')) {
         const a = user.querySelector('td.user-container a');
-        const m = (_b = user.attributes.getNamedItem('onclick')) === null || _b === void 0 ? void 0 : _b.value.match(/href\s*=\s*'(.*?)'/);
+        const m = (_a = user.attributes.getNamedItem('onclick')) === null || _a === void 0 ? void 0 : _a.value.match(/href\s*=\s*'(.*?)'/);
         if (m) {
             a.href = m[1];
             a.onclick = e => e.stopPropagation();
@@ -1299,17 +1299,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 const hide_svg_1 = __importDefault(__webpack_require__(14));
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 const leave_svg_1 = __importDefault(__webpack_require__(15));
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 const replace_svg_1 = __importDefault(__webpack_require__(16));
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 const show_svg_1 = __importDefault(__webpack_require__(17));
 const ajax_1 = __webpack_require__(1);
 const cond_1 = __webpack_require__(0);
@@ -1805,11 +1797,10 @@ function estimateSwapPrices() {
 }
 exports.estimateSwapPrices = estimateSwapPrices;
 function estimateWeightPrice() {
-    var _a, _b, _c;
     const coinBlock = document.getElementById(COIN_ID);
-    const aPrice = (_a = coinBlock) === null || _a === void 0 ? void 0 : _a.querySelector('.right.pricewj');
-    const head = (_b = coinBlock) === null || _b === void 0 ? void 0 : _b.querySelector('h1');
-    const trs = (_c = coinBlock) === null || _c === void 0 ? void 0 : _c.querySelectorAll('.coin-info tr');
+    const aPrice = coinBlock === null || coinBlock === void 0 ? void 0 : coinBlock.querySelector('.right.pricewj');
+    const head = coinBlock === null || coinBlock === void 0 ? void 0 : coinBlock.querySelector('h1');
+    const trs = coinBlock === null || coinBlock === void 0 ? void 0 : coinBlock.querySelectorAll('.coin-info tr');
     let weight = NaN;
     let isRussia = false;
     let isSilver = false;
@@ -2403,16 +2394,16 @@ function duplicatePagination() {
 }
 exports.duplicatePagination = duplicatePagination;
 function showAllPrices() {
-    var _a, _b, _c, _d;
+    var _a, _b, _c;
     const swapRows = document.querySelectorAll('table.swap-coin tr');
     for (const tr of swapRows) {
         const td = tr.querySelector('.td-cond + *');
         if (td) {
             const myPriceElement = td.querySelector('span.blue-13');
-            const myPrice = +((_a = myPriceElement) === null || _a === void 0 ? void 0 : _a.textContent);
-            const prefix = (_b = td.querySelector('span.gray-11:first-child')) === null || _b === void 0 ? void 0 : _b.textContent;
-            const suffix = (_c = td.querySelector('span.gray-11:last-child')) === null || _c === void 0 ? void 0 : _c.textContent;
-            const tooltipPrice = (_d = tr.dataset) === null || _d === void 0 ? void 0 : _d.tooltipPrice;
+            const myPrice = +(myPriceElement === null || myPriceElement === void 0 ? void 0 : myPriceElement.textContent);
+            const prefix = (_a = td.querySelector('span.gray-11:first-child')) === null || _a === void 0 ? void 0 : _a.textContent;
+            const suffix = (_b = td.querySelector('span.gray-11:last-child')) === null || _b === void 0 ? void 0 : _b.textContent;
+            const tooltipPrice = (_c = tr.dataset) === null || _c === void 0 ? void 0 : _c.tooltipPrice;
             if (tooltipPrice) {
                 const price = +tooltipPrice.replace(prefix, '').replace(suffix, '');
                 if (!isNaN(price) && myPrice !== price) {

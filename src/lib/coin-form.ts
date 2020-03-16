@@ -1,14 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 import HIDE from '../../images/hide.svg';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 import LEAVE from '../../images/leave.svg';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 import REPLACE from '../../images/replace.svg';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 import SHOW from '../../images/show.svg';
 import {getFragment, postFragment} from './ajax';
 import {Color, FormColorValues, FormValueColors} from './cond';

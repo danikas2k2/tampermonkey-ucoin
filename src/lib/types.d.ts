@@ -1,3 +1,8 @@
+declare module '*.svg' {
+    const svgCntent: string;
+    export default svgCntent;
+}
+
 interface Dictionary {
     [key: string]: string;
 }

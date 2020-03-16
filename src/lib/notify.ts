@@ -1,14 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 import ERROR from '../../images/error.svg';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 import INFO from '../../images/info.svg';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 import WARNING from '../../images/minus.svg';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 import OK from '../../images/success.svg';
 
 function notify(title: string, body?: string, icon?: string): void {
