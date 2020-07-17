@@ -365,14 +365,6 @@ body {
     }
 }
 
-#swap-mgr {
-    table.offer-list {
-        tr.str {
-            cursor: default;
-        }
-    }
-}
-
 #swap-list {
     .pages {
         padding-right: 0 !important;
@@ -380,6 +372,36 @@ body {
 
     .filter-container {
         margin: 0 !important;
+    }
+}
+
+#swap-mgr {
+    table.offer-list {
+        tr.str {
+            cursor: default;
+        }
+    }
+
+    #smart-filter-container {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 15px 0 20px;
+        background: white;
+
+        #country-filter {
+            width: 129px;
+            &.selected {
+                border-color: #3B7BEA;
+            }
+        }
+
+        .swap-coin-filter {
+            input.filter {
+                width: 100%;
+            }
+        }
     }
 }
 

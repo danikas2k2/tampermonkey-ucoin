@@ -66,6 +66,15 @@ export function updateRequiredElement(fragment: DocumentFragment, element: HTMLE
         }
         element.replaceWith(newElement);
         element = newElement;
+        element.querySelectorAll('[data-href]').forEach((el: HTMLElement) => {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const a = document.createElement('a');
+                a.href = el.dataset.href;
+                a.dispatchEvent(new MouseEvent(e.type, e));
+            });
+        });
     }
     return element;
 }

@@ -24,6 +24,24 @@ export class WishForm extends ListForm {
         }
     }
 
+    protected async updateForm(): Promise<void> {
+        super.updateForm();
+        this.updateVarieties();
+    }
+
+    protected updateVarieties(): void {
+        const varieties: RadioNodeList = this.form[this.formVariety];
+        if (varieties) {
+            const firstVariety = <HTMLLabelElement> varieties[0].parentElement;
+            const anyVariety = <HTMLLabelElement> firstVariety.cloneNode();
+            const anyVarietyInput = <HTMLInputElement> firstVariety.querySelector('input').cloneNode();
+            anyVarietyInput.value = '';
+            anyVariety.insertAdjacentElement('beforeend', anyVarietyInput);
+            anyVariety.insertAdjacentText('beforeend', 'Any');
+            firstVariety.insertAdjacentElement('beforebegin', anyVariety);
+        }
+    }
+
     // eslint-disable-next-line class-methods-use-this
     protected getConditionOption(o: HTMLOptionElement): ConditionOption {
         const {value, textContent} = o;

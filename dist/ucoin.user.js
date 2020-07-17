@@ -91,6 +91,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ColorStyle = exports.WishValue = exports.SwapValue = exports.FormColorValues = exports.FormValueColors = exports.FormValue = exports.ColorValues = exports.ConditionValues = exports.Value = exports.ConditionColors = exports.Color = void 0;
 var Color;
 (function (Color) {
     Color[Color["ANY"] = 1] = "ANY";
@@ -224,6 +225,7 @@ exports.ColorStyle = new Map([
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.postFragment = exports.getFragment = exports.documentFragment = exports.postText = exports.getText = exports.postJson = exports.getJson = exports.post = exports.get = void 0;
 async function get(url, body) {
     return await fetch(url, { method: 'GET', body });
 }
@@ -281,6 +283,7 @@ exports.postFragment = postFragment;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.id = void 0;
 function id(id) {
     return `#${id}`;
 }
@@ -294,6 +297,7 @@ exports.id = id;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.todayMonth = exports.handleLinkSubmit = exports.handleFormSubmit = exports.updateParts = exports.updateOptionalElement = exports.updateRequiredElement = exports.reload = exports.cancel = exports.disable = exports.enable = exports.toggle = exports.hide = exports.show = exports.tt = exports.sp = void 0;
 function sp(str) {
     return `${str || ''}`.replace(/\u{00A0}+/gu, ' ').replace(/\s+/g, ' ').trim();
 }
@@ -361,6 +365,15 @@ function updateRequiredElement(fragment, element) {
         }
         element.replaceWith(newElement);
         element = newElement;
+        element.querySelectorAll('[data-href]').forEach((el) => {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const a = document.createElement('a');
+                a.href = el.dataset.href;
+                a.dispatchEvent(new MouseEvent(e.type, e));
+            });
+        });
     }
     return element;
 }
@@ -425,6 +438,7 @@ exports.todayMonth = todayMonth;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.randomDelay = exports.delay = void 0;
 async function delay(time) {
     return await new Promise(resolve => setTimeout(() => resolve(), time));
 }
@@ -444,6 +458,7 @@ exports.randomDelay = randomDelay;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.addLinkComments = exports.addComment = exports.styleListLinks = exports.styleSwapLink = exports.getSwapLinksWithMatches = exports.getSwapLinks = exports.CoinSwapFormOnMatcher = void 0;
 const cond_1 = __webpack_require__(0);
 exports.CoinSwapFormOnMatcher = /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
 function* getSwapLinks(d = document) {
@@ -519,6 +534,7 @@ exports.addLinkComments = addLinkComments;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AbstractForm = void 0;
 class AbstractForm {
 }
 exports.AbstractForm = AbstractForm;
@@ -531,7 +547,9 @@ exports.AbstractForm = AbstractForm;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.addFilteringOptions = exports.addSortingOptions = exports.cmp = void 0;
 const cond_1 = __webpack_require__(0);
+const filters_1 = __webpack_require__(21);
 const utils_1 = __webpack_require__(3);
 const { location: loc } = document;
 function num(s) {
@@ -551,17 +569,17 @@ function cmpStr(a, b, field) {
 }
 function cmpYear(a, b, o = 1) {
     return o * cmpNum(a, b, 'year')
-        || cmpStr(a, b, 'mm');
+        || o * cmpStr(a, b, 'mm');
 }
 function cmpKm(a, b, o = 1) {
     return o * cmpStr(a, b, 'kmc')
         || o * cmpNum(a, b, 'km')
         || o * cmpStr(a, b, 'kma')
-        || cmpYear(a, b, -1);
+        || o * cmpYear(a, b);
 }
 function cmpFace(a, b, o = 1) {
     return o * cmpStr(a, b, 'face')
-        || cmpKm(a, b, -1);
+        || o * cmpKm(a, b, -1);
 }
 function cmpCond(a, b, o = 1) {
     return o * cmpNum(a, b, 'cond')
@@ -626,6 +644,18 @@ function setActiveSortOption(option, order) {
     parts[1] = `${sortOptionParams.get(option).field}:${order}`;
     loc.hash = parts.join(';');
 }
+function dropdown(id, selected, options) {
+    return `
+    <div class="right filter-container">
+        <div class="filter-box" id="${id}">
+            ${c(selected)}
+        </div>
+        <div class="drop hide filter-dialog" id="${id}-dialog">
+            ${options.join('')}
+        </div>
+    </div>
+`;
+}
 function addSortingOptions() {
     const swapList = document.getElementById('take-swap-list');
     if (!swapList) {
@@ -678,19 +708,10 @@ function addSortingOptions() {
     getActiveSortOption();
     sortBy(sections, currentOption, currentOrder);
     leftControls.removeAttribute('style');
-    leftControls.insertAdjacentHTML('afterend', `
-        <div class="right filter-container">
-            <div class="filter-box" id="sort-filter">
-                ${c(`${o(currentOption)}${a(currentOrder)}`)}
-            </div>
-            <div class="drop hide filter-dialog" id="sort-filter-dialog">
-            ${sortOptions.map(opt => `
-                <a class="list-link" data-option="${opt}" data-order="a">${o(opt)}${a()}</a>
-                <a class="list-link" data-option="${opt}" data-order="d">${o(opt)}${d()}</a>
-            `).join('')}
-            </div>
-        </div>
-    `);
+    leftControls.insertAdjacentHTML('afterend', dropdown('sort-filter', `${o(currentOption)}${a(currentOrder)}`, sortOptions.map(opt => `
+            <a class="list-link" data-option="${opt}" data-order="a">${o(opt)}${a()}</a>
+            <a class="list-link" data-option="${opt}" data-order="d">${o(opt)}${d()}</a>
+        `)));
     const sortFilter = swapList.querySelector('#sort-filter');
     const sortDialog = swapList.querySelector('#sort-filter-dialog');
     sortFilter.addEventListener('click', e => {
@@ -713,6 +734,190 @@ function addSortingOptions() {
     });
 }
 exports.addSortingOptions = addSortingOptions;
+function addFilteringOptions() {
+    const swapList = document.getElementById('take-swap-list');
+    if (!swapList) {
+        return;
+    }
+    const dataList = swapList.lastElementChild;
+    if (!dataList) {
+        return;
+    }
+    const countryHeadings = swapList.querySelectorAll('h2');
+    const countryOptions = [null, ...countryHeadings].reduce((r, h) => {
+        if (!h) {
+            r[''] = 'All';
+            return r;
+        }
+        const hc = h.cloneNode(true);
+        for (const el of hc.querySelectorAll('input, sup')) {
+            el.remove();
+        }
+        r[hc.id] = hc.innerHTML;
+        return r;
+    }, {});
+    dataList.insertAdjacentHTML('beforebegin', filters_1.renderFilters([
+        {
+            id: 'country-filter',
+            name: 'country',
+            placeholder: 'Country',
+            width: 170,
+            options: countryOptions,
+        },
+        {
+            id: 'year-filter',
+            name: 'year',
+            placeholder: 'Year',
+            width: 90,
+            options: countryOptions,
+        },
+        {
+            id: 'face-value-filter',
+            name: 'fv',
+            placeholder: 'Face value',
+            width: 170,
+            options: countryOptions,
+        },
+        {
+            id: 'code-filter',
+            name: 'km',
+            placeholder: 'KM#',
+            width: 90,
+            options: countryOptions,
+        },
+    ]));
+    const countryFilter = swapList.querySelector('#country-filter');
+    const countryDialog = swapList.querySelector('#country-filter-dialog');
+    countryFilter.addEventListener('click', e => {
+        e.stopPropagation();
+        countryDialog.style.display = countryDialog.style.display === 'block' ? 'none' : 'block';
+    });
+    countryDialog.addEventListener('click', e => {
+        e.stopPropagation();
+        countryDialog.style.display = 'none';
+        const a = e.target.closest('a');
+        if (!a) {
+            return;
+        }
+        countryFilter.innerHTML = `${c(a.innerHTML)}${d()}`;
+        const { option } = a.dataset;
+        if (!option) {
+            for (const h of countryHeadings) {
+                h.style.display = '';
+                h.nextElementSibling.style.display = '';
+            }
+        }
+        else {
+            for (const h of countryHeadings) {
+                if (h.id === option) {
+                    h.style.display = '';
+                    h.nextElementSibling.style.display = '';
+                }
+                else {
+                    h.style.display = 'none';
+                    h.nextElementSibling.style.display = 'none';
+                }
+            }
+        }
+    });
+    const filters = swapList.querySelectorAll('.filter');
+    for (const filter of filters) {
+        filter.addEventListener('input', e => {
+            const target = e.target;
+            const id = target.id;
+            const value = target.value;
+            const name = `sort${utils_1.tt(id)}`;
+            const rows = swapList.querySelectorAll('tbody > tr');
+            for (const row of rows) {
+                const d = row.dataset;
+                if (!value || d[name].includes(value)) {
+                    row.style.display = '';
+                }
+                else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+    }
+    const sections = swapList.querySelectorAll('table.swap-coin tbody');
+    if (!sections || !sections.length) {
+        return;
+    }
+    // add sorting index to all rows
+    // const rows = swapList.querySelectorAll<HTMLTableRowElement>('table.swap-coin tbody tr');
+    // for (const row of rows) {
+    //     const offset = row.querySelectorAll('td.ico-star').length;
+    //     const c = row.querySelectorAll('td');
+    //     const d = row.dataset;
+    //     for (const [option, {index, field}] of sortOptionParams) {
+    //         const name = `sort${tt(field)}`;
+    //         const t = c[index + offset].textContent;
+    //         if (option === 'Year') {
+    //             const [year, ...mm] = t.split(/(?:\s|&nbsp;)+/);
+    //             d[name] = year;
+    //             d.sortMm = mm.join(' ');
+    //         } else if (option === 'Condition') {
+    //             d[name] = `${ConditionValues.get(t)}`;
+    //         } else if (option === 'Krause number') {
+    //             const m = t.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?(?:[a-zA-Z]*))/i);
+    //             if (m && m.groups) {
+    //                 const {cat, num, prefix, suffix} = m.groups;
+    //                 d.sortKmc = cat;
+    //                 d[name] = num;
+    //                 d.sortKma = `${prefix}${suffix}`;
+    //             } else {
+    //                 d.sortKmc = '';
+    //                 d[name] = t;
+    //                 d.sortKma = '';
+    //             }
+    //         } else {
+    //             d[name] = t;
+    //         }
+    //     }
+    // }
+    // getActiveSortOption();
+    // sortBy(sections, currentOption, currentOrder);
+    // leftControls.removeAttribute('style');
+    // leftControls.insertAdjacentHTML('afterend', `
+    //     <div class="right filter-container">
+    //         <div class="filter-box" id="sort-filter">
+    //             ${c(`${o(currentOption)}${a(currentOrder)}`)}
+    //         </div>
+    //         <div class="drop hide filter-dialog" id="sort-filter-dialog">
+    //         ${sortOptions.map(opt => `
+    //             <a class="list-link" data-option="${opt}" data-order="a">${o(opt)}${a()}</a>
+    //             <a class="list-link" data-option="${opt}" data-order="d">${o(opt)}${d()}</a>
+    //         `).join('')}
+    //         </div>
+    //     </div>
+    // `);
+    // const sortFilter = swapList.querySelector<HTMLDivElement>('#sort-filter');
+    // const sortDialog = swapList.querySelector<HTMLDivElement>('#sort-filter-dialog');
+    //
+    // sortFilter.addEventListener('click', e => {
+    //     e.stopPropagation();
+    //     sortDialog.style.display = 'block';
+    // });
+    //
+    // sortDialog.addEventListener('click', e => {
+    //     e.stopPropagation();
+    //     sortDialog.style.display = 'none';
+    //
+    //     const a = (<HTMLElement> e.target).closest('a');
+    //     if (!a) {
+    //         return;
+    //     }
+    //
+    //     sortFilter.innerHTML = c(a.innerHTML);
+    //
+    //     const {option, order} = a.dataset;
+    //     currentOption = <SortOption> option;
+    //     currentOrder = <SortOrder> order;
+    //     setActiveSortOption(currentOption, currentOrder);
+    //     sortBy(sections, currentOption, currentOrder);
+    // });
+}
+exports.addFilteringOptions = addFilteringOptions;
 
 
 /***/ }),
@@ -722,12 +927,12 @@ exports.addSortingOptions = addSortingOptions;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ListForm = void 0;
 const ajax_1 = __webpack_require__(1);
 const form_1 = __webpack_require__(6);
 const selectors_1 = __webpack_require__(2);
 const swap_links_1 = __webpack_require__(5);
 const utils_1 = __webpack_require__(3);
-const vid_1 = __webpack_require__(23);
 class ListForm extends form_1.AbstractForm {
     constructor() {
         super(...arguments);
@@ -798,7 +1003,12 @@ class ListForm extends form_1.AbstractForm {
             this.form.price.value = price;
         }
         if (this.form[this.formVariety]) {
-            this.form[this.formVariety].value = vid || vid_1.getCurrentVarietyId();
+            if (vid) {
+                this.form[this.formVariety].value = vid;
+            }
+            else {
+                this.form[this.formVariety][0].checked = true;
+            }
         }
         this.form.action.value = uid ? `edit${this.formType}coin` : `add${this.formType}coin`;
     }
@@ -929,7 +1139,7 @@ class ListForm extends form_1.AbstractForm {
 }
 exports.ListForm = ListForm;
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(22)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(23)))
 
 /***/ }),
 /* 9 */
@@ -938,6 +1148,7 @@ exports.ListForm = ListForm;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UID = void 0;
 exports.UID = (() => {
     const a = document.querySelector('.header .partition .menu-l a[href^="/uid"');
     if (a) {
@@ -980,11 +1191,11 @@ const coin_form_1 = __webpack_require__(13);
 const gallery_1 = __webpack_require__(18);
 const links_1 = __webpack_require__(19);
 const prices_1 = __webpack_require__(20);
-const swap_form_1 = __webpack_require__(21);
-const swap_list_1 = __webpack_require__(25);
+const swap_form_1 = __webpack_require__(22);
+const swap_list_1 = __webpack_require__(26);
 const swap_list_sort_1 = __webpack_require__(7);
 const uid_1 = __webpack_require__(9);
-const wish_form_1 = __webpack_require__(26);
+const wish_form_1 = __webpack_require__(27);
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${ucoin_less_1.default}</style>`);
 async function handleHomePage() {
     const profile = document.getElementById('profile');
@@ -1031,6 +1242,7 @@ async function handleCoinPage() {
     await new wish_form_1.WishForm().handle();
 }
 async function handleGalleryPage() {
+    var _a, _b;
     const gallery = document.getElementById('gallery');
     if (gallery) {
         // fix gallery links
@@ -1045,6 +1257,14 @@ async function handleGalleryPage() {
         const closeButtons = gallery.querySelectorAll('div.close');
         for (const div of closeButtons) {
             links_1.updateOnClickHref(div);
+        }
+        const count = gallery.querySelectorAll('.coin').length;
+        const pages = +((_a = gallery.querySelector('.pages a:last-child')) === null || _a === void 0 ? void 0 : _a.textContent);
+        const current = +((_b = gallery.querySelector('.pages a.current')) === null || _b === void 0 ? void 0 : _b.textContent);
+        if (count) {
+            const isLast = current === pages;
+            const total = isLast ? (pages - 1) * 12 + count : (pages - 1) * 12;
+            gallery.querySelector('h1').insertAdjacentHTML('beforeend', ` <small>(${count}${pages ? ` <small>of ${isLast ? total : `${total + 1}~${total + 12}`}</small>` : ''})</small>`);
         }
     }
     gallery_1.addGalleryVisibilityToggle();
@@ -1084,6 +1304,7 @@ async function handleSwapPage() {
     swap_list_1.addTrackingLinks();
     swap_list_1.addOpenedTabsHandler();
     swap_list_sort_1.addSortingOptions();
+    swap_list_sort_1.addFilteringOptions();
     swap_list_1.duplicatePagination();
     swap_list_1.showAllPrices();
     swap_list_1.addConflictHandling();
@@ -1140,7 +1361,8 @@ async function handleSwapPage() {
         tree.insertAdjacentHTML('afterbegin', `<input id="${searchInputId}" class="tree-filter" placeholder="Search"/>`);
         const searchInput = document.getElementById(searchInputId);
         searchInput.addEventListener('input', () => {
-            const pattern = new RegExp([...searchInput.value].join('.*?'), 'i');
+            // const pattern = new RegExp([...searchInput.value].join('.*?'), 'i');
+            const pattern = new RegExp(searchInput.value.replace(/\W+/g, '.*?'), 'i');
             for (const a of tree.querySelectorAll('a.country-name')) {
                 const country = a.closest('div.country');
                 const countryVisible = pattern.test(a.textContent);
@@ -1167,6 +1389,16 @@ async function handleSwapPage() {
                 const plusMinus = country.querySelector('img');
                 plusMinus.src = showPeriods ? '/i/bg/minus.gif' : '/i/bg/plus.gif';
             }
+            const visibleCountries = tree.querySelectorAll('div.country:not(.hide)');
+            if (visibleCountries.length === 1) {
+                const country = visibleCountries[0];
+                const periodsBlock = country.querySelector('.periods');
+                if (periodsBlock) {
+                    periodsBlock.style.display = 'block';
+                }
+                const plusMinus = country.querySelector('img');
+                plusMinus.src = '/i/bg/minus.gif';
+            }
             for (const reg of tree.querySelectorAll('div.reg')) {
                 const { length } = reg.querySelectorAll('div.country:not(.hide)');
                 reg.classList.toggle('hide', !length);
@@ -1190,7 +1422,7 @@ exports = ___CSS_LOADER_API_IMPORT___(false);
 exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap);"]);
 exports.push([module.i, "@import url(https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css);"]);
 // Module
-exports.push([module.i, "body {\n  font-family: 'Open Sans', sans-serif;\n  font-size: 14px;\n}\n.widget {\n  font-size: inherit;\n}\n.widget-header {\n  background-color: #CCCCCC;\n  color: #333333;\n  font-weight: 300;\n  font-size: inherit;\n}\n.btn-l {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-l.hide {\n  display: none;\n}\n.btn-s {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-s.hide {\n  display: none;\n}\n.btn-red {\n  background-color: #CC0000;\n  border: 1px solid #00000022;\n}\n.btn-red,\n.btn-red:hover {\n  color: #F5F5F5;\n}\n#table a.cell {\n  position: relative;\n}\n#table a.cell.samekm {\n  z-index: 1;\n  background-color: #333333AA;\n  color: #CCCCCC;\n  box-shadow: none;\n  -webkit-box-shadow: none;\n}\n#table a.cell.samekm:hover {\n  background-color: #000000AA;\n  color: #FFFFFF;\n}\n.btn-set .btn-marker:hover {\n  filter: brightness(1.2);\n}\n#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#buy_year_month {\n  background-color: #FFFFFF;\n  border: 1px solid #ACACAC;\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: 0 2px 1px #0000000D inset;\n  color: #222222;\n  display: inline-block;\n  font-family: 'Open Sans', sans-serif;\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 150px;\n}\n#my-func-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#my-func-block .btn-i {\n  padding: 10px;\n}\n#my-func-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n.estimated-prices-widget .widget-header {\n  cursor: default;\n}\n#estimated-prices {\n  max-height: 400px;\n  overflow-x: hidden;\n}\n#estimated-prices .list-link {\n  cursor: initial;\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #e9edf1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n}\n.widget .list-link .blue-13,\n#coin-list table .blue-13 {\n  font-size: 11px;\n  line-height: 19px;\n  letter-spacing: -1px;\n  white-space: nowrap;\n}\n#coin h1 {\n  color: #3B3B3B;\n}\n#coin .pricewj {\n  border: none;\n}\n#coin .pricewj span {\n  font-size: 15px;\n}\n#coin .tbl td,\n#coin .tbl th {\n  border: none;\n}\n#coin .coin-info th {\n  background-color: #EDF1F3;\n}\n#coin .coin-info tr + tr td {\n  border-top: 1px solid #EDF1F3;\n}\n#coin .coin-info tr + tr th {\n  border-top: 1px solid #FFF;\n}\n#coin .coin-info thead + tbody {\n  border-top: 1px solid #FFF;\n}\n#coin .coin-img td.i {\n  border: none;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-s,\n#coin #wish-form .btn-s {\n  margin: 0 0 0 5px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-swap-block #swap-block .btn--combine,\n#my-swap-block #swap-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-swap-block #swap-block .btn--combine.hide,\n#my-swap-block #swap-block .btn--expand.hide {\n  display: none;\n}\n#my-wish-block #wish-block a {\n  position: relative;\n}\n#my-wish-block #wish-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-wish-block #wish-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-wish-block #wish-block a .comments:active,\n#my-wish-block #wish-block a .comments:focus,\n#my-wish-block #wish-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block a:active .comments,\n#my-wish-block #wish-block a:focus .comments,\n#my-wish-block #wish-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-wish-block #wish-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 28px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-wish-block #wish-block .btn--combine,\n#my-wish-block #wish-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-wish-block #wish-block .btn--combine.hide,\n#my-wish-block #wish-block .btn--expand.hide {\n  display: none;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #FDD;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #FED;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n#swap-list .action-board,\n#swap-mgr .action-board,\n#swap-list .filter-container,\n#swap-mgr .filter-container {\n  margin: 15px 0 20px;\n  height: 30px;\n  width: auto;\n}\n#swap-list #sort-filter,\n#swap-mgr #sort-filter {\n  border-color: #3B7BEA;\n  width: 150px !important;\n  padding: 4px 12px 7px;\n}\n#swap-list #sort-filter .left,\n#swap-mgr #sort-filter .left {\n  max-width: 140px !important;\n}\n#swap-list #sort-filter-dialog,\n#swap-mgr #sort-filter-dialog {\n  width: 174px;\n  display: none;\n}\n#swap-mgr table.offer-list tr.str {\n  cursor: default;\n}\n#swap-list .pages {\n  padding-right: 0 !important;\n}\n#swap-list .filter-container {\n  margin: 0 !important;\n}\n#profile .price {\n  display: inline-block;\n}\n#profile .price .total {\n  float: right;\n  color: #666666;\n  font-size: 20px;\n  font-family: Arial, Helvetica, sans-serif;\n  font-weight: normal;\n  margin-top: 4px;\n  padding-top: 4px;\n  border-top: 1px solid #006600;\n}\n#profile .price .total .cur {\n  font-size: 16px;\n  padding-right: 6px;\n}\n#tree .tree-filter {\n  background-color: #FFFFFF;\n  border: 1px solid #ACACAC;\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: 0 2px 1px #0000000D inset;\n  color: #222222;\n  display: inline-block;\n  font-family: 'Open Sans', sans-serif;\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 100%;\n  margin-bottom: 3px;\n  font-size: 13px;\n}\n#tree #catalog-tree .country .hide,\n#tree #catalog-tree .period .hide {\n  display: none;\n}\n#coin .rnav {\n  position: relative;\n}\n#coin-chooser-dialog {\n  width: max-content;\n  min-width: 200px;\n  max-width: 640px;\n  max-height: 720px !important;\n  column-width: 200px;\n  column-gap: 20px;\n  right: 0;\n}\n#coin-chooser-dialog .list-link {\n  display: inline-block;\n  width: 176px;\n}\n", ""]);
+exports.push([module.i, "body {\n  font-family: 'Open Sans', sans-serif;\n  font-size: 14px;\n}\n.widget {\n  font-size: inherit;\n}\n.widget-header {\n  background-color: #CCCCCC;\n  color: #333333;\n  font-weight: 300;\n  font-size: inherit;\n}\n.btn-l {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-l.hide {\n  display: none;\n}\n.btn-s {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-s.hide {\n  display: none;\n}\n.btn-red {\n  background-color: #CC0000;\n  border: 1px solid #00000022;\n}\n.btn-red,\n.btn-red:hover {\n  color: #F5F5F5;\n}\n#table a.cell {\n  position: relative;\n}\n#table a.cell.samekm {\n  z-index: 1;\n  background-color: #333333AA;\n  color: #CCCCCC;\n  box-shadow: none;\n  -webkit-box-shadow: none;\n}\n#table a.cell.samekm:hover {\n  background-color: #000000AA;\n  color: #FFFFFF;\n}\n.btn-set .btn-marker:hover {\n  filter: brightness(1.2);\n}\n#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#buy_year_month {\n  background-color: #FFFFFF;\n  border: 1px solid #ACACAC;\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: 0 2px 1px #0000000D inset;\n  color: #222222;\n  display: inline-block;\n  font-family: 'Open Sans', sans-serif;\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 150px;\n}\n#my-func-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#my-func-block .btn-i {\n  padding: 10px;\n}\n#my-func-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n.estimated-prices-widget .widget-header {\n  cursor: default;\n}\n#estimated-prices {\n  max-height: 400px;\n  overflow-x: hidden;\n}\n#estimated-prices .list-link {\n  cursor: initial;\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid #e9edf1;\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n}\n.widget .list-link .blue-13,\n#coin-list table .blue-13 {\n  font-size: 11px;\n  line-height: 19px;\n  letter-spacing: -1px;\n  white-space: nowrap;\n}\n#coin h1 {\n  color: #3B3B3B;\n}\n#coin .pricewj {\n  border: none;\n}\n#coin .pricewj span {\n  font-size: 15px;\n}\n#coin .tbl td,\n#coin .tbl th {\n  border: none;\n}\n#coin .coin-info th {\n  background-color: #EDF1F3;\n}\n#coin .coin-info tr + tr td {\n  border-top: 1px solid #EDF1F3;\n}\n#coin .coin-info tr + tr th {\n  border-top: 1px solid #FFF;\n}\n#coin .coin-info thead + tbody {\n  border-top: 1px solid #FFF;\n}\n#coin .coin-img td.i {\n  border: none;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-s,\n#coin #wish-form .btn-s {\n  margin: 0 0 0 5px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-swap-block #swap-block .btn--combine,\n#my-swap-block #swap-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-swap-block #swap-block .btn--combine.hide,\n#my-swap-block #swap-block .btn--expand.hide {\n  display: none;\n}\n#my-wish-block #wish-block a {\n  position: relative;\n}\n#my-wish-block #wish-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-wish-block #wish-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-wish-block #wish-block a .comments:active,\n#my-wish-block #wish-block a .comments:focus,\n#my-wish-block #wish-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block a:active .comments,\n#my-wish-block #wish-block a:focus .comments,\n#my-wish-block #wish-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-wish-block #wish-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 28px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-wish-block #wish-block .btn--combine,\n#my-wish-block #wish-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-wish-block #wish-block .btn--combine.hide,\n#my-wish-block #wish-block .btn--expand.hide {\n  display: none;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: #FDD;\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: #FED;\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n#swap-list .action-board,\n#swap-mgr .action-board,\n#swap-list .filter-container,\n#swap-mgr .filter-container {\n  margin: 15px 0 20px;\n  height: 30px;\n  width: auto;\n}\n#swap-list #sort-filter,\n#swap-mgr #sort-filter {\n  border-color: #3B7BEA;\n  width: 150px !important;\n  padding: 4px 12px 7px;\n}\n#swap-list #sort-filter .left,\n#swap-mgr #sort-filter .left {\n  max-width: 140px !important;\n}\n#swap-list #sort-filter-dialog,\n#swap-mgr #sort-filter-dialog {\n  width: 174px;\n  display: none;\n}\n#swap-list .pages {\n  padding-right: 0 !important;\n}\n#swap-list .filter-container {\n  margin: 0 !important;\n}\n#swap-mgr table.offer-list tr.str {\n  cursor: default;\n}\n#swap-mgr #smart-filter-container {\n  position: sticky;\n  top: 0;\n  width: 100%;\n  margin: 0;\n  padding: 15px 0 20px;\n  background: white;\n}\n#swap-mgr #smart-filter-container #country-filter {\n  width: 129px;\n}\n#swap-mgr #smart-filter-container #country-filter.selected {\n  border-color: #3B7BEA;\n}\n#swap-mgr #smart-filter-container .swap-coin-filter input.filter {\n  width: 100%;\n}\n#profile .price {\n  display: inline-block;\n}\n#profile .price .total {\n  float: right;\n  color: #666666;\n  font-size: 20px;\n  font-family: Arial, Helvetica, sans-serif;\n  font-weight: normal;\n  margin-top: 4px;\n  padding-top: 4px;\n  border-top: 1px solid #006600;\n}\n#profile .price .total .cur {\n  font-size: 16px;\n  padding-right: 6px;\n}\n#tree .tree-filter {\n  background-color: #FFFFFF;\n  border: 1px solid #ACACAC;\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: 0 2px 1px #0000000D inset;\n  color: #222222;\n  display: inline-block;\n  font-family: 'Open Sans', sans-serif;\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 100%;\n  margin-bottom: 3px;\n  font-size: 13px;\n}\n#tree #catalog-tree .country .hide,\n#tree #catalog-tree .period .hide {\n  display: none;\n}\n#coin .rnav {\n  position: relative;\n}\n#coin-chooser-dialog {\n  width: max-content;\n  min-width: 200px;\n  max-width: 640px;\n  max-height: 720px !important;\n  column-width: 200px;\n  column-gap: 20px;\n  right: 0;\n}\n#coin-chooser-dialog .list-link {\n  display: inline-block;\n  width: 176px;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -1305,6 +1537,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CoinForm = void 0;
 const hide_svg_1 = __importDefault(__webpack_require__(14));
 const leave_svg_1 = __importDefault(__webpack_require__(15));
 const replace_svg_1 = __importDefault(__webpack_require__(16));
@@ -1536,6 +1769,7 @@ module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 576 51
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.addGalleryVisibilityToggle = void 0;
 const ajax_1 = __webpack_require__(1);
 const delay_1 = __webpack_require__(4);
 const gallery = document.getElementById('gallery');
@@ -1613,6 +1847,7 @@ exports.addGalleryVisibilityToggle = addGalleryVisibilityToggle;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.updateOnClickHref = exports.updateLinkHref = void 0;
 const loc = document.location.href;
 function updateLinkHref(a) {
     const oldUrl = new URL(a.href, loc);
@@ -1674,6 +1909,7 @@ exports.updateOnClickHref = updateOnClickHref;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.estimateWeightPrice = exports.estimateSwapPrices = void 0;
 const cond_1 = __webpack_require__(0);
 const swap_list_sort_1 = __webpack_require__(7);
 const COIN_ID = 'coin';
@@ -1894,11 +2130,76 @@ exports.estimateWeightPrice = estimateWeightPrice;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.renderFilters = exports.renderFilter = void 0;
+const { location: loc } = document;
+function urlWithoutFilter(name) {
+    const url = new URL(loc.href);
+    url.searchParams.delete(name);
+    return url.href;
+}
+function urlWithFilter(name, value) {
+    const url = new URL(loc.href);
+    url.searchParams.set(name, value);
+    return url.href;
+}
+function renderFilter(props) {
+    return `<div class="${(props === null || props === void 0 ? void 0 : props.direction) || 'left'} filter-container"><div id="${props === null || props === void 0 ? void 0 : props.id}" class="filter-box${(props === null || props === void 0 ? void 0 : props.value) ? ` filter-box-active` : ''}" style="width: ${(props === null || props === void 0 ? void 0 : props.width) - 24}px;">\
+            <div class="${(props === null || props === void 0 ? void 0 : props.value) ? `blue-13 ` : ''}left">${(props === null || props === void 0 ? void 0 : props.value) || (props === null || props === void 0 ? void 0 : props.placeholder)}</div>${(props === null || props === void 0 ? void 0 : props.value) ? `<div class="right close" title="Clear filter" onclick="location.href='${urlWithoutFilter(props === null || props === void 0 ? void 0 : props.name)}';">×</div>`
+        : `<div class="right"><span class="arrow ab"></span></div>`}</div>\
+        <div class="drop hide filter-dialog" id="${props === null || props === void 0 ? void 0 : props.id}-dialog" style="width: ${props === null || props === void 0 ? void 0 : props.width}px;">\
+            ${Object.entries(props === null || props === void 0 ? void 0 : props.options).map(([value, label]) => `<a class="list-link" href="${urlWithFilter(props === null || props === void 0 ? void 0 : props.name, value)}><span class="left gray-13 wrap" style="max-width:140px;">${label}</span></a>`).join('')}\
+        </div></div>`;
+    // Toggle:
+    // <div class="filter-box" style="width: 120px;" data-href="/table/?country=latvia&amp;period=315&amp;type=1&amp;uid=28609&amp;year=2014&amp;mintset=on">
+    //     <div class="gray-13 left wrap" style="max-width:100px;">Mint Set</div>
+    //     <div class="lgray-13 right">38</div>
+    // </div>
+}
+exports.renderFilter = renderFilter;
+function renderFilters(props) {
+    const script = ``;
+    // const script = `
+    //     <script>
+    //         $(document).on('click touchstart', function (event) {
+    //             if( $(event.target).closest(".filter-dialog").length )
+    //                 return;
+    //             $(".filter-dialog").fadeOut("fast");
+    //             event.stopPropagation();
+    //         });
+    //         $('.filter-box[data-href!=""]').on('click touchstart', function () {
+    //             $(location).attr('href', $(this).attr('data-href'));
+    //         });
+    //         $('.filter-box').on('click touchstart', function (event) {
+    //             if( $(event.target).closest(".close").length ) return;
+    //             dialog = "#" + $(this).attr('id') + "-dialog";
+    //             if( $(dialog).css("display") == 'block') {
+    //                 $(dialog).fadeOut("fast");
+    //             } else {
+    //                 $(".filter-dialog").fadeOut("fast");
+    //                 $(dialog).fadeIn("fast");
+    //             }
+    //             return false;
+    //         });
+    //     </script>`;
+    return `<div class="filters">${props.map(renderFilter).join('')}${script}</div>`;
+}
+exports.renderFilters = renderFilters;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SwapForm = void 0;
 const cond_1 = __webpack_require__(0);
 const list_form_1 = __webpack_require__(8);
 const selectors_1 = __webpack_require__(2);
 const swap_form_list_1 = __webpack_require__(24);
 const swap_links_1 = __webpack_require__(5);
+const vid_1 = __webpack_require__(25);
 // declare let CoinSwapFormOn: (usid: string, cond: string, price: string, info: string, vid: string, qty: string, replica: string, ...other: string[]) => void;
 // declare let CoinSwapFormOff: (...other: string[]) => void;
 class SwapForm extends list_form_1.ListForm {
@@ -1923,7 +2224,7 @@ class SwapForm extends list_form_1.ListForm {
         this.swapListManager = new swap_form_list_1.SwapFormList(this);
     }
     fillForm(uid = '', cond = '', price = '', info = '', vid = '', qty = '', replica = '') {
-        super.fillForm(uid, cond || replica && '100', price, vid);
+        super.fillForm(uid, cond || replica && '100', price, vid || vid_1.getCurrentVarietyId());
         this.form.comment.value = info;
         this.form.qty.value = qty || '1';
         this.form.comment.value = info;
@@ -1987,7 +2288,7 @@ exports.SwapForm = SwapForm;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 var g;
@@ -2013,36 +2314,13 @@ module.exports = g;
 
 
 /***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-function getCurrentVarietyId() {
-    const vid = new URL(document.location.href).searchParams.get('vid');
-    if (vid) {
-        return vid;
-    }
-    const form = document.querySelector('#edit-coin-form form');
-    if (form) {
-        const variety = new FormData(form).get('variety');
-        if (variety) {
-            return variety.toString();
-        }
-    }
-    return null;
-}
-exports.getCurrentVarietyId = getCurrentVarietyId;
-
-
-/***/ }),
 /* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SwapFormList = void 0;
 const ajax_1 = __webpack_require__(1);
 const delay_1 = __webpack_require__(4);
 const selectors_1 = __webpack_require__(2);
@@ -2332,6 +2610,32 @@ exports.SwapFormList = SwapFormList;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getCurrentVarietyId = void 0;
+function getCurrentVarietyId() {
+    const vid = new URL(document.location.href).searchParams.get('vid');
+    if (vid) {
+        return vid;
+    }
+    const form = document.querySelector('#edit-coin-form form');
+    if (form) {
+        const variety = new FormData(form).get('variety');
+        if (variety) {
+            return variety.toString();
+        }
+    }
+    return null;
+}
+exports.getCurrentVarietyId = getCurrentVarietyId;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.removeRowHrefFromSwapList = exports.ignoreUnwanted = exports.checkSold = exports.addConflictHandling = exports.showAllPrices = exports.duplicatePagination = exports.addOpenedTabsHandler = exports.addTrackingLinks = void 0;
 const ajax_1 = __webpack_require__(1);
 const cond_1 = __webpack_require__(0);
 const delay_1 = __webpack_require__(4);
@@ -2613,12 +2917,13 @@ exports.removeRowHrefFromSwapList = removeRowHrefFromSwapList;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.WishForm = void 0;
 const cond_1 = __webpack_require__(0);
 const list_form_1 = __webpack_require__(8);
 // declare let CoinWishFormOn: (uwid: string, cond: string, price: string, tid: string, vid: string, ...other: string[]) => void;
@@ -2641,6 +2946,22 @@ class WishForm extends list_form_1.ListForm {
         super.fillForm(uid, cond, price, vid);
         if (this.form.is_type) {
             this.form.is_type.checked = true;
+        }
+    }
+    async updateForm() {
+        super.updateForm();
+        this.updateVarieties();
+    }
+    updateVarieties() {
+        const varieties = this.form[this.formVariety];
+        if (varieties) {
+            const firstVariety = varieties[0].parentElement;
+            const anyVariety = firstVariety.cloneNode();
+            const anyVarietyInput = firstVariety.querySelector('input').cloneNode();
+            anyVarietyInput.value = '';
+            anyVariety.insertAdjacentElement('beforeend', anyVarietyInput);
+            anyVariety.insertAdjacentText('beforeend', 'Any');
+            firstVariety.insertAdjacentElement('beforebegin', anyVariety);
         }
     }
     // eslint-disable-next-line class-methods-use-this

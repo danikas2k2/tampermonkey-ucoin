@@ -4,7 +4,6 @@ import {AbstractForm} from './form';
 import {id} from './selectors';
 import {styleListLinks} from './swap-links';
 import {cancel, disable, enable, handleFormSubmit, handleLinkSubmit, hide, show, toggle, updateRequiredElement} from './utils';
-import {getCurrentVarietyId} from './vid';
 
 export abstract class ListForm extends AbstractForm {
     protected widgetHeader: HTMLElement;
@@ -108,7 +107,11 @@ export abstract class ListForm extends AbstractForm {
             this.form.price.value = price;
         }
         if (this.form[this.formVariety]) {
-            this.form[this.formVariety].value = vid || getCurrentVarietyId();
+            if (vid) {
+                this.form[this.formVariety].value = vid;
+            } else {
+                this.form[this.formVariety][0].checked = true;
+            }
         }
         (<HTMLInputElement> <unknown> this.form.action).value = uid ? `edit${this.formType}coin` : `add${this.formType}coin`;
     }

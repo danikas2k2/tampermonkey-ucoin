@@ -3,6 +3,7 @@ import {ListForm} from './list-form';
 import {id} from './selectors';
 import {SwapFormList} from './swap-form-list';
 import {addLinkComments, styleListLinks} from './swap-links';
+import {getCurrentVarietyId} from './vid';
 
 // declare let CoinSwapFormOn: (usid: string, cond: string, price: string, info: string, vid: string, qty: string, replica: string, ...other: string[]) => void;
 // declare let CoinSwapFormOff: (...other: string[]) => void;
@@ -29,7 +30,7 @@ export class SwapForm extends ListForm {
     private swapListManager = new SwapFormList(this);
 
     protected fillForm(uid = '', cond = '', price = '', info = '', vid = '', qty = '', replica = ''): void {
-        super.fillForm(uid, cond || replica && '100', price, vid);
+        super.fillForm(uid, cond || replica && '100', price, vid || getCurrentVarietyId());
         this.form.comment.value = info;
         this.form.qty.value = qty || '1';
         this.form.comment.value = info;

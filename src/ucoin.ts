@@ -32,7 +32,7 @@ import {
     removeRowHrefFromSwapList,
     showAllPrices
 } from './lib/swap-list';
-import {addSortingOptions} from './lib/swap-list-sort';
+import {addFilteringOptions, addSortingOptions} from './lib/swap-list-sort';
 import {UID} from './lib/uid';
 import {WishForm} from './lib/wish-form';
 
@@ -105,6 +105,15 @@ async function handleGalleryPage(): Promise<void> {
         for (const div of closeButtons) {
             updateOnClickHref(div);
         }
+
+        const count = gallery.querySelectorAll('.coin').length;
+        const pages = +(gallery.querySelector('.pages a:last-child')?.textContent);
+        const current = +(gallery.querySelector('.pages a.current')?.textContent);
+        if (count) {
+            const isLast = current === pages;
+            const total = isLast ? (pages - 1) * 12 + count : (pages - 1) * 12;
+            gallery.querySelector('h1').insertAdjacentHTML('beforeend', ` <small>(${count}${pages ? ` <small>of ${isLast ? total : `${total+1}~${total+12}`}</small>` : ''})</small>`);
+        }
     }
 
     addGalleryVisibilityToggle();
@@ -147,6 +156,7 @@ async function handleSwapPage(): Promise<void> {
     addTrackingLinks();
     addOpenedTabsHandler();
     addSortingOptions();
+    addFilteringOptions();
     duplicatePagination();
     showAllPrices();
     addConflictHandling();
@@ -214,7 +224,8 @@ async function handleSwapPage(): Promise<void> {
         tree.insertAdjacentHTML('afterbegin', `<input id="${searchInputId}" class="tree-filter" placeholder="Search"/>`);
         const searchInput = <HTMLInputElement> document.getElementById(searchInputId);
         searchInput.addEventListener('input', () => {
-            const pattern = new RegExp([...searchInput.value].join('.*?'), 'i');
+            // const pattern = new RegExp([...searchInput.value].join('.*?'), 'i');
+            const pattern = new RegExp(searchInput.value.replace(/\W+/g, '.*?'), 'i');
             for (const a of tree.querySelectorAll('a.country-name')) {
                 const country = a.closest('div.country');
                 const countryVisible: boolean = pattern.test(a.textContent);
@@ -239,6 +250,17 @@ async function handleSwapPage(): Promise<void> {
                 }
                 const plusMinus = country.querySelector<HTMLImageElement>('img');
                 plusMinus.src = showPeriods ? '/i/bg/minus.gif' : '/i/bg/plus.gif';
+            }
+
+            const visibleCountries = tree.querySelectorAll('div.country:not(.hide)');
+            if (visibleCountries.length === 1) {
+                const country = visibleCountries[0];
+                const periodsBlock = country.querySelector<HTMLDivElement>('.periods');
+                if (periodsBlock) {
+                    periodsBlock.style.display = 'block';
+                }
+                const plusMinus = country.querySelector<HTMLImageElement>('img');
+                plusMinus.src = '/i/bg/minus.gif';
             }
 
             for (const reg of tree.querySelectorAll('div.reg')) {
