@@ -1,9 +1,10 @@
 import path from 'path';
 import webpack from 'webpack';
 // @ts-ignore
-import WebpackAutoInject from 'webpack-auto-inject-version';
+import ReplacePlugin from 'webpack-plugin-replace';
+import PACKAGE from './package.json';
 
-const config: webpack.Configuration = {
+const config = (env: Record<string, any>): webpack.Configuration => ({
     mode: 'production',
     context: __dirname,
     entry: {
@@ -28,15 +29,12 @@ const config: webpack.Configuration = {
         minimize: false
     },
     plugins: [
-        new WebpackAutoInject({
-            SILENT: true,
-            components: {
-                AutoIncreaseVersion: true,
-                InjectAsComment: false,
-                InjectByTag: true,
+        new ReplacePlugin({
+            values: {
+                '{{project.version}}': PACKAGE.version,
             },
         }),
     ]
-};
+});
 
 export default config;

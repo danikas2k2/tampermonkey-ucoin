@@ -1,15 +1,20 @@
 export abstract class AbstractForm {
-    public mainId: string;
-    public formId: string;
     protected funcId: string;
-
     protected main: HTMLElement;
     protected form: HTMLFormElement;
     protected func: HTMLElement;
 
-    public abstract async handle(): Promise<void>;
+    public get mainId(): string {
+        return '';
+    }
 
-    protected abstract async updateFragment(fragment: DocumentFragment): Promise<void>;
+    public get formId(): string {
+        return '';
+    }
 
-    protected abstract async update(): Promise<void>;
+    public abstract handle(): Promise<void>;
+
+    protected abstract updateFragment(fragment: DocumentFragment): Promise<void>;
+
+    protected abstract update(): Promise<void>;
 }
