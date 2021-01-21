@@ -125,7 +125,7 @@ module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 576 51
 
 /***/ }),
 
-/***/ 516:
+/***/ 759:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -184,7 +184,7 @@ exports.postFragment = postFragment;
 
 /***/ }),
 
-/***/ 905:
+/***/ 659:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -198,11 +198,11 @@ const hide_svg_1 = __importDefault(__webpack_require__(602));
 const leave_svg_1 = __importDefault(__webpack_require__(916));
 const replace_svg_1 = __importDefault(__webpack_require__(584));
 const show_svg_1 = __importDefault(__webpack_require__(238));
-const ajax_1 = __webpack_require__(516);
-const cond_1 = __webpack_require__(105);
-const form_1 = __webpack_require__(417);
-const selectors_1 = __webpack_require__(557);
-const utils_1 = __webpack_require__(721);
+const ajax_1 = __webpack_require__(759);
+const cond_1 = __webpack_require__(290);
+const form_1 = __webpack_require__(213);
+const selectors_1 = __webpack_require__(26);
+const utils_1 = __webpack_require__(131);
 class CoinForm extends form_1.AbstractForm {
     constructor() {
         super(...arguments);
@@ -396,7 +396,7 @@ exports.CoinForm = CoinForm;
 
 /***/ }),
 
-/***/ 105:
+/***/ 290:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -531,7 +531,7 @@ exports.ColorStyle = new Map([
 
 /***/ }),
 
-/***/ 298:
+/***/ 799:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -552,7 +552,7 @@ exports.randomDelay = randomDelay;
 
 /***/ }),
 
-/***/ 872:
+/***/ 526:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -616,7 +616,7 @@ exports.renderFilters = renderFilters;
 
 /***/ }),
 
-/***/ 417:
+/***/ 213:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -636,15 +636,15 @@ exports.AbstractForm = AbstractForm;
 
 /***/ }),
 
-/***/ 799:
+/***/ 691:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.addGalleryVisibilityToggle = void 0;
-const ajax_1 = __webpack_require__(516);
-const delay_1 = __webpack_require__(298);
+const ajax_1 = __webpack_require__(759);
+const delay_1 = __webpack_require__(799);
 const gallery = document.getElementById('gallery');
 let privateStatus;
 let publicStatus;
@@ -715,7 +715,7 @@ exports.addGalleryVisibilityToggle = addGalleryVisibilityToggle;
 
 /***/ }),
 
-/***/ 579:
+/***/ 379:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -778,18 +778,18 @@ exports.updateOnClickHref = updateOnClickHref;
 
 /***/ }),
 
-/***/ 89:
+/***/ 136:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ListForm = void 0;
-const ajax_1 = __webpack_require__(516);
-const form_1 = __webpack_require__(417);
-const selectors_1 = __webpack_require__(557);
-const swap_links_1 = __webpack_require__(303);
-const utils_1 = __webpack_require__(721);
+const ajax_1 = __webpack_require__(759);
+const form_1 = __webpack_require__(213);
+const selectors_1 = __webpack_require__(26);
+const swap_links_1 = __webpack_require__(52);
+const utils_1 = __webpack_require__(131);
 class ListForm extends form_1.AbstractForm {
     constructor() {
         super(...arguments);
@@ -999,15 +999,15 @@ exports.ListForm = ListForm;
 
 /***/ }),
 
-/***/ 374:
+/***/ 48:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.estimateWeightPrice = exports.estimateSwapPrices = void 0;
-const cond_1 = __webpack_require__(105);
-const swap_list_sort_1 = __webpack_require__(727);
+const cond_1 = __webpack_require__(290);
+const swap_list_sort_1 = __webpack_require__(188);
 const COIN_ID = 'coin';
 const SWAP_ID = 'swap';
 const SWAP_BLOCK_ID = 'swap-block';
@@ -1221,7 +1221,7 @@ exports.estimateWeightPrice = estimateWeightPrice;
 
 /***/ }),
 
-/***/ 557:
+/***/ 26:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -1236,19 +1236,19 @@ exports.id = id;
 
 /***/ }),
 
-/***/ 786:
+/***/ 677:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SwapFormList = void 0;
-const ajax_1 = __webpack_require__(516);
-const delay_1 = __webpack_require__(298);
-const selectors_1 = __webpack_require__(557);
-const swap_links_1 = __webpack_require__(303);
-const uid_1 = __webpack_require__(718);
-const utils_1 = __webpack_require__(721);
+const ajax_1 = __webpack_require__(759);
+const delay_1 = __webpack_require__(799);
+const selectors_1 = __webpack_require__(26);
+const swap_links_1 = __webpack_require__(52);
+const uid_1 = __webpack_require__(560);
+const utils_1 = __webpack_require__(131);
 const { debug } = console;
 class SwapFormList {
     constructor(listForm) {
@@ -1527,19 +1527,19 @@ exports.SwapFormList = SwapFormList;
 
 /***/ }),
 
-/***/ 891:
+/***/ 385:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SwapForm = void 0;
-const cond_1 = __webpack_require__(105);
-const list_form_1 = __webpack_require__(89);
-const selectors_1 = __webpack_require__(557);
-const swap_form_list_1 = __webpack_require__(786);
-const swap_links_1 = __webpack_require__(303);
-const vid_1 = __webpack_require__(428);
+const cond_1 = __webpack_require__(290);
+const list_form_1 = __webpack_require__(136);
+const selectors_1 = __webpack_require__(26);
+const swap_form_list_1 = __webpack_require__(677);
+const swap_links_1 = __webpack_require__(52);
+const vid_1 = __webpack_require__(377);
 // declare let CoinSwapFormOn: (usid: string, cond: string, price: string, info: string, vid: string, qty: string, replica: string, ...other: string[]) => void;
 // declare let CoinSwapFormOff: (...other: string[]) => void;
 class SwapForm extends list_form_1.ListForm {
@@ -1629,14 +1629,14 @@ exports.SwapForm = SwapForm;
 
 /***/ }),
 
-/***/ 303:
+/***/ 52:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.addLinkComments = exports.addComment = exports.styleListLinks = exports.styleSwapLink = exports.getSwapLinksWithMatches = exports.getSwapLinks = exports.CoinSwapFormOnMatcher = void 0;
-const cond_1 = __webpack_require__(105);
+const cond_1 = __webpack_require__(290);
 exports.CoinSwapFormOnMatcher = /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
 function* getSwapLinks(d = document) {
     const swapBlock = d.getElementById('swap-block');
@@ -1706,16 +1706,16 @@ exports.addLinkComments = addLinkComments;
 
 /***/ }),
 
-/***/ 727:
+/***/ 188:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.addFilteringOptions = exports.addSortingOptions = exports.cmp = void 0;
-const cond_1 = __webpack_require__(105);
-const filters_1 = __webpack_require__(872);
-const utils_1 = __webpack_require__(721);
+const cond_1 = __webpack_require__(290);
+const filters_1 = __webpack_require__(526);
+const utils_1 = __webpack_require__(131);
 const { location: loc } = document;
 function num(s) {
     return +(s.replace(/[^.\d]/g, ''));
@@ -2087,16 +2087,16 @@ exports.addFilteringOptions = addFilteringOptions;
 
 /***/ }),
 
-/***/ 79:
+/***/ 65:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.removeRowHrefFromSwapList = exports.ignoreUnwanted = exports.checkSold = exports.addConflictHandling = exports.showAllPrices = exports.duplicatePagination = exports.addOpenedTabsHandler = exports.addTrackingLinks = void 0;
-const ajax_1 = __webpack_require__(516);
-const cond_1 = __webpack_require__(105);
-const delay_1 = __webpack_require__(298);
+const ajax_1 = __webpack_require__(759);
+const cond_1 = __webpack_require__(290);
+const delay_1 = __webpack_require__(799);
 const { location: loc } = document;
 function addTrackingLinks() {
     const swapMgr = document.getElementById('swap-mgr');
@@ -2376,7 +2376,7 @@ exports.removeRowHrefFromSwapList = removeRowHrefFromSwapList;
 
 /***/ }),
 
-/***/ 718:
+/***/ 560:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2397,7 +2397,7 @@ exports.UID = (() => {
 
 /***/ }),
 
-/***/ 721:
+/***/ 131:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2539,7 +2539,7 @@ exports.todayMonth = todayMonth;
 
 /***/ }),
 
-/***/ 428:
+/***/ 377:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2565,15 +2565,15 @@ exports.getCurrentVarietyId = getCurrentVarietyId;
 
 /***/ }),
 
-/***/ 153:
+/***/ 897:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WishForm = void 0;
-const cond_1 = __webpack_require__(105);
-const list_form_1 = __webpack_require__(89);
+const cond_1 = __webpack_require__(290);
+const list_form_1 = __webpack_require__(136);
 // declare let CoinWishFormOn: (uwid: string, cond: string, price: string, tid: string, vid: string, ...other: string[]) => void;
 // declare let CoinWishFormOff: (...other: string[]) => void;
 class WishForm extends list_form_1.ListForm {
@@ -2630,7 +2630,7 @@ exports.WishForm = WishForm;
 
 /***/ }),
 
-/***/ 4:
+/***/ 196:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2651,10 +2651,20 @@ exports.WishForm = WishForm;
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineObject.defineProperty(exports, "__esModule", ( });
-// eslint-))isable-next-line @typescript-eslint/ban-ts-ignore
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const coin_form_1 = __webpack_require__(659);
+const gallery_1 = __webpack_require__(691);
+const links_1 = __webpack_require__(379);
+const prices_1 = __webpack_require__(48);
+const swap_form_1 = __webpack_require__(385);
+const swap_list_1 = __webpack_require__(65);
+const swap_list_sort_1 = __webpack_require__(188);
+const uid_1 = __webpack_require__(560);
+const wish_form_1 = __webpack_require__(897);
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-const ucoin_less_1 = __importDefault(require("../s__webpack_require__c702n_form_1 = require("./li__webpack_require__f905ery_1 = require("./li__webpack_require__r799s_1 = require("./li__webpack_require__"579es_1 = require("./li__webpack_require__s374_form_1 = require("./li__webpack_require__f891_list_1 = require("./li__webpack_require__l79_list_sort_1 = require("./li__webpack_require__l7271 = require("./li__webpack_require__;718_form_1 = require("./li__webpack_require__f153ead.insertAdjacentHTML('beforeend', `<style type="text/css">${ucoin_less_1.default}</style>`);
+const ucoin_less_1 = __importDefault(__webpack_require__(702));
+document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${ucoin_less_1.default}</style>`);
 async function handleHomePage() {
     const profile = document.getElementById('profile');
     if (profile) {
@@ -2876,7 +2886,7 @@ async function handleSwapPage() {
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -2889,14 +2899,14 @@ async function handleSwapPage() {
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -2909,7 +2919,7 @@ async function handleSwapPage() {
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -2921,7 +2931,7 @@ async function handleSwapPage() {
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/global */
 /******/ 	(() => {
 /******/ 		__webpack_require__.g = (function() {
@@ -2933,12 +2943,12 @@ async function handleSwapPage() {
 /******/ 			}
 /******/ 		})();
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -2949,11 +2959,11 @@ async function handleSwapPage() {
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	// startup
 /******/ 	// Load entry module
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	__webpack_require__(4);
+/******/ 	__webpack_require__(196);
 /******/ })()
 ;
