@@ -7,7 +7,7 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
@@ -48,15 +48,15 @@ module.exports = function (cssWithMappingToString) {
       }
 
       return content;
-    }).join('');
+    }).join("");
   }; // import a list of modules into the list
   // eslint-disable-next-line func-names
 
 
   list.i = function (modules, mediaQuery, dedupe) {
-    if (typeof modules === 'string') {
+    if (typeof modules === "string") {
       // eslint-disable-next-line no-param-reassign
-      modules = [[null, modules, '']];
+      modules = [[null, modules, ""]];
     }
 
     var alreadyImportedModules = {};
@@ -572,7 +572,8 @@ function urlWithFilter(name, value) {
 }
 function renderFilter(props) {
     return `<div class="${(props === null || props === void 0 ? void 0 : props.direction) || 'left'} filter-container"><div id="${props === null || props === void 0 ? void 0 : props.id}" class="filter-box${(props === null || props === void 0 ? void 0 : props.value) ? ` filter-box-active` : ''}" style="width: ${(props === null || props === void 0 ? void 0 : props.width) - 24}px;">\
-            <div class="${(props === null || props === void 0 ? void 0 : props.value) ? `blue-13 ` : ''}left">${(props === null || props === void 0 ? void 0 : props.value) || (props === null || props === void 0 ? void 0 : props.placeholder)}</div>${(props === null || props === void 0 ? void 0 : props.value) ? `<div class="right close" title="Clear filter" onclick="location.href='${urlWithoutFilter(props === null || props === void 0 ? void 0 : props.name)}';">×</div>`
+            <div class="${(props === null || props === void 0 ? void 0 : props.value) ? `blue-13 ` : ''}left">${(props === null || props === void 0 ? void 0 : props.value) || (props === null || props === void 0 ? void 0 : props.placeholder)}</div>${(props === null || props === void 0 ? void 0 : props.value)
+        ? `<div class="right close" title="Clear filter" onclick="location.href='${urlWithoutFilter(props === null || props === void 0 ? void 0 : props.name)}';">×</div>`
         : `<div class="right"><span class="arrow ab"></span></div>`}</div>\
         <div class="drop hide filter-dialog" id="${props === null || props === void 0 ? void 0 : props.id}-dialog" style="width: ${props === null || props === void 0 ? void 0 : props.width}px;">\
             ${Object.entries(props === null || props === void 0 ? void 0 : props.options).map(([value, label]) => `<a class="list-link" href="${urlWithFilter(props === null || props === void 0 ? void 0 : props.name, value)}><span class="left gray-13 wrap" style="max-width:140px;">${label}</span></a>`).join('')}\
@@ -2633,7 +2634,7 @@ exports.WishForm = WishForm;
 // ==UserScript==
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/
-// @version      1.5.14
+// @version      1.5.15
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
 // @downloadURL  https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js
@@ -2882,8 +2883,9 @@ async function handleSwapPage() {
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -2905,8 +2907,8 @@ async function handleSwapPage() {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
 /******/ 		__webpack_require__.n = (module) => {
 /******/ 			var getter = module && module.__esModule ?
-/******/ 				() => module['default'] :
-/******/ 				() => module;
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
 /******/ 			__webpack_require__.d(getter, { a: getter });
 /******/ 			return getter;
 /******/ 		};
@@ -2938,7 +2940,7 @@ async function handleSwapPage() {
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
@@ -2953,9 +2955,11 @@ async function handleSwapPage() {
 /******/ 	})();
 /******/ 	
 /************************************************************************/
+/******/ 	
 /******/ 	// startup
-/******/ 	// Load entry module
+/******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	__webpack_require__(196);
+/******/ 	var __webpack_exports__ = __webpack_require__(196);
+/******/ 	
 /******/ })()
 ;
