@@ -1015,10 +1015,10 @@ const RX_RUSSIA = /Russia|Россия|Rusija|USSR|СССР|TSRS/;
 const RX_COMPOSITION = /Composition|Материал|Sudėtis/;
 const RX_SILVER = /Silver|Серебро|Sidabras/;
 const RX_GOLD = /Gold|Золото|Auksas/;
-const RU_PRICE = 0.0055; //       3-8e/kg
-const EU_PRICE = 0.0125; //     10-15e/kg
-const AG_PRICE = 0.80; //   .64-.84e/g
-const AU_PRICE = 50.0; // 47.7-51.1e/g
+const RU_PRICE = 0.006; //       3-8e/kg
+const EU_PRICE = 0.013; //     10-15e/kg
+const AG_PRICE = 0.700; //   .60-.80e/g
+const AU_PRICE = 47.00; // 45.0-55.0e/g
 function sortByCondition(a, b) {
     return cond_1.ConditionValues.get(b) - cond_1.ConditionValues.get(a);
 }
@@ -2633,7 +2633,7 @@ exports.WishForm = WishForm;
 // ==UserScript==
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/
-// @version      1.5.13
+// @version      1.5.14
 // @author       danikas2k2
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABuUlEQVQokS2Qv4pfZQBEz8x3d8kWVtEuwVSSIo1d+gTLgM8QSYiQEK0Ci90mvSD2guRNFN/AhMRCMIHdRcE/u79i7zdjcfcBZs7M0RdPn9KhGpeUVHt7ySoJDGGNFmYsTUseNVCxak5HC3NeSALWZG1Y3NZIddslIqDMvULapmOZ1EWXVWnCUIu9LGtZpI+ufnj0zTOgcPj8xcmff4nc+uTmk4cPhikcHr04OT1N4kVuK1dCrWEgzxagw5AKAGlEXlRkzwZSSWLNlGSNpABWEqYcS1lC06KtBUB2xZqJVUgz7IoKrMUBY4laoi0YsDGoDEzBqkJxh9rZiMulFQHAc85NE2Jjga1ie/NDECzdlE9JtEBKmShSHZSw2+1KN8j+wZXpqB4YqYnobndue1aua/vs7Oz1m9+2wOf37plZ5c5ndxGyX719c36+m0GS7n/1tSKVGx9fe/zoyw8O9knR5aW2/+3Wb7//7vc/3m0Ox6e3b1tQ/f3Pv7++foV1/fo1SaRFP/38yw8/vnx/fMxYaFQ2QoeW2YhIgs6m8kBtpdHOVmOMzlgpkCSieIbGeM81GWa0qmU788Lq/6iyH9ZvXMLcAAAAAElFTkSuQmCC
 // @downloadURL  https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js
