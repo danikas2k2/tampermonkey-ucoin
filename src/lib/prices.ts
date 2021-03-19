@@ -17,10 +17,10 @@ const RX_COMPOSITION = /Composition|Материал|Sudėtis/;
 const RX_SILVER = /Silver|Серебро|Sidabras/;
 const RX_GOLD = /Gold|Золото|Auksas/;
 
-const RU_PRICE = 0.0055; //       3-8e/kg
-const EU_PRICE = 0.0125; //     10-15e/kg
-const AG_PRICE = 0.5237; //   .47-.53e/g
-const AU_PRICE = 46.722; // 45.5-46.2e/g
+const RU_PRICE = 0.006; //       3-8e/kg
+const EU_PRICE = 0.013; //     10-15e/kg
+const AG_PRICE = 0.700; //   .60-.80e/g
+const AU_PRICE = 47.00; // 45.0-55.0e/g
 
 function sortByCondition(a: string, b: string): number {
     return ConditionValues.get(b) - ConditionValues.get(a);
@@ -79,7 +79,7 @@ export function estimateSwapPrices(): void {
     function addPricesByType(byType: Map<string, number[]>, mint = ''): void {
         const keys = [...byType.keys()].sort(sortByCondition);
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const options: Chart.ChartConfiguration = {
             type: 'line',
@@ -132,7 +132,7 @@ export function estimateSwapPrices(): void {
         estimatedPrices.insertAdjacentHTML('beforeend', `<canvas id="${id}" width="239" height="119"/>`);
         const ctx = (<HTMLCanvasElement> document.getElementById(id)).getContext('2d');
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         // eslint-disable-next-line
         new Chart(ctx, options);

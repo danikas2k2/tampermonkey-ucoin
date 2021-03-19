@@ -913,12 +913,9 @@ class ListForm extends form_1.AbstractForm {
         }
     }
     updateFormHandlers() {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        __webpack_require__.g[this.formOnFunctionName] = (...args) => this.formOnHandler(...args);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        __webpack_require__.g[this.formOffFunctionName] = (...args) => this.formOffHandler(...args);
+        const { unsafeWindow: userScope } = __webpack_require__.g;
+        userScope[this.formOnFunctionName] = (...args) => this.formOnHandler(...args);
+        userScope[this.formOffFunctionName] = () => this.formOffHandler();
     }
     async update() {
         if (this.main) {
@@ -1020,8 +1017,8 @@ const RX_SILVER = /Silver|Серебро|Sidabras/;
 const RX_GOLD = /Gold|Золото|Auksas/;
 const RU_PRICE = 0.0055; //       3-8e/kg
 const EU_PRICE = 0.0125; //     10-15e/kg
-const AG_PRICE = 0.5237; //   .47-.53e/g
-const AU_PRICE = 46.722; // 45.5-46.2e/g
+const AG_PRICE = 0.80; //   .64-.84e/g
+const AU_PRICE = 50.0; // 47.7-51.1e/g
 function sortByCondition(a, b) {
     return cond_1.ConditionValues.get(b) - cond_1.ConditionValues.get(a);
 }
@@ -1065,7 +1062,7 @@ function estimateSwapPrices() {
     const estimatedPrices = document.getElementById(ESTIMATED_PRICES_ID);
     function addPricesByType(byType, mint = '') {
         const keys = [...byType.keys()].sort(sortByCondition);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const options = {
             type: 'line',
@@ -1116,7 +1113,7 @@ function estimateSwapPrices() {
         const id = `${ESTIMATED_PRICES_ID}-${mint.trim()}`;
         estimatedPrices.insertAdjacentHTML('beforeend', `<canvas id="${id}" width="239" height="119"/>`);
         const ctx = document.getElementById(id).getContext('2d');
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         // eslint-disable-next-line
         new Chart(ctx, options);
@@ -1567,7 +1564,6 @@ class SwapForm extends list_form_1.ListForm {
         super.fillForm(uid, cond || replica && '100', price, vid || vid_1.getCurrentVarietyId());
         this.form.comment.value = info;
         this.form.qty.value = qty || '1';
-        this.form.comment.value = info;
     }
     updateList() {
         this.listBlock = document.getElementById(this.listId);
@@ -1579,18 +1575,17 @@ class SwapForm extends list_form_1.ListForm {
             swap_links_1.addLinkComments();
         }
     }
-    async update() {
+    /*protected async update(): Promise<void> {
         super.update();
-        /// WHAT THIS PART DOES?! {{{
-        /*const DIV_ID = 'some-strange-div';
+
+        const DIV_ID = 'some-strange-div';
         console.log(DIV_ID);
         listBlock.insertAdjacentHTML('afterbegin', `<div id="${DIV_ID}" style="max-height:400px;overflow-x:hidden;overflow-y:auto;background:red"/>`);
         const div = listBlock.querySelector(id(DIV_ID));
         for (const {a} of getSwapLinksWithMatches()) {
             div.insertAdjacentElement('beforeend', a);
-        }*/
-        /// }}}
-    }
+        }
+    }*/
     // eslint-disable-next-line class-methods-use-this
     getConditionOption(o) {
         const { value, textContent } = o;
@@ -1602,7 +1597,7 @@ class SwapForm extends list_form_1.ListForm {
         };
     }
     async updateForm() {
-        super.updateForm();
+        await super.updateForm();
         this.updateQty();
     }
     updateQty() {
@@ -2663,6 +2658,7 @@ const swap_form_1 = __webpack_require__(385);
 const swap_list_1 = __webpack_require__(65);
 const swap_list_sort_1 = __webpack_require__(188);
 const uid_1 = __webpack_require__(560);
+const utils_1 = __webpack_require__(131);
 const wish_form_1 = __webpack_require__(897);
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${ucoin_less_1.default}</style>`);
 async function handleHomePage() {
@@ -2748,11 +2744,7 @@ async function handleTablePage() {
         sp.set('order', 'kd');
         sortFilterDialog.insertAdjacentHTML('beforeend', `<a class="list-link" href="${url.href}"><div class="left gray-13">Krause</div><div class="right"><span class="arrow ab"></span></div></a>`);
         for (const a of sortFilterDialog.querySelectorAll('a.list-link')) {
-            a.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                // console.log(a.href);
-            });
+            a.addEventListener('click', utils_1.cancel);
         }
     }
 }

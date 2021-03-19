@@ -34,6 +34,7 @@ import {
 } from './lib/swap-list';
 import {addFilteringOptions, addSortingOptions} from './lib/swap-list-sort';
 import {UID} from './lib/uid';
+import {cancel} from './lib/utils';
 import {WishForm} from './lib/wish-form';
 
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${style}</style>`);
@@ -131,11 +132,7 @@ async function handleTablePage(): Promise<void> {
         sortFilterDialog.insertAdjacentHTML('beforeend', `<a class="list-link" href="${url.href}"><div class="left gray-13">Krause</div><div class="right"><span class="arrow ab"></span></div></a>`);
 
         for (const a of <NodeListOf<HTMLAnchorElement>> sortFilterDialog.querySelectorAll('a.list-link')) {
-            a.addEventListener('click', (e: MouseEvent) => {
-                e.preventDefault();
-                e.stopPropagation();
-                // console.log(a.href);
-            });
+            a.addEventListener('click', cancel);
         }
     }
 }

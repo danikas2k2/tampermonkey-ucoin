@@ -167,12 +167,9 @@ export abstract class ListForm extends AbstractForm {
     }
 
     protected updateFormHandlers(): void {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        global[this.formOnFunctionName] = (...args) => this.formOnHandler(...args);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        global[this.formOffFunctionName] = (...args) => this.formOffHandler(...args);
+        const {unsafeWindow: userScope} = <{ unsafeWindow: Record<string, () => void> }> <unknown> global;
+        userScope[this.formOnFunctionName] = (...args: string[]) => this.formOnHandler(...args);
+        userScope[this.formOffFunctionName] = () => this.formOffHandler();
     }
 
     protected async update(): Promise<void> {

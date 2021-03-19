@@ -33,7 +33,6 @@ export class SwapForm extends ListForm {
         super.fillForm(uid, cond || replica && '100', price, vid || getCurrentVarietyId());
         this.form.comment.value = info;
         this.form.qty.value = qty || '1';
-        this.form.comment.value = info;
     }
 
     protected updateList(): void {
@@ -47,19 +46,17 @@ export class SwapForm extends ListForm {
         }
     }
 
-    protected async update(): Promise<void> {
+    /*protected async update(): Promise<void> {
         super.update();
 
-        /// WHAT THIS PART DOES?! {{{
-        /*const DIV_ID = 'some-strange-div';
+        const DIV_ID = 'some-strange-div';
         console.log(DIV_ID);
         listBlock.insertAdjacentHTML('afterbegin', `<div id="${DIV_ID}" style="max-height:400px;overflow-x:hidden;overflow-y:auto;background:red"/>`);
         const div = listBlock.querySelector(id(DIV_ID));
         for (const {a} of getSwapLinksWithMatches()) {
             div.insertAdjacentElement('beforeend', a);
-        }*/
-        /// }}}
-    }
+        }
+    }*/
 
     // eslint-disable-next-line class-methods-use-this
     protected getConditionOption(o: HTMLOptionElement): ConditionOption {
@@ -73,7 +70,7 @@ export class SwapForm extends ListForm {
     }
 
     protected async updateForm(): Promise<void> {
-        super.updateForm();
+        await super.updateForm();
         this.updateQty();
     }
 
