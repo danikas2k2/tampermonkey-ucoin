@@ -221,28 +221,28 @@ class CoinForm extends form_1.AbstractForm {
         await this.update();
     }
     async updateFragment(fragment) {
-        this.func = utils_1.updateRequiredElement(fragment, this.func);
-        this.coinChooser = utils_1.updateOptionalElement(fragment, this.coinChooser);
+        this.func = (0, utils_1.updateRequiredElement)(fragment, this.func);
+        this.coinChooser = (0, utils_1.updateOptionalElement)(fragment, this.coinChooser);
         return await this.update();
     }
     async update() {
-        utils_1.show(this.func);
+        (0, utils_1.show)(this.func);
         this.updateButtons();
         this.addForm = this.func.querySelector(`#${this.addFormId} form`);
         this.editForm = this.func.querySelector(`#${this.editFormId} form`);
         this.form = this.editForm || this.addForm;
         if (this.form) {
-            this.view = this.func.querySelector(selectors_1.id(this.viewId));
+            this.view = this.func.querySelector((0, selectors_1.id)(this.viewId));
             if (this.view) {
                 this.addPublicityToggle();
                 this.addReplacementToggle();
             }
             this.updateBuyDateInput();
             this.addSyncConditionToColorTable();
-            await utils_1.handleFormSubmit(this.form, async () => await this.updateFragment(await ajax_1.postFragment(location.href, new FormData(this.form))));
+            await (0, utils_1.handleFormSubmit)(this.form, async () => await this.updateFragment(await (0, ajax_1.postFragment)(location.href, new FormData(this.form))));
             if (this.view) {
                 for (const link of this.view.querySelectorAll('a[type=submit]')) {
-                    await utils_1.handleLinkSubmit(link, async () => await this.updateFragment(await ajax_1.getFragment(link.href)));
+                    await (0, utils_1.handleLinkSubmit)(link, async () => await this.updateFragment(await (0, ajax_1.getFragment)(link.href)));
                 }
             }
         }
@@ -250,15 +250,15 @@ class CoinForm extends form_1.AbstractForm {
     updateBuyDateInput() {
         const { buy_month: buyMonth, buy_year: buyYear } = this.form;
         let { buy_year_month: buyYearMonth } = this.form;
-        utils_1.hide(buyYear, buyMonth);
+        (0, utils_1.hide)(buyYear, buyMonth);
         if (!buyYearMonth) {
             buyYear.insertAdjacentHTML('afterend', `<input id="buy_year_month" name="buy_year_month" type="month"/>`);
             buyYearMonth = this.form.buy_year_month;
         }
-        buyYearMonth.max = utils_1.todayMonth();
+        buyYearMonth.max = (0, utils_1.todayMonth)();
         buyYearMonth.addEventListener('change', (e) => {
-            utils_1.cancel(e);
-            const value = buyYearMonth.value || utils_1.todayMonth();
+            (0, utils_1.cancel)(e);
+            const value = buyYearMonth.value || (0, utils_1.todayMonth)();
             [buyYear.value, buyMonth.value] = value.split('-', 2);
             return false;
         });
@@ -267,7 +267,7 @@ class CoinForm extends form_1.AbstractForm {
         const condition = this.form.condition;
         const tableColor = this.form.color;
         tableColor.nextElementSibling.classList.add('btn-set');
-        const setColor = this.form.querySelector(selectors_1.id('edit-set-color'));
+        const setColor = this.form.querySelector((0, selectors_1.id)('edit-set-color'));
         const markedDivs = this.form.querySelectorAll('table div[class^="marked-"]');
         for (const div of markedDivs) {
             if (div.matches('#set-color')) {
@@ -298,10 +298,10 @@ class CoinForm extends form_1.AbstractForm {
         });
     }
     async postForm() {
-        if (await ajax_1.postFragment(location.href, new FormData(this.form))) {
+        if (await (0, ajax_1.postFragment)(location.href, new FormData(this.form))) {
             return true;
         }
-        return utils_1.reload();
+        return (0, utils_1.reload)();
     }
     addPublicityToggle() {
         // const form = view.nextElementSibling.querySelector<HTMLFormElement>('form');
@@ -309,7 +309,7 @@ class CoinForm extends form_1.AbstractForm {
         const buttons = this.view.querySelector('.func-button');
         const buttonId = 'coin-form-visibility';
         buttons.insertAdjacentHTML('afterbegin', `<button id="${buttonId}" class="btn-l btn-i btn-narrow"/>`);
-        const button = buttons.querySelector(selectors_1.id(buttonId));
+        const button = buttons.querySelector((0, selectors_1.id)(buttonId));
         const updateStatus = () => {
             const { checked } = this.form.public;
             button.title = checked ? 'Hide' : 'Show';
@@ -345,7 +345,7 @@ class CoinForm extends form_1.AbstractForm {
         const buttons = this.view.querySelector('.func-button');
         const buttonId = 'coin-form-replacement';
         buttons.insertAdjacentHTML('afterbegin', `<button id="${buttonId}" class="btn-l btn-i btn-narrow"/>`);
-        const button = buttons.querySelector(selectors_1.id(buttonId));
+        const button = buttons.querySelector((0, selectors_1.id)(buttonId));
         const updateStatus = () => {
             const { checked } = this.form.replace;
             button.title = checked ? `Don't replace` : `Replace`;
@@ -655,7 +655,7 @@ function updateStatusElements() {
 }
 async function postPublicityForm(url, form, checked) {
     form.querySelector('input[name=public]').checked = checked;
-    return await ajax_1.post(url, new FormData(form));
+    return await (0, ajax_1.post)(url, new FormData(form));
 }
 function addVisibilityToggleButton(container, text, className, visibility, count, callback) {
     const buttonId = `button-${text.toLowerCase()}`;
@@ -682,7 +682,7 @@ async function toggleGroupVisibility(container, checked) {
     const statusList = checked ? privateStatus : publicStatus;
     for await (const status of statusList) {
         const url = status.parentElement.querySelector(`.coin-desc div a`).href;
-        const response = await ajax_1.get(url);
+        const response = await (0, ajax_1.get)(url);
         const responseText = await response.text();
         const temp = document.createElement('template');
         temp.innerHTML = responseText;
@@ -700,7 +700,7 @@ async function toggleGroupVisibility(container, checked) {
         status.textContent = statusText;
         updateStatusElements();
         toggleButtonVisibility(container, toggleGroupVisibility);
-        await delay_1.randomDelay();
+        await (0, delay_1.randomDelay)();
     }
 }
 function addGalleryVisibilityToggle() {
@@ -872,15 +872,15 @@ class ListForm extends form_1.AbstractForm {
     }
     formOnHandler(uid, ...other) {
         this.formClickTimeout = setTimeout(() => {
-            utils_1.hide(this.listBlock);
-            utils_1.show(this.form, this.formClose);
-            utils_1.disable(this.func);
+            (0, utils_1.hide)(this.listBlock);
+            (0, utils_1.show)(this.form, this.formClose);
+            (0, utils_1.disable)(this.func);
             this.widgetHeader.removeEventListener('click', e => this.widgetHeaderRedirectHandler(e));
             this.widgetHeader.addEventListener('click', e => this.widgetHeaderCloseHandler(e));
             this.fillForm(uid, ...other);
-            utils_1.show(this.cancelButton);
-            utils_1.toggle(!uid, this.addButton);
-            utils_1.toggle(uid, this.editButton, this.deleteButton);
+            (0, utils_1.show)(this.cancelButton);
+            (0, utils_1.toggle)(!uid, this.addButton);
+            (0, utils_1.toggle)(uid, this.editButton, this.deleteButton);
             this.deleteButton.href = `?action=del${this.formType}coin&${this.formUid}=${uid}`;
             (uid ? this.editButton : this.addButton).focus();
         }, 300);
@@ -891,20 +891,20 @@ class ListForm extends form_1.AbstractForm {
         this.form.submit();
     }
     formOffHandler() {
-        utils_1.hide(this.form, this.formClose);
-        utils_1.show(this.listBlock);
-        utils_1.enable(this.func);
+        (0, utils_1.hide)(this.form, this.formClose);
+        (0, utils_1.show)(this.listBlock);
+        (0, utils_1.enable)(this.func);
         this.widgetHeader.removeEventListener('click', e => this.widgetHeaderCloseHandler(e));
         this.widgetHeader.addEventListener('click', e => this.widgetHeaderRedirectHandler(e));
     }
     widgetHeaderCloseHandler(e) {
-        utils_1.cancel(e);
+        (0, utils_1.cancel)(e);
         this.formOffHandler();
     }
     updateList() {
         this.listBlock = document.getElementById(this.listId);
         if (this.listBlock) {
-            swap_links_1.styleListLinks(this.listBlock);
+            (0, swap_links_1.styleListLinks)(this.listBlock);
         }
     }
     removeOneButton() {
@@ -920,7 +920,7 @@ class ListForm extends form_1.AbstractForm {
     }
     async update() {
         if (this.main) {
-            utils_1.show(this.main);
+            (0, utils_1.show)(this.main);
             this.removeOneButton();
             this.updateWidget();
             this.updateForm();
@@ -934,7 +934,7 @@ class ListForm extends form_1.AbstractForm {
         }
         oneButton.insertAdjacentHTML('afterend', `<div id="${this.buttonSetId}" class="btn-set"/>`);
         oneButton.remove();
-        const buttonSet = this.main.querySelector(selectors_1.id(this.buttonSetId));
+        const buttonSet = this.main.querySelector((0, selectors_1.id)(this.buttonSetId));
         if (!buttonSet) {
             return;
         }
@@ -942,7 +942,7 @@ class ListForm extends form_1.AbstractForm {
             const markerId = `${this.formType}-marker-${value}`;
             const markerClass = `btn-marker marked-${color}`;
             buttonSet.insertAdjacentHTML('beforeend', `<div id="${markerId}" class="${markerClass}">${text}</div>`);
-            const marker = buttonSet.querySelector(selectors_1.id(markerId));
+            const marker = buttonSet.querySelector((0, selectors_1.id)(markerId));
             marker.addEventListener('click', () => this.formOnHandler('', `${value}`));
             marker.addEventListener('dblclick', () => this.formOnHandlerSubmit('', `${value}`));
         };
@@ -964,28 +964,28 @@ class ListForm extends form_1.AbstractForm {
         condition.remove();
     }
     updateFormButtons() {
-        this.cancelButton = this.form.querySelector(selectors_1.id(this.cancelButtonId));
-        this.addButton = this.form.querySelector(selectors_1.id(this.addButtonId));
-        this.editButton = this.form.querySelector(selectors_1.id(this.editButtonId));
-        this.deleteButton = this.form.querySelector(selectors_1.id(this.deleteButtonId));
+        this.cancelButton = this.form.querySelector((0, selectors_1.id)(this.cancelButtonId));
+        this.addButton = this.form.querySelector((0, selectors_1.id)(this.addButtonId));
+        this.editButton = this.form.querySelector((0, selectors_1.id)(this.editButtonId));
+        this.deleteButton = this.form.querySelector((0, selectors_1.id)(this.deleteButtonId));
         this.deleteButton.classList.add('btn-red');
     }
     updateWidget() {
-        this.widgetHeader = this.main.querySelector(selectors_1.id(this.headerId));
+        this.widgetHeader = this.main.querySelector((0, selectors_1.id)(this.headerId));
         this.widgetHeaderRedirectHandler = this.widgetHeader.onclick;
         this.widgetHeader.removeAttribute('onclick');
     }
     async updateFragment(fragment) {
-        this.main = utils_1.updateRequiredElement(fragment, this.main);
+        this.main = (0, utils_1.updateRequiredElement)(fragment, this.main);
         return await this.update();
     }
     async updateForm() {
-        this.func = this.main.querySelector(selectors_1.id(this.funcId));
-        this.form = this.main.querySelector(selectors_1.id(this.formId));
-        this.formClose = this.main.querySelector(selectors_1.id(this.formCloseId));
-        await utils_1.handleFormSubmit(this.form, async () => await this.updateFragment(await ajax_1.postFragment(location.href, new FormData(this.form))));
+        this.func = this.main.querySelector((0, selectors_1.id)(this.funcId));
+        this.form = this.main.querySelector((0, selectors_1.id)(this.formId));
+        this.formClose = this.main.querySelector((0, selectors_1.id)(this.formCloseId));
+        await (0, utils_1.handleFormSubmit)(this.form, async () => await this.updateFragment(await (0, ajax_1.postFragment)(location.href, new FormData(this.form))));
         for (const link of this.form.querySelectorAll('a[type=submit]')) {
-            await utils_1.handleLinkSubmit(link, async () => await this.updateFragment(await ajax_1.getFragment(link.href)));
+            await (0, utils_1.handleLinkSubmit)(link, async () => await this.updateFragment(await (0, ajax_1.getFragment)(link.href)));
         }
         this.updateFormButtons();
         this.updateCondition();
@@ -1262,9 +1262,9 @@ class SwapFormList {
             p.set('f', 'del');
             p.set('usid', usid);
             p.set('uid', uid_1.UID);
-            const fragment = await ajax_1.getText(url.href, null, false);
+            const fragment = await (0, ajax_1.getText)(url.href, null, false);
             if (!fragment) {
-                return utils_1.reload();
+                return (0, utils_1.reload)();
             }
             return true;
         };
@@ -1291,8 +1291,8 @@ class SwapFormList {
         else {
             this.listBlock = listBlock;
         }
-        this.form = listBlock.querySelector(selectors_1.id(this.listForm.formId))
-            || document.querySelector(selectors_1.id(this.listForm.formId));
+        this.form = listBlock.querySelector((0, selectors_1.id)(this.listForm.formId))
+            || document.querySelector((0, selectors_1.id)(this.listForm.formId));
         this.buttonSet = listBlock.querySelector('center');
         if (this.buttonSet) {
             /*const oldButton = this.buttonSet.querySelector('button.btn-s.btn-gray');
@@ -1308,13 +1308,13 @@ class SwapFormList {
     }
     addButton(role, qty, text, clickHandler) {
         const buttonId = `${role}-qty`;
-        const expand = this.buttonSet.querySelector(selectors_1.id(buttonId));
+        const expand = this.buttonSet.querySelector((0, selectors_1.id)(buttonId));
         if (expand) {
-            utils_1.show(expand);
+            (0, utils_1.show)(expand);
         }
         else {
             this.buttonSet.insertAdjacentHTML('beforeend', `<button id="${buttonId}" type="button" class="btn--${role} btn-s btn-blue">${text}</button>`);
-            this.buttonSet.querySelector(selectors_1.id(buttonId)).addEventListener('click', async () => {
+            this.buttonSet.querySelector((0, selectors_1.id)(buttonId)).addEventListener('click', async () => {
                 this.hideButtons();
                 await clickHandler(qty);
                 this.updateButtons();
@@ -1325,7 +1325,7 @@ class SwapFormList {
         this.expandAvailable = false;
         this.combineAvailable = false;
         this.variants.clear();
-        for (const { m } of swap_links_1.getSwapLinksWithMatches()) {
+        for (const { m } of (0, swap_links_1.getSwapLinksWithMatches)()) {
             const { uniq, usid, cond, price, info, vid, strqty } = m;
             const qty = +strqty;
             if (qty > 1) {
@@ -1345,10 +1345,10 @@ class SwapFormList {
         }
     }
     showButtons(role) {
-        utils_1.show(...this.buttonSet.querySelectorAll(`button${role ? `.btn--${role}` : ''}`));
+        (0, utils_1.show)(...this.buttonSet.querySelectorAll(`button${role ? `.btn--${role}` : ''}`));
     }
     hideButtons(role) {
-        utils_1.hide(...this.buttonSet.querySelectorAll(`button${role ? `.btn--${role}` : ''}`));
+        (0, utils_1.hide)(...this.buttonSet.querySelectorAll(`button${role ? `.btn--${role}` : ''}`));
     }
     showExpandButtons() {
         this.showButtons('expand');
@@ -1385,7 +1385,7 @@ class SwapFormList {
         let isAddFailed = false;
         let isUpdFailed = false;
         let isFirstQuery = true;
-        for await (const { a, m } of swap_links_1.getSwapLinksWithMatches()) {
+        for await (const { a, m } of (0, swap_links_1.getSwapLinksWithMatches)()) {
             const { uniq, usid, cond, price, info, vid, strqty } = m;
             const qty = +strqty;
             const n = expandTo > 0 ? Math.min(qty, expandTo) : qty;
@@ -1396,7 +1396,7 @@ class SwapFormList {
             for (let i = n, qq = qty, q = Math.floor(qq / i); i > 1; i--, q = Math.floor(qq / i)) {
                 qq -= q;
                 if (!isFirstQuery) {
-                    await delay_1.randomDelay();
+                    await (0, delay_1.randomDelay)();
                 }
                 isFirstQuery = false;
                 debug(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
@@ -1406,7 +1406,7 @@ class SwapFormList {
                     break;
                 }
                 const links = new Set();
-                for (const l of swap_links_1.getSwapLinks()) {
+                for (const l of (0, swap_links_1.getSwapLinks)()) {
                     if (!l.hasAttribute('onClick')) {
                         continue;
                     }
@@ -1415,7 +1415,7 @@ class SwapFormList {
                         links.add(m.groups.usid);
                     }
                 }
-                for (const l of swap_links_1.getSwapLinks(addR)) {
+                for (const l of (0, swap_links_1.getSwapLinks)(addR)) {
                     if (!l.hasAttribute('onClick')) {
                         continue;
                     }
@@ -1425,12 +1425,12 @@ class SwapFormList {
                         continue;
                     }
                     links.add(usid);
-                    swap_links_1.styleSwapLink(l);
+                    (0, swap_links_1.styleSwapLink)(l);
                     a.insertAdjacentElement('afterend', l);
-                    swap_links_1.addComment(l);
+                    (0, swap_links_1.addComment)(l);
                 }
                 if (!isFirstQuery) {
-                    await delay_1.randomDelay();
+                    await (0, delay_1.randomDelay)();
                 }
                 isFirstQuery = false;
                 debug(`UPDATING ${uniq} ${usid} -> ${qq}`);
@@ -1476,7 +1476,7 @@ class SwapFormList {
             if (content) {
                 const newListBlock = content.getElementById(this.listForm.listId);
                 if (newListBlock && this.listBlock) {
-                    swap_links_1.styleListLinks(newListBlock);
+                    (0, swap_links_1.styleListLinks)(newListBlock);
                     this.update(newListBlock);
                 }
             }
@@ -1504,7 +1504,7 @@ class SwapFormList {
         data.set('comment', `${info || ''}`);
         data.set('price', `${price || ''}`);
         data.set('action', `${action || ''}`);
-        const fragment = await ajax_1.postFragment(location.href, data);
+        const fragment = await (0, ajax_1.postFragment)(location.href, data);
         debug('fragment');
         debug(fragment);
         debug('this.listForm.mainId');
@@ -1512,7 +1512,7 @@ class SwapFormList {
         debug('fragment.getElementById(this.listForm.mainId)');
         debug(fragment.getElementById(this.listForm.mainId));
         if (!fragment.getElementById(this.listForm.mainId)) {
-            return utils_1.reload();
+            return (0, utils_1.reload)();
         }
         return fragment;
     }
@@ -1562,7 +1562,7 @@ class SwapForm extends list_form_1.ListForm {
         this.swapListManager = new swap_form_list_1.SwapFormList(this);
     }
     fillForm(uid = '', cond = '', price = '', info = '', vid = '', qty = '', replica = '') {
-        super.fillForm(uid, cond || replica && '100', price, vid || vid_1.getCurrentVarietyId());
+        super.fillForm(uid, cond || replica && '100', price, vid || (0, vid_1.getCurrentVarietyId)());
         this.form.comment.value = info;
         this.form.qty.value = qty || '1';
     }
@@ -1570,10 +1570,10 @@ class SwapForm extends list_form_1.ListForm {
         this.listBlock = document.getElementById(this.listId);
         if (this.listBlock) {
             this.swapListManager.update(this.listBlock);
-            for (const list of document.querySelectorAll(selectors_1.id(this.listId))) {
-                swap_links_1.styleListLinks(list);
+            for (const list of document.querySelectorAll((0, selectors_1.id)(this.listId))) {
+                (0, swap_links_1.styleListLinks)(list);
             }
-            swap_links_1.addLinkComments();
+            (0, swap_links_1.addLinkComments)();
         }
     }
     /*protected async update(): Promise<void> {
@@ -1721,11 +1721,11 @@ function cmp(a, b) {
 }
 exports.cmp = cmp;
 function cmpNum(a, b, field) {
-    const f = `sort${utils_1.tt(field)}`;
+    const f = `sort${(0, utils_1.tt)(field)}`;
     return cmp(num(a[f]), num(b[f]));
 }
 function cmpStr(a, b, field) {
-    const f = `sort${utils_1.tt(field)}`;
+    const f = `sort${(0, utils_1.tt)(field)}`;
     return cmp(a[f], b[f]);
 }
 function cmpYear(a, b, o = 1) {
@@ -1837,7 +1837,7 @@ function addSortingOptions() {
         const c = row.querySelectorAll('td');
         const d = row.dataset;
         for (const [option, { index, field }] of sortOptionParams) {
-            const name = `sort${utils_1.tt(field)}`;
+            const name = `sort${(0, utils_1.tt)(field)}`;
             const t = c[index + offset].textContent;
             if (option === 'Year') {
                 const [year, ...mm] = t.split(/(?:\s|&nbsp;)+/);
@@ -1917,7 +1917,7 @@ function addFilteringOptions() {
         r[hc.id] = hc.innerHTML;
         return r;
     }, {});
-    dataList.insertAdjacentHTML('beforebegin', filters_1.renderFilters([
+    dataList.insertAdjacentHTML('beforebegin', (0, filters_1.renderFilters)([
         {
             id: 'country-filter',
             name: 'country',
@@ -1987,7 +1987,7 @@ function addFilteringOptions() {
             const target = e.target;
             const id = target.id;
             const value = target.value;
-            const name = `sort${utils_1.tt(id)}`;
+            const name = `sort${(0, utils_1.tt)(id)}`;
             const rows = swapList.querySelectorAll('tbody > tr');
             for (const row of rows) {
                 const d = row.dataset;
@@ -2319,11 +2319,11 @@ function checkSold() {
         let isFirstRequest = true;
         for await (const sold of soldList) {
             if (!isFirstRequest) {
-                await delay_1.randomDelay();
+                await (0, delay_1.randomDelay)();
             }
             isFirstRequest = false;
             const { href } = sold.querySelector('a.act');
-            await ajax_1.get(href);
+            await (0, ajax_1.get)(href);
             const tree = document.getElementById('tree');
             const soldCountElement = tree.querySelector('a.region.list-link div.right.blue-13 sup');
             if (--soldCount) {
@@ -2697,13 +2697,13 @@ async function handleCoinPage() {
         // fixTagLinks
         const galleryLinks = tags.querySelectorAll('a[href^="/gallery/"]');
         for (const a of galleryLinks) {
-            links_1.updateLinkHref(a);
+            (0, links_1.updateLinkHref)(a);
         }
     }
     await new coin_form_1.CoinForm().handle();
     await new swap_form_1.SwapForm().handle();
-    await prices_1.estimateSwapPrices();
-    await prices_1.estimateWeightPrice();
+    await (0, prices_1.estimateSwapPrices)();
+    await (0, prices_1.estimateWeightPrice)();
     await new wish_form_1.WishForm().handle();
 }
 async function handleGalleryPage() {
@@ -2713,15 +2713,15 @@ async function handleGalleryPage() {
         // fix gallery links
         const galleryLinks = gallery.querySelectorAll('a[href^="/gallery/"]');
         for (const a of galleryLinks) {
-            links_1.updateLinkHref(a);
+            (0, links_1.updateLinkHref)(a);
         }
         const queryLinks = gallery.querySelectorAll('a[href^="?"]');
         for (const a of queryLinks) {
-            links_1.updateLinkHref(a);
+            (0, links_1.updateLinkHref)(a);
         }
         const closeButtons = gallery.querySelectorAll('div.close');
         for (const div of closeButtons) {
-            links_1.updateOnClickHref(div);
+            (0, links_1.updateOnClickHref)(div);
         }
         const count = gallery.querySelectorAll('.coin').length;
         const pages = +((_a = gallery.querySelector('.pages a:last-child')) === null || _a === void 0 ? void 0 : _a.textContent);
@@ -2732,7 +2732,7 @@ async function handleGalleryPage() {
             gallery.querySelector('h1').insertAdjacentHTML('beforeend', ` <small>(${count}${pages ? ` <small>of ${isLast ? total : `${total + 1}~${total + 12}`}</small>` : ''})</small>`);
         }
     }
-    gallery_1.addGalleryVisibilityToggle();
+    (0, gallery_1.addGalleryVisibilityToggle)();
 }
 async function handleTablePage() {
     const sortFilter = document.getElementById('sort-filter');
@@ -2762,28 +2762,28 @@ async function handleMessagePage() {
     }
 }
 async function handleSwapPage() {
-    swap_list_1.addTrackingLinks();
-    swap_list_1.addOpenedTabsHandler();
-    swap_list_sort_1.addSortingOptions();
-    swap_list_sort_1.addFilteringOptions();
-    swap_list_1.duplicatePagination();
-    swap_list_1.showAllPrices();
-    swap_list_1.addConflictHandling();
-    swap_list_1.checkSold();
-    swap_list_1.ignoreUnwanted();
-    swap_list_1.removeRowHrefFromSwapList();
+    (0, swap_list_1.addTrackingLinks)();
+    (0, swap_list_1.addOpenedTabsHandler)();
+    (0, swap_list_sort_1.addSortingOptions)();
+    (0, swap_list_sort_1.addFilteringOptions)();
+    (0, swap_list_1.duplicatePagination)();
+    (0, swap_list_1.showAllPrices)();
+    (0, swap_list_1.addConflictHandling)();
+    (0, swap_list_1.checkSold)();
+    (0, swap_list_1.ignoreUnwanted)();
+    (0, swap_list_1.removeRowHrefFromSwapList)();
     const tree = document.getElementById('tree');
     if (tree) {
         const filterLinks = tree.querySelectorAll('.filter-container .list-link');
         for (const a of filterLinks) {
-            links_1.updateLinkHref(a);
+            (0, links_1.updateLinkHref)(a);
         }
         const filterBoxes = tree.querySelectorAll('.filter-container .filter-box-active');
         for (const filter of filterBoxes) {
             const name = filter.getAttribute('id').replace(/-filter/, '');
             const div = filter.querySelector('.close');
             if (div) {
-                links_1.updateOnClickHref(div, [name]);
+                (0, links_1.updateOnClickHref)(div, [name]);
             }
         }
     }
