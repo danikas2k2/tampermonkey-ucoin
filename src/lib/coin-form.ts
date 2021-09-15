@@ -2,11 +2,21 @@ import HIDE from '../../images/hide.svg';
 import LEAVE from '../../images/leave.svg';
 import REPLACE from '../../images/replace.svg';
 import SHOW from '../../images/show.svg';
-import {getFragment, postFragment} from './ajax';
-import {Color, FormColorValues, FormValueColors} from './cond';
-import {AbstractForm} from './form';
-import {id} from './selectors';
-import {cancel, handleFormSubmit, handleLinkSubmit, hide, reload, show, todayMonth, updateOptionalElement, updateRequiredElement} from './utils';
+import { getFragment, postFragment } from './ajax';
+import { Color, FormColorValues, FormValueColors } from './cond';
+import { AbstractForm } from './form';
+import { id } from './selectors';
+import {
+    cancel,
+    handleFormSubmit,
+    handleLinkSubmit,
+    hide,
+    reload,
+    show,
+    todayMonth,
+    updateOptionalElement,
+    updateRequiredElement,
+} from './utils';
 
 export class CoinForm extends AbstractForm {
     protected addFormId = 'add-coin-form';
@@ -21,12 +31,12 @@ export class CoinForm extends AbstractForm {
     private coinChooser: HTMLElement;
 
     public async handle(/*loc: string*/): Promise<void> {
-        this.func = <HTMLElement> document.getElementById(this.funcId);
+        this.func = <HTMLElement>document.getElementById(this.funcId);
         if (!this.func) {
             return;
         }
 
-        this.coinChooser = <HTMLElement> document.getElementById(this.coinChooserId);
+        this.coinChooser = <HTMLElement>document.getElementById(this.coinChooserId);
 
         await this.update();
     }
@@ -56,7 +66,10 @@ export class CoinForm extends AbstractForm {
             this.updateBuyDateInput();
             this.addSyncConditionToColorTable();
 
-            await handleFormSubmit(this.form, async () => await this.updateFragment(await postFragment(location.href, new FormData(this.form))));
+            await handleFormSubmit(
+                this.form,
+                async () => await this.updateFragment(await postFragment(location.href, new FormData(this.form)))
+            );
 
             if (this.view) {
                 for (const link of this.view.querySelectorAll<HTMLAnchorElement>('a[type=submit]')) {
@@ -67,11 +80,11 @@ export class CoinForm extends AbstractForm {
     }
 
     private updateBuyDateInput(): void {
-        const {buy_month: buyMonth, buy_year: buyYear} = this.form;
-        let {buy_year_month: buyYearMonth} = this.form;
+        const { buy_month: buyMonth, buy_year: buyYear } = this.form;
+        let { buy_year_month: buyYearMonth } = this.form;
         hide(buyYear, buyMonth);
         if (!buyYearMonth) {
-            buyYear.insertAdjacentHTML('afterend', `<input id="buy_year_month" name="buy_year_month" type="month"/>`);
+            buyYear.insertAdjacentHTML('afterend', `<input id='buy_year_month' name='buy_year_month' type='month'/>`);
             buyYearMonth = this.form.buy_year_month;
         }
 
@@ -99,7 +112,7 @@ export class CoinForm extends AbstractForm {
             div.classList.add('btn-marker');
 
             div.addEventListener('click', (e: Event) => {
-                const target = <HTMLElement> e.target;
+                const target = <HTMLElement>e.target;
                 let color: Color = null;
                 for (const c of target.classList) {
                     if (c.startsWith('marked-')) {
@@ -113,7 +126,7 @@ export class CoinForm extends AbstractForm {
         }
 
         condition.addEventListener('change', (e: Event) => {
-            const target = <HTMLSelectElement> e.target;
+            const target = <HTMLSelectElement>e.target;
             setColor.classList.remove(`marked-${tableColor.value}`);
             const value = +target.value;
             if (FormValueColors.has(value)) {
@@ -136,11 +149,11 @@ export class CoinForm extends AbstractForm {
 
         const buttons = this.view.querySelector('.func-button');
         const buttonId = 'coin-form-visibility';
-        buttons.insertAdjacentHTML('afterbegin', `<button id="${buttonId}" class="btn-l btn-i btn-narrow"/>`);
+        buttons.insertAdjacentHTML('afterbegin', `<button id='${buttonId}' class='btn-l btn-i btn-narrow'/>`);
         const button = buttons.querySelector<HTMLButtonElement>(id(buttonId));
 
         const updateStatus = () => {
-            const {checked} = this.form.public;
+            const { checked } = this.form.public;
             button.title = checked ? 'Hide' : 'Show';
             button.innerHTML = checked ? HIDE : SHOW;
             button.classList.toggle('btn-blue', !checked);
@@ -179,11 +192,11 @@ export class CoinForm extends AbstractForm {
 
         const buttons = this.view.querySelector('.func-button');
         const buttonId = 'coin-form-replacement';
-        buttons.insertAdjacentHTML('afterbegin', `<button id="${buttonId}" class="btn-l btn-i btn-narrow"/>`);
+        buttons.insertAdjacentHTML('afterbegin', `<button id='${buttonId}' class='btn-l btn-i btn-narrow'/>`);
         const button = buttons.querySelector<HTMLButtonElement>(id(buttonId));
 
         const updateStatus = () => {
-            const {checked} = this.form.replace;
+            const { checked } = this.form.replace;
             button.title = checked ? `Don't replace` : `Replace`;
             button.innerHTML = checked ? LEAVE : REPLACE;
 
@@ -193,7 +206,10 @@ export class CoinForm extends AbstractForm {
                 if (!status) {
                     const tbody = this.view.querySelector<HTMLTableElement>('.status-line + table tbody');
                     if (tbody) {
-                        tbody.insertAdjacentHTML('beforeend', `<tr><td class="lgray-12" colspan="2"><span class="set status2 wrap" style="max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;">Need to replace</span></td></tr>`);
+                        tbody.insertAdjacentHTML(
+                            'beforeend',
+                            `<tr><td class='lgray-12' colspan='2'><span class='set status2 wrap' style='max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;'>Need to replace</span></td></tr>`
+                        );
                         status = tbody.querySelector('tr:last-child');
                     }
                 }

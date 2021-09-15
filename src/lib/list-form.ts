@@ -1,9 +1,19 @@
-import {getFragment, postFragment} from './ajax';
-import {Color, CondValue} from './cond';
-import {AbstractForm} from './form';
-import {id} from './selectors';
-import {styleListLinks} from './swap-links';
-import {cancel, disable, enable, handleFormSubmit, handleLinkSubmit, hide, show, toggle, updateRequiredElement} from './utils';
+import { getFragment, postFragment } from './ajax';
+import { Color, CondValue } from './cond';
+import { AbstractForm } from './form';
+import { id } from './selectors';
+import { styleListLinks } from './swap-links';
+import {
+    cancel,
+    disable,
+    enable,
+    handleFormSubmit,
+    handleLinkSubmit,
+    hide,
+    show,
+    toggle,
+    updateRequiredElement,
+} from './utils';
 
 export abstract class ListForm extends AbstractForm {
     protected widgetHeader: HTMLElement;
@@ -113,23 +123,25 @@ export abstract class ListForm extends AbstractForm {
                 this.form[this.formVariety][0].checked = true;
             }
         }
-        (<HTMLInputElement> <unknown> this.form.action).value = uid ? `edit${this.formType}coin` : `add${this.formType}coin`;
+        (<HTMLInputElement>(<unknown>this.form.action)).value = uid
+            ? `edit${this.formType}coin`
+            : `add${this.formType}coin`;
     }
 
     protected formOnHandler(uid?: string, ...other: string[]): void {
-        this.formClickTimeout = <number> <unknown> setTimeout(() => {
+        this.formClickTimeout = <number>(<unknown>setTimeout(() => {
             hide(this.listBlock);
             show(this.form, this.formClose);
             disable(this.func);
-            this.widgetHeader.removeEventListener('click', e => this.widgetHeaderRedirectHandler(e));
-            this.widgetHeader.addEventListener('click', e => this.widgetHeaderCloseHandler(e));
+            this.widgetHeader.removeEventListener('click', (e) => this.widgetHeaderRedirectHandler(e));
+            this.widgetHeader.addEventListener('click', (e) => this.widgetHeaderCloseHandler(e));
             this.fillForm(uid, ...other);
             show(this.cancelButton);
             toggle(!uid, this.addButton);
             toggle(uid, this.editButton, this.deleteButton);
             this.deleteButton.href = `?action=del${this.formType}coin&${this.formUid}=${uid}`;
             (uid ? this.editButton : this.addButton).focus();
-        }, 300);
+        }, 300));
     }
 
     protected formOnHandlerSubmit(uid?: string, ...other: string[]): void {
@@ -143,8 +155,8 @@ export abstract class ListForm extends AbstractForm {
         show(this.listBlock);
         enable(this.func);
 
-        this.widgetHeader.removeEventListener('click', e => this.widgetHeaderCloseHandler(e));
-        this.widgetHeader.addEventListener('click', e => this.widgetHeaderRedirectHandler(e));
+        this.widgetHeader.removeEventListener('click', (e) => this.widgetHeaderCloseHandler(e));
+        this.widgetHeader.addEventListener('click', (e) => this.widgetHeaderRedirectHandler(e));
     }
 
     protected widgetHeaderCloseHandler(e: Event): void {
@@ -167,7 +179,7 @@ export abstract class ListForm extends AbstractForm {
     }
 
     protected updateFormHandlers(): void {
-        const {unsafeWindow: userScope} = <{ unsafeWindow: Record<string, () => void> }> <unknown> global;
+        const { unsafeWindow: userScope } = <{ unsafeWindow: Record<string, () => void> }>(<unknown>global);
         userScope[this.formOnFunctionName] = (...args: string[]) => this.formOnHandler(...args);
         userScope[this.formOffFunctionName] = () => this.formOffHandler();
     }
@@ -213,15 +225,19 @@ export abstract class ListForm extends AbstractForm {
 
     protected updateCondition(): void {
         const condition: HTMLSelectElement = this.form.condition;
-        condition.insertAdjacentHTML('afterend',
-            `<fieldset name="conditionFieldset"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`);
+        condition.insertAdjacentHTML(
+            'afterend',
+            `<fieldset name="conditionFieldset"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`
+        );
         const fieldset = this.form.conditionFieldset;
         for (const o of condition.options) {
             const c = this.getConditionOption(o);
             if (c) {
-                const {text, value, checked, style} = c;
-                fieldset.insertAdjacentHTML('beforeend',
-                    `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${value}" ${checked} type="radio"/>${text}</label>`);
+                const { text, value, checked, style } = c;
+                fieldset.insertAdjacentHTML(
+                    'beforeend',
+                    `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${value}" ${checked} type="radio"/>${text}</label>`
+                );
             }
         }
         condition.remove();
@@ -251,7 +267,10 @@ export abstract class ListForm extends AbstractForm {
         this.form = this.main.querySelector<HTMLFormElement>(id(this.formId));
         this.formClose = this.main.querySelector<HTMLElement>(id(this.formCloseId));
 
-        await handleFormSubmit(this.form, async () => await this.updateFragment(await postFragment(location.href, new FormData(this.form))));
+        await handleFormSubmit(
+            this.form,
+            async () => await this.updateFragment(await postFragment(location.href, new FormData(this.form)))
+        );
 
         for (const link of this.form.querySelectorAll<HTMLAnchorElement>('a[type=submit]')) {
             await handleLinkSubmit(link, async () => await this.updateFragment(await getFragment(link.href)));

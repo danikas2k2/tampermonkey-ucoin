@@ -1,6 +1,7 @@
-import {ConditionColors} from './cond';
+import { ConditionColors } from './cond';
 
-export const CoinSwapFormOnMatcher = /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
+export const CoinSwapFormOnMatcher =
+    /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
 
 export function* getSwapLinks(d: DocumentFragment = document): IterableIterator<HTMLAnchorElement> {
     const swapBlock = d.getElementById('swap-block');
@@ -18,10 +19,10 @@ export function* getSwapLinksWithMatches(): IterableIterator<CoinSwapAnchorAndMa
             continue;
         }
         if (a.hasAttribute('onClick')) {
-            const m = <CoinSwapFormOnMatchResult> a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+            const m = <CoinSwapFormOnMatchResult>a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
             if (m && m.groups) {
-                const {cond, info, vid} = m.groups;
-                yield {a, m: {...m.groups, uniq: `${cond} ${vid} ${info}`}};
+                const { cond, info, vid } = m.groups;
+                yield { a, m: { ...m.groups, uniq: `${cond} ${vid} ${info}` } };
             }
         }
     }
@@ -51,12 +52,14 @@ export function styleListLinks(list: HTMLElement): void {
 
 export function addComment(a: HTMLAnchorElement): void {
     if (a.hasAttribute('onClick')) {
-        const m = <CoinSwapFormOnMatchResult> a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+        const m = <CoinSwapFormOnMatchResult>a.getAttribute('onClick').match(CoinSwapFormOnMatcher);
         if (m && m.groups) {
-            const {info} = m.groups;
+            const { info } = m.groups;
             if (info && !a.querySelector('.comments')) {
-                a.insertAdjacentHTML('beforeend',
-                    `<span class="right dgray-11 wrap comments" title="${info}"><div class="ico-16"></div> ${info}</span>`);
+                a.insertAdjacentHTML(
+                    'beforeend',
+                    `<span class="right dgray-11 wrap comments" title="${info}"><div class="ico-16"></div> ${info}</span>`
+                );
             }
         }
     }

@@ -17,7 +17,7 @@ var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBP
 ___CSS_LOADER_EXPORT___.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap);"]);
 ___CSS_LOADER_EXPORT___.push([module.id, "@import url(https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css);"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ":root {\n  --base-font-family: 'Open Sans', sans-serif;\n  --base-font-size: 14px;\n  --color-surface: #fff;\n  --color-surface-warning: #fdd;\n  --color-surface-error: #fed;\n  --color-surface-info: #eee;\n  --color-content-header: #333;\n  --color-content-total: #666;\n  --color-border-total: #060;\n  --color-content-link: #37e;\n  --color-input-sufrace: var(--color-surface);\n  --color-input-content: #222;\n  --color-input-border: #aaa;\n  --color-input-shadow: 0 2px 1px #0001 inset;\n  --color-ignore-content: #ccc;\n  --color-ignore-surface: #333a;\n  --color-ignore-content-hover: #fff;\n  --color-ignore-sufrace-hover: #000a;\n  --color-error-surface: #c00;\n  --color-error-border: #0002;\n  --color-error-sufrace-hover: #eee;\n  --color-widget-content: #333;\n  --color-widget-surface: #ccc;\n}\nbody {\n  font-family: var(--base-font-family);\n  font-size: var(--base-font-size);\n}\n.widget {\n  font-size: inherit;\n}\n.widget-header {\n  background-color: var(--color-widget-surface);\n  color: var(--color-widget-content);\n  font-weight: 300;\n  font-size: inherit;\n}\n.btn-l {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-l.hide {\n  display: none;\n}\n.btn-s {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-s.hide {\n  display: none;\n}\n.btn-red {\n  background-color: var(--color-error-surface);\n  border: 1px solid var(--color-error-border);\n}\n.btn-red,\n.btn-red:hover {\n  color: var(--color-error-sufrace-hover);\n}\n#table a.cell {\n  position: relative;\n}\n#table a.cell.samekm {\n  z-index: 1;\n  background-color: var(--color-ignore-surface);\n  color: var(--color-ignore-content);\n  box-shadow: none;\n  -webkit-box-shadow: none;\n}\n#table a.cell.samekm:hover {\n  background-color: var(--color-ignore-sufrace-hover);\n  color: var(--color-ignore-content-hover);\n}\n.btn-set .btn-marker:hover {\n  filter: brightness(1.2);\n}\n#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#buy_year_month {\n  color: var(--color-input-content);\n  background-color: var(--color-input-sufrace);\n  border: 1px solid var(--color-input-border);\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: var(--color-input-shadow);\n  display: inline-block;\n  font-family: var(--base-font-family);\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 150px;\n}\n#my-func-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#my-func-block .btn-i {\n  padding: 10px;\n}\n#my-func-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n.estimated-prices-widget .widget-header {\n  cursor: default;\n}\n#estimated-prices {\n  max-height: 400px;\n  overflow-x: hidden;\n}\n#estimated-prices .list-link {\n  cursor: initial;\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid var(--color-surface-info);\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n}\n.widget .list-link .blue-13,\n#coin-list table .blue-13 {\n  font-size: 11px;\n  line-height: 19px;\n  letter-spacing: -1px;\n  white-space: nowrap;\n}\n#coin h1 {\n  color: var(--color-content-header);\n}\n#coin .pricewj {\n  border: none;\n}\n#coin .pricewj span {\n  font-size: 15px;\n}\n#coin .tbl td,\n#coin .tbl th {\n  border: none;\n}\n#coin .coin-info th {\n  background-color: var(--color-surface-info);\n}\n#coin .coin-info tr + tr td {\n  border-top: 1px solid var(--color-surface-info);\n}\n#coin .coin-info tr + tr th {\n  border-top: 1px solid var(--color-surface);\n}\n#coin .coin-info thead + tbody {\n  border-top: 1px solid var(--color-surface);\n}\n#coin .coin-img td.i {\n  border: none;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-s,\n#coin #wish-form .btn-s {\n  margin: 0 0 0 5px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-swap-block #swap-block .btn--combine,\n#my-swap-block #swap-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-swap-block #swap-block .btn--combine.hide,\n#my-swap-block #swap-block .btn--expand.hide {\n  display: none;\n}\n#my-wish-block #wish-block a {\n  position: relative;\n}\n#my-wish-block #wish-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-wish-block #wish-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-wish-block #wish-block a .comments:active,\n#my-wish-block #wish-block a .comments:focus,\n#my-wish-block #wish-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block a:active .comments,\n#my-wish-block #wish-block a:focus .comments,\n#my-wish-block #wish-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-wish-block #wish-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 28px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-wish-block #wish-block .btn--combine,\n#my-wish-block #wish-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-wish-block #wish-block .btn--combine.hide,\n#my-wish-block #wish-block .btn--expand.hide {\n  display: none;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: var(--color-surface-warning);\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: var(--color-surface-error);\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n#swap-list .action-board,\n#swap-mgr .action-board,\n#swap-list .filter-container,\n#swap-mgr .filter-container {\n  margin: 15px 0 20px;\n  height: 30px;\n  width: auto;\n}\n#swap-list #sort-filter,\n#swap-mgr #sort-filter {\n  border-color: var(--color-content-link);\n  width: 150px !important;\n  padding: 4px 12px 7px;\n}\n#swap-list #sort-filter .left,\n#swap-mgr #sort-filter .left {\n  max-width: 140px !important;\n}\n#swap-list #sort-filter-dialog,\n#swap-mgr #sort-filter-dialog {\n  width: 174px;\n  display: none;\n}\n#swap-list .pages {\n  padding-right: 0 !important;\n}\n#swap-list .filter-container {\n  margin: 0 !important;\n}\n#swap-mgr table.offer-list tr.str {\n  cursor: default;\n}\n#swap-mgr #smart-filter-container {\n  position: sticky;\n  top: 0;\n  width: 100%;\n  margin: 0;\n  padding: 15px 0 20px;\n  background: var(--color-surface);\n}\n#swap-mgr #smart-filter-container #country-filter {\n  width: 129px;\n}\n#swap-mgr #smart-filter-container #country-filter.selected {\n  border-color: var(--color-content-link);\n}\n#swap-mgr #smart-filter-container .swap-coin-filter input.filter {\n  width: 100%;\n}\n#profile .price {\n  display: inline-block;\n}\n#profile .price .total {\n  float: right;\n  color: var(--color-content-total);\n  font-size: 20px;\n  font-family: var(--base-font-family);\n  font-weight: normal;\n  margin-top: 4px;\n  padding-top: 4px;\n  border-top: 1px solid var(--color-border-total);\n}\n#profile .price .total .cur {\n  font-size: 16px;\n  padding-right: 6px;\n}\n#tree .tree-filter {\n  color: var(--color-input-content);\n  background-color: var(--color-input-sufrace);\n  border: 1px solid var(--color-input-border);\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: var(--color-input-shadow);\n  display: inline-block;\n  font-family: var(--base-font-family);\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 100%;\n  margin-bottom: 3px;\n  font-size: 13px;\n}\n#tree #catalog-tree .country .hide,\n#tree #catalog-tree .period .hide {\n  display: none;\n}\n#coin .rnav {\n  position: relative;\n}\n#coin-chooser-dialog {\n  --width: 200px;\n  --height: 36px;\n  --gap: 20px;\n  --columns: 3;\n  --rows: 20;\n  width: max-content;\n  min-width: var(--width);\n  max-width: calc((var(--width) + var(--gap)) * var(--columns) - var(--gap));\n  max-height: calc(var(--height) * var(--rows)) !important;\n  column-width: var(--width);\n  column-gap: var(--gap);\n  right: 0;\n}\n#coin-chooser-dialog .list-link {\n  display: inline-block;\n  width: calc(var(--width) - 24px);\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ":root {\n  --base-font-family: 'Open Sans', sans-serif;\n  --base-font-size: 14px;\n  --color-surface: #fff;\n  --color-surface-warning: #fdd;\n  --color-surface-error: #fed;\n  --color-surface-info: #eee;\n  --color-content-header: #333;\n  --color-content-total: #666;\n  --color-border-total: #060;\n  --color-content-link: #37e;\n  --color-input-sufrace: var(--color-surface);\n  --color-input-content: #222;\n  --color-input-content-disabled: #444;\n  --color-input-border: #aaa;\n  --color-input-border-disabled: #eee;\n  --color-input-shadow: 0 2px 1px #0001 inset;\n  --color-ignore-content: #ccc;\n  --color-ignore-surface: #333a;\n  --color-ignore-content-hover: #fff;\n  --color-ignore-sufrace-hover: #000a;\n  --color-error-surface: #c00;\n  --color-error-border: #0002;\n  --color-error-sufrace-hover: #eee;\n  --color-widget-content: #333;\n  --color-widget-surface: #ccc;\n}\nbody {\n  font-family: var(--base-font-family);\n  font-size: var(--base-font-size);\n}\n.widget {\n  font-size: inherit;\n}\n.widget-header {\n  background-color: var(--color-widget-surface);\n  color: var(--color-widget-content);\n  font-weight: 300;\n  font-size: inherit;\n}\n.btn-l {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-l.hide {\n  display: none;\n}\n.btn-s {\n  font-family: inherit;\n  font-size: inherit;\n  font-weight: inherit;\n}\n.btn-s.hide {\n  display: none;\n}\n.btn-red {\n  background-color: var(--color-error-surface);\n  border: 1px solid var(--color-error-border);\n}\n.btn-red,\n.btn-red:hover {\n  color: var(--color-error-sufrace-hover);\n}\n#table a.cell {\n  position: relative;\n}\n#table a.cell.samekm {\n  z-index: 1;\n  background-color: var(--color-ignore-surface);\n  color: var(--color-ignore-content);\n  box-shadow: none;\n  -webkit-box-shadow: none;\n}\n#table a.cell.samekm:hover {\n  background-color: var(--color-ignore-sufrace-hover);\n  color: var(--color-ignore-content-hover);\n}\n.btn-set .btn-marker:hover {\n  filter: brightness(1.2);\n}\n#buy_reset {\n  font-size: 16px;\n  font-weight: bold;\n  width: 22px;\n  height: 22px;\n  display: inline-block;\n}\n#buy_reset svg {\n  width: 14px;\n  height: 14px;\n}\n#buy_year_month {\n  color: var(--color-input-content);\n  background-color: var(--color-input-sufrace);\n  border: 1px solid var(--color-input-border);\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: var(--color-input-shadow);\n  display: inline-block;\n  font-family: var(--base-font-family);\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 150px;\n}\n#my-func-block .btn-narrow {\n  padding-left: 14px;\n  padding-right: 14px;\n}\n#my-func-block .btn-i {\n  padding: 10px;\n}\n#my-func-block .btn-i svg {\n  width: 15px;\n  height: 15px;\n}\n.estimated-prices-widget {\n  margin: 30px 0;\n}\n.estimated-prices-widget .widget-header {\n  cursor: default;\n}\n#estimated-prices {\n  max-height: 400px;\n  overflow-x: hidden;\n}\n#estimated-prices .list-link {\n  cursor: initial;\n  padding: 6px 0 3px;\n}\n#estimated-prices .list-sep {\n  padding: 0;\n  border-bottom: 2px solid var(--color-surface-info);\n}\n#estimated-prices .dgray-11 {\n  display: inline-block;\n  text-align: center;\n  line-height: 19px;\n  width: 32px;\n  margin: 0 4px;\n}\n#estimated-prices .gray-13 {\n  padding: 1px 4px 1px 8px;\n  max-width: 64px;\n}\n#estimated-prices .right {\n  max-width: 120px;\n}\n.widget .list-link .blue-13,\n#coin-list table .blue-13 {\n  font-size: 11px;\n  line-height: 19px;\n  letter-spacing: -1px;\n  white-space: nowrap;\n}\n#coin h1 {\n  color: var(--color-content-header);\n}\n#coin .pricewj {\n  border: none;\n}\n#coin .pricewj span {\n  font-size: 15px;\n}\n#coin .tbl td,\n#coin .tbl th {\n  border: none;\n}\n#coin .coin-info th {\n  background-color: var(--color-surface-info);\n}\n#coin .coin-info tr + tr td {\n  border-top: 1px solid var(--color-surface-info);\n}\n#coin .coin-info tr + tr th {\n  border-top: 1px solid var(--color-surface);\n}\n#coin .coin-info thead + tbody {\n  border-top: 1px solid var(--color-surface);\n}\n#coin .coin-img td.i {\n  border: none;\n}\n#coin #swap-block .dgray-11,\n#coin #wish-block .dgray-11 {\n  width: 32px !important;\n  margin: 0 4px;\n}\n#coin #swap-form .btn-s,\n#coin #wish-form .btn-s {\n  margin: 0 0 0 5px;\n}\n#coin #swap-form .btn-ctrl {\n  float: right;\n  margin: 14px 3px 0;\n  height: 26px;\n}\n#coin #swap-form .btn-ctrl + .btn-ctrl {\n  margin-right: 0;\n}\n#coin #swap-form #swap-qty {\n  margin-top: 1em;\n}\n#my-swap-block #swap-block a {\n  position: relative;\n}\n#my-swap-block #swap-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-swap-block #swap-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-swap-block #swap-block a .comments:active,\n#my-swap-block #swap-block a .comments:focus,\n#my-swap-block #swap-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block a:active .comments,\n#my-swap-block #swap-block a:focus .comments,\n#my-swap-block #swap-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-swap-block #swap-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-swap-block #swap-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 20px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-swap-block #swap-block .btn--combine,\n#my-swap-block #swap-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-swap-block #swap-block .btn--combine.hide,\n#my-swap-block #swap-block .btn--expand.hide {\n  display: none;\n}\n#my-wish-block #wish-block a {\n  position: relative;\n}\n#my-wish-block #wish-block a .comments {\n  position: absolute;\n  width: auto;\n  left: 100%;\n  text-align: left;\n}\n#my-wish-block #wish-block a .comments .ico-16 {\n  display: inline-block;\n  vertical-align: middle;\n  background-position: -16px 0;\n}\n#my-wish-block #wish-block a .comments:active,\n#my-wish-block #wish-block a .comments:focus,\n#my-wish-block #wish-block a .comments:hover {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block a:active .comments,\n#my-wish-block #wish-block a:focus .comments,\n#my-wish-block #wish-block a:hover .comments {\n  max-width: 100%;\n  overflow: visible;\n}\n#my-wish-block #wish-block center div.btn-set {\n  display: flex;\n  justify-content: space-around;\n  margin: 0 auto;\n  width: fit-content;\n}\n#my-wish-block #wish-block center div.btn-set div {\n  font-size: 11px;\n  flex: 0 0 28px;\n  height: 20px;\n  line-height: 20px;\n  cursor: pointer;\n  padding: 1px;\n  margin: 0 1px;\n}\n#my-wish-block #wish-block .btn--combine,\n#my-wish-block #wish-block .btn--expand {\n  margin: 8px 2px 0;\n}\n#my-wish-block #wish-block .btn--combine.hide,\n#my-wish-block #wish-block .btn--expand.hide {\n  display: none;\n}\n#swap-list .swap-coin tr,\n#swap-mgr .swap-coin tr {\n  transition: opacity 0.25s, background 0.25s;\n}\n#swap-list .swap-coin tr.conflict,\n#swap-mgr .swap-coin tr.conflict {\n  background: var(--color-surface-warning);\n}\n#swap-list .swap-coin tr.conflict.mark,\n#swap-mgr .swap-coin tr.conflict.mark {\n  background: var(--color-surface-error);\n}\n#swap-list .swap-coin tr.ignore,\n#swap-mgr .swap-coin tr.ignore {\n  opacity: 0.5;\n}\n#swap-list .swap-coin tr.ignore.conflict,\n#swap-mgr .swap-coin tr.ignore.conflict,\n#swap-list .swap-coin tr.ignore.mark,\n#swap-mgr .swap-coin tr.ignore.mark {\n  opacity: 0.75;\n}\n#swap-list .action-board,\n#swap-mgr .action-board,\n#swap-list .filter-container,\n#swap-mgr .filter-container {\n  margin: 15px 0 20px;\n  height: 30px;\n  width: auto;\n}\n#swap-list .filters .filter + .filter,\n#swap-mgr .filters .filter + .filter {\n  margin-left: 4px;\n}\n#swap-list .filters .filter .close,\n#swap-mgr .filters .filter .close {\n  width: 18px;\n  text-align: center;\n  margin-right: -8px;\n}\n#swap-list .filters .filter .flag,\n#swap-mgr .filters .filter .flag {\n  margin-right: 4px;\n}\n#swap-list .filters .filter-dialog,\n#swap-mgr .filters .filter-dialog {\n  max-height: 300px;\n  overflow: auto;\n}\n#swap-list .filters .filter-box.filter-box-disabled,\n#swap-mgr .filters .filter-box.filter-box-disabled {\n  color: var(--color-input-content-disabled);\n}\n#swap-list .filters .filter-box.filter-box-disabled,\n#swap-mgr .filters .filter-box.filter-box-disabled,\n#swap-list .filters .filter-box.filter-box-disabled:hover,\n#swap-mgr .filters .filter-box.filter-box-disabled:hover {\n  border-color: var(--color-input-border-disabled);\n}\n#swap-list #sort-filter,\n#swap-mgr #sort-filter {\n  border-color: var(--color-content-link);\n  width: 150px !important;\n  padding: 4px 12px 7px;\n}\n#swap-list #sort-filter .left,\n#swap-mgr #sort-filter .left {\n  max-width: 140px !important;\n}\n#swap-list #sort-filter-dialog,\n#swap-mgr #sort-filter-dialog {\n  width: 174px;\n  display: none;\n}\n#swap-list .pages {\n  padding-right: 0 !important;\n}\n#swap-list .filter-container {\n  margin: 0 !important;\n}\n#swap-mgr table.offer-list tr.str {\n  cursor: default;\n}\n#swap-mgr #smart-filter-container {\n  position: sticky;\n  top: 0;\n  width: 100%;\n  margin: 0;\n  padding: 15px 0 20px;\n  background: var(--color-surface);\n}\n#swap-mgr #smart-filter-container #country-filter {\n  width: 129px;\n}\n#swap-mgr #smart-filter-container #country-filter.selected {\n  border-color: var(--color-content-link);\n}\n#swap-mgr #smart-filter-container .swap-coin-filter input.filter {\n  width: 100%;\n}\n#profile .price {\n  display: inline-block;\n}\n#profile .price .total {\n  float: right;\n  color: var(--color-content-total);\n  font-size: 20px;\n  font-family: var(--base-font-family);\n  font-weight: normal;\n  margin-top: 4px;\n  padding-top: 4px;\n  border-top: 1px solid var(--color-border-total);\n}\n#profile .price .total .cur {\n  font-size: 16px;\n  padding-right: 6px;\n}\n#tree .tree-filter {\n  color: var(--color-input-content);\n  background-color: var(--color-input-sufrace);\n  border: 1px solid var(--color-input-border);\n  border-radius: 2px;\n  transition: all 150ms ease-in-out 0s;\n  box-shadow: var(--color-input-shadow);\n  display: inline-block;\n  font-family: var(--base-font-family);\n  padding: 2px 8px;\n  height: 28px;\n  box-sizing: border-box;\n  width: 100%;\n  margin-bottom: 3px;\n  font-size: 13px;\n}\n#tree #catalog-tree .country .hide,\n#tree #catalog-tree .period .hide {\n  display: none;\n}\n#coin .rnav {\n  position: relative;\n}\n#coin-chooser-dialog {\n  --width: 200px;\n  --height: 36px;\n  --gap: 20px;\n  --columns: 3;\n  --rows: 20;\n  width: max-content;\n  min-width: var(--width);\n  max-width: calc((var(--width) + var(--gap)) * var(--columns) - var(--gap));\n  max-height: calc(var(--height) * var(--rows)) !important;\n  column-width: var(--width);\n  column-gap: var(--gap);\n  right: 0;\n}\n#coin-chooser-dialog .list-link {\n  display: inline-block;\n  width: calc(var(--width) - 24px);\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -252,7 +252,7 @@ class CoinForm extends form_1.AbstractForm {
         let { buy_year_month: buyYearMonth } = this.form;
         (0, utils_1.hide)(buyYear, buyMonth);
         if (!buyYearMonth) {
-            buyYear.insertAdjacentHTML('afterend', `<input id="buy_year_month" name="buy_year_month" type="month"/>`);
+            buyYear.insertAdjacentHTML('afterend', `<input id='buy_year_month' name='buy_year_month' type='month'/>`);
             buyYearMonth = this.form.buy_year_month;
         }
         buyYearMonth.max = (0, utils_1.todayMonth)();
@@ -308,7 +308,7 @@ class CoinForm extends form_1.AbstractForm {
         const status = this.view.querySelector('.status-line .left');
         const buttons = this.view.querySelector('.func-button');
         const buttonId = 'coin-form-visibility';
-        buttons.insertAdjacentHTML('afterbegin', `<button id="${buttonId}" class="btn-l btn-i btn-narrow"/>`);
+        buttons.insertAdjacentHTML('afterbegin', `<button id='${buttonId}' class='btn-l btn-i btn-narrow'/>`);
         const button = buttons.querySelector((0, selectors_1.id)(buttonId));
         const updateStatus = () => {
             const { checked } = this.form.public;
@@ -344,7 +344,7 @@ class CoinForm extends form_1.AbstractForm {
         }
         const buttons = this.view.querySelector('.func-button');
         const buttonId = 'coin-form-replacement';
-        buttons.insertAdjacentHTML('afterbegin', `<button id="${buttonId}" class="btn-l btn-i btn-narrow"/>`);
+        buttons.insertAdjacentHTML('afterbegin', `<button id='${buttonId}' class='btn-l btn-i btn-narrow'/>`);
         const button = buttons.querySelector((0, selectors_1.id)(buttonId));
         const updateStatus = () => {
             const { checked } = this.form.replace;
@@ -356,7 +356,7 @@ class CoinForm extends form_1.AbstractForm {
                 if (!status) {
                     const tbody = this.view.querySelector('.status-line + table tbody');
                     if (tbody) {
-                        tbody.insertAdjacentHTML('beforeend', `<tr><td class="lgray-12" colspan="2"><span class="set status2 wrap" style="max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;">Need to replace</span></td></tr>`);
+                        tbody.insertAdjacentHTML('beforeend', `<tr><td class='lgray-12' colspan='2'><span class='set status2 wrap' style='max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;'>Need to replace</span></td></tr>`);
                         status = tbody.querySelector('tr:last-child');
                     }
                 }
@@ -539,7 +539,7 @@ exports.ColorStyle = new Map([
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.randomDelay = exports.delay = void 0;
 async function delay(time) {
-    return await new Promise(resolve => setTimeout(() => resolve(), time));
+    return await new Promise((resolve) => setTimeout(() => resolve(), time));
 }
 exports.delay = delay;
 async function randomDelay(rndDelay = 1000, minDelay = 500) {
@@ -558,59 +558,37 @@ exports.randomDelay = randomDelay;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.renderFilters = exports.renderFilter = void 0;
-const { location: loc } = document;
-function urlWithoutFilter(name) {
-    const url = new URL(loc.href);
-    url.searchParams.delete(name);
-    return url.href;
-}
-function urlWithFilter(name, value) {
-    const url = new URL(loc.href);
-    url.searchParams.set(name, value);
-    return url.href;
-}
-function renderFilter(props) {
-    return `<div class="${(props === null || props === void 0 ? void 0 : props.direction) || 'left'} filter-container"><div id="${props === null || props === void 0 ? void 0 : props.id}" class="filter-box${(props === null || props === void 0 ? void 0 : props.value) ? ` filter-box-active` : ''}" style="width: ${(props === null || props === void 0 ? void 0 : props.width) - 24}px;">\
-            <div class="${(props === null || props === void 0 ? void 0 : props.value) ? `blue-13 ` : ''}left">${(props === null || props === void 0 ? void 0 : props.value) || (props === null || props === void 0 ? void 0 : props.placeholder)}</div>${(props === null || props === void 0 ? void 0 : props.value)
-        ? `<div class="right close" title="Clear filter" onclick="location.href='${urlWithoutFilter(props === null || props === void 0 ? void 0 : props.name)}';">×</div>`
-        : `<div class="right"><span class="arrow ab"></span></div>`}</div>\
-        <div class="drop hide filter-dialog" id="${props === null || props === void 0 ? void 0 : props.id}-dialog" style="width: ${props === null || props === void 0 ? void 0 : props.width}px;">\
-            ${Object.entries(props === null || props === void 0 ? void 0 : props.options).map(([value, label]) => `<a class="list-link" href="${urlWithFilter(props === null || props === void 0 ? void 0 : props.name, value)}><span class="left gray-13 wrap" style="max-width:140px;">${label}</span></a>`).join('')}\
+exports.renderFilters = exports.renderFilter = exports.Filter = void 0;
+var Filter;
+(function (Filter) {
+    Filter["COUNTRY"] = "country";
+    Filter["YEAR"] = "year";
+    Filter["VALUE"] = "value";
+    Filter["KM"] = "km";
+})(Filter = exports.Filter || (exports.Filter = {}));
+function renderFilter([name, props]) {
+    const disabled = props.options.size <= 2;
+    return `<div class='${props.direction || 'left'} filter'>\
+            <div data-filter='${name}' data-filter-placeholder='${props.placeholder}'${disabled ? ' data-filter-disabled' : ''} class='filter-box${disabled ? ' filter-box-disabled' : props.value ? ' filter-box-active' : ''}' style='width: ${props.width - 24}px;'>\
+            <div class='${props.value ? `blue-13 ` : ''}left'>${disabled
+        ? props.options.get([...props.options.keys()].filter((k) => k !== '').pop())
+        : props.value
+            ? props.options.get(props.value) || props.value
+            : props.placeholder}</div>${(!disabled &&
+        (props.value
+            ? `<div class='right close' title='Clear filter' data-filter-clear='${name}'>×</div>`
+            : `<div class='right'><span class='arrow ab'></span></div>`)) ||
+        ''}</div>\
+        <div class='drop hide filter-dialog' data-filter-dialog='${name}' style='width: ${props.width}px;'>\
+            ${[['', 'All'], ...props.options.entries()]
+        .map(([value, label]) => `<a class='list-link' data-filter-by='${name}' data-filter-value='${value}'>\
+                    <span class='left gray-13 wrap' style='max-width:140px;'>${label}</span></a>`)
+        .join('')}\
         </div></div>`;
-    // Toggle:
-    // <div class="filter-box" style="width: 120px;" data-href="/table/?country=latvia&amp;period=315&amp;type=1&amp;uid=28609&amp;year=2014&amp;mintset=on">
-    //     <div class="gray-13 left wrap" style="max-width:100px;">Mint Set</div>
-    //     <div class="lgray-13 right">38</div>
-    // </div>
 }
 exports.renderFilter = renderFilter;
 function renderFilters(props) {
-    const script = ``;
-    // const script = `
-    //     <script>
-    //         $(document).on('click touchstart', function (event) {
-    //             if( $(event.target).closest(".filter-dialog").length )
-    //                 return;
-    //             $(".filter-dialog").fadeOut("fast");
-    //             event.stopPropagation();
-    //         });
-    //         $('.filter-box[data-href!=""]').on('click touchstart', function () {
-    //             $(location).attr('href', $(this).attr('data-href'));
-    //         });
-    //         $('.filter-box').on('click touchstart', function (event) {
-    //             if( $(event.target).closest(".close").length ) return;
-    //             dialog = "#" + $(this).attr('id') + "-dialog";
-    //             if( $(dialog).css("display") == 'block') {
-    //                 $(dialog).fadeOut("fast");
-    //             } else {
-    //                 $(".filter-dialog").fadeOut("fast");
-    //                 $(dialog).fadeIn("fast");
-    //             }
-    //             return false;
-    //         });
-    //     </script>`;
-    return `<div class="filters">${props.map(renderFilter).join('')}${script}</div>`;
+    return `<div class='left filter-container filters'>${[...props.entries()].map(renderFilter).join('')}</div>`;
 }
 exports.renderFilters = renderFilters;
 
@@ -663,8 +641,7 @@ function addVisibilityToggleButton(container, text, className, visibility, count
     if (!button) {
         container.insertAdjacentHTML('beforeend', `<button id="${buttonId}" class="btn-l ${className}" style="padding: 0 14px; height: 26px">${text} <small></small></button>`);
         button = document.getElementById(buttonId);
-        button.addEventListener('click', () => confirm(`Are you sure to ${text.toLowerCase()}?`) &&
-            callback(container, visibility));
+        button.addEventListener('click', () => confirm(`Are you sure to ${text.toLowerCase()}?`) && callback(container, visibility));
     }
     const small = button.querySelector('small');
     small.textContent = `(${count})`;
@@ -868,15 +845,17 @@ class ListForm extends form_1.AbstractForm {
                 this.form[this.formVariety][0].checked = true;
             }
         }
-        this.form.action.value = uid ? `edit${this.formType}coin` : `add${this.formType}coin`;
+        this.form.action.value = uid
+            ? `edit${this.formType}coin`
+            : `add${this.formType}coin`;
     }
     formOnHandler(uid, ...other) {
         this.formClickTimeout = setTimeout(() => {
             (0, utils_1.hide)(this.listBlock);
             (0, utils_1.show)(this.form, this.formClose);
             (0, utils_1.disable)(this.func);
-            this.widgetHeader.removeEventListener('click', e => this.widgetHeaderRedirectHandler(e));
-            this.widgetHeader.addEventListener('click', e => this.widgetHeaderCloseHandler(e));
+            this.widgetHeader.removeEventListener('click', (e) => this.widgetHeaderRedirectHandler(e));
+            this.widgetHeader.addEventListener('click', (e) => this.widgetHeaderCloseHandler(e));
             this.fillForm(uid, ...other);
             (0, utils_1.show)(this.cancelButton);
             (0, utils_1.toggle)(!uid, this.addButton);
@@ -894,8 +873,8 @@ class ListForm extends form_1.AbstractForm {
         (0, utils_1.hide)(this.form, this.formClose);
         (0, utils_1.show)(this.listBlock);
         (0, utils_1.enable)(this.func);
-        this.widgetHeader.removeEventListener('click', e => this.widgetHeaderCloseHandler(e));
-        this.widgetHeader.addEventListener('click', e => this.widgetHeaderRedirectHandler(e));
+        this.widgetHeader.removeEventListener('click', (e) => this.widgetHeaderCloseHandler(e));
+        this.widgetHeader.addEventListener('click', (e) => this.widgetHeaderRedirectHandler(e));
     }
     widgetHeaderCloseHandler(e) {
         (0, utils_1.cancel)(e);
@@ -1016,10 +995,10 @@ const RX_RUSSIA = /Russia|Россия|Rusija|USSR|СССР|TSRS/;
 const RX_COMPOSITION = /Composition|Материал|Sudėtis/;
 const RX_SILVER = /Silver|Серебро|Sidabras/;
 const RX_GOLD = /Gold|Золото|Auksas/;
-const RU_PRICE = 0.006; //       3-8e/kg
-const EU_PRICE = 0.013; //     10-15e/kg
-const AG_PRICE = 0.700; //   .60-.80e/g
-const AU_PRICE = 47.00; // 45.0-55.0e/g
+const RU_PRICE = 0.005; //       3-8e/kg
+const EU_PRICE = 0.012; //     10-15e/kg
+const AG_PRICE = 0.77; //   .60-.80e/g
+const AU_PRICE = 49.0; // 45.0-55.0e/g
 function sortByCondition(a, b) {
     return cond_1.ConditionValues.get(b) - cond_1.ConditionValues.get(a);
 }
@@ -1074,11 +1053,13 @@ function estimateSwapPrices() {
                 hover: { mode: 'nearest', intersect: true },
                 scales: {
                     xAxes: [],
-                    yAxes: [{
+                    yAxes: [
+                        {
                             type: 'linear',
                             display: true,
                             ticks: { beginAtZero: true },
-                        }],
+                        },
+                    ],
                 },
                 legend: { display: false },
                 elements: { point: { radius: 1 } },
@@ -1099,7 +1080,7 @@ function estimateSwapPrices() {
             options.data.datasets.push({
                 xAxisID,
                 label: cond,
-                data: p.map((v, i) => ({ x: i * maxLength / length, y: v })),
+                data: p.map((v, i) => ({ x: (i * maxLength) / length, y: v })),
                 backgroundColor: color,
                 borderColor: color,
                 borderWidth: 1,
@@ -1144,7 +1125,7 @@ function estimateWeightPrice() {
     let part = 1;
     for (const tr of trs) {
         const th = tr.querySelector('th');
-        const head = th && th.textContent || '';
+        const head = (th && th.textContent) || '';
         const td = tr.querySelector('td');
         if (td) {
             const data = `${td.textContent}`;
@@ -1270,7 +1251,9 @@ class SwapFormList {
         };
         this.updateLinkQty = (a, qty) => {
             if (a.hasAttribute('onClick')) {
-                a.setAttribute('onClick', a.getAttribute('onClick').replace(swap_links_1.CoinSwapFormOnMatcher, `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${qty}', '$<replica>'`));
+                a.setAttribute('onClick', a
+                    .getAttribute('onClick')
+                    .replace(swap_links_1.CoinSwapFormOnMatcher, `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${qty}', '$<replica>'`));
             }
             for (const span of a.querySelectorAll('span.left.dblue-13')) {
                 span.remove();
@@ -1291,17 +1274,17 @@ class SwapFormList {
         else {
             this.listBlock = listBlock;
         }
-        this.form = listBlock.querySelector((0, selectors_1.id)(this.listForm.formId))
-            || document.querySelector((0, selectors_1.id)(this.listForm.formId));
+        this.form =
+            listBlock.querySelector((0, selectors_1.id)(this.listForm.formId)) || document.querySelector((0, selectors_1.id)(this.listForm.formId));
         this.buttonSet = listBlock.querySelector('center');
         if (this.buttonSet) {
             /*const oldButton = this.buttonSet.querySelector('button.btn-s.btn-gray');
             if (oldButton) {
                 oldButton.remove();
             }*/
-            this.addButton('expand', 0, '&laquo;*&raquo;', n => this.onExpand(n));
-            this.addButton('expand', 5, '&laquo;5&raquo;', n => this.onExpand(n));
-            this.addButton('expand', 10, '&laquo;10&raquo;', n => this.onExpand(n));
+            this.addButton('expand', 0, '&laquo;*&raquo;', (n) => this.onExpand(n));
+            this.addButton('expand', 5, '&laquo;5&raquo;', (n) => this.onExpand(n));
+            this.addButton('expand', 10, '&laquo;10&raquo;', (n) => this.onExpand(n));
             this.addButton('combine', 0, '&raquo;&middot;&laquo;', () => this.onCombine());
             this.updateButtons();
         }
@@ -1467,7 +1450,7 @@ class SwapFormList {
             const remove = new Set(usids);
             remove.delete(usid);
             debug(`REMOVING ${remove}`);
-            if (!await this.deleteSwapCoin(remove)) {
+            if (!(await this.deleteSwapCoin(remove))) {
                 isDelFailed = true;
                 break;
             }
@@ -1562,7 +1545,7 @@ class SwapForm extends list_form_1.ListForm {
         this.swapListManager = new swap_form_list_1.SwapFormList(this);
     }
     fillForm(uid = '', cond = '', price = '', info = '', vid = '', qty = '', replica = '') {
-        super.fillForm(uid, cond || replica && '100', price, vid || (0, vid_1.getCurrentVarietyId)());
+        super.fillForm(uid, cond || (replica && '100'), price, vid || (0, vid_1.getCurrentVarietyId)());
         this.form.comment.value = info;
         this.form.qty.value = qty || '1';
     }
@@ -1593,7 +1576,7 @@ class SwapForm extends list_form_1.ListForm {
         return {
             value,
             text: value ? textContent : 'Without condition',
-            checked: (value === '3') ? 'checked' : '',
+            checked: value === '3' ? 'checked' : '',
             style: o.getAttribute('style') || '',
         };
     }
@@ -1614,10 +1597,10 @@ class SwapForm extends list_form_1.ListForm {
                 qty.value = `${valueChanger(+qty.value)}`;
             });
         };
-        addQtyCtrlButton('beforebegin', 'plus10', '+10', v => v + 10);
-        addQtyCtrlButton('beforebegin', 'plus5', '+5', v => v + 5);
-        addQtyCtrlButton('beforebegin', 'plus', '+', v => v + 1);
-        addQtyCtrlButton('beforebegin', 'minus', '&minus;', v => v - 1);
+        addQtyCtrlButton('beforebegin', 'plus10', '+10', (v) => v + 10);
+        addQtyCtrlButton('beforebegin', 'plus5', '+5', (v) => v + 5);
+        addQtyCtrlButton('beforebegin', 'plus', '+', (v) => v + 1);
+        addQtyCtrlButton('beforebegin', 'minus', '&minus;', (v) => v - 1);
     }
 }
 exports.SwapForm = SwapForm;
@@ -1711,10 +1694,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.addFilteringOptions = exports.addSortingOptions = exports.cmp = void 0;
 const cond_1 = __webpack_require__(290);
 const filters_1 = __webpack_require__(526);
+const url_1 = __webpack_require__(422);
 const utils_1 = __webpack_require__(131);
-const { location: loc } = document;
 function num(s) {
-    return +(s.replace(/[^.\d]/g, ''));
+    return +s.replace(/[^.\d]/g, '');
 }
 function cmp(a, b) {
     return -(a < b) || +(a > b);
@@ -1729,26 +1712,19 @@ function cmpStr(a, b, field) {
     return cmp(a[f], b[f]);
 }
 function cmpYear(a, b, o = 1) {
-    return o * cmpNum(a, b, 'year')
-        || o * cmpStr(a, b, 'mm');
+    return o * cmpNum(a, b, 'year') || o * cmpStr(a, b, 'mm');
 }
 function cmpKm(a, b, o = 1) {
-    return o * cmpStr(a, b, 'kmc')
-        || o * cmpNum(a, b, 'km')
-        || o * cmpStr(a, b, 'kma')
-        || o * cmpYear(a, b);
+    return o * cmpStr(a, b, 'kmc') || o * cmpNum(a, b, 'km') || o * cmpStr(a, b, 'kma') || o * cmpYear(a, b);
 }
 function cmpFace(a, b, o = 1) {
-    return o * cmpStr(a, b, 'face')
-        || o * cmpKm(a, b, -1);
+    return o * cmpStr(a, b, 'face') || o * cmpKm(a, b, -1);
 }
 function cmpCond(a, b, o = 1) {
-    return o * cmpNum(a, b, 'cond')
-        || cmpFace(a, b);
+    return o * cmpNum(a, b, 'cond') || cmpFace(a, b);
 }
 function cmpValue(a, b, o = 1) {
-    return o * cmpNum(a, b, 'value')
-        || cmpCond(a, b, -1);
+    return o * cmpNum(a, b, 'value') || cmpCond(a, b, -1);
 }
 const sortOptionParams = new Map([
     ['Year', { index: 0, field: 'year', sort: cmpYear }],
@@ -1760,21 +1736,24 @@ const sortOptionParams = new Map([
 const sortOptions = ['Year', 'Facial value', 'Condition', 'Value', 'Krause number'];
 let currentOption = 'Year';
 let currentOrder = 'd';
+function x(name) {
+    return `<div class='right close' title='Clear filter' data-filter-clear='${name}'>×</div>`;
+}
 function a(ord = 'a') {
     const arrClass = ord === 'a' ? 'at' : 'ab';
-    return `<div class="right"><span class="arrow ${arrClass}"></span></div>`;
+    return `<div class='right'><span class='arrow ${arrClass}'></span></div>`;
 }
 function d(ord = 'd') {
     return a(ord);
 }
 function o(opt) {
-    return `<div class="left gray-13">${opt}</div>`;
+    return `<div class='left gray-13'>${opt}</div>`;
 }
 function c(html) {
     const template = document.createElement('template');
     template.innerHTML = html;
     const opt = template.content.querySelector('div.left');
-    opt.classList.add('wrap');
+    opt === null || opt === void 0 ? void 0 : opt.classList.add('wrap');
     return template.innerHTML;
 }
 function sortBy(sections, option, order) {
@@ -1788,30 +1767,30 @@ function sortBy(sections, option, order) {
         }
     }
 }
+const ORDER_PARAM = 'o';
+const ORDER_SEPARATOR = '_';
 function getActiveSortOption() {
-    const parts = loc.hash.split(';');
-    if (parts[1]) {
-        const [field = 'year', order = 'd'] = parts[1].split(':');
-        currentOrder = order;
-        for (const [option, { field: f }] of sortOptionParams.entries()) {
-            if (f === field) {
-                currentOption = option;
-            }
+    const o = (0, url_1.getHashParam)(ORDER_PARAM);
+    const [field = 'year', order = 'd'] = (o === null || o === void 0 ? void 0 : o.split(ORDER_SEPARATOR)) || [];
+    currentOrder = order;
+    for (const [option, { field: f }] of sortOptionParams.entries()) {
+        if (f === field) {
+            currentOption = option;
         }
     }
 }
 function setActiveSortOption(option, order) {
-    const parts = loc.hash.split(';');
-    parts[1] = `${sortOptionParams.get(option).field}:${order}`;
-    loc.hash = parts.join(';');
+    (0, url_1.updateLocationHash)((params) => {
+        params.set(ORDER_PARAM, `${sortOptionParams.get(option).field}${ORDER_SEPARATOR}${order}`);
+    });
 }
 function dropdown(id, selected, options) {
     return `
-    <div class="right filter-container">
-        <div class="filter-box" id="${id}">
+    <div class='right filter-container'>
+        <div class='filter-box' id='${id}'>
             ${c(selected)}
         </div>
-        <div class="drop hide filter-dialog" id="${id}-dialog">
+        <div class='drop hide filter-dialog' id='${id}-dialog'>
             ${options.join('')}
         </div>
     </div>
@@ -1850,15 +1829,17 @@ function addSortingOptions() {
             else if (option === 'Krause number') {
                 const m = t.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?(?:[a-zA-Z]*))/i);
                 if (m && m.groups) {
-                    const { cat, num, prefix, suffix } = m.groups;
+                    const { 0: full, groups: { cat, num, prefix, suffix }, } = m;
                     d.sortKmc = cat;
                     d[name] = num;
                     d.sortKma = `${prefix}${suffix}`;
+                    d.sortKmz = t;
                 }
                 else {
                     d.sortKmc = '';
                     d[name] = t;
                     d.sortKma = '';
+                    d.sortKmz = t;
                 }
             }
             else {
@@ -1869,17 +1850,17 @@ function addSortingOptions() {
     getActiveSortOption();
     sortBy(sections, currentOption, currentOrder);
     leftControls.removeAttribute('style');
-    leftControls.insertAdjacentHTML('afterend', dropdown('sort-filter', `${o(currentOption)}${a(currentOrder)}`, sortOptions.map(opt => `
-            <a class="list-link" data-option="${opt}" data-order="a">${o(opt)}${a()}</a>
-            <a class="list-link" data-option="${opt}" data-order="d">${o(opt)}${d()}</a>
+    leftControls.insertAdjacentHTML('afterend', dropdown('sort-filter', `${o(currentOption)}${a(currentOrder)}`, sortOptions.map((opt) => `
+            <a class='list-link' data-option='${opt}' data-order='a'>${o(opt)}${a()}</a>
+            <a class='list-link' data-option='${opt}' data-order='d'>${o(opt)}${d()}</a>
         `)));
     const sortFilter = swapList.querySelector('#sort-filter');
     const sortDialog = swapList.querySelector('#sort-filter-dialog');
-    sortFilter.addEventListener('click', e => {
+    sortFilter.addEventListener('click', (e) => {
         e.stopPropagation();
         sortDialog.style.display = 'block';
     });
-    sortDialog.addEventListener('click', e => {
+    sortDialog.addEventListener('click', (e) => {
         e.stopPropagation();
         sortDialog.style.display = 'none';
         const a = e.target.closest('a');
@@ -1904,86 +1885,172 @@ function addFilteringOptions() {
     if (!dataList) {
         return;
     }
-    const countryHeadings = swapList.querySelectorAll('h2');
-    const countryOptions = [null, ...countryHeadings].reduce((r, h) => {
-        if (!h) {
-            r[''] = 'All';
+    function sort(data, cmp) {
+        return [...data.keys()].sort(cmp).reduce((r, k) => {
+            r.set(k, data.get(k));
             return r;
-        }
-        const hc = h.cloneNode(true);
-        for (const el of hc.querySelectorAll('input, sup')) {
-            el.remove();
-        }
-        r[hc.id] = hc.innerHTML;
-        return r;
-    }, {});
-    dataList.insertAdjacentHTML('beforebegin', (0, filters_1.renderFilters)([
-        {
-            id: 'country-filter',
-            name: 'country',
-            placeholder: 'Country',
-            width: 170,
-            options: countryOptions,
-        },
-        {
-            id: 'year-filter',
-            name: 'year',
-            placeholder: 'Year',
-            width: 90,
-            options: countryOptions,
-        },
-        {
-            id: 'face-value-filter',
-            name: 'fv',
-            placeholder: 'Face value',
-            width: 170,
-            options: countryOptions,
-        },
-        {
-            id: 'code-filter',
-            name: 'km',
-            placeholder: 'KM#',
-            width: 90,
-            options: countryOptions,
-        },
-    ]));
-    const countryFilter = swapList.querySelector('#country-filter');
-    const countryDialog = swapList.querySelector('#country-filter-dialog');
-    countryFilter.addEventListener('click', e => {
-        e.stopPropagation();
-        countryDialog.style.display = countryDialog.style.display === 'block' ? 'none' : 'block';
-    });
-    countryDialog.addEventListener('click', e => {
-        e.stopPropagation();
-        countryDialog.style.display = 'none';
-        const a = e.target.closest('a');
-        if (!a) {
-            return;
-        }
-        countryFilter.innerHTML = `${c(a.innerHTML)}${d()}`;
-        const { option } = a.dataset;
-        if (!option) {
-            for (const h of countryHeadings) {
-                h.style.display = '';
-                h.nextElementSibling.style.display = '';
+        }, new Map());
+    }
+    // TODO add number of available results for every filter option
+    // TODO disable unavailable/hidden filter options or event whole filter for single option
+    // TODO render filters on the fly
+    // TODO add more advance filter dialogs for years (columns, ranges), values (columns, ranges), km (columns, masks)
+    const filterProps = new Map();
+    const countryHeadings = swapList.querySelectorAll('h2');
+    filterProps.set(filters_1.Filter.COUNTRY, {
+        placeholder: 'Country',
+        width: 250,
+        options: sort([...countryHeadings].reduce((r, h) => {
+            const hc = h.cloneNode(true);
+            for (const el of hc.querySelectorAll('input, sup')) {
+                el.remove();
             }
+            r.set(hc.id, hc.innerHTML);
+            return r;
+        }, new Map())),
+    });
+    filterProps.set(filters_1.Filter.YEAR, {
+        placeholder: 'Year',
+        width: 90,
+        options: sort([...swapList.querySelectorAll('tr[data-sort-year]')].reduce((r, o) => {
+            const y = o.dataset.sortYear;
+            r.set(y, y);
+            return r;
+        }, new Map()), (a, b) => cmp(num(b), num(a))),
+    });
+    filterProps.set(filters_1.Filter.VALUE, {
+        placeholder: 'Face value',
+        width: 110,
+        options: sort([...swapList.querySelectorAll('tr[data-sort-face]')].reduce((r, o) => {
+            const f = o.dataset.sortFace;
+            const [v] = f.split(' ');
+            r.set(v, v);
+            return r;
+        }, new Map()), (a, b) => cmp(num(a), num(b))),
+    });
+    const kmMatch = /([a-z]*)([0-9]*)((?:\.[0-9]+)?[a-z]*)/i;
+    filterProps.set(filters_1.Filter.KM, {
+        placeholder: 'KM#',
+        width: 110,
+        options: sort([...swapList.querySelectorAll('tr[data-sort-km]')].reduce((r, o) => {
+            const { sortKmc: c = '', sortKm: k = '', sortKma: a = '' } = o.dataset;
+            const v = `${c.toLowerCase()}${k}${a}`;
+            if (v) {
+                r.set(v, `${c}# ${k}${a}`);
+            }
+            return r;
+        }, new Map()), (a, b) => {
+            const [, ac, ak, aa] = a.match(kmMatch);
+            const [, bc, bk, ba] = b.match(kmMatch);
+            return cmp(ac, bc) || cmp(num(ak), num(bk)) || cmp(aa, ba);
+        }),
+    });
+    const filterNames = Object.values(filters_1.Filter);
+    const filterValues = new Map();
+    for (const filter of filterNames) {
+        const value = (0, url_1.getHashParam)(filter);
+        if (value) {
+            filterValues.set(filter, value);
+            filterProps.get(filter).value = value;
+        }
+    }
+    dataList.insertAdjacentHTML('beforebegin', (0, filters_1.renderFilters)(filterProps));
+    function applyFilters() {
+        for (const h of countryHeadings) {
+            const t = h.nextElementSibling;
+            const rows = t.querySelectorAll('tr');
+            let hasVisibleRows = false;
+            rowLoop: for (const r of rows) {
+                const d = r.dataset;
+                for (const [filter, value] of filterValues) {
+                    switch (filter) {
+                        case filters_1.Filter.COUNTRY:
+                            if (h.id !== value) {
+                                hasVisibleRows = false;
+                                break rowLoop;
+                            }
+                            break;
+                        case filters_1.Filter.YEAR:
+                            if (d.sortYear !== value) {
+                                r.style.display = 'none';
+                                continue rowLoop;
+                            }
+                            break;
+                        case filters_1.Filter.VALUE:
+                            if (!d.sortFace.startsWith(`${value} `)) {
+                                r.style.display = 'none';
+                                continue rowLoop;
+                            }
+                            break;
+                        case filters_1.Filter.KM:
+                            const [, c, k, a] = value.match(kmMatch);
+                            if (d.sortKmc.toLowerCase() !== c || d.sortKm !== k || d.sortKma !== a) {
+                                r.style.display = 'none';
+                                continue rowLoop;
+                            }
+                            break;
+                    }
+                }
+                // no filter applied
+                r.style.display = '';
+                hasVisibleRows = true;
+            }
+            h.style.display = t.style.display = hasVisibleRows ? '' : 'none';
+        }
+    }
+    applyFilters();
+    document.querySelectorAll('[data-filter-by]').forEach((option) => option.addEventListener('click', (e) => {
+        const ds = option.dataset;
+        const filter = ds.filterBy;
+        const value = ds.filterValue;
+        (0, url_1.updateLocationHash)((params) => value
+            ? params.set(filter, value)
+            : params.delete(filter));
+        const display = document.querySelector(`[data-filter="${filter}"]`);
+        if (value) {
+            display.innerHTML = `${c(option.innerHTML)}${x(filter)}`;
+            display.classList.add('filter-box-active');
         }
         else {
-            for (const h of countryHeadings) {
-                if (h.id === option) {
-                    h.style.display = '';
-                    h.nextElementSibling.style.display = '';
-                }
-                else {
-                    h.style.display = 'none';
-                    h.nextElementSibling.style.display = 'none';
-                }
-            }
+            display.innerHTML = `${c(display.dataset.filterPlaceholder)}${d()}`;
+            display.classList.remove('filter-box-active');
         }
-    });
+        value ? filterValues.set(filter, value) : filterValues.delete(filter);
+        applyFilters();
+    }));
+    document.querySelectorAll('[data-filter]').forEach((display) => display.addEventListener('click', (e) => {
+        (0, utils_1.cancel)(e);
+        const ds = display.dataset;
+        if (ds.filterDisabled != null) {
+            return;
+        }
+        let clearClicked = false;
+        const button = e.target;
+        const filter = ds.filter;
+        if (button.matches('[data-filter-clear]')) {
+            clearClicked = true;
+            (0, url_1.updateLocationHash)((params) => params.delete(button.dataset.filterClear));
+            display.innerHTML = `${c(ds.filterPlaceholder)}${d()}`;
+            display.classList.remove('filter-box-active');
+            filterValues.delete(filter);
+            applyFilters();
+        }
+        document.querySelectorAll(`[data-filter-dialog]`).forEach((dialog) => {
+            dialog.style.display =
+                !clearClicked &&
+                    dialog.dataset.filterDialog === filter &&
+                    dialog.style.display !== 'block'
+                    ? 'block'
+                    : 'none';
+        });
+    }));
+    document.querySelectorAll('[data-filter-dialog]').forEach((dialog) => dialog.addEventListener('click', (e) => {
+        (0, utils_1.cancel)(e);
+        dialog.style.display = 'none';
+    }));
     const filters = swapList.querySelectorAll('.filter');
     for (const filter of filters) {
-        filter.addEventListener('input', e => {
+        filter.addEventListener('input', (e) => {
             const target = e.target;
             const id = target.id;
             const value = target.value;
@@ -1991,12 +2058,7 @@ function addFilteringOptions() {
             const rows = swapList.querySelectorAll('tbody > tr');
             for (const row of rows) {
                 const d = row.dataset;
-                if (!value || d[name].includes(value)) {
-                    row.style.display = '';
-                }
-                else {
-                    row.style.display = 'none';
-                }
+                row.style.display = !value || d[name].includes(value) ? '' : 'none';
             }
         });
     }
@@ -2093,7 +2155,8 @@ exports.removeRowHrefFromSwapList = exports.ignoreUnwanted = exports.checkSold =
 const ajax_1 = __webpack_require__(759);
 const cond_1 = __webpack_require__(290);
 const delay_1 = __webpack_require__(799);
-const { location: loc } = document;
+const url_1 = __webpack_require__(422);
+// TODO add thumbnails to list
 function addTrackingLinks() {
     const swapMgr = document.getElementById('swap-mgr');
     if (swapMgr) {
@@ -2105,33 +2168,31 @@ function addTrackingLinks() {
             const next = div.nextElementSibling;
             const text = next.textContent;
             if (text) {
-                next.innerHTML = `<a href="https://www.17track.net/en/track?nums=${text}" target="_blank">${text}</a>`;
+                next.innerHTML = `<a href='https://www.17track.net/en/track?nums=${text}' target='_blank'>${text}</a>`;
             }
         }
     }
 }
 exports.addTrackingLinks = addTrackingLinks;
+const TAB_PARAM = 't';
+const TAB_TAKE = 'take';
+const TAB_NEED = 'need';
 function setActiveSwapTab(tab) {
-    const parts = loc.hash.split(';');
-    parts[0] = tab;
-    loc.hash = parts.join(';');
+    (0, url_1.updateLocationHash)((params) => params.set(TAB_PARAM, tab));
 }
 function addOpenedTabsHandler() {
-    const tabs = document.querySelectorAll(`#swap-mgr > div.widerightCol > ul.region-list > li.region`);
-    if (tabs.length) {
-        const needTab = tabs.item(0);
-        if (needTab) {
-            needTab.addEventListener('click', () => setActiveSwapTab('need'));
-            if (loc.hash.startsWith('#need')) {
-                needTab.click();
-            }
+    const [needTab, takeTab] = document.querySelectorAll(`#swap-mgr div.widerightCol > ul.region-list > li.region`);
+    let currentTab = (0, url_1.getHashParam)(TAB_PARAM) || TAB_TAKE;
+    if (needTab) {
+        needTab.addEventListener('click', () => setActiveSwapTab(TAB_NEED));
+        if (currentTab === TAB_NEED) {
+            needTab.click();
         }
-        const takeTab = tabs.item(1);
-        if (takeTab) {
-            takeTab.addEventListener('click', () => setActiveSwapTab('take'));
-            if (loc.hash.startsWith('#take')) {
-                takeTab.click();
-            }
+    }
+    if (takeTab) {
+        takeTab.addEventListener('click', () => setActiveSwapTab(TAB_TAKE));
+        if (currentTab === TAB_TAKE) {
+            takeTab.click();
         }
     }
 }
@@ -2183,24 +2244,25 @@ function showAllPrices() {
                     const rel = myPrice / price;
                     let percent;
                     if (rel >= 2) {
-                        percent = `<span class="gray-11" style="color:darkred;font-weight:bold">&times;${rel
-                            .toFixed(rel >= 10 ? 0 : 1).replace('.0', '')}</span>`;
+                        percent = `<span class='gray-11' style='color:darkred;font-weight:bold'>&times;${rel
+                            .toFixed(rel >= 10 ? 0 : 1)
+                            .replace('.0', '')}</span>`;
                         myPriceElement.style.color = 'darkred';
                         myPriceElement.style.fontWeight = 'bold';
                     }
                     else {
                         const prel = (rel - 1) * 100;
                         if (prel >= 50) {
-                            percent = `<span class="gray-11" style="color:darkred;font-weight:bold">+${prel.toFixed()}%</span>`;
+                            percent = `<span class='gray-11' style='color:darkred;font-weight:bold'>+${prel.toFixed()}%</span>`;
                         }
                         else if (prel >= 0) {
-                            percent = `<span class="gray-11" style="color:brown">+${prel.toFixed()}%</span>`;
+                            percent = `<span class='gray-11' style='color:brown'>+${prel.toFixed()}%</span>`;
                         }
                         else {
-                            percent = `<span class="gray-11" style="color:green">&minus;${Math.abs(prel).toFixed()}%</span>`;
+                            percent = `<span class='gray-11' style='color:green'>&minus;${Math.abs(prel).toFixed()}%</span>`;
                         }
                     }
-                    td.insertAdjacentHTML('beforeend', ` ${percent}<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
+                    td.insertAdjacentHTML('beforeend', ` ${percent}<br/><span class='gray-11'>${prefix}${price.toFixed(2)}${suffix}</span>`);
                 }
             }
         }
@@ -2249,7 +2311,7 @@ function highlightConflicts() {
             }
             let rows = [...table.querySelectorAll(selector)];
             if (!needSwapList) {
-                rows = rows.filter(r => !!r.querySelector('input.swap-checkbox:checked'));
+                rows = rows.filter((r) => !!r.querySelector('input.swap-checkbox:checked'));
             }
             const hasConflicts = rows.length > 1;
             for (const r of rows) {
@@ -2262,7 +2324,7 @@ function addConflictHandling() {
     highlightConflicts();
     const checkboxes = document.querySelectorAll('#swap-list table.swap-coin input.swap-checkbox');
     for (const checkbox of checkboxes) {
-        checkbox.addEventListener('click', e => {
+        checkbox.addEventListener('click', (e) => {
             const target = e.target;
             if (!target.checked) {
                 const row = target.closest('tr');
@@ -2275,7 +2337,7 @@ function addConflictHandling() {
     }
     const countryCheckboxes = document.querySelectorAll('#swap-list h2 input.swap-country-checkbox');
     for (const checkbox of countryCheckboxes) {
-        checkbox.addEventListener('click', e => {
+        checkbox.addEventListener('click', (e) => {
             const target = e.target;
             if (!target.checked) {
                 const country = target.closest('h2');
@@ -2306,7 +2368,7 @@ function checkSold() {
     if (!actionBoard) {
         return;
     }
-    actionBoard.insertAdjacentHTML('beforeend', `<a class="btn-s btn-gray ico-del" id="${delAllButtonId}" style="float: right;"><div class="ico-16"></div></a>`);
+    actionBoard.insertAdjacentHTML('beforeend', `<a class='btn-s btn-gray ico-del' id='${delAllButtonId}' style='float: right;'><div class='ico-16'></div></a>`);
     const button = document.getElementById(delAllButtonId);
     if (!button) {
         return;
@@ -2346,9 +2408,9 @@ function ignoreUnwanted() {
             for (const tr of rows) {
                 const markedElement = tr.querySelector('td span[class^="marked-"]');
                 const markedClass = markedElement && markedElement.classList.item(0);
-                const myCond = markedClass && cond_1.ColorValues.get(+markedClass.split('marked-').pop()) || 0;
+                const myCond = (markedClass && cond_1.ColorValues.get(+markedClass.split('marked-').pop())) || 0;
                 const condElement = tr.querySelector('td.td-cond');
-                const cond = condElement && cond_1.ConditionValues.get(condElement.textContent) || 0;
+                const cond = (condElement && cond_1.ConditionValues.get(condElement.textContent)) || 0;
                 if (myCond && (!cond || cond <= myCond)) {
                     tr.classList.add('ignore');
                 }
@@ -2393,6 +2455,82 @@ exports.UID = (() => {
 
 /***/ }),
 
+/***/ 422:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getAllHashParams = exports.getHashParam = exports.hasHashParam = exports.setHashParam = exports.deleteHashParam = exports.updateHashHref = exports.updateLocationHash = exports.hashSearchParams = exports.setHash = exports.loc = void 0;
+const { location } = document;
+function loc() {
+    return new URL(location.href);
+}
+exports.loc = loc;
+function setHash(hash) {
+    const newHash = hash.toString();
+    if (location.hash || newHash) {
+        location.hash = `#${newHash}`;
+    }
+}
+exports.setHash = setHash;
+function hashSearchParams(url = loc()) {
+    return new URLSearchParams(url.hash.substr(1));
+}
+exports.hashSearchParams = hashSearchParams;
+function getUpdatedHash(hash, url = loc()) {
+    if (typeof hash !== 'function') {
+        return hash.toString();
+    }
+    const params = hashSearchParams(url);
+    const result = hash(params);
+    return (result != null ? result : params).toString();
+}
+function updateLocationHash(hash, url = loc()) {
+    const newHash = getUpdatedHash(hash, url);
+    if (location.hash || newHash) {
+        location.hash = `#${newHash}`;
+    }
+}
+exports.updateLocationHash = updateLocationHash;
+function updateHashHref(hash, url = loc()) {
+    const newHash = getUpdatedHash(hash, url);
+    if (url.hash || newHash) {
+        url.hash = `#${newHash}`;
+    }
+    return url.href;
+}
+exports.updateHashHref = updateHashHref;
+function deleteHashParam(name) {
+    return updateHashHref((params) => {
+        params.delete(name);
+        return params;
+    });
+}
+exports.deleteHashParam = deleteHashParam;
+function setHashParam(name, value) {
+    return updateHashHref((params) => {
+        params.set(name, value);
+        return params;
+    });
+}
+exports.setHashParam = setHashParam;
+function hasHashParam(name) {
+    return hashSearchParams().has(name);
+}
+exports.hasHashParam = hasHashParam;
+function getHashParam(name) {
+    return hashSearchParams().get(name);
+}
+exports.getHashParam = getHashParam;
+function getAllHashParams(name) {
+    return hashSearchParams().getAll(name);
+}
+exports.getAllHashParams = getAllHashParams;
+
+
+/***/ }),
+
 /***/ 131:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -2401,7 +2539,10 @@ exports.UID = (() => {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.todayMonth = exports.handleLinkSubmit = exports.handleFormSubmit = exports.updateParts = exports.updateOptionalElement = exports.updateRequiredElement = exports.reload = exports.cancel = exports.disable = exports.enable = exports.toggle = exports.hide = exports.show = exports.tt = exports.sp = void 0;
 function sp(str) {
-    return `${str || ''}`.replace(/\u{00A0}+/gu, ' ').replace(/\s+/g, ' ').trim();
+    return `${str || ''}`
+        .replace(/\u{00A0}+/gu, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
 }
 exports.sp = sp;
 function tt(str) {
@@ -2410,23 +2551,23 @@ function tt(str) {
 }
 exports.tt = tt;
 function show(...elements) {
-    elements.forEach(element => element && element.classList.remove('hide'));
+    elements.forEach((element) => element && element.classList.remove('hide'));
 }
 exports.show = show;
 function hide(...elements) {
-    elements.forEach(element => element && element.classList.add('hide'));
+    elements.forEach((element) => element && element.classList.add('hide'));
 }
 exports.hide = hide;
 function toggle(visible, ...elements) {
-    elements.forEach(element => element && element.classList.toggle('hide', !visible));
+    elements.forEach((element) => element && element.classList.toggle('hide', !visible));
 }
 exports.toggle = toggle;
 function enable(...elements) {
-    elements.forEach(element => element && element.classList.remove('disable'));
+    elements.forEach((element) => element && element.classList.remove('disable'));
 }
 exports.enable = enable;
 function disable(...elements) {
-    elements.forEach(element => element && element.classList.add('disable'));
+    elements.forEach((element) => element && element.classList.add('disable'));
 }
 exports.disable = disable;
 function cancel(e) {
@@ -2496,15 +2637,15 @@ function updateOptionalElement(fragment, element) {
 }
 exports.updateOptionalElement = updateOptionalElement;
 async function updateParts(fragment, callback, required, optional) {
-    required = required.map(element => updateRequiredElement(fragment, element));
+    required = required.map((element) => updateRequiredElement(fragment, element));
     if (optional) {
-        optional = optional.map(element => updateOptionalElement(fragment, element));
+        optional = optional.map((element) => updateOptionalElement(fragment, element));
     }
     return await callback();
 }
 exports.updateParts = updateParts;
 async function handleFormSubmit(form, callback) {
-    form.addEventListener('submit', (onsubmit => async (e) => {
+    form.addEventListener('submit', ((onsubmit) => async (e) => {
         cancel(e);
         const form = e.target;
         if (onsubmit && onsubmit.call(form, e) === false) {
@@ -2516,7 +2657,7 @@ async function handleFormSubmit(form, callback) {
 }
 exports.handleFormSubmit = handleFormSubmit;
 async function handleLinkSubmit(link, callback) {
-    link.addEventListener('click', (onclick => async (e) => {
+    link.addEventListener('click', ((onclick) => async (e) => {
         cancel(e);
         const link = e.target;
         if (onclick && onclick.call(link, e) === false) {
@@ -2615,7 +2756,7 @@ class WishForm extends list_form_1.ListForm {
             return {
                 text: textContent,
                 value,
-                checked: (value === '3') ? 'checked' : '',
+                checked: value === '3' ? 'checked' : '',
                 style: o.getAttribute('style') || '',
             };
         }
@@ -2729,7 +2870,9 @@ async function handleGalleryPage() {
         if (count) {
             const isLast = current === pages;
             const total = isLast ? (pages - 1) * 12 + count : (pages - 1) * 12;
-            gallery.querySelector('h1').insertAdjacentHTML('beforeend', ` <small>(${count}${pages ? ` <small>of ${isLast ? total : `${total + 1}~${total + 12}`}</small>` : ''})</small>`);
+            gallery
+                .querySelector('h1')
+                .insertAdjacentHTML('beforeend', ` <small>(${count}${pages ? ` <small>of ${isLast ? total : `${total + 1}~${total + 12}`}</small>` : ''})</small>`);
         }
     }
     (0, gallery_1.addGalleryVisibilityToggle)();
@@ -2757,7 +2900,7 @@ async function handleMessagePage() {
         const m = (_a = user.attributes.getNamedItem('onclick')) === null || _a === void 0 ? void 0 : _a.value.match(/href\s*=\s*'(.*?)'/);
         if (m) {
             a.href = m[1];
-            a.onclick = e => e.stopPropagation();
+            a.onclick = (e) => e.stopPropagation();
         }
     }
 }
@@ -2865,7 +3008,7 @@ async function handleSwapPage() {
                 reg.classList.toggle('hide', !length);
                 const region = reg.querySelector('.region');
                 const countries = reg.querySelector('.countries');
-                const visibleRegion = length > 0 && length <= 5 || region.matches('.open');
+                const visibleRegion = (length > 0 && length <= 5) || region.matches('.open');
                 countries.classList.toggle('hide', !visibleRegion);
             }
         });

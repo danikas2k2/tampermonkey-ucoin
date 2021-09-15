@@ -1,12 +1,19 @@
-import {getText, postFragment} from './ajax';
-import {randomDelay} from './delay';
-import {ListForm} from './list-form';
-import {id} from './selectors';
-import {addComment, CoinSwapFormOnMatcher, getSwapLinks, getSwapLinksWithMatches, styleListLinks, styleSwapLink} from './swap-links';
-import {UID} from './uid';
-import {hide, reload, show} from './utils';
+import { getText, postFragment } from './ajax';
+import { randomDelay } from './delay';
+import { ListForm } from './list-form';
+import { id } from './selectors';
+import {
+    addComment,
+    CoinSwapFormOnMatcher,
+    getSwapLinks,
+    getSwapLinksWithMatches,
+    styleListLinks,
+    styleSwapLink,
+} from './swap-links';
+import { UID } from './uid';
+import { hide, reload, show } from './utils';
 
-const {debug} = console;
+const { debug } = console;
 
 export class SwapFormList {
     private variants = new Map<string, CoinSwapVariant>();
@@ -29,17 +36,17 @@ export class SwapFormList {
         } else {
             this.listBlock = listBlock;
         }
-        this.form = listBlock.querySelector(id(this.listForm.formId))
-            || document.querySelector(id(this.listForm.formId));
+        this.form =
+            listBlock.querySelector(id(this.listForm.formId)) || document.querySelector(id(this.listForm.formId));
         this.buttonSet = listBlock.querySelector('center');
         if (this.buttonSet) {
             /*const oldButton = this.buttonSet.querySelector('button.btn-s.btn-gray');
             if (oldButton) {
                 oldButton.remove();
             }*/
-            this.addButton('expand', 0, '&laquo;*&raquo;', n => this.onExpand(n));
-            this.addButton('expand', 5, '&laquo;5&raquo;', n => this.onExpand(n));
-            this.addButton('expand', 10, '&laquo;10&raquo;', n => this.onExpand(n));
+            this.addButton('expand', 0, '&laquo;*&raquo;', (n) => this.onExpand(n));
+            this.addButton('expand', 5, '&laquo;5&raquo;', (n) => this.onExpand(n));
+            this.addButton('expand', 10, '&laquo;10&raquo;', (n) => this.onExpand(n));
             this.addButton('combine', 0, '&raquo;&middot;&laquo;', () => this.onCombine());
             this.updateButtons();
         }
@@ -51,8 +58,10 @@ export class SwapFormList {
         if (expand) {
             show(expand);
         } else {
-            this.buttonSet.insertAdjacentHTML('beforeend',
-                `<button id="${buttonId}" type="button" class="btn--${role} btn-s btn-blue">${text}</button>`);
+            this.buttonSet.insertAdjacentHTML(
+                'beforeend',
+                `<button id="${buttonId}" type="button" class="btn--${role} btn-s btn-blue">${text}</button>`
+            );
             this.buttonSet.querySelector(id(buttonId)).addEventListener('click', async () => {
                 this.hideButtons();
                 await clickHandler(qty);
@@ -66,8 +75,8 @@ export class SwapFormList {
         this.combineAvailable = false;
         this.variants.clear();
 
-        for (const {m} of getSwapLinksWithMatches()) {
-            const {uniq, usid, cond, price, info, vid, strqty} = m;
+        for (const { m } of getSwapLinksWithMatches()) {
+            const { uniq, usid, cond, price, info, vid, strqty } = m;
             const qty = +strqty;
             if (qty > 1) {
                 this.expandAvailable = true;
@@ -80,7 +89,7 @@ export class SwapFormList {
                 variant.total += qty;
                 this.combineAvailable = true;
             } else {
-                variant = {usid, usids: new Set([usid]), cond, price, info, vid, qty, total: qty};
+                variant = { usid, usids: new Set([usid]), cond, price, info, vid, qty, total: qty };
             }
             this.variants.set(uniq, variant);
         }
@@ -135,8 +144,8 @@ export class SwapFormList {
         let isUpdFailed = false;
         let isFirstQuery = true;
 
-        for await (const {a, m} of getSwapLinksWithMatches()) {
-            const {uniq, usid, cond, price, info, vid, strqty} = m;
+        for await (const { a, m } of getSwapLinksWithMatches()) {
+            const { uniq, usid, cond, price, info, vid, strqty } = m;
             const qty = +strqty;
 
             const n = expandTo > 0 ? Math.min(qty, expandTo) : qty;
@@ -153,7 +162,7 @@ export class SwapFormList {
                 isFirstQuery = false;
 
                 debug(`ADDING ${uniq} ${n - i + 1} -> ${q}`);
-                const addR = await this.addSwapCoin({cond, qty: q, vid, info, price});
+                const addR = await this.addSwapCoin({ cond, qty: q, vid, info, price });
                 if (!addR) {
                     isAddFailed = true;
                     break;
@@ -165,7 +174,7 @@ export class SwapFormList {
                         continue;
                     }
 
-                    const m = <CoinSwapFormOnMatchResult> l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+                    const m = <CoinSwapFormOnMatchResult>l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
                     if (m && m.groups) {
                         links.add(m.groups.usid);
                     }
@@ -175,7 +184,7 @@ export class SwapFormList {
                     if (!l.hasAttribute('onClick')) {
                         continue;
                     }
-                    const m = <CoinSwapFormOnMatchResult> l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
+                    const m = <CoinSwapFormOnMatchResult>l.getAttribute('onClick').match(CoinSwapFormOnMatcher);
                     const usid = m && m.groups && m.groups.usid;
                     if (!usid || links.has(usid)) {
                         continue;
@@ -192,7 +201,7 @@ export class SwapFormList {
                 isFirstQuery = false;
 
                 debug(`UPDATING ${uniq} ${usid} -> ${qq}`);
-                const updR = await this.updateSwapCoin(usid, {cond, qty: qq, vid, info, price});
+                const updR = await this.updateSwapCoin(usid, { cond, qty: qq, vid, info, price });
                 if (!updR) {
                     isUpdFailed = true;
                     break;
@@ -222,7 +231,7 @@ export class SwapFormList {
         let isUpdFailed = false;
 
         for (const variant of this.variants.values()) {
-            const {usid, usids, qty, total} = variant;
+            const { usid, usids, qty, total } = variant;
             if (total <= qty) {
                 continue;
             }
@@ -231,13 +240,13 @@ export class SwapFormList {
             remove.delete(usid);
 
             debug(`REMOVING ${remove}`);
-            if (!await this.deleteSwapCoin(remove)) {
+            if (!(await this.deleteSwapCoin(remove))) {
                 isDelFailed = true;
                 break;
             }
 
             debug(`UPDATING ${usid}`);
-            const content = await this.updateSwapCoin(usid, {...variant, qty: total});
+            const content = await this.updateSwapCoin(usid, { ...variant, qty: total });
             if (content) {
                 const newListBlock = content.getElementById(this.listForm.listId);
                 if (newListBlock && this.listBlock) {
@@ -259,7 +268,11 @@ export class SwapFormList {
         }
     }
 
-    private async updateSwapCoin(usid: string, {cond, qty, vid, info, price}: CoinSwapVariantData, action: SwapFormAction = 'editswapcoin'): Promise<DocumentFragment> {
+    private async updateSwapCoin(
+        usid: string,
+        { cond, qty, vid, info, price }: CoinSwapVariantData,
+        action: SwapFormAction = 'editswapcoin'
+    ): Promise<DocumentFragment> {
         const data = new FormData(this.form);
         data.set('usid', `${usid || ''}`);
         data.set('condition', `${cond || ''}`);
@@ -309,8 +322,15 @@ export class SwapFormList {
 
     private updateLinkQty = (a: HTMLAnchorElement, qty: number): void => {
         if (a.hasAttribute('onClick')) {
-            a.setAttribute('onClick', a.getAttribute('onClick').replace(CoinSwapFormOnMatcher,
-                `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${qty}', '$<replica>'`));
+            a.setAttribute(
+                'onClick',
+                a
+                    .getAttribute('onClick')
+                    .replace(
+                        CoinSwapFormOnMatcher,
+                        `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${qty}', '$<replica>'`
+                    )
+            );
         }
 
         for (const span of a.querySelectorAll('span.left.dblue-13')) {

@@ -1,5 +1,5 @@
-import {Color, WishValue} from './cond';
-import {ListForm} from './list-form';
+import { Color, WishValue } from './cond';
+import { ListForm } from './list-form';
 
 // declare let CoinWishFormOn: (uwid: string, cond: string, price: string, tid: string, vid: string, ...other: string[]) => void;
 // declare let CoinWishFormOff: (...other: string[]) => void;
@@ -32,9 +32,9 @@ export class WishForm extends ListForm {
     protected updateVarieties(): void {
         const varieties: RadioNodeList = this.form[this.formVariety];
         if (varieties) {
-            const firstVariety = <HTMLLabelElement> varieties[0].parentElement;
-            const anyVariety = <HTMLLabelElement> firstVariety.cloneNode();
-            const anyVarietyInput = <HTMLInputElement> firstVariety.querySelector('input').cloneNode();
+            const firstVariety = <HTMLLabelElement>varieties[0].parentElement;
+            const anyVariety = <HTMLLabelElement>firstVariety.cloneNode();
+            const anyVarietyInput = <HTMLInputElement>firstVariety.querySelector('input').cloneNode();
             anyVarietyInput.value = '';
             anyVariety.insertAdjacentElement('beforeend', anyVarietyInput);
             anyVariety.insertAdjacentText('beforeend', 'Any');
@@ -44,12 +44,12 @@ export class WishForm extends ListForm {
 
     // eslint-disable-next-line class-methods-use-this
     protected getConditionOption(o: HTMLOptionElement): ConditionOption {
-        const {value, textContent} = o;
+        const { value, textContent } = o;
         if (value || textContent.includes('ANY')) {
             return {
                 text: textContent,
                 value,
-                checked: (value === '3') ? 'checked' : '',
+                checked: value === '3' ? 'checked' : '',
                 style: o.getAttribute('style') || '',
             };
         }

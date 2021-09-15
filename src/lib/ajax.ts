@@ -1,15 +1,20 @@
 type RequestMethod = 'GET' | 'POST';
 
 export async function get(url: RequestInfo, body?: BodyInit): Promise<Response> {
-    return await fetch(url, {method: 'GET', body});
+    return await fetch(url, { method: 'GET', body });
 }
 
 export async function post(url: RequestInfo, body?: BodyInit): Promise<Response> {
-    return await fetch(url, {method: 'POST', body});
+    return await fetch(url, { method: 'POST', body });
 }
 
-async function responseOrError(url: RequestInfo, method: RequestMethod = 'GET', body?: BodyInit, autoRedirect = true): Promise<Response> {
-    const response = await fetch(url, {method, body});
+async function responseOrError(
+    url: RequestInfo,
+    method: RequestMethod = 'GET',
+    body?: BodyInit,
+    autoRedirect = true
+): Promise<Response> {
+    const response = await fetch(url, { method, body });
     if (!response.ok) {
         throw new Error(`${response.status}: ${response.statusText}`);
     }

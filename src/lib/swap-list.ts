@@ -1,8 +1,9 @@
-import {get} from './ajax';
-import {ColorValues, ConditionValues} from './cond';
-import {randomDelay} from './delay';
+import { get } from './ajax';
+import { ColorValues, ConditionValues } from './cond';
+import { randomDelay } from './delay';
+import { getHashParam, updateLocationHash } from './url';
 
-const {location: loc} = document;
+// TODO add thumbnails to list
 
 export function addTrackingLinks(): void {
     const swapMgr = document.getElementById('swap-mgr');
@@ -16,41 +17,41 @@ export function addTrackingLinks(): void {
             const next = div.nextElementSibling;
             const text = next.textContent;
             if (text) {
-                next.innerHTML = `<a href="https://www.17track.net/en/track?nums=${text}" target="_blank">${text}</a>`;
+                next.innerHTML = `<a href='https://www.17track.net/en/track?nums=${text}' target='_blank'>${text}</a>`;
             }
         }
     }
 }
 
+const TAB_PARAM = 't';
+const TAB_TAKE = 'take';
+const TAB_NEED = 'need';
+
 function setActiveSwapTab(tab: string): void {
-    const parts = loc.hash.split(';');
-    parts[0] = tab;
-    loc.hash = parts.join(';');
+    updateLocationHash((params) => params.set(TAB_PARAM, tab));
 }
 
 export function addOpenedTabsHandler(): void {
-    const tabs = document.querySelectorAll<HTMLLIElement>(`#swap-mgr > div.widerightCol > ul.region-list > li.region`);
-    if (tabs.length) {
-        const needTab = tabs.item(0);
-        if (needTab) {
-            needTab.addEventListener('click', () => setActiveSwapTab('need'));
-            if (loc.hash.startsWith('#need')) {
-                needTab.click();
-            }
+    const [needTab, takeTab] = document.querySelectorAll<HTMLLIElement>(
+        `#swap-mgr div.widerightCol > ul.region-list > li.region`
+    );
+    let currentTab = getHashParam(TAB_PARAM) || TAB_TAKE;
+    if (needTab) {
+        needTab.addEventListener('click', () => setActiveSwapTab(TAB_NEED));
+        if (currentTab === TAB_NEED) {
+            needTab.click();
         }
-
-        const takeTab = tabs.item(1);
-        if (takeTab) {
-            takeTab.addEventListener('click', () => setActiveSwapTab('take'));
-            if (loc.hash.startsWith('#take')) {
-                takeTab.click();
-            }
+    }
+    if (takeTab) {
+        takeTab.addEventListener('click', () => setActiveSwapTab(TAB_TAKE));
+        if (currentTab === TAB_TAKE) {
+            takeTab.click();
         }
     }
 }
 
 export function duplicatePagination(): void {
-    const swapList = <HTMLDivElement> document.getElementById('swap-list');
+    const swapList = <HTMLDivElement>document.getElementById('swap-list');
     if (!swapList) {
         return;
     }
@@ -70,7 +71,7 @@ export function duplicatePagination(): void {
         return;
     }
 
-    const heading = <HTMLHeadingElement> table.previousElementSibling;
+    const heading = <HTMLHeadingElement>table.previousElementSibling;
     if (!heading || !heading.matches('h2')) {
         return;
     }
@@ -80,7 +81,7 @@ export function duplicatePagination(): void {
         return;
     }
 
-    const clone = <HTMLDivElement> parent.cloneNode(true);
+    const clone = <HTMLDivElement>parent.cloneNode(true);
     clone.style.height = '30px';
     heading.insertAdjacentElement('beforebegin', clone);
 }
@@ -101,21 +102,27 @@ export function showAllPrices(): void {
                     const rel = myPrice / price;
                     let percent;
                     if (rel >= 2) {
-                        percent = `<span class="gray-11" style="color:darkred;font-weight:bold">&times;${rel
-                            .toFixed(rel >= 10 ? 0 : 1).replace('.0', '')}</span>`;
+                        percent = `<span class='gray-11' style='color:darkred;font-weight:bold'>&times;${rel
+                            .toFixed(rel >= 10 ? 0 : 1)
+                            .replace('.0', '')}</span>`;
                         myPriceElement.style.color = 'darkred';
                         myPriceElement.style.fontWeight = 'bold';
                     } else {
                         const prel = (rel - 1) * 100;
                         if (prel >= 50) {
-                            percent = `<span class="gray-11" style="color:darkred;font-weight:bold">+${prel.toFixed()}%</span>`;
+                            percent = `<span class='gray-11' style='color:darkred;font-weight:bold'>+${prel.toFixed()}%</span>`;
                         } else if (prel >= 0) {
-                            percent = `<span class="gray-11" style="color:brown">+${prel.toFixed()}%</span>`;
+                            percent = `<span class='gray-11' style='color:brown'>+${prel.toFixed()}%</span>`;
                         } else {
-                            percent = `<span class="gray-11" style="color:green">&minus;${Math.abs(prel).toFixed()}%</span>`;
+                            percent = `<span class='gray-11' style='color:green'>&minus;${Math.abs(
+                                prel
+                            ).toFixed()}%</span>`;
                         }
                     }
-                    td.insertAdjacentHTML('beforeend', ` ${percent}<br/><span class="gray-11">${prefix}${price.toFixed(2)}${suffix}</span>`);
+                    td.insertAdjacentHTML(
+                        'beforeend',
+                        ` ${percent}<br/><span class='gray-11'>${prefix}${price.toFixed(2)}${suffix}</span>`
+                    );
                 }
             }
         }
@@ -144,9 +151,11 @@ function highlightConflicts(): void {
             r.classList.remove('conflict');
             return false;
         });
-        const heading = <HTMLHeadingElement> table.previousElementSibling;
+        const heading = <HTMLHeadingElement>table.previousElementSibling;
         if (heading.tagName.toLowerCase() === 'h2') {
-            const all = heading.querySelector<HTMLInputElement>('input.swap-country-checkbox, input.edit-country-checkbox');
+            const all = heading.querySelector<HTMLInputElement>(
+                'input.swap-country-checkbox, input.edit-country-checkbox'
+            );
             all.checked = checked.length === rows.length;
         }
         if (!needSwapList) {
@@ -154,8 +163,8 @@ function highlightConflicts(): void {
         }
 
         for (const r of rows) {
-            const data = <TooltipDataset> r.dataset;
-            const {tooltipName, tooltipSubject, tooltipVariety, tooltipKm} = {...data};
+            const data = <TooltipDataset>r.dataset;
+            const { tooltipName, tooltipSubject, tooltipVariety, tooltipKm } = { ...data };
             // const selector = `tr[data-tooltip-name=${JSON.stringify(tooltipName)}]` +
             //     `[data-tooltip-subject=${JSON.stringify(tooltipSubject)}]` +
             //     `[data-tooltip-variety=${JSON.stringify(tooltipVariety)}]` +
@@ -174,7 +183,7 @@ function highlightConflicts(): void {
             }
             let rows = [...table.querySelectorAll(selector)];
             if (!needSwapList) {
-                rows = rows.filter(r => !!r.querySelector('input.swap-checkbox:checked'));
+                rows = rows.filter((r) => !!r.querySelector('input.swap-checkbox:checked'));
             }
             const hasConflicts = rows.length > 1;
             for (const r of rows) {
@@ -189,8 +198,8 @@ export function addConflictHandling(): void {
 
     const checkboxes = document.querySelectorAll<HTMLInputElement>('#swap-list table.swap-coin input.swap-checkbox');
     for (const checkbox of checkboxes) {
-        checkbox.addEventListener('click', e => {
-            const target = <HTMLInputElement> e.target;
+        checkbox.addEventListener('click', (e) => {
+            const target = <HTMLInputElement>e.target;
             if (!target.checked) {
                 const row = target.closest('tr');
                 if (row) {
@@ -203,8 +212,8 @@ export function addConflictHandling(): void {
 
     const countryCheckboxes = document.querySelectorAll<HTMLInputElement>('#swap-list h2 input.swap-country-checkbox');
     for (const checkbox of countryCheckboxes) {
-        checkbox.addEventListener('click', e => {
-            const target = <HTMLInputElement> e.target;
+        checkbox.addEventListener('click', (e) => {
+            const target = <HTMLInputElement>e.target;
             if (!target.checked) {
                 const country = target.closest('h2');
                 if (country) {
@@ -238,8 +247,10 @@ export function checkSold(): void {
         return;
     }
 
-    actionBoard.insertAdjacentHTML('beforeend',
-        `<a class="btn-s btn-gray ico-del" id="${delAllButtonId}" style="float: right;"><div class="ico-16"></div></a>`);
+    actionBoard.insertAdjacentHTML(
+        'beforeend',
+        `<a class='btn-s btn-gray ico-del' id='${delAllButtonId}' style='float: right;'><div class='ico-16'></div></a>`
+    );
 
     const button = document.getElementById(delAllButtonId);
     if (!button) {
@@ -259,7 +270,7 @@ export function checkSold(): void {
             }
             isFirstRequest = false;
 
-            const {href} = sold.querySelector<HTMLAnchorElement>('a.act');
+            const { href } = sold.querySelector<HTMLAnchorElement>('a.act');
             await get(href);
 
             const tree = document.getElementById('tree');
@@ -276,7 +287,6 @@ export function checkSold(): void {
     });
 }
 
-
 export function ignoreUnwanted(): void {
     if (!document.getElementById('need-swap-list')) {
         const tables = document.querySelectorAll('table.swap-coin');
@@ -285,9 +295,9 @@ export function ignoreUnwanted(): void {
             for (const tr of rows) {
                 const markedElement = tr.querySelector('td span[class^="marked-"]');
                 const markedClass = markedElement && markedElement.classList.item(0);
-                const myCond = markedClass && ColorValues.get(+markedClass.split('marked-').pop()) || 0;
+                const myCond = (markedClass && ColorValues.get(+markedClass.split('marked-').pop())) || 0;
                 const condElement = tr.querySelector('td.td-cond');
-                const cond = condElement && ConditionValues.get(condElement.textContent) || 0;
+                const cond = (condElement && ConditionValues.get(condElement.textContent)) || 0;
                 if (myCond && (!cond || cond <= myCond)) {
                     tr.classList.add('ignore');
                 }

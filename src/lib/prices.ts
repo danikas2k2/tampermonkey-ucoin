@@ -1,5 +1,5 @@
-import {ColorStyle, ConditionColors, ConditionValues} from './cond';
-import {cmp} from './swap-list-sort';
+import { ColorStyle, ConditionColors, ConditionValues } from './cond';
+import { cmp } from './swap-list-sort';
 
 type YearMap = Map<string, number[]>;
 type MintMap = Map<string, YearMap>;
@@ -17,10 +17,10 @@ const RX_COMPOSITION = /Composition|Материал|Sudėtis/;
 const RX_SILVER = /Silver|Серебро|Sidabras/;
 const RX_GOLD = /Gold|Золото|Auksas/;
 
-const RU_PRICE = 0.006; //       3-8e/kg
-const EU_PRICE = 0.013; //     10-15e/kg
-const AG_PRICE = 0.700; //   .60-.80e/g
-const AU_PRICE = 47.00; // 45.0-55.0e/g
+const RU_PRICE = 0.005; //       3-8e/kg
+const EU_PRICE = 0.012; //     10-15e/kg
+const AG_PRICE = 0.77;  //   .60-.80e/g
+const AU_PRICE = 49.0;  // 45.0-55.0e/g
 
 function sortByCondition(a: string, b: string): number {
     return ConditionValues.get(b) - ConditionValues.get(a);
@@ -72,7 +72,10 @@ export function estimateSwapPrices(): void {
         byMint.set(mint, pm);
     }
 
-    swapBlock.parentElement.insertAdjacentHTML('beforebegin', `<div class="widget estimated-prices-widget"><a class="widget-header">Estimated prices</a><div id="${ESTIMATED_PRICES_ID}"></div></div>`);
+    swapBlock.parentElement.insertAdjacentHTML(
+        'beforebegin',
+        `<div class="widget estimated-prices-widget"><a class="widget-header">Estimated prices</a><div id="${ESTIMATED_PRICES_ID}"></div></div>`
+    );
 
     const estimatedPrices = document.getElementById(ESTIMATED_PRICES_ID);
 
@@ -83,28 +86,30 @@ export function estimateSwapPrices(): void {
         // @ts-ignore
         const options: Chart.ChartConfiguration = {
             type: 'line',
-            data: {datasets: []},
+            data: { datasets: [] },
             options: {
-                title: {display: true, text: mint},
+                title: { display: true, text: mint },
                 responsive: true,
-                hover: {mode: 'nearest', intersect: true},
+                hover: { mode: 'nearest', intersect: true },
                 scales: {
                     xAxes: [],
-                    yAxes: [{
-                        type: 'linear',
-                        display: true,
-                        ticks: {beginAtZero: true},
-                    }],
+                    yAxes: [
+                        {
+                            type: 'linear',
+                            display: true,
+                            ticks: { beginAtZero: true },
+                        },
+                    ],
                 },
-                legend: {display: false},
-                elements: {point: {radius: 1}},
+                legend: { display: false },
+                elements: { point: { radius: 1 } },
             },
         };
 
         const maxLength = 100;
         for (const cond of keys) {
             const p: number[] = byType.get(cond).sort(cmp);
-            let {length} = p;
+            let { length } = p;
             if (length === 1) {
                 p.push(p[0]);
             } else {
@@ -115,7 +120,7 @@ export function estimateSwapPrices(): void {
             options.data.datasets.push({
                 xAxisID,
                 label: cond,
-                data: p.map((v, i) => ({x: i * maxLength / length, y: v})),
+                data: p.map((v, i) => ({ x: (i * maxLength) / length, y: v })),
                 backgroundColor: color,
                 borderColor: color,
                 borderWidth: 1,
@@ -130,7 +135,7 @@ export function estimateSwapPrices(): void {
 
         const id = `${ESTIMATED_PRICES_ID}-${mint.trim()}`;
         estimatedPrices.insertAdjacentHTML('beforeend', `<canvas id="${id}" width="239" height="119"/>`);
-        const ctx = (<HTMLCanvasElement> document.getElementById(id)).getContext('2d');
+        const ctx = (<HTMLCanvasElement>document.getElementById(id)).getContext('2d');
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -164,7 +169,7 @@ export function estimateWeightPrice(): void {
 
     for (const tr of trs) {
         const th = tr.querySelector('th');
-        const head = th && th.textContent || '';
+        const head = (th && th.textContent) || '';
         const td = tr.querySelector('td');
         if (td) {
             const data = `${td.textContent}`;
@@ -198,7 +203,9 @@ export function estimateWeightPrice(): void {
         priceSource = '--';
     }
 
-    const weightPrice = `<br/><price class="right" title="${priceSource}: ${price.toFixed(5)}">€ ${price.toFixed(2)}</price>`;
+    const weightPrice = `<br/><price class="right" title="${priceSource}: ${price.toFixed(5)}">€ ${price.toFixed(
+        2
+    )}</price>`;
 
     if (!aPrice) {
         let isAproximate = false;
@@ -209,7 +216,7 @@ export function estimateWeightPrice(): void {
             for (const child of clone.childNodes) {
                 child.remove();
             }
-            const {textContent} = clone;
+            const { textContent } = clone;
             if (textContent) {
                 prices.push(+textContent);
             } else {
@@ -224,7 +231,12 @@ export function estimateWeightPrice(): void {
         } else if (isAproximate) {
             showPrices.unshift('');
         }
-        head.insertAdjacentHTML('beforebegin', `<a href="#price" class="gray-12 right pricewj">Value:&nbsp;€ <span>${showPrices.join(isAproximate ? '~' : '-')}</span>${weightPrice}</a>`);
+        head.insertAdjacentHTML(
+            'beforebegin',
+            `<a href="#price" class="gray-12 right pricewj">Value:&nbsp;€ <span>${showPrices.join(
+                isAproximate ? '~' : '-'
+            )}</span>${weightPrice}</a>`
+        );
     } else {
         aPrice.insertAdjacentHTML('beforeend', weightPrice);
     }

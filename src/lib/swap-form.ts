@@ -1,9 +1,9 @@
-import {Color, SwapValue} from './cond';
-import {ListForm} from './list-form';
-import {id} from './selectors';
-import {SwapFormList} from './swap-form-list';
-import {addLinkComments, styleListLinks} from './swap-links';
-import {getCurrentVarietyId} from './vid';
+import { Color, SwapValue } from './cond';
+import { ListForm } from './list-form';
+import { id } from './selectors';
+import { SwapFormList } from './swap-form-list';
+import { addLinkComments, styleListLinks } from './swap-links';
+import { getCurrentVarietyId } from './vid';
 
 // declare let CoinSwapFormOn: (usid: string, cond: string, price: string, info: string, vid: string, qty: string, replica: string, ...other: string[]) => void;
 // declare let CoinSwapFormOff: (...other: string[]) => void;
@@ -30,7 +30,7 @@ export class SwapForm extends ListForm {
     private swapListManager = new SwapFormList(this);
 
     protected fillForm(uid = '', cond = '', price = '', info = '', vid = '', qty = '', replica = ''): void {
-        super.fillForm(uid, cond || replica && '100', price, vid || getCurrentVarietyId());
+        super.fillForm(uid, cond || (replica && '100'), price, vid || getCurrentVarietyId());
         this.form.comment.value = info;
         this.form.qty.value = qty || '1';
     }
@@ -60,11 +60,11 @@ export class SwapForm extends ListForm {
 
     // eslint-disable-next-line class-methods-use-this
     protected getConditionOption(o: HTMLOptionElement): ConditionOption {
-        const {value, textContent} = o;
+        const { value, textContent } = o;
         return {
             value,
             text: value ? textContent : 'Without condition',
-            checked: (value === '3') ? 'checked' : '',
+            checked: value === '3' ? 'checked' : '',
             style: o.getAttribute('style') || '',
         };
     }
@@ -75,24 +75,32 @@ export class SwapForm extends ListForm {
     }
 
     protected updateQty(): void {
-        const {form} = this;
-        const {qty} = form;
+        const { form } = this;
+        const { qty } = form;
 
         qty.inputmode = 'numeric';
         qty.addEventListener('focus', () => {
             qty.setSelectionRange(0, qty.value.length);
         });
 
-        const addQtyCtrlButton = (where: InsertPosition, name: string, text: string, valueChanger: (prevValue: number) => number): void => {
-            qty.insertAdjacentHTML(where, `<button name="${name}" type="button" class="btn-s btn-gray btn-ctrl">${text}</button>`);
+        const addQtyCtrlButton = (
+            where: InsertPosition,
+            name: string,
+            text: string,
+            valueChanger: (prevValue: number) => number
+        ): void => {
+            qty.insertAdjacentHTML(
+                where,
+                `<button name="${name}" type="button" class="btn-s btn-gray btn-ctrl">${text}</button>`
+            );
             form[name].addEventListener('click', () => {
                 qty.value = `${valueChanger(+qty.value)}`;
             });
         };
 
-        addQtyCtrlButton('beforebegin', 'plus10', '+10', v => v + 10);
-        addQtyCtrlButton('beforebegin', 'plus5', '+5', v => v + 5);
-        addQtyCtrlButton('beforebegin', 'plus', '+', v => v + 1);
-        addQtyCtrlButton('beforebegin', 'minus', '&minus;', v => v - 1);
+        addQtyCtrlButton('beforebegin', 'plus10', '+10', (v) => v + 10);
+        addQtyCtrlButton('beforebegin', 'plus5', '+5', (v) => v + 5);
+        addQtyCtrlButton('beforebegin', 'plus', '+', (v) => v + 1);
+        addQtyCtrlButton('beforebegin', 'minus', '&minus;', (v) => v - 1);
     }
 }

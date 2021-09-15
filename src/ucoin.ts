@@ -12,16 +12,15 @@
 // @run-at       document-end
 // ==/UserScript==
 
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import style from '../styles/ucoin.less';
 
-import {CoinForm} from './lib/coin-form';
-import {addGalleryVisibilityToggle} from './lib/gallery';
-import {updateLinkHref, updateOnClickHref} from './lib/links';
-import {estimateSwapPrices, estimateWeightPrice} from './lib/prices';
-import {SwapForm} from './lib/swap-form';
+import { CoinForm } from './lib/coin-form';
+import { addGalleryVisibilityToggle } from './lib/gallery';
+import { updateLinkHref, updateOnClickHref } from './lib/links';
+import { estimateSwapPrices, estimateWeightPrice } from './lib/prices';
+import { SwapForm } from './lib/swap-form';
 import {
     addConflictHandling,
     addOpenedTabsHandler,
@@ -30,12 +29,12 @@ import {
     duplicatePagination,
     ignoreUnwanted,
     removeRowHrefFromSwapList,
-    showAllPrices
+    showAllPrices,
 } from './lib/swap-list';
-import {addFilteringOptions, addSortingOptions} from './lib/swap-list-sort';
-import {UID} from './lib/uid';
-import {cancel} from './lib/utils';
-import {WishForm} from './lib/wish-form';
+import { addFilteringOptions, addSortingOptions } from './lib/swap-list-sort';
+import { UID } from './lib/uid';
+import { cancel } from './lib/utils';
+import { WishForm } from './lib/wish-form';
 
 document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${style}</style>`);
 
@@ -50,9 +49,12 @@ async function handleHomePage(): Promise<void> {
                 const swapPrice = +swapPriceElement.textContent.replace(/[^\d.]/g, '');
                 const price = colPrice + swapPrice;
                 curPriceElement.classList.add('price');
-                curPriceElement.insertAdjacentHTML('beforeend', `<br/><small class="total"><abbr class="cur">€</abbr> ${
-                    new Intl.NumberFormat('en').format(price)
-                }</small>`);
+                curPriceElement.insertAdjacentHTML(
+                    'beforeend',
+                    `<br/><small class="total"><abbr class="cur">€</abbr> ${new Intl.NumberFormat('en').format(
+                        price
+                    )}</small>`
+                );
             }
         }
     }
@@ -64,10 +66,11 @@ async function handleProfile(): Promise<void> {
     if (profile) {
         const paragraphs = profile.querySelectorAll<HTMLParagraphElement>('p.dgray-13');
         for (const p of paragraphs) {
-            p.innerHTML = converter.makeHtml(p.innerHTML
-                .replace(/<br\s*\/?>/gi, '\n')
-                .replace(/([\w.-]+@[\w.-]+)/gi, '<$1>')
-                .replace(/&gt;/gi, '>')
+            p.innerHTML = converter.makeHtml(
+                p.innerHTML
+                    .replace(/<br\s*\/?>/gi, '\n')
+                    .replace(/([\w.-]+@[\w.-]+)/gi, '<$1>')
+                    .replace(/&gt;/gi, '>')
             );
         }
     }
@@ -77,7 +80,7 @@ async function handleCoinPage(): Promise<void> {
     const tags = document.getElementById('tags');
     if (tags) {
         // fixTagLinks
-        const galleryLinks = <NodeListOf<HTMLAnchorElement>> tags.querySelectorAll('a[href^="/gallery/"]');
+        const galleryLinks = <NodeListOf<HTMLAnchorElement>>tags.querySelectorAll('a[href^="/gallery/"]');
         for (const a of galleryLinks) {
             updateLinkHref(a);
         }
@@ -94,26 +97,33 @@ async function handleGalleryPage(): Promise<void> {
     const gallery = document.getElementById('gallery');
     if (gallery) {
         // fix gallery links
-        const galleryLinks = <NodeListOf<HTMLAnchorElement>> gallery.querySelectorAll('a[href^="/gallery/"]');
+        const galleryLinks = <NodeListOf<HTMLAnchorElement>>gallery.querySelectorAll('a[href^="/gallery/"]');
         for (const a of galleryLinks) {
             updateLinkHref(a);
         }
-        const queryLinks = <NodeListOf<HTMLAnchorElement>> gallery.querySelectorAll('a[href^="?"]');
+        const queryLinks = <NodeListOf<HTMLAnchorElement>>gallery.querySelectorAll('a[href^="?"]');
         for (const a of queryLinks) {
             updateLinkHref(a);
         }
-        const closeButtons = <NodeListOf<HTMLDivElement>> gallery.querySelectorAll('div.close');
+        const closeButtons = <NodeListOf<HTMLDivElement>>gallery.querySelectorAll('div.close');
         for (const div of closeButtons) {
             updateOnClickHref(div);
         }
 
         const count = gallery.querySelectorAll('.coin').length;
-        const pages = +(gallery.querySelector('.pages a:last-child')?.textContent);
-        const current = +(gallery.querySelector('.pages a.current')?.textContent);
+        const pages = +gallery.querySelector('.pages a:last-child')?.textContent;
+        const current = +gallery.querySelector('.pages a.current')?.textContent;
         if (count) {
             const isLast = current === pages;
             const total = isLast ? (pages - 1) * 12 + count : (pages - 1) * 12;
-            gallery.querySelector('h1').insertAdjacentHTML('beforeend', ` <small>(${count}${pages ? ` <small>of ${isLast ? total : `${total+1}~${total+12}`}</small>` : ''})</small>`);
+            gallery
+                .querySelector('h1')
+                .insertAdjacentHTML(
+                    'beforeend',
+                    ` <small>(${count}${
+                        pages ? ` <small>of ${isLast ? total : `${total + 1}~${total + 12}`}</small>` : ''
+                    })</small>`
+                );
         }
     }
 
@@ -127,11 +137,17 @@ async function handleTablePage(): Promise<void> {
         const url = new URL(location.href);
         const sp = url.searchParams;
         sp.set('order', 'ka');
-        sortFilterDialog.insertAdjacentHTML('beforeend', `<a class="list-link" href="${url.href}"><div class="left gray-13">Krause</div><div class="right"><span class="arrow at"></span></div></a>`);
+        sortFilterDialog.insertAdjacentHTML(
+            'beforeend',
+            `<a class="list-link" href="${url.href}"><div class="left gray-13">Krause</div><div class="right"><span class="arrow at"></span></div></a>`
+        );
         sp.set('order', 'kd');
-        sortFilterDialog.insertAdjacentHTML('beforeend', `<a class="list-link" href="${url.href}"><div class="left gray-13">Krause</div><div class="right"><span class="arrow ab"></span></div></a>`);
+        sortFilterDialog.insertAdjacentHTML(
+            'beforeend',
+            `<a class="list-link" href="${url.href}"><div class="left gray-13">Krause</div><div class="right"><span class="arrow ab"></span></div></a>`
+        );
 
-        for (const a of <NodeListOf<HTMLAnchorElement>> sortFilterDialog.querySelectorAll('a.list-link')) {
+        for (const a of <NodeListOf<HTMLAnchorElement>>sortFilterDialog.querySelectorAll('a.list-link')) {
             a.addEventListener('click', cancel);
         }
     }
@@ -144,7 +160,7 @@ async function handleMessagePage(): Promise<void> {
         const m = user.attributes.getNamedItem('onclick')?.value.match(/href\s*=\s*'(.*?)'/);
         if (m) {
             a.href = m[1];
-            a.onclick = e => e.stopPropagation();
+            a.onclick = (e) => e.stopPropagation();
         }
     }
 }
@@ -161,7 +177,7 @@ async function handleSwapPage(): Promise<void> {
     ignoreUnwanted();
     removeRowHrefFromSwapList();
 
-    const tree = <HTMLDivElement> document.getElementById('tree');
+    const tree = <HTMLDivElement>document.getElementById('tree');
     if (tree) {
         const filterLinks = tree.querySelectorAll<HTMLAnchorElement>('.filter-container .list-link');
         for (const a of filterLinks) {
@@ -218,8 +234,11 @@ async function handleSwapPage(): Promise<void> {
         }
 
         const searchInputId = 'search-input-id';
-        tree.insertAdjacentHTML('afterbegin', `<input id="${searchInputId}" class="tree-filter" placeholder="Search"/>`);
-        const searchInput = <HTMLInputElement> document.getElementById(searchInputId);
+        tree.insertAdjacentHTML(
+            'afterbegin',
+            `<input id="${searchInputId}" class="tree-filter" placeholder="Search"/>`
+        );
+        const searchInput = <HTMLInputElement>document.getElementById(searchInputId);
         searchInput.addEventListener('input', () => {
             // const pattern = new RegExp([...searchInput.value].join('.*?'), 'i');
             const pattern = new RegExp(searchInput.value.replace(/\W+/g, '.*?'), 'i');
@@ -261,12 +280,12 @@ async function handleSwapPage(): Promise<void> {
             }
 
             for (const reg of tree.querySelectorAll('div.reg')) {
-                const {length} = reg.querySelectorAll('div.country:not(.hide)');
+                const { length } = reg.querySelectorAll('div.country:not(.hide)');
                 reg.classList.toggle('hide', !length);
 
                 const region = reg.querySelector('.region');
                 const countries = reg.querySelector('.countries');
-                const visibleRegion: boolean = length > 0 && length <= 5 || region.matches('.open');
+                const visibleRegion: boolean = (length > 0 && length <= 5) || region.matches('.open');
                 countries.classList.toggle('hide', !visibleRegion);
             }
         });

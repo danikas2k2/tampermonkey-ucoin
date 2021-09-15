@@ -16,7 +16,9 @@
 
     --color-input-sufrace: var(--color-surface);
     --color-input-content: #222;
+    --color-input-content-disabled: #444;
     --color-input-border: #aaa;
+    --color-input-border-disabled: #eee;
     --color-input-shadow: 0 2px 1px #0001 inset;
 
     --color-ignore-content: #ccc;
@@ -383,6 +385,40 @@ body {
         width: auto;
     }
 
+    .filters {
+        .filter {
+            + .filter {
+                margin-left: 4px;
+            }
+
+            .close {
+                width: 18px;
+                text-align: center;
+                margin-right: -8px;
+            }
+
+            .flag {
+                margin-right: 4px;
+            }
+
+        }
+
+        .filter-dialog {
+            max-height: 300px;
+            overflow: auto;
+        }
+
+        .filter-box {
+            &.filter-box-disabled {
+                color: var(--color-input-content-disabled);
+
+                &, &:hover {
+                    border-color: var(--color-input-border-disabled);
+                }
+            }
+        }
+    }
+
     #sort-filter {
         border-color: var(--color-content-link);
         width: 150px !important;
@@ -426,6 +462,7 @@ body {
 
         #country-filter {
             width: 129px;
+
             &.selected {
                 border-color: var(--color-content-link);
             }

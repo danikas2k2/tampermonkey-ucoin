@@ -1,5 +1,8 @@
 export function sp(str: string): string {
-    return `${str || ''}`.replace(/\u{00A0}+/gu, ' ').replace(/\s+/g, ' ').trim();
+    return `${str || ''}`
+        .replace(/\u{00A0}+/gu, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
 }
 
 export function tt(str: string): string {
@@ -8,23 +11,23 @@ export function tt(str: string): string {
 }
 
 export function show(...elements: HTMLElement[]): void {
-    elements.forEach(element => element && element.classList.remove('hide'));
+    elements.forEach((element) => element && element.classList.remove('hide'));
 }
 
 export function hide(...elements: HTMLElement[]): void {
-    elements.forEach(element => element && element.classList.add('hide'));
+    elements.forEach((element) => element && element.classList.add('hide'));
 }
 
 export function toggle(visible: string | boolean, ...elements: HTMLElement[]): void {
-    elements.forEach(element => element && element.classList.toggle('hide', !visible));
+    elements.forEach((element) => element && element.classList.toggle('hide', !visible));
 }
 
 export function enable(...elements: HTMLElement[]): void {
-    elements.forEach(element => element && element.classList.remove('disable'));
+    elements.forEach((element) => element && element.classList.remove('disable'));
 }
 
 export function disable(...elements: HTMLElement[]): void {
-    elements.forEach(element => element && element.classList.add('disable'));
+    elements.forEach((element) => element && element.classList.add('disable'));
 }
 
 export function cancel(e: Event): void {
@@ -93,35 +96,46 @@ export function updateOptionalElement(fragment: DocumentFragment, element: HTMLE
     return element;
 }
 
-export async function updateParts(fragment: DocumentFragment, callback: UpdateCallback, required: HTMLElement[], optional?: HTMLElement[]): Promise<void> {
-    required = required.map(element => updateRequiredElement(fragment, element));
+export async function updateParts(
+    fragment: DocumentFragment,
+    callback: UpdateCallback,
+    required: HTMLElement[],
+    optional?: HTMLElement[]
+): Promise<void> {
+    required = required.map((element) => updateRequiredElement(fragment, element));
     if (optional) {
-        optional = optional.map(element => updateOptionalElement(fragment, element));
+        optional = optional.map((element) => updateOptionalElement(fragment, element));
     }
     return await callback();
 }
 
 export async function handleFormSubmit(form: HTMLFormElement, callback: RequestCallback): Promise<void> {
-    form.addEventListener('submit', (onsubmit => async (e: Event) => {
-        cancel(e);
-        const form = <HTMLFormElement> e.target;
-        if (onsubmit && onsubmit.call(form, e) === false) {
-            return;
-        }
-        await callback();
-    })(form.onsubmit));
+    form.addEventListener(
+        'submit',
+        ((onsubmit) => async (e: Event) => {
+            cancel(e);
+            const form = <HTMLFormElement>e.target;
+            if (onsubmit && onsubmit.call(form, e) === false) {
+                return;
+            }
+            await callback();
+        })(form.onsubmit)
+    );
     form.removeAttribute('onsubmit');
 }
 
 export async function handleLinkSubmit(link: HTMLAnchorElement, callback: RequestCallback): Promise<void> {
-    link.addEventListener('click', (onclick => async (e: Event) => {
-        cancel(e);
-        const link = <HTMLAnchorElement> e.target;
-        if (onclick && onclick.call(link, e) === false) {
-            return;
-        }
-        await callback();
-    })(link.onclick));
+    link.addEventListener(
+        'click',
+        ((onclick) => async (e: Event) => {
+            cancel(e);
+            const link = <HTMLAnchorElement>e.target;
+            if (onclick && onclick.call(link, e) === false) {
+                return;
+            }
+            await callback();
+        })(link.onclick)
+    );
     link.removeAttribute('onclick');
 }
 

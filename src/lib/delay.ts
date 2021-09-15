@@ -1,5 +1,5 @@
 export async function delay(time: number): Promise<void> {
-    return await new Promise(resolve => setTimeout(() => resolve(), time));
+    return await new Promise((resolve) => setTimeout(() => resolve(), time));
 }
 
 export async function randomDelay(rndDelay = 1000, minDelay = 500): Promise<void> {
