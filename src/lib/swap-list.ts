@@ -3,7 +3,21 @@ import { ColorValues, ConditionValues } from './cond';
 import { randomDelay } from './delay';
 import { getHashParam, updateLocationHash } from './url';
 
-// TODO add thumbnails to list
+export function addThumbnails(): void {
+    for (const row of document.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr')) {
+        const d = row.dataset;
+        console.info(d);
+        row.querySelector('td')?.insertAdjacentHTML(
+            'beforebegin',
+            `
+            <th style="width: 100px" class="thumbnails">
+                <img src="${d.tooltipImgpath}/${d.tooltipSample}-1c/${d.tooltipCode}.jpg" class="thumbnail" loading="lazy" alt="obverse"/>
+                <img src="${d.tooltipImgpath}/${d.tooltipSample}-2c/${d.tooltipCode}.jpg" class="thumbnail" loading="lazy" alt="reverse"/>
+            </th>
+        `
+        );
+    }
+}
 
 export function addTrackingLinks(): void {
     const swapMgr = document.getElementById('swap-mgr');

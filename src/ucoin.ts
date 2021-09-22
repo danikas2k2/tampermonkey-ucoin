@@ -24,6 +24,7 @@ import { SwapForm } from './lib/swap-form';
 import {
     addConflictHandling,
     addOpenedTabsHandler,
+    addThumbnails,
     addTrackingLinks,
     checkSold,
     duplicatePagination,
@@ -36,7 +37,7 @@ import { UID } from './lib/uid';
 import { cancel } from './lib/utils';
 import { WishForm } from './lib/wish-form';
 
-document.head.insertAdjacentHTML('beforeend', `<style type="text/css">${style}</style>`);
+document.head.insertAdjacentHTML('beforeend', `<style>${style}</style>`);
 
 async function handleHomePage(): Promise<void> {
     const profile = document.getElementById('profile');
@@ -51,7 +52,7 @@ async function handleHomePage(): Promise<void> {
                 curPriceElement.classList.add('price');
                 curPriceElement.insertAdjacentHTML(
                     'beforeend',
-                    `<br/><small class="total"><abbr class="cur">€</abbr> ${new Intl.NumberFormat('en').format(
+                    `<br/><small class='total'><abbr class='cur'>€</abbr> ${new Intl.NumberFormat('en').format(
                         price
                     )}</small>`
                 );
@@ -139,12 +140,12 @@ async function handleTablePage(): Promise<void> {
         sp.set('order', 'ka');
         sortFilterDialog.insertAdjacentHTML(
             'beforeend',
-            `<a class="list-link" href="${url.href}"><div class="left gray-13">Krause</div><div class="right"><span class="arrow at"></span></div></a>`
+            `<a class='list-link' href='${url.href}'><div class='left gray-13'>Krause</div><div class='right'><span class='arrow at'></span></div></a>`
         );
         sp.set('order', 'kd');
         sortFilterDialog.insertAdjacentHTML(
             'beforeend',
-            `<a class="list-link" href="${url.href}"><div class="left gray-13">Krause</div><div class="right"><span class="arrow ab"></span></div></a>`
+            `<a class='list-link' href='${url.href}'><div class='left gray-13'>Krause</div><div class='right'><span class='arrow ab'></span></div></a>`
         );
 
         for (const a of <NodeListOf<HTMLAnchorElement>>sortFilterDialog.querySelectorAll('a.list-link')) {
@@ -167,6 +168,7 @@ async function handleMessagePage(): Promise<void> {
 
 async function handleSwapPage(): Promise<void> {
     addTrackingLinks();
+    addThumbnails();
     addOpenedTabsHandler();
     addSortingOptions();
     addFilteringOptions();
@@ -236,7 +238,7 @@ async function handleSwapPage(): Promise<void> {
         const searchInputId = 'search-input-id';
         tree.insertAdjacentHTML(
             'afterbegin',
-            `<input id="${searchInputId}" class="tree-filter" placeholder="Search"/>`
+            `<input id='${searchInputId}' class='tree-filter' placeholder='Search'/>`
         );
         const searchInput = <HTMLInputElement>document.getElementById(searchInputId);
         searchInput.addEventListener('input', () => {
