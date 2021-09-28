@@ -3,19 +3,67 @@ import { ColorValues, ConditionValues } from './cond';
 import { randomDelay } from './delay';
 import { getHashParam, updateLocationHash } from './url';
 
+export function addSwapTitle() {
+    const title = [...document.querySelectorAll('#swap-mgr div.leftCol > div.user-info > .wrap')].map(e => e.textContent).join(' / ');
+    if (title) {
+        document.title = `${title} - ${document.title}`;
+    }
+}
+
 export function addThumbnails(): void {
     for (const row of document.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr')) {
-        const d = row.dataset;
-        console.info(d);
+        const { tooltipImgpath, tooltipSample, tooltipCode } = row.dataset;
         row.querySelector('td')?.insertAdjacentHTML(
-            'beforebegin',
+            row.querySelector('div.reserve') ? 'beforebegin' : 'afterend',
             `
-            <th style="width: 100px" class="thumbnails">
-                <img src="${d.tooltipImgpath}/${d.tooltipSample}-1c/${d.tooltipCode}.jpg" class="thumbnail" loading="lazy" alt="obverse"/>
-                <img src="${d.tooltipImgpath}/${d.tooltipSample}-2c/${d.tooltipCode}.jpg" class="thumbnail" loading="lazy" alt="reverse"/>
+            <th style='width: 100px' class='thumbnails'>
+                ${
+                    tooltipImgpath && tooltipSample && tooltipCode
+                        ? `
+                    <img src='${tooltipImgpath}/${tooltipSample}-1c/${tooltipCode}.jpg' class='thumbnail' loading='lazy' alt='obverse'/>
+                    <img src='${tooltipImgpath}/${tooltipSample}-2c/${tooltipCode}.jpg' class='thumbnail' loading='lazy' alt='reverse'/>
+                `
+                        : ''
+                }
             </th>
         `
         );
+    }
+}
+
+const separateCountries = [
+    'austria',
+    'belgium',
+    'denmark',
+    'estonia',
+    'finland',
+    'france',
+    'germany',
+    'german_democratic_republic',
+    'third_reich',
+    'german_empire',
+    'india',
+    'italy',
+    'latvia',
+    'lithuania',
+    'netherlands',
+    'norway',
+    'poland',
+    'portugal',
+    'spain',
+    'russia',
+    'ussr',
+    'sweden',
+    'switzerland',
+    'united_kingdom',
+    'usa',
+];
+
+export function markSeparateCountries(): void {
+    for (const h2 of document.querySelectorAll<HTMLHeadingElement>('#take-swap-list h2')) {
+        if (separateCountries.includes(h2.id)) {
+            h2.classList.add('separate-country');
+        }
     }
 }
 

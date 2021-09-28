@@ -29,7 +29,7 @@ interface FilterPropsWithoutValue extends CommonFilterProps {
 export type FilterProps = FilterPropsWithValue | FilterPropsWithoutValue;
 
 export function renderFilter([name, props]: [Filter, FilterProps]) {
-    const disabled = props.options.size <= 2;
+    const disabled = props.options.size <= 1;
     return `<div class='${props.direction || 'left'} filter'>\
             <div data-filter='${name}' data-filter-placeholder='${props.placeholder}'${
         disabled ? ' data-filter-disabled' : ''
