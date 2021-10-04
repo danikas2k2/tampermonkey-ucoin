@@ -46,10 +46,10 @@ export function documentFragment(src: string): DocumentFragment {
     return temp.content;
 }
 
-export async function getFragment(url: RequestInfo, body?: BodyInit): Promise<DocumentFragment> {
-    return documentFragment(await getText(url, body));
+export async function getFragment(url: RequestInfo, body?: BodyInit, autoRedirect = true): Promise<DocumentFragment> {
+    return documentFragment(await getText(url, body, autoRedirect));
 }
 
-export async function postFragment(url: RequestInfo, body?: BodyInit): Promise<DocumentFragment> {
-    return documentFragment(await postText(url, body));
+export async function postFragment(url: RequestInfo, body?: BodyInit, autoRedirect = true): Promise<DocumentFragment> {
+    return documentFragment(await postText(url, body, autoRedirect));
 }

@@ -38,7 +38,7 @@ export class SwapForm extends ListForm {
     protected updateList(): void {
         this.listBlock = document.getElementById(this.listId);
         if (this.listBlock) {
-            this.swapListManager.update(this.listBlock);
+            this.swapListManager.update(this.listBlock.cloneNode(true) as HTMLElement);
             for (const list of document.querySelectorAll<HTMLElement>(id(this.listId))) {
                 styleListLinks(list);
             }

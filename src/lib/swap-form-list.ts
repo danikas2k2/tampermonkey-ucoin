@@ -1,4 +1,4 @@
-import { getText, postFragment } from './ajax';
+import { getFragment, postFragment } from './ajax';
 import { randomDelay } from './delay';
 import { ListForm } from './list-form';
 import { id } from './selectors';
@@ -31,8 +31,7 @@ export class SwapFormList {
 
     public update(listBlock: HTMLElement): void {
         if (this.listBlock) {
-            // this.listBlock.replaceWith(listBlock);
-            this.listBlock = listBlock;
+            this.listBlock.replaceWith(listBlock);
         } else {
             this.listBlock = listBlock;
         }
@@ -60,7 +59,7 @@ export class SwapFormList {
         } else {
             this.buttonSet.insertAdjacentHTML(
                 'beforeend',
-                `<button id="${buttonId}" type="button" class="btn--${role} btn-s btn-blue">${text}</button>`
+                `<button id='${buttonId}' type='button' class='btn--${role} btn-s btn-blue'>${text}</button>`
             );
             this.buttonSet.querySelector(id(buttonId)).addEventListener('click', async () => {
                 this.hideButtons();
@@ -230,26 +229,40 @@ export class SwapFormList {
         let isDelFailed = false;
         let isUpdFailed = false;
 
-        for (const variant of this.variants.values()) {
+        for (const variant of [...this.variants.values()]) {
             const { usid, usids, qty, total } = variant;
+            debug(`VARIANT usid=${usid} usids=${[...usids].join(',')} qty=${qty} total=${total}`);
             if (total <= qty) {
                 continue;
             }
 
             const remove = new Set<string>(usids);
             remove.delete(usid);
+            if (!remove.size) {
+                continue;
+            }
 
-            debug(`REMOVING ${remove}`);
-            if (!(await this.deleteSwapCoin(remove))) {
+            debug(`REMOVING ${[...remove].join(', ')}`);
+            const deleteContent = await this.deleteSwapCoin(remove);
+            if (deleteContent) {
+                const newListBlock = deleteContent.getElementById(this.listForm.listId);
+                if (newListBlock && this.listBlock) {
+                    newListBlock.querySelector('center').replaceWith(this.listBlock.querySelector('center'));
+                    styleListLinks(newListBlock);
+                    this.update(newListBlock);
+                }
+            } else {
                 isDelFailed = true;
                 break;
             }
 
             debug(`UPDATING ${usid}`);
-            const content = await this.updateSwapCoin(usid, { ...variant, qty: total });
-            if (content) {
-                const newListBlock = content.getElementById(this.listForm.listId);
+            const updateContent = await this.updateSwapCoin(usid, { ...variant, qty: total });
+            if (updateContent) {
+                const newListBlock = updateContent.getElementById(this.listForm.listId);
+                debug(this.listForm.listId, this.listBlock, newListBlock);
                 if (newListBlock && this.listBlock) {
+                    newListBlock.querySelector('center').replaceWith(this.listBlock.querySelector('center'));
                     styleListLinks(newListBlock);
                     this.update(newListBlock);
                 }
@@ -302,7 +315,7 @@ export class SwapFormList {
         return await this.updateSwapCoin('', data, 'addswapcoin');
     }
 
-    private deleteSwapCoin = async (usid: string | Set<string>): Promise<boolean> => {
+    private deleteSwapCoin = async (usid: string | Set<string>): Promise<DocumentFragment> => {
         if (usid instanceof Set) {
             usid = [...usid].join(',');
         }
@@ -313,11 +326,11 @@ export class SwapFormList {
         p.set('usid', usid);
         p.set('uid', UID);
 
-        const fragment = await getText(url.href, null, false);
+        const fragment = await getFragment(url.href, null, false);
         if (!fragment) {
             return reload();
         }
-        return true;
+        return fragment;
     };
 
     private updateLinkQty = (a: HTMLAnchorElement, qty: number): void => {
@@ -338,7 +351,7 @@ export class SwapFormList {
         }
         if (qty > 1) {
             for (const span of a.querySelectorAll('span.left.gray-13.wrap')) {
-                span.insertAdjacentHTML('afterend', `<span class="left dblue-13"><span>&times;</span>${qty}</span>`);
+                span.insertAdjacentHTML('afterend', `<span class='left dblue-13'><span>&times;</span>${qty}</span>`);
             }
         }
     };

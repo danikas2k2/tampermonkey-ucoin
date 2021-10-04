@@ -395,9 +395,21 @@ body {
         }
     }
 
-    #take-swap-list h2.separate-country {
-        font-weight: bold;
-        color: var(--color-separate-country);
+    #take-swap-list {
+        h2.separate-country {
+            font-weight: bold;
+            color: var(--color-separate-country);
+        }
+
+        .filter-container {
+            position: -webkit-sticky;
+            position: sticky;
+            z-index: 100;
+            top: 0;
+            background: var(--color-surface);
+            padding: 15px 0;
+            margin: 0 0 5px;
+        }
     }
 
     .action-board,
@@ -405,13 +417,6 @@ body {
         margin: 15px 0 20px;
         height: 30px;
         width: auto;
-    }
-
-    .filter-container {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 10px;
-        background: var(--color-surface);
     }
 
     .filters {
@@ -566,5 +571,11 @@ body {
     .list-link {
         display: inline-block;
         width: calc(var(--width) - 24px);
+    }
+}
+
+.filter-dialog {
+    .list-link {
+        display: flex;
     }
 }
