@@ -5,16 +5,19 @@ type VisibilityToggleCallback = (container: HTMLElement, checked: boolean) => vo
 
 const gallery = document.getElementById('gallery');
 
-let privateStatus: NodeListOf<HTMLDivElement>;
-let publicStatus: NodeListOf<HTMLDivElement>;
+let privateStatus: NodeListOf<HTMLDivElement> | undefined;
+let publicStatus: NodeListOf<HTMLDivElement> | undefined;
 
 function updateStatusElements(): void {
-    privateStatus = gallery.querySelectorAll<HTMLDivElement>('.coin .desc-block span.status0');
-    publicStatus = gallery.querySelectorAll<HTMLDivElement>('.coin .desc-block span.status1');
+    privateStatus = gallery?.querySelectorAll<HTMLDivElement>('.coin .desc-block span.status0');
+    publicStatus = gallery?.querySelectorAll<HTMLDivElement>('.coin .desc-block span.status1');
 }
 
 async function postPublicityForm(url: RequestInfo, form: HTMLFormElement, checked: boolean): Promise<Response> {
-    form.querySelector<HTMLInputElement>('input[name=public]').checked = checked;
+    const publicInput = form.querySelector<HTMLInputElement>('input[name=public]');
+    if (publicInput) {
+        publicInput.checked = checked;
+    }
     return await post(url, new FormData(form));
 }
 
@@ -28,13 +31,13 @@ function addVisibilityToggleButton(
 ): HTMLButtonElement {
     const buttonId = `button-${text.toLowerCase()}`;
 
-    let button = <HTMLButtonElement>document.getElementById(buttonId);
+    let button = document.getElementById(buttonId) as HTMLButtonElement;
     if (!button) {
         container.insertAdjacentHTML(
             'beforeend',
-            `<button id="${buttonId}" class="btn-l ${className}" style="padding: 0 14px; height: 26px">${text} <small></small></button>`
+            `<button id='${buttonId}' class='btn-l ${className}' style='padding: 0 14px; height: 26px'>${text} <small></small></button>`
         );
-        button = <HTMLButtonElement>document.getElementById(buttonId);
+        button = document.getElementById(buttonId) as HTMLButtonElement;
         button.addEventListener(
             'click',
             () => confirm(`Are you sure to ${text.toLowerCase()}?`) && callback(container, visibility)
@@ -42,15 +45,17 @@ function addVisibilityToggleButton(
     }
 
     const small = button.querySelector('small');
-    small.textContent = `(${count})`;
+    if (small) {
+        small.textContent = `(${count})`;
+    }
 
     button.style.display = count ? 'block' : 'none';
     return button;
 }
 
 function toggleButtonVisibility(container: HTMLElement, callback: VisibilityToggleCallback): void {
-    addVisibilityToggleButton(container, 'Show', 'btn-blue', true, privateStatus.length, callback);
-    addVisibilityToggleButton(container, 'Hide', 'btn-gray', false, publicStatus.length, callback);
+    addVisibilityToggleButton(container, 'Show', 'btn-blue', true, privateStatus?.length || 0, callback);
+    addVisibilityToggleButton(container, 'Hide', 'btn-gray', false, publicStatus?.length || 0, callback);
 }
 
 async function toggleGroupVisibility(container: HTMLElement, checked: boolean): Promise<void> {
@@ -59,8 +64,15 @@ async function toggleGroupVisibility(container: HTMLElement, checked: boolean): 
     const statusText = checked ? 'Public' : 'Private';
 
     const statusList = checked ? privateStatus : publicStatus;
+    if (!statusList) {
+        return;
+    }
+
     for await (const status of statusList) {
-        const url = status.parentElement.querySelector<HTMLAnchorElement>(`.coin-desc div a`).href;
+        const url = status.parentElement?.querySelector<HTMLAnchorElement>(`.coin-desc div a`)?.href;
+        if (!url) {
+            continue;
+        }
 
         const response = await get(url);
         const responseText = await response.text();
@@ -94,13 +106,14 @@ export function addGalleryVisibilityToggle(): void {
     updateStatusElements();
 
     const buttonContainerId = 'button-container';
-
-    const sortFilter = document.getElementById('sort-filter').parentElement;
-    sortFilter.insertAdjacentHTML(
+    const sortFilter = document.getElementById('sort-filter')?.parentElement;
+    sortFilter?.insertAdjacentHTML(
         'afterend',
-        `<div id="${buttonContainerId}" class="left filter-container" style="float:right">`
+        `<div id='${buttonContainerId}' class='left filter-container' style='float:right'>`
     );
 
     const container = document.getElementById(buttonContainerId);
-    toggleButtonVisibility(container, toggleGroupVisibility);
+    if (container) {
+        toggleButtonVisibility(container, toggleGroupVisibility);
+    }
 }

@@ -1,8 +1,8 @@
 export abstract class AbstractForm {
-    protected funcId: string;
-    protected main: HTMLElement;
-    protected form: HTMLFormElement;
-    protected func: HTMLElement;
+    protected funcId: string | null;
+    protected main: HTMLElement | null;
+    protected form: HTMLFormElement | null;
+    protected func: HTMLElement | null;
 
     public get mainId(): string {
         return '';

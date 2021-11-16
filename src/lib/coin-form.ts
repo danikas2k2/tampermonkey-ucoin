@@ -3,7 +3,7 @@ import LEAVE from '../../images/leave.svg';
 import REPLACE from '../../images/replace.svg';
 import SHOW from '../../images/show.svg';
 import { getFragment, postFragment } from './ajax';
-import { Color, FormColorValues, FormValueColors } from './cond';
+import { Color, FormColorValues, FormValue, FormValueColors } from './cond';
 import { AbstractForm } from './form';
 import { id } from './selectors';
 import {
@@ -25,18 +25,18 @@ export class CoinForm extends AbstractForm {
     protected viewId = 'ucid-block';
     protected coinChooserId = 'coin-chooser-dialog';
 
-    private addForm: HTMLFormElement;
-    private editForm: HTMLFormElement;
-    private view: HTMLElement;
-    private coinChooser: HTMLElement;
+    private addForm: HTMLFormElement | null;
+    private editForm: HTMLFormElement | null;
+    private view: HTMLElement | null;
+    private coinChooser: HTMLElement | null;
 
     public async handle(/*loc: string*/): Promise<void> {
-        this.func = <HTMLElement>document.getElementById(this.funcId);
+        this.func = document.getElementById(this.funcId) as HTMLElement;
         if (!this.func) {
             return;
         }
 
-        this.coinChooser = <HTMLElement>document.getElementById(this.coinChooserId);
+        this.coinChooser = document.getElementById(this.coinChooserId) as HTMLElement;
 
         await this.update();
     }
@@ -48,6 +48,10 @@ export class CoinForm extends AbstractForm {
     }
 
     protected async update(): Promise<void> {
+        if (!this.func) {
+            return;
+        }
+
         show(this.func);
 
         this.updateButtons();
@@ -68,7 +72,7 @@ export class CoinForm extends AbstractForm {
 
             await handleFormSubmit(
                 this.form,
-                async () => await this.updateFragment(await postFragment(location.href, new FormData(this.form)))
+                async () => await this.updateFragment(await postFragment(location.href, new FormData(this.form!)))
             );
 
             if (this.view) {
@@ -80,80 +84,93 @@ export class CoinForm extends AbstractForm {
     }
 
     private updateBuyDateInput(): void {
-        const { buy_month: buyMonth, buy_year: buyYear } = this.form;
-        let { buy_year_month: buyYearMonth } = this.form;
-        hide(buyYear, buyMonth);
-        if (!buyYearMonth) {
-            buyYear.insertAdjacentHTML('afterend', `<input id='buy_year_month' name='buy_year_month' type='month'/>`);
-            buyYearMonth = this.form.buy_year_month;
-        }
+        if (this.form) {
+            const { buy_month: buyMonth, buy_year: buyYear } = this.form;
+            let { buy_year_month: buyYearMonth } = this.form;
+            hide(buyYear, buyMonth);
+            if (!buyYearMonth) {
+                buyYear.insertAdjacentHTML('afterend', `<input id='buy_year_month' name='buy_year_month' type='month'/>`);
+                buyYearMonth = this.form.buy_year_month;
+            }
 
-        buyYearMonth.max = todayMonth();
-        buyYearMonth.addEventListener('change', (e: Event) => {
-            cancel(e);
-            const value = buyYearMonth.value || todayMonth();
-            [buyYear.value, buyMonth.value] = value.split('-', 2);
-            return false;
-        });
+            buyYearMonth.max = todayMonth();
+            buyYearMonth.addEventListener('change', (e: Event) => {
+                cancel(e);
+                const value = buyYearMonth.value || todayMonth();
+                [buyYear.value, buyMonth.value] = value.split('-', 2);
+                return false;
+            });
+        }
     }
 
     private addSyncConditionToColorTable(): void {
-        const condition: HTMLSelectElement = this.form.condition;
-        const tableColor: HTMLInputElement = this.form.color;
-        tableColor.nextElementSibling.classList.add('btn-set');
-        const setColor: HTMLDivElement = this.form.querySelector(id('edit-set-color'));
+        if (this.form) {
+            const condition: HTMLSelectElement = this.form.condition;
+            const tableColor: HTMLInputElement = this.form.color;
+            tableColor.nextElementSibling?.classList.add('btn-set');
+            const setColor: HTMLDivElement | null = this.form.querySelector(id('edit-set-color'));
 
-        const markedDivs = this.form.querySelectorAll<HTMLDivElement>('table div[class^="marked-"]');
-        for (const div of markedDivs) {
-            if (div.matches('#set-color')) {
-                continue;
+            const markedDivs = this.form.querySelectorAll<HTMLDivElement>('table div[class^="marked-"]');
+            for (const div of markedDivs) {
+                if (div.matches('#set-color')) {
+                    continue;
+                }
+
+                div.classList.add('btn-marker');
+
+                div.addEventListener('click', (e: Event) => {
+                    const target = e.target as HTMLElement;
+                    let color: Color | null = null;
+                    for (const c of target.classList) {
+                        if (c.startsWith('marked-')) {
+                            color = +c.split('-', 3)[1];
+                        }
+                    }
+                    if (color && color in FormColorValues) {
+                        condition.value = `${FormColorValues[color]}`;
+                    }
+                });
             }
 
-            div.classList.add('btn-marker');
-
-            div.addEventListener('click', (e: Event) => {
-                const target = <HTMLElement>e.target;
-                let color: Color = null;
-                for (const c of target.classList) {
-                    if (c.startsWith('marked-')) {
-                        color = +c.split('-', 3)[1];
-                    }
+            condition.addEventListener('change', (e: Event) => {
+                if (!setColor) {
+                    return;
                 }
-                if (FormColorValues.has(color)) {
-                    condition.value = `${FormColorValues.get(color)}`;
+                const target = e.target as HTMLSelectElement;
+                setColor.classList.remove(`marked-${tableColor.value}`);
+                const value = +target.value as FormValue;
+                if (value in FormValueColors) {
+                    tableColor.value = `${FormValueColors[value]}`;
                 }
+                setColor.classList.add(`marked-${tableColor.value}`);
             });
         }
-
-        condition.addEventListener('change', (e: Event) => {
-            const target = <HTMLSelectElement>e.target;
-            setColor.classList.remove(`marked-${tableColor.value}`);
-            const value = +target.value;
-            if (FormValueColors.has(value)) {
-                tableColor.value = `${FormValueColors.get(value)}`;
-            }
-            setColor.classList.add(`marked-${tableColor.value}`);
-        });
     }
 
     private async postForm(): Promise<boolean> {
-        if (await postFragment(location.href, new FormData(this.form))) {
+        if (this.form && await postFragment(location.href, new FormData(this.form))) {
             return true;
         }
-        return reload();
+        return !!reload();
     }
 
     private addPublicityToggle(): void {
         // const form = view.nextElementSibling.querySelector<HTMLFormElement>('form');
-        const status = this.view.querySelector<HTMLDivElement>('.status-line .left');
+        const status = this.view?.querySelector<HTMLDivElement>('.status-line .left');
+        const buttons = this.view?.querySelector('.func-button');
+        if (!status || !buttons) {
+            return;
+        }
 
-        const buttons = this.view.querySelector('.func-button');
         const buttonId = 'coin-form-visibility';
         buttons.insertAdjacentHTML('afterbegin', `<button id='${buttonId}' class='btn-l btn-i btn-narrow'/>`);
         const button = buttons.querySelector<HTMLButtonElement>(id(buttonId));
+        if (!button) {
+            return;
+        }
 
         const updateStatus = () => {
-            const { checked } = this.form.public;
+            const checked = this.form?.public?.checked;
             button.title = checked ? 'Hide' : 'Show';
             button.innerHTML = checked ? HIDE : SHOW;
             button.classList.toggle('btn-blue', !checked);
@@ -164,26 +181,25 @@ export class CoinForm extends AbstractForm {
         };
 
         button.addEventListener('click', async () => {
+            if (!this.form) {
+                return;
+            }
             this.form.public.checked = !this.form.public.checked;
             if (await this.postForm()) {
                 updateStatus();
             }
         });
 
-        /*document.body.addEventListener('keypress', e => {
-            const key = e.key.toUpperCase();
-            if (e.ctrlKey && (key === 'S' || key === 'H' || key === 'P')) {
-                visibilityButton.click();
-            }
-        });*/
-
         updateStatus();
     }
 
     private addReplacementToggle(): void {
         // const form = view.nextElementSibling.querySelector<HTMLFormElement>('form');
+        if (!this.view) {
+            return;
+        }
 
-        let status: HTMLTableRowElement;
+        let status: HTMLTableRowElement | null;
         for (const tr of this.view.querySelectorAll<HTMLTableRowElement>('.status-line + table tr')) {
             if (tr.querySelector('span.status2')) {
                 status = tr;
@@ -191,12 +207,19 @@ export class CoinForm extends AbstractForm {
         }
 
         const buttons = this.view.querySelector('.func-button');
+        if (!buttons) {
+            return;
+        }
+
         const buttonId = 'coin-form-replacement';
         buttons.insertAdjacentHTML('afterbegin', `<button id='${buttonId}' class='btn-l btn-i btn-narrow'/>`);
         const button = buttons.querySelector<HTMLButtonElement>(id(buttonId));
+        if (!button) {
+            return;
+        }
 
         const updateStatus = () => {
-            const { checked } = this.form.replace;
+            const checked = this.form?.replace?.checked;
             button.title = checked ? `Don't replace` : `Replace`;
             button.innerHTML = checked ? LEAVE : REPLACE;
 
@@ -204,7 +227,7 @@ export class CoinForm extends AbstractForm {
             button.classList.toggle('btn-gray', checked);
             if (checked) {
                 if (!status) {
-                    const tbody = this.view.querySelector<HTMLTableElement>('.status-line + table tbody');
+                    const tbody = this.view?.querySelector<HTMLTableElement>('.status-line + table tbody');
                     if (tbody) {
                         tbody.insertAdjacentHTML(
                             'beforeend',
@@ -220,30 +243,27 @@ export class CoinForm extends AbstractForm {
         };
 
         button.addEventListener('click', async () => {
-            this.form.replace.checked = !this.form.replace.checked;
-            if (await this.postForm()) {
-                updateStatus();
+            if (this.form) {
+                this.form.replace.checked = !this.form.replace.checked;
+                if (await this.postForm()) {
+                    updateStatus();
+                }
             }
         });
-
-        /*document.body.addEventListener('keypress', e => {
-            if (e.ctrlKey && e.key.toUpperCase() === 'R') {
-                replacementButton.click();
-            }
-        });*/
 
         updateStatus();
     }
 
     private updateButtons(): void {
-        // if (isPersonal) {
-        for (const button of this.func.querySelectorAll<HTMLElement>('.func-button .btn-l')) {
-            button.classList.add('btn-narrow');
-            if (button.matches('a')) {
-                button.classList.replace('btn-gray', 'btn-red');
-                button.setAttribute('type', 'submit');
+        const buttons = this.func?.querySelectorAll<HTMLElement>('.func-button .btn-l');
+        if (buttons) {
+            for (const button of buttons) {
+                button.classList.add('btn-narrow');
+                if (button.matches('a')) {
+                    button.classList.replace('btn-gray', 'btn-red');
+                    button.setAttribute('type', 'submit');
+                }
             }
         }
-        // }
     }
 }

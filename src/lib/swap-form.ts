@@ -1,9 +1,12 @@
-import { Color, SwapValue } from './cond';
+import { Color, Condition, FormValue, FormValueCondition, SwapValue } from './cond';
 import { ListForm } from './list-form';
+import { getPriceByConditions } from './prices';
 import { id } from './selectors';
 import { SwapFormList } from './swap-form-list';
 import { addLinkComments, styleListLinks } from './swap-links';
 import { getCurrentVarietyId } from './vid';
+
+const { debug } = console;
 
 // declare let CoinSwapFormOn: (usid: string, cond: string, price: string, info: string, vid: string, qty: string, replica: string, ...other: string[]) => void;
 // declare let CoinSwapFormOff: (...other: string[]) => void;
@@ -31,8 +34,16 @@ export class SwapForm extends ListForm {
 
     protected fillForm(uid = '', cond = '', price = '', info = '', vid = '', qty = '', replica = ''): void {
         super.fillForm(uid, cond || (replica && '100'), price, vid || getCurrentVarietyId());
-        this.form.comment.value = info;
-        this.form.qty.value = qty || '1';
+        const { form } = this;
+        if (!form) {
+            return;
+        }
+        form.comment.value = info;
+        form.qty.value = qty || '1';
+        if (!form.price.value || form.price.value == this.getDefaultPrice(vid)) {
+            form.price.value = this.getPriceByCondition(vid);
+            debug(form.price.value);
+        }
     }
 
     protected updateList(): void {
@@ -63,7 +74,7 @@ export class SwapForm extends ListForm {
         const { value, textContent } = o;
         return {
             value,
-            text: value ? textContent : 'Without condition',
+            text: value && textContent ? textContent : 'Without condition',
             checked: value === '3' ? 'checked' : '',
             style: o.getAttribute('style') || '',
         };
@@ -72,11 +83,19 @@ export class SwapForm extends ListForm {
     protected async updateForm(): Promise<void> {
         await super.updateForm();
         this.updateQty();
+        this.updatePrice();
     }
 
     protected updateQty(): void {
         const { form } = this;
+        if (!form) {
+            return;
+        }
+
         const { qty } = form;
+        if (!qty) {
+            return;
+        }
 
         qty.inputmode = 'numeric';
         qty.addEventListener('focus', () => {
@@ -91,7 +110,7 @@ export class SwapForm extends ListForm {
         ): void => {
             qty.insertAdjacentHTML(
                 where,
-                `<button name="${name}" type="button" class="btn-s btn-gray btn-ctrl">${text}</button>`
+                `<button name='${name}' type='button' class='btn-s btn-gray btn-ctrl'>${text}</button>`
             );
             form[name].addEventListener('click', () => {
                 qty.value = `${valueChanger(+qty.value)}`;
@@ -102,5 +121,72 @@ export class SwapForm extends ListForm {
         addQtyCtrlButton('beforebegin', 'plus5', '+5', (v) => v + 5);
         addQtyCtrlButton('beforebegin', 'plus', '+', (v) => v + 1);
         addQtyCtrlButton('beforebegin', 'minus', '&minus;', (v) => v - 1);
+    }
+
+    protected updatePrice(): void {
+        const { form } = this;
+        if (!form) {
+            return;
+        }
+
+        const { price } = form;
+        if (!price) {
+            return;
+        }
+
+        price.inputmode = 'numeric';
+        price.addEventListener('focus', () => {
+            price.setSelectionRange(0, price.value.length);
+        });
+
+        price.insertAdjacentHTML(
+            'afterend',
+            `<button name='resetprice' type='button' class='btn-s btn-gray btn-ctrl btn-ctrl-price'>⟲</button>`
+        );
+
+        form.resetprice.addEventListener('click', () => {
+            form.price.value = this.getPriceByCondition((this.formVariety && form[this.formVariety]?.value) || '');
+            debug(form.price.value);
+        });
+    }
+
+    getDefaultPrice(vid = '') {
+        const { form } = this;
+        return +(
+            (vid &&
+                document.querySelector(`#coin table.tbl tr td a[href$="&vid=${vid}#price"]`)?.childNodes?.[1]
+                    ?.textContent) ||
+            form?.price.placeholder
+        );
+    }
+
+    getPriceByCondition(vid = '') {
+        const { form } = this;
+        if (!form) {
+            return;
+        }
+
+        const comment = form.comment.value.toLowerCase();
+        if (comment.includes('.')) {
+            return form.price.value;
+        }
+
+        let cond = FormValueCondition[+form.condition.value as FormValue] || ('' as Condition);
+        if (comment.startsWith('au')) {
+            cond = Condition.AU;
+        } else if (comment.startsWith('xf+')) {
+            cond = Condition.XF_;
+        } else if (comment.startsWith('vf+')) {
+            cond = Condition.VF_;
+        }
+
+        let plus = [...comment].filter((c) => c === '+').length;
+        if (plus) {
+            plus--;
+        }
+
+        const year = document.querySelector('#swap-block span.gray-13')?.childNodes?.[0]?.textContent;
+
+        return getPriceByConditions(this.getDefaultPrice(vid), cond, year, plus);
     }
 }

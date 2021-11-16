@@ -1,5 +1,5 @@
-import { ConditionValues } from './cond';
-import { Filter, FilterOptions, FilterProps, renderFilter, renderFilters } from './filters';
+import { Condition, ConditionValues } from './cond';
+import { Filter, FilterOptions, FilterProps, renderFilters } from './filters';
 import { getHashParam, updateLocationHash } from './url';
 import { cancel, tt } from './utils';
 
@@ -14,8 +14,8 @@ interface SortOptionParam {
     sort: SortFunction;
 }
 
-function num(s: string): number {
-    return +s.replace(/[^.\d]/g, '');
+function num(s: string | undefined): number {
+    return s ? +s.replace(/[^.\d]/g, '') : 0;
 }
 
 export function cmp<T = string | number>(a: T, b: T): number {
@@ -82,7 +82,11 @@ function o(opt: string): string {
     return `<div class='left gray-13'>${opt}</div>`;
 }
 
-function c(html: string): string {
+function c(html: string | undefined): string {
+    if (!html) {
+        return '';
+    }
+
     const template = document.createElement('template');
     template.innerHTML = html;
 
@@ -94,7 +98,11 @@ function c(html: string): string {
 
 function sortBy(sections: NodeListOf<HTMLTableSectionElement>, option: SortOption, order: SortOrder): void {
     const ord = order === 'a' ? 1 : -1;
-    const { sort } = sortOptionParams.get(option);
+    const optionParams = sortOptionParams.get(option);
+    if (!optionParams) {
+        return;
+    }
+    const { sort } = optionParams;
     for (const section of sections) {
         const rows = [...section.querySelectorAll('tr')];
         if (rows.length > 1) {
@@ -110,7 +118,7 @@ const ORDER_SEPARATOR = '_';
 function getActiveSortOption(): void {
     const o = getHashParam(ORDER_PARAM);
     const [field = 'year', order = 'd'] = o?.split(ORDER_SEPARATOR) || [];
-    currentOrder = <SortOrder>order;
+    currentOrder = order as SortOrder;
     for (const [option, { field: f }] of sortOptionParams.entries()) {
         if (f === field) {
             currentOption = option;
@@ -118,9 +126,12 @@ function getActiveSortOption(): void {
     }
 }
 
-function setActiveSortOption(option: SortOption, order: SortOrder): void {
-    updateLocationHash((params) => {
-        params.set(ORDER_PARAM, `${sortOptionParams.get(option).field}${ORDER_SEPARATOR}${order}`);
+async function setActiveSortOption(option: SortOption, order: SortOrder) {
+    await updateLocationHash((params) => {
+        const optionParams = sortOptionParams.get(option);
+        if (optionParams) {
+            params.set(ORDER_PARAM, `${optionParams.field}${ORDER_SEPARATOR}${order}`);
+        }
     });
 }
 
@@ -138,7 +149,7 @@ function dropdown(id: string, selected: string, options: string[]) {
 }
 
 export function addSortingOptions(): void {
-    const swapList = <HTMLDivElement>document.getElementById('take-swap-list');
+    const swapList = document.getElementById('take-swap-list') as HTMLDivElement;
     if (!swapList) {
         return;
     }
@@ -161,18 +172,17 @@ export function addSortingOptions(): void {
         const d = row.dataset;
         for (const [option, { index, field }] of sortOptionParams) {
             const name = `sort${tt(field)}`;
-            const t = c[index + offset].textContent;
+            const t = c[index + offset].textContent as Condition;
             if (option === 'Year') {
                 const [year, ...mm] = t.split(/(?:\s|&nbsp;)+/);
                 d[name] = year;
                 d.sortMm = mm.join(' ');
             } else if (option === 'Condition') {
-                d[name] = `${ConditionValues.get(t)}`;
+                d[name] = `${ConditionValues[t]}`;
             } else if (option === 'Krause number') {
-                const m = t.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?(?:[a-zA-Z]*))/i);
+                const m = t.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i);
                 if (m && m.groups) {
                     const {
-                        0: full,
                         groups: { cat, num, prefix, suffix },
                     } = m;
                     d.sortKmc = cat;
@@ -211,17 +221,20 @@ export function addSortingOptions(): void {
 
     const sortFilter = swapList.querySelector<HTMLDivElement>('#sort-filter');
     const sortDialog = swapList.querySelector<HTMLDivElement>('#sort-filter-dialog');
+    if (!sortFilter || !sortDialog) {
+        return;
+    }
 
     sortFilter.addEventListener('click', (e) => {
         e.stopPropagation();
         sortDialog.style.display = 'block';
     });
 
-    sortDialog.addEventListener('click', (e) => {
+    sortDialog.addEventListener('click', async (e) => {
         e.stopPropagation();
         sortDialog.style.display = 'none';
 
-        const a = (<HTMLElement>e.target).closest('a');
+        const a = (e.target as HTMLElement).closest('a');
         if (!a) {
             return;
         }
@@ -229,27 +242,30 @@ export function addSortingOptions(): void {
         sortFilter.innerHTML = c(a.innerHTML);
 
         const { option, order } = a.dataset;
-        currentOption = <SortOption>option;
-        currentOrder = <SortOrder>order;
-        setActiveSortOption(currentOption, currentOrder);
+        currentOption = option as SortOption;
+        currentOrder = order as SortOrder;
+        await setActiveSortOption(currentOption, currentOrder);
         sortBy(sections, currentOption, currentOrder);
     });
 }
 
 export function addFilteringOptions(): void {
-    const swapList = <HTMLDivElement>document.getElementById('take-swap-list');
+    const swapList = document.getElementById('take-swap-list') as HTMLDivElement;
     if (!swapList) {
         return;
     }
 
-    const dataList = <HTMLDivElement>swapList.lastElementChild;
+    const dataList = swapList.lastElementChild as HTMLDivElement;
     if (!dataList) {
         return;
     }
 
     function sort(data: FilterOptions, cmp?: (a: string, b: string) => number): FilterOptions {
         return [...data.keys()].sort(cmp).reduce((r: FilterOptions, k) => {
-            r.set(k, data.get(k));
+            const value = data.get(k);
+            if (value) {
+                r.set(k, value);
+            }
             return r;
         }, new Map());
     }
@@ -283,7 +299,9 @@ export function addFilteringOptions(): void {
         options: sort(
             [...swapList.querySelectorAll<HTMLTableRowElement>('tr[data-sort-year]')].reduce((r: FilterOptions, o) => {
                 const y = o.dataset.sortYear;
-                r.set(y, y);
+                if (y) {
+                    r.set(y, y);
+                }
                 return r;
             }, new Map()),
             (a, b) => cmp(num(b), num(a))
@@ -296,8 +314,10 @@ export function addFilteringOptions(): void {
         options: sort(
             [...swapList.querySelectorAll<HTMLTableRowElement>('tr[data-sort-face]')].reduce((r: FilterOptions, o) => {
                 const f = o.dataset.sortFace;
-                const [v] = f.split(' ');
-                r.set(v, v);
+                if (f) {
+                    const [v] = f.split(' ');
+                    r.set(v, v);
+                }
                 return r;
             }, new Map()),
             (a, b) => cmp(num(a), num(b))
@@ -319,8 +339,8 @@ export function addFilteringOptions(): void {
                 return r;
             }, new Map()),
             (a, b) => {
-                const [, ac, ak, aa] = a.match(kmMatch);
-                const [, bc, bk, ba] = b.match(kmMatch);
+                const [, ac, ak, aa] = a.match(kmMatch) || [];
+                const [, bc, bk, ba] = b.match(kmMatch) || [];
                 return cmp(ac, bc) || cmp(num(ak), num(bk)) || cmp(aa, ba);
             }
         ),
@@ -332,7 +352,10 @@ export function addFilteringOptions(): void {
         const value = getHashParam(filter);
         if (value) {
             filterValues.set(filter, value);
-            filterProps.get(filter).value = value;
+            const props = filterProps.get(filter);
+            if (props) {
+                props.value = value;
+            }
         }
     }
 
@@ -345,8 +368,7 @@ export function addFilteringOptions(): void {
 
             let hasVisibleRows = false;
 
-            rowLoop:
-            for (const r of rows) {
+            rowLoop: for (const r of rows) {
                 const d = r.dataset;
                 for (const [filter, value] of filterValues) {
                     switch (filter) {
@@ -365,15 +387,15 @@ export function addFilteringOptions(): void {
                             break;
 
                         case Filter.VALUE:
-                            if (!d.sortFace.startsWith(`${value} `)) {
+                            if (!d.sortFace?.startsWith(`${value} `)) {
                                 r.style.display = 'none';
                                 continue rowLoop;
                             }
                             break;
 
                         case Filter.KM:
-                            const [, c, k, a] = value.match(kmMatch);
-                            if (d.sortKmc.toLowerCase() !== c || d.sortKm !== k || d.sortKma !== a) {
+                            const [, c, k, a] = value.match(kmMatch) || [];
+                            if (d.sortKmc?.toLowerCase() !== c || d.sortKm !== k || d.sortKma !== a) {
                                 r.style.display = 'none';
                                 continue rowLoop;
                             }
@@ -389,35 +411,34 @@ export function addFilteringOptions(): void {
             h.style.display = t.style.display = hasVisibleRows ? '' : 'none';
         }
     }
+
     applyFilters();
 
-    document.querySelectorAll<HTMLElement>('[data-filter-by]').forEach((option) =>
-        option.addEventListener('click', (e) => {
+    for (const option of document.querySelectorAll<HTMLElement>('[data-filter-by]')) {
+        option.addEventListener('click', async () => {
             const ds = option.dataset;
             const filter = ds.filterBy as Filter;
             const value = ds.filterValue;
-            updateLocationHash((params) =>
-                value
-                    ? params.set(filter, value)
-                    : params.delete(filter)
-            );
+            await updateLocationHash((params) => (value ? params.set(filter, value) : params.delete(filter)));
 
             const display = document.querySelector<HTMLElement>(`[data-filter="${filter}"]`);
-            if (value) {
-                display.innerHTML = `${c(option.innerHTML)}${x(filter)}`;
-                display.classList.add('filter-box-active');
-            } else {
-                display.innerHTML = `${c(display.dataset.filterPlaceholder)}${d()}`;
-                display.classList.remove('filter-box-active');
+            if (display) {
+                if (value) {
+                    display.innerHTML = `${c(option.innerHTML)}${x(filter)}`;
+                    display.classList.add('filter-box-active');
+                } else {
+                    display.innerHTML = `${c(display.dataset?.filterPlaceholder)}${d()}`;
+                    display.classList.remove('filter-box-active');
+                }
             }
 
             value ? filterValues.set(filter as Filter, value) : filterValues.delete(filter as Filter);
             applyFilters();
-        })
-    );
+        });
+    }
 
     document.querySelectorAll<HTMLElement>('[data-filter]').forEach((display) =>
-        display.addEventListener('click', (e) => {
+        display.addEventListener('click', async (e) => {
             cancel(e);
             const ds = display.dataset;
             if (ds.filterDisabled != null) {
@@ -429,21 +450,22 @@ export function addFilteringOptions(): void {
             const filter = ds.filter as Filter;
             if (button.matches('[data-filter-clear]')) {
                 clearClicked = true;
-                updateLocationHash((params) => params.delete(button.dataset.filterClear));
+                const { filterClear } = button.dataset;
+                if (filterClear) {
+                    await updateLocationHash((params) => params.delete(filterClear));
+                }
                 display.innerHTML = `${c(ds.filterPlaceholder)}${d()}`;
                 display.classList.remove('filter-box-active');
                 filterValues.delete(filter);
                 applyFilters();
             }
 
-            document.querySelectorAll<HTMLElement>(`[data-filter-dialog]`).forEach((dialog) => {
+            for (const dialog of document.querySelectorAll<HTMLElement>(`[data-filter-dialog]`)) {
                 dialog.style.display =
-                    !clearClicked &&
-                    dialog.dataset.filterDialog === filter &&
-                    dialog.style.display !== 'block'
+                    !clearClicked && dialog.dataset.filterDialog === filter && dialog.style.display !== 'block'
                         ? 'block'
                         : 'none';
-            });
+            }
         })
     );
 
@@ -464,7 +486,7 @@ export function addFilteringOptions(): void {
             const rows = swapList.querySelectorAll<HTMLTableRowElement>('tbody > tr');
             for (const row of rows) {
                 const d = row.dataset;
-                row.style.display = !value || d[name].includes(value) ? '' : 'none';
+                row.style.display = !value || d[name]?.includes(value) ? '' : 'none';
             }
         });
     }
@@ -534,7 +556,7 @@ export function addFilteringOptions(): void {
     //     e.stopPropagation();
     //     sortDialog.style.display = 'none';
     //
-    //     const a = (<HTMLElement> e.target).closest('a');
+    //     const a = (e.target as HTMLElement).closest('a');
     //     if (!a) {
     //         return;
     //     }

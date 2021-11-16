@@ -1,8 +1,9 @@
-@import (css) url('https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap');
-@import (css) url('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css');
+//@import (css) url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600&display=swap');
+@import (css) url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
 
 :root {
-    --base-font-family: 'Open Sans', sans-serif;
+    //--base-font-family: 'Open Sans', sans-serif;
+    --base-font-family: 'Noto Sans', sans-serif;
     --base-font-size: 14px;
 
     --color-surface: #fff;
@@ -168,46 +169,6 @@ body {
     }
 }
 
-.estimated-prices-widget {
-    margin: 30px 0;
-
-    .widget-header {
-        cursor: default;
-    }
-}
-
-#estimated-prices {
-    max-height: 400px;
-    overflow-x: hidden;
-
-    .list-link {
-        cursor: initial;
-        padding: 6px 0 3px;
-    }
-
-    .list-sep {
-        padding: 0;
-        border-bottom: 2px solid var(--color-surface-info);
-    }
-
-    .dgray-11 {
-        display: inline-block;
-        text-align: center;
-        line-height: 19px;
-        width: 32px;
-        margin: 0 4px;
-    }
-
-    .gray-13 {
-        padding: 1px 4px 1px 8px;
-        max-width: 64px;
-    }
-
-    .right {
-        max-width: 120px;
-    }
-}
-
 .widget .list-link .blue-13,
 #coin-list table .blue-13 {
     font-size: 11px;
@@ -283,6 +244,11 @@ body {
 
             + .btn-ctrl {
                 margin-right: 0;
+            }
+
+            &.btn-ctrl-price {
+                margin-right: 0;
+                margin-top: 0;
             }
         }
 
@@ -364,6 +330,7 @@ body {
         position: -webkit-sticky;
         position: sticky;
         top: 10px;
+        z-index: 200;
     }
 
     .swap-coin tr {
@@ -396,11 +363,6 @@ body {
     }
 
     #take-swap-list {
-        h2.separate-country {
-            font-weight: bold;
-            color: var(--color-separate-country);
-        }
-
         .filter-container {
             position: -webkit-sticky;
             position: sticky;
@@ -471,6 +433,18 @@ body {
     }
 }
 
+#swap-list,
+#take-swap-list {
+    div {
+        h2, a {
+            &.separate-country {
+                font-weight: bold;
+                color: var(--color-separate-country);
+            }
+        }
+    }
+}
+
 #swap-list {
     .pages {
         padding-right: 0 !important;
@@ -478,6 +452,13 @@ body {
 
     .filter-container {
         margin: 0 !important;
+        position: relative;
+
+        &.right {
+            .filter-dialog {
+                right: 0;
+            }
+        }
     }
 }
 
@@ -509,6 +490,58 @@ body {
                 width: 100%;
             }
         }
+    }
+}
+
+#swap-list, #swap-mgr {
+    .price-times {
+        color: darkred;
+        font-weight: bold;
+    }
+
+    .price-over {
+        color: brown;
+    }
+
+    .price-under {
+        color: green;
+    }
+
+    .price-times, .price-over, .price-under {
+        &.gray-11 {
+            padding-left: 6px;
+        }
+    }
+
+    .price-tooltip {
+        display: block;
+    }
+
+    .price-cond {
+        display: block;
+        border-top: 3px solid darkred;
+        color: darkred;
+        font-weight: bold;
+    }
+
+    .price-invalid {
+        .td-price {
+        }
+    }
+
+    .price-line {
+        display: block;
+        height: 1.1em !important;
+        padding: 3px 6px;
+        border-top: 1px solid #eeeeee;
+    }
+
+    .price-double {
+        height: 2.4em !important;
+    }
+
+    .price-triple {
+        height: 3.5em !important;
     }
 }
 
@@ -577,5 +610,78 @@ body {
 .filter-dialog {
     .list-link {
         display: flex;
+
+        .left {
+            flex: 1;
+            text-align: start;
+
+            &.flag {
+                flex: 0 1 auto;
+            }
+        }
+
+        .right {
+            display: flex;
+            align-items: center;
+        }
+    }
+}
+
+.country-list, .catalog-list {
+    a {
+        border: none;
+    }
+}
+
+ul.regions {
+    margin-block-start: 2em;
+    padding-inline-start: .5em;
+
+    li.region {
+        display: block;
+
+        &.hide {
+            display: none;
+        }
+
+        /*&.active > h2 {
+            display: none;
+        }*/
+
+        h2 {
+            font-size: 1.6em;
+
+            .lgray-13 {
+                padding-inline-start: 1em;
+            }
+        }
+
+        li.region {
+            h2 {
+                font-size: 1.4em;
+            }
+
+            li.region {
+                h2 {
+                    font-size: 1.2em;
+                }
+
+                li.region {
+                    h2 {
+                        font-size: 1.1em;
+                    }
+                }
+            }
+        }
+    }
+
+    + ul.regions > li.region {
+        margin-block-start: 3em;
+    }
+}
+
+ul.hor-switcher {
+    .close {
+        padding: 0 4px;
     }
 }

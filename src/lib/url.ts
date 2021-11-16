@@ -5,46 +5,54 @@ export function loc(): URL {
 }
 
 type ParamsProcessor = (params: URLSearchParams) => URLSearchParams | void;
+type AsyncParamsProcessor = (params: URLSearchParams) => Promise<URLSearchParams | void>;
 type HashValue = string | URLSearchParams;
-type HashType = HashValue | ParamsProcessor;
+type HashType = HashValue | ParamsProcessor | AsyncParamsProcessor;
+type UrlType = URL | string;
 
 export function setHash(hash: HashValue) {
     const newHash = hash.toString();
     if (location.hash || newHash) {
-        location.hash = `#${newHash}`;
+        history.replaceState({}, '', new URL(`#${newHash}`, location.href));
+        // location.hash = `#${newHash}`;
     }
 }
 
-export function hashSearchParams(url = loc()): URLSearchParams {
-    return new URLSearchParams(url.hash.substr(1));
+export function getUrl(href: UrlType): URL {
+    return typeof href === 'string' ? new URL(href) : href;
 }
 
-function getUpdatedHash(hash: HashType, url = loc()): string {
+export function hashSearchParams(url: UrlType = loc()): URLSearchParams {
+    return new URLSearchParams(getUrl(url).hash.substr(1));
+}
+
+async function getUpdatedHash(hash: HashType, url: UrlType = loc()) {
     if (typeof hash !== 'function') {
         return hash.toString();
     }
     const params = hashSearchParams(url);
-    const result = hash(params);
+    const result = await hash(params);
     return (result != null ? (result as URLSearchParams) : params).toString();
 }
 
-export function updateLocationHash(hash: HashType, url = loc()) {
-    const newHash = getUpdatedHash(hash, url);
+export async function updateLocationHash(hash: HashType, url: UrlType = loc()) {
+    const newHash = await getUpdatedHash(hash, url);
     if (location.hash || newHash) {
-        location.hash = `#${newHash}`;
+        history.replaceState({}, '', new URL(`#${newHash}`, url));
     }
 }
 
-export function updateHashHref(hash: HashType, url = loc()): string {
-    const newHash = getUpdatedHash(hash, url);
+export async function updateHashHref(hash: HashType, href: UrlType = loc()): Promise<string> {
+    const url = getUrl(href);
+    const newHash = await getUpdatedHash(hash, url);
     if (url.hash || newHash) {
         url.hash = `#${newHash}`;
     }
     return url.href;
 }
 
-export function deleteHashParam(name: string): string {
-    return updateHashHref((params) => {
+export async function deleteHashParam(name: string): Promise<string> {
+    return await updateHashHref((params) => {
         params.delete(name);
         return params;
     });

@@ -3,11 +3,7 @@ declare module '*.svg' {
     export default svgCntent;
 }
 
-interface Dictionary {
-    [key: string]: string;
-}
-
-interface CoinSwapFormOnMatchGroups extends Dictionary {
+interface CoinSwapFormOnMatchGroups extends Record<string, string> {
     uniq?: string;
     usid?: string;
     cond?: string;
@@ -41,6 +37,15 @@ interface CoinSwapVariant extends CoinSwapVariantData {
     total: number;
 }
 
+interface CoinWishFormOnMatchGroups extends Record<string, string> {
+    uwid?: string;
+    condition?: string;
+}
+
+interface CoinWishFormOnMatchResult extends RegExpMatchArray {
+    groups: CoinWishFormOnMatchGroups;
+}
+
 type FormType = 'swap' | 'wish';
 
 type FormTypeMethod = 'Swap' | 'Wish';
@@ -52,8 +57,6 @@ type FormUidPrefix = 's' | 'w';
 type SwapFormAction = 'addswapcoin' | 'delswapcoin' | 'editswapcoin';
 
 type SwapListManageRole = 'expand' | 'combine';
-
-type WishFormAction = 'addwishcoin' | 'delwishcoin' | 'editwishcoin';
 
 interface UpdateElements {
     required: HTMLElement[];

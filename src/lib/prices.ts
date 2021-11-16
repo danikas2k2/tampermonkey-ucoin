@@ -1,4 +1,4 @@
-import { ColorStyle, ConditionColors, ConditionValues } from './cond';
+import { Condition, ConditionValues } from './cond';
 import { cmp } from './swap-list-sort';
 
 type YearMap = Map<string, number[]>;
@@ -8,7 +8,6 @@ const COIN_ID = 'coin';
 
 const SWAP_ID = 'swap';
 const SWAP_BLOCK_ID = 'swap-block';
-const ESTIMATED_PRICES_ID = 'estimated-prices';
 
 const RX_GRAMMS = /\([gг]/;
 const RX_COUNTRY = /Country|Страна|Valstybė/;
@@ -16,14 +15,17 @@ const RX_RUSSIA = /Russia|Россия|Rusija|USSR|СССР|TSRS/;
 const RX_COMPOSITION = /Composition|Материал|Sudėtis/;
 const RX_SILVER = /Silver|Серебро|Sidabras/;
 const RX_GOLD = /Gold|Золото|Auksas/;
+export const RX_YEAR = /Year|Год|Metai/;
 
-const RU_PRICE = 0.005; //       3-8e/kg
-const EU_PRICE = 0.012; //     10-15e/kg
-const AG_PRICE = 0.77;  //   .60-.80e/g
-const AU_PRICE = 49.0;  // 45.0-55.0e/g
+const RU_PRICE = 0.0075; //      3-8e/kg
+const EU_PRICE = 0.0125; //    10-15e/kg
+const AG_PRICE = 0.66; //   .60-.80e/g
+const AU_PRICE = 50.0; // 45.0-55.0e/g
 
-function sortByCondition(a: string, b: string): number {
-    return ConditionValues.get(b) - ConditionValues.get(a);
+function sortByCondition(a: Condition, b: Condition): number {
+    const A = ConditionValues[a] || 0;
+    const B = ConditionValues[b] || 0;
+    return B - A;
 }
 
 export function estimateSwapPrices(): void {
@@ -40,126 +42,66 @@ export function estimateSwapPrices(): void {
     const byType: YearMap = new Map();
     const byMint: MintMap = new Map();
 
-    let pricePrefix: string, priceSuffix: string;
     const listOfLinks = swapBlock.querySelectorAll(`a.list-link`);
     for (const a of listOfLinks) {
-        const cond = a.querySelector(`.left.dgray-11`).textContent;
-        const mint = a.querySelector(`.left.gray-13`).textContent;
-
         const priceElement = a.querySelector(`.right.blue-13`);
-        let priceStr = priceElement.textContent;
+        if (!priceElement) {
+            continue;
+        }
+        let priceStr: string | null | undefined = priceElement.textContent;
 
-        pricePrefix = priceElement.firstChild.textContent;
+        const pricePrefix = priceElement.firstChild?.textContent;
         if (pricePrefix) {
-            priceStr = priceStr.replace(pricePrefix, '');
+            priceStr = priceStr?.replace(pricePrefix, '');
         }
 
-        priceSuffix = priceElement.lastChild.textContent;
+        const priceSuffix = priceElement.lastChild?.textContent;
         if (priceSuffix) {
-            priceStr = priceStr.replace(priceSuffix, '');
+            priceStr = priceStr?.replace(priceSuffix, '');
         }
 
-        const price = +priceStr;
+        const price = priceStr ? +priceStr : 0;
 
-        const p = byType.has(cond) ? byType.get(cond) : [];
+        const cond = a.querySelector(`.left.dgray-11`)?.textContent || '';
+        const p = byType.get(cond) || [];
         p.push(price);
         byType.set(cond, p);
 
-        const pm = byMint.has(mint) ? byMint.get(mint) : new Map();
-        const pc = pm.has(cond) ? pm.get(cond) : [];
+        const mint = a.querySelector(`.left.gray-13`)?.textContent || '';
+        const pm = byMint.get(mint) || new Map();
+        const pc = pm.get(cond) || [];
         pc.push(price);
         pm.set(cond, pc);
         byMint.set(mint, pm);
     }
 
-    swapBlock.parentElement.insertAdjacentHTML(
-        'beforebegin',
-        `<div class="widget estimated-prices-widget"><a class="widget-header">Estimated prices</a><div id="${ESTIMATED_PRICES_ID}"></div></div>`
-    );
-
-    const estimatedPrices = document.getElementById(ESTIMATED_PRICES_ID);
-
-    function addPricesByType(byType: Map<string, number[]>, mint = ''): void {
-        const keys = [...byType.keys()].sort(sortByCondition);
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const options: Chart.ChartConfiguration = {
-            type: 'line',
-            data: { datasets: [] },
-            options: {
-                title: { display: true, text: mint },
-                responsive: true,
-                hover: { mode: 'nearest', intersect: true },
-                scales: {
-                    xAxes: [],
-                    yAxes: [
-                        {
-                            type: 'linear',
-                            display: true,
-                            ticks: { beginAtZero: true },
-                        },
-                    ],
-                },
-                legend: { display: false },
-                elements: { point: { radius: 1 } },
-            },
-        };
-
-        const maxLength = 100;
-        for (const cond of keys) {
-            const p: number[] = byType.get(cond).sort(cmp);
+    function addPricesByType(byType: Map<string, number[]>): void {
+        for (const cond of [...byType.keys()].sort(sortByCondition)) {
+            const p: number[] = byType.get(cond)?.sort(cmp) || [];
             let { length } = p;
             if (length === 1) {
                 p.push(p[0]);
-            } else {
-                length -= 1;
             }
-            const color = ColorStyle.get(ConditionColors.get(cond));
-            const xAxisID = `x-axis-${cond}`;
-            options.data.datasets.push({
-                xAxisID,
-                label: cond,
-                data: p.map((v, i) => ({ x: (i * maxLength) / length, y: v })),
-                backgroundColor: color,
-                borderColor: color,
-                borderWidth: 1,
-                fill: false,
-            });
-            options.options.scales.xAxes.push({
-                id: xAxisID,
-                type: 'linear',
-                display: false,
-            });
         }
-
-        const id = `${ESTIMATED_PRICES_ID}-${mint.trim()}`;
-        estimatedPrices.insertAdjacentHTML('beforeend', `<canvas id="${id}" width="239" height="119"/>`);
-        const ctx = (<HTMLCanvasElement>document.getElementById(id)).getContext('2d');
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        // eslint-disable-next-line
-        new Chart(ctx, options);
     }
 
     if (byMint.size > 1) {
         addPricesByType(byType);
     } else {
-        for (const [mint, byType] of byMint) {
-            if (byMint.size > 1) {
-                estimatedPrices.insertAdjacentHTML('beforeend', `<div class="list-sep"></div>`);
-            }
-            addPricesByType(byType, mint);
+        for (const [, byType] of byMint) {
+            addPricesByType(byType);
         }
     }
 }
 
 export function estimateWeightPrice(): void {
     const coinBlock = document.getElementById(COIN_ID);
-    const aPrice = coinBlock?.querySelector('.right.pricewj');
-    const head = coinBlock?.querySelector('h1');
-    const trs = coinBlock?.querySelectorAll<HTMLTableHeaderCellElement>('.coin-info tr');
+    if (!coinBlock) {
+        return;
+    }
+    const aPrice = coinBlock.querySelector('.right.pricewj');
+    const head = coinBlock.querySelector('h1');
+    const trs = coinBlock.querySelectorAll<HTMLTableHeaderCellElement>('.coin-info tr');
 
     let weight = NaN;
     let isRussia = false;
@@ -181,7 +123,7 @@ export function estimateWeightPrice(): void {
                 isSilver = !!data.match(RX_SILVER);
                 isGold = !!data.match(RX_GOLD);
                 if (isSilver || isGold) {
-                    part = +data.split(' ').pop();
+                    part = +(data.split(' ').pop() || 0);
                 }
             }
         }
@@ -203,7 +145,7 @@ export function estimateWeightPrice(): void {
         priceSource = '--';
     }
 
-    const weightPrice = `<br/><price class="right" title="${priceSource}: ${price.toFixed(5)}">€ ${price.toFixed(
+    const weightPrice = `<br/><price class='right' title='${priceSource}: ${price.toFixed(5)}'>€ ${price.toFixed(
         2
     )}</price>`;
 
@@ -231,13 +173,57 @@ export function estimateWeightPrice(): void {
         } else if (isAproximate) {
             showPrices.unshift('');
         }
-        head.insertAdjacentHTML(
+        head?.insertAdjacentHTML(
             'beforebegin',
-            `<a href="#price" class="gray-12 right pricewj">Value:&nbsp;€ <span>${showPrices.join(
+            `<a href='#price' class='gray-12 right pricewj'>Value:&nbsp;€ <span>${showPrices.join(
                 isAproximate ? '~' : '-'
             )}</span>${weightPrice}</a>`
         );
     } else {
         aPrice.insertAdjacentHTML('beforeend', weightPrice);
     }
+}
+
+// { [condition]: [mul, add, min] }
+export const PricePropsByCondition = new Map<Condition, [number, number, number]>([
+    [Condition.UNC, [1.5, 0.5, 0.5]],
+    [Condition.AU, [1.25, 0.25, 0.3]],
+    [Condition.XF_, [1.1, 0.1, 0.2]],
+    [Condition.XF, [1.05, 0.05, 0.15]],
+    [Condition.VF_, [1.025, 0.025, 0.12]],
+    [Condition.VF, [1, 0, 0.1]],
+    [Condition.F, [0.99, -0.05, 0.08]],
+    [Condition.VG, [0.98, -0.1, 0.07]],
+    [Condition.G, [0.97, -0.1, 0.06]],
+]);
+
+const YEAR_MULTIPLIER = 0.001;
+const MUL_PLUS_MULTIPLIER = 0.001;
+const ADD_PLUS_MULTIPLIER = 0.01;
+
+export function getPriceByConditions(price: number, cond: Condition, year?: string | null, plus = 0): string {
+    if (price && PricePropsByCondition.has(cond)) {
+        const [mul = 1, add = 0, min = 0] = PricePropsByCondition.get(cond) || [];
+        const y = +(year || 0);
+        const ymul = 1 + (y && !isNaN(y) ? YEAR_MULTIPLIER * (new Date().getUTCFullYear() - y) : 0);
+        const maxPrice = (price * (mul + MUL_PLUS_MULTIPLIER * plus) + add + ADD_PLUS_MULTIPLIER * plus) * ymul;
+        const minPrice = (min + ADD_PLUS_MULTIPLIER * plus) * ymul;
+        const final = Math.max(maxPrice, minPrice);
+        console.debug('', {
+            price,
+            cond,
+            year,
+            plus,
+            yplus: new Date().getUTCFullYear() - y,
+            ymul,
+            mul,
+            add,
+            min,
+            maxPrice: maxPrice.toFixed(2),
+            minPrice: minPrice.toFixed(2),
+            final: final.toFixed(2),
+        });
+        return final.toFixed(2);
+    }
+    return '';
 }

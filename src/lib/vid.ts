@@ -1,4 +1,4 @@
-export function getCurrentVarietyId(): string {
+export function getCurrentVarietyId(): string | undefined {
     const vid = new URL(document.location.href).searchParams.get('vid');
     if (vid) {
         return vid;
@@ -12,5 +12,5 @@ export function getCurrentVarietyId(): string {
         }
     }
 
-    return null;
+    return undefined;
 }

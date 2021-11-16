@@ -19,39 +19,45 @@ export class WishForm extends ListForm {
 
     protected fillForm(uid = '', cond = '', price = '', _tid?: string, vid = ''): void {
         super.fillForm(uid, cond, price, vid);
-        if (this.form.is_type) {
+        if (this.form?.is_type) {
             this.form.is_type.checked = true;
         }
     }
 
     protected async updateForm(): Promise<void> {
-        super.updateForm();
+        await super.updateForm();
         this.updateVarieties();
     }
 
     protected updateVarieties(): void {
-        const varieties: RadioNodeList = this.form[this.formVariety];
+        const varieties: RadioNodeList = this.form?.[this.formVariety];
         if (varieties) {
-            const firstVariety = <HTMLLabelElement>varieties[0].parentElement;
-            const anyVariety = <HTMLLabelElement>firstVariety.cloneNode();
-            const anyVarietyInput = <HTMLInputElement>firstVariety.querySelector('input').cloneNode();
+            const firstVariety = varieties[0].parentElement as HTMLLabelElement;
+            const anyVariety = firstVariety.cloneNode() as HTMLLabelElement;
+            const anyVarietyInput = firstVariety.querySelector('input')?.cloneNode() as HTMLInputElement;
             anyVarietyInput.value = '';
             anyVariety.insertAdjacentElement('beforeend', anyVarietyInput);
-            anyVariety.insertAdjacentText('beforeend', 'Any');
+            anyVariety.insertAdjacentText('beforeend', 'ANY');
             firstVariety.insertAdjacentElement('beforebegin', anyVariety);
         }
     }
 
     // eslint-disable-next-line class-methods-use-this
-    protected getConditionOption(o: HTMLOptionElement): ConditionOption {
+    protected getConditionOption(o: HTMLOptionElement): ConditionOption | undefined {
         const { value, textContent } = o;
-        if (value || textContent.includes('ANY')) {
+        if (value || textContent?.includes('ANY')) {
             return {
-                text: textContent,
+                text: textContent!,
                 value,
                 checked: value === '3' ? 'checked' : '',
                 style: o.getAttribute('style') || '',
             };
         }
     }
+}
+
+export const enum WishFormAction {
+    ADD = 'addwishcoin',
+    DELETE = 'delwishcoin',
+    EDIT = 'editwishcoin',
 }

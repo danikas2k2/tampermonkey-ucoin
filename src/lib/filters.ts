@@ -38,7 +38,7 @@ export function renderFilter([name, props]: [Filter, FilterProps]) {
     }px;'>\
             <div class='${props.value ? `blue-13 ` : ''}left'>${
         disabled
-            ? props.options.get([...props.options.keys()].filter((k) => k !== '').pop())
+            ? props.options.get([...props.options.keys()].filter((k) => k !== '').pop() || '') || props.placeholder
             : props.value
             ? props.options.get(props.value) || props.value
             : props.placeholder

@@ -1,0 +1,121 @@
+export const Euro = 'Euro';
+
+export const Europe = 'Europe';
+export const Northern_Europe = 'Northern Europe';
+export const Eastern_Europe = 'Eastern Europe';
+export const Central_Europe = 'Central Europe';
+export const Western_Europe = 'Western Europe';
+export const Southern_Europe = 'Southern Europe';
+export const Southeast_Europe = 'Southeast Europe';
+export const Southwest_Europe = 'Southwest Europe';
+
+export const Asia = 'Asia';
+export const Northern_Asia = 'Northern Asia';
+export const Central_Asia = 'Central Asia';
+export const Eastern_Asia = 'Eastern Asia';
+export const Southeast_Asia = 'Southeast Asia';
+export const Mainland_Southeast_Asia = 'Mainland Southeast Asia';
+export const Maritime_Southeast_Asia = 'Maritime Southeast Asia';
+export const Southern_Asia = 'Southern Asia';
+export const Western_Asia = 'Western Asia';
+
+export const Africa = 'Africa';
+export const Northern_Africa = 'Northern Africa';
+export const Eastern_Africa = 'Eastern Africa';
+export const East_African_Community = 'East African Community';
+export const Horn_of_Africa = 'Horn of Africa';
+export const Indian_Ocean_Islands = 'Indian Ocean Islands';
+export const Nile_Valley = 'Nile Valley';
+export const Central_Africa = 'Central Africa';
+export const Southeast_Africa = 'Southeast Africa';
+export const Southern_Africa = 'Southern Africa';
+export const Western_Africa = 'Western Africa';
+
+export const America = 'America';
+export const Northern_America = 'Northern America';
+export const Caribbean = 'Caribbean';
+export const Central_America = 'Central America';
+export const Southern_America = 'Southern America';
+
+export const Oceania = 'Oceania';
+export const Australia_and_New_Zealand = 'Australia and New Zealand';
+export const Melanesia = 'Melanesia';
+export const Micronesia = 'Micronesia';
+export const Polynesia = 'Polynesia';
+
+export const Antarctica = 'Antarctica';
+export const Worldwide = 'Worldwide';
+
+interface Regions extends Record<string, Regions> {}
+
+export const regionTree: Regions = {
+    [Euro]: {},
+    [Europe]: {
+        [Northern_Europe]: {},
+        [Eastern_Europe]: {},
+        [Central_Europe]: {},
+        [Western_Europe]: {},
+        [Southern_Europe]: {
+            [Southeast_Europe]: {},
+            [Southwest_Europe]: {},
+        },
+    },
+    [Asia]: {
+        [Northern_Asia]: {},
+        [Central_Asia]: {},
+        [Eastern_Asia]: {},
+        [Southeast_Asia]: {
+            [Mainland_Southeast_Asia]: {},
+            [Maritime_Southeast_Asia]: {},
+        },
+        [Southern_Asia]: {},
+        [Western_Asia]: {},
+    },
+    [Africa]: {
+        [Northern_Africa]: {},
+        [Eastern_Africa]: {
+            [East_African_Community]: {},
+            [Horn_of_Africa]: {},
+            [Indian_Ocean_Islands]: {},
+            [Nile_Valley]: {},
+        },
+        [Central_Africa]: {},
+        [Southeast_Africa]: {},
+        [Southern_Africa]: {},
+        [Western_Africa]: {},
+    },
+    [America]: {
+        [Northern_America]: {},
+        [Caribbean]: {},
+        [Central_America]: {},
+        [Southern_America]: {},
+    },
+    [Oceania]: {
+        [Australia_and_New_Zealand]: {},
+        [Melanesia]: {},
+        [Micronesia]: {},
+        [Polynesia]: {},
+    },
+    [Antarctica]: {},
+    [Worldwide]: {},
+};
+
+// export const regionParents: Record<string, string[]> = {};
+
+// (function addRegionsToList(regions: Regions, parent?: string) {
+//     for (const [name, sub] of Object.entries(regions)) {
+//         if (parent) {
+//             regionParents[name] = unique([...(regionParents[name] || []), parent, ...getParents(parent)]);
+//         } else {
+//             regionParents[name] = [...(regionParents[name] || [])];
+//         }
+//         addRegionsToList(sub, name);
+//     }
+//
+//     function getParents(name: string): string[] {
+//         const parents = regionParents[name];
+//         return [...parents, ...parents.flatMap((p) => getParents(p))];
+//     }
+// })(regionTree);
+
+// export const regions = Object.keys(regionParents);

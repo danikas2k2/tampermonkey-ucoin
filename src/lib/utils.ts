@@ -11,23 +11,33 @@ export function tt(str: string): string {
 }
 
 export function show(...elements: HTMLElement[]): void {
-    elements.forEach((element) => element && element.classList.remove('hide'));
+    for (const element of elements) {
+        element?.classList.remove('hide');
+    }
 }
 
 export function hide(...elements: HTMLElement[]): void {
-    elements.forEach((element) => element && element.classList.add('hide'));
+    for (const element of elements) {
+        element?.classList.add('hide');
+    }
 }
 
-export function toggle(visible: string | boolean, ...elements: HTMLElement[]): void {
-    elements.forEach((element) => element && element.classList.toggle('hide', !visible));
+export function toggle(visible: boolean, ...elements: HTMLElement[]): void {
+    for (const element of elements) {
+        element?.classList.toggle('hide', !visible);
+    }
 }
 
 export function enable(...elements: HTMLElement[]): void {
-    elements.forEach((element) => element && element.classList.remove('disable'));
+    for (const element of elements) {
+        element?.classList.remove('disable');
+    }
 }
 
 export function disable(...elements: HTMLElement[]): void {
-    elements.forEach((element) => element && element.classList.add('disable'));
+    for (const element of elements) {
+        element?.classList.add('disable');
+    }
 }
 
 export function cancel(e: Event): void {
@@ -61,7 +71,7 @@ export function reload(): null {
     return null;
 }
 
-export function updateRequiredElement(fragment: DocumentFragment, element: HTMLElement): HTMLElement {
+export function updateRequiredElement(fragment: DocumentFragment, element: HTMLElement | null): HTMLElement | null {
     if (element) {
         const newElement = fragment.getElementById(element.id);
         if (!newElement) {
@@ -74,7 +84,7 @@ export function updateRequiredElement(fragment: DocumentFragment, element: HTMLE
                 e.preventDefault();
                 e.stopPropagation();
                 const a = document.createElement('a');
-                a.href = el.dataset.href;
+                a.href = el.dataset.href!;
                 a.dispatchEvent(new MouseEvent(e.type, e));
             });
         });
@@ -82,7 +92,7 @@ export function updateRequiredElement(fragment: DocumentFragment, element: HTMLE
     return element;
 }
 
-export function updateOptionalElement(fragment: DocumentFragment, element: HTMLElement): HTMLElement {
+export function updateOptionalElement(fragment: DocumentFragment, element: HTMLElement | null): HTMLElement | null {
     if (element) {
         const newElement = fragment.getElementById(element.id);
         if (newElement) {
@@ -102,9 +112,9 @@ export async function updateParts(
     required: HTMLElement[],
     optional?: HTMLElement[]
 ): Promise<void> {
-    required = required.map((element) => updateRequiredElement(fragment, element));
+    required.map((element) => updateRequiredElement(fragment, element));
     if (optional) {
-        optional = optional.map((element) => updateOptionalElement(fragment, element));
+        optional.map((element) => updateOptionalElement(fragment, element));
     }
     return await callback();
 }
@@ -114,7 +124,7 @@ export async function handleFormSubmit(form: HTMLFormElement, callback: RequestC
         'submit',
         ((onsubmit) => async (e: Event) => {
             cancel(e);
-            const form = <HTMLFormElement>e.target;
+            const form = e.target as HTMLFormElement;
             if (onsubmit && onsubmit.call(form, e) === false) {
                 return;
             }
@@ -129,8 +139,8 @@ export async function handleLinkSubmit(link: HTMLAnchorElement, callback: Reques
         'click',
         ((onclick) => async (e: Event) => {
             cancel(e);
-            const link = <HTMLAnchorElement>e.target;
-            if (onclick && onclick.call(link, e) === false) {
+            const link = e.target as HTMLAnchorElement;
+            if (onclick?.call(link, e) === false) {
                 return;
             }
             await callback();
@@ -141,4 +151,16 @@ export async function handleLinkSubmit(link: HTMLAnchorElement, callback: Reques
 
 export function todayMonth(): string {
     return new Date().toISOString().split('-', 2).join('-');
+}
+
+export function unique<T>(array: T[]): T[] {
+    return array.reduce<T[]>((r, v) => (r.includes(v) ? r : [...r, v]), []);
+}
+
+export function slug(s: string): string {
+    return s.replace(/\W+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
+}
+
+export function scrollIntoView(element: HTMLElement) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
 }
