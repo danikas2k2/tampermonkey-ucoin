@@ -287,12 +287,13 @@ export function addOpenedTabsHandler(): void {
     const [needTab, takeTab] = document.querySelectorAll<HTMLLIElement>(
         `#swap-mgr div.widerightCol > ul.region-list > li.region`
     );
+    const get = document.querySelector('#tree a.list-link:not([href]):first-child .right')?.textContent || '0';
     const [, status] =
         document
             .querySelector('#tree .user-info + div span[class^="swap-status"]')
             ?.className.match(/swap-status(\d+)/) || [];
-    console.info({ status });
-    let currentTab = getHashParam(TAB_PARAM) || (status > '2' ? TAB_NEED : TAB_TAKE);
+    console.info(get, status);
+    let currentTab = getHashParam(TAB_PARAM) || (get === '0' || status === '1' || status === '2' ? TAB_TAKE : TAB_NEED);
     if (needTab) {
         needTab.addEventListener('click', () => setActiveSwapTab(TAB_NEED));
         if (currentTab === TAB_NEED) {
