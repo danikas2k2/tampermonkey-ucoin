@@ -118,7 +118,7 @@ export async function syncListWish() {
 
     buttons.insertAdjacentHTML(
         'afterbegin',
-        `<label><input type='checkbox' id='${SYNC_ID}'/> ${langSyncWish[lang]}</label>`
+        `<label class='gray-13' for='${SYNC_ID}'><input type='checkbox' id='${SYNC_ID}'/> ${langSyncWish[lang]}</label>`
     );
     const sync = document.getElementById(SYNC_ID) as HTMLInputElement;
 
