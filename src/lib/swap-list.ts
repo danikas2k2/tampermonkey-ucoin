@@ -1,4 +1,4 @@
-import { countryRegions, getCountryId } from '../data/countries';
+import { countryRegions, getCountryId, separateCountries } from '../data/countries';
 import { Europe, PayPal_Europe, PayPal_UK } from '../data/regions';
 import { get } from './ajax';
 import { Color, ColorValues, Condition, ConditionValues } from './cond';
@@ -37,34 +37,6 @@ export function addThumbnails(): void {
         );
     }
 }
-
-const separateCountries = [
-    'australia',
-    'belgium',
-    'croatia',
-    'denmark',
-    'finland',
-    'france',
-    'german_democratic_republic',
-    'german_empire',
-    'germany',
-    'iceland',
-    'india',
-    'british_india',
-    'italy',
-    'lithuania',
-    'netherlands',
-    'norway',
-    'poland',
-    'portugal',
-    'russia',
-    'spain',
-    'sweden',
-    'third_reich',
-    'united_kingdom',
-    'usa',
-    'ussr',
-];
 
 export function markSeparateCountries(): void {
     for (const list of document.querySelectorAll<HTMLHeadingElement>('#swap-list, #take-swap-list')) {

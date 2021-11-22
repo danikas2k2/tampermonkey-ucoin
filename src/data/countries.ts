@@ -34,6 +34,8 @@ import {
     Northern_and_Western_Africa as FNW,
     Northern_Europe as EN,
     Oceania as O,
+    PayPal_Europe as PPEU,
+    PayPal_UK as PPUK,
     Poland as PL,
     Polynesia as OP,
     Russia as RU,
@@ -52,8 +54,6 @@ import {
     Western_Asia as SW,
     Western_Europe as EW,
     Worldwide as WW,
-    PayPal_Europe as PPEU,
-    PayPal_UK as PPUK,
 } from './regions';
 
 export const countryRegions: Record<string, string[]> = {
@@ -1047,3 +1047,31 @@ export function getCountryId(name: string) {
     }
     return nameToCountry[name];
 }
+
+export const separateCountries = [
+    'australia',
+    'belgium',
+    'croatia',
+    'denmark',
+    'finland',
+    'france',
+    'german_democratic_republic',
+    'german_empire',
+    'germany',
+    'iceland',
+    'india',
+    'british_india',
+    'italy',
+    'lithuania',
+    'netherlands',
+    'norway',
+    'poland',
+    'portugal',
+    'russia',
+    'spain',
+    'sweden',
+    'third_reich',
+    'united_kingdom',
+    'usa',
+    'ussr',
+];
