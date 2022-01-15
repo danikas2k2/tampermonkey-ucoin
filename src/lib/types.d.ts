@@ -39,7 +39,7 @@ interface CoinSwapVariant extends CoinSwapVariantData {
 
 interface CoinWishFormOnMatchGroups extends Record<string, string> {
     uwid?: string;
-    condition?: string;
+    cond?: string;
 }
 
 interface CoinWishFormOnMatchResult extends RegExpMatchArray {

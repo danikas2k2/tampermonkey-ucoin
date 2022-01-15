@@ -77,12 +77,10 @@ export function updateRequiredElement(fragment: DocumentFragment, element: HTMLE
         if (!newElement) {
             return reload();
         }
-        element.replaceWith(newElement);
-        element = newElement;
+        element.innerHTML = newElement.innerHTML;
         element.querySelectorAll('[data-href]').forEach((el: HTMLElement) => {
-            el.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            el.addEventListener('click',  (e) => {
+                cancel(e);
                 const a = document.createElement('a');
                 a.href = el.dataset.href!;
                 a.dispatchEvent(new MouseEvent(e.type, e));
@@ -96,8 +94,7 @@ export function updateOptionalElement(fragment: DocumentFragment, element: HTMLE
     if (element) {
         const newElement = fragment.getElementById(element.id);
         if (newElement) {
-            element.replaceWith(newElement);
-            element = newElement;
+            element.innerHTML = newElement.innerHTML;
         } else {
             element.remove();
             element = null;

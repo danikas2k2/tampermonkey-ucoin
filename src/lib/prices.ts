@@ -186,15 +186,15 @@ export function estimateWeightPrice(): void {
 
 // { [condition]: [mul, add, min] }
 export const PricePropsByCondition = new Map<Condition, [number, number, number]>([
-    [Condition.UNC, [1.5, 0.5, 0.5]],
-    [Condition.AU, [1.25, 0.25, 0.3]],
-    [Condition.XF_, [1.1, 0.1, 0.2]],
-    [Condition.XF, [1.05, 0.05, 0.15]],
-    [Condition.VF_, [1.025, 0.025, 0.12]],
+    [Condition.UNC, [1.75, 0.5, 0.5]],
+    [Condition.AU, [1.5, 0.25, 0.3]],
+    [Condition.XF_, [1.25, 0.1, 0.2]],
+    [Condition.XF, [1.1, 0.05, 0.15]],
+    [Condition.VF_, [1.05, 0.025, 0.12]],
     [Condition.VF, [1, 0, 0.1]],
-    [Condition.F, [0.99, -0.05, 0.08]],
-    [Condition.VG, [0.98, -0.1, 0.07]],
-    [Condition.G, [0.97, -0.1, 0.06]],
+    [Condition.F, [0.98, -0.05, 0.08]],
+    [Condition.VG, [0.95, -0.1, 0.07]],
+    [Condition.G, [0.90, -0.1, 0.06]],
 ]);
 
 const YEAR_MULTIPLIER = 0.001;
@@ -205,7 +205,7 @@ export function getPriceByConditions(price: number, cond: Condition, year?: stri
     if (price && PricePropsByCondition.has(cond)) {
         const [mul = 1, add = 0, min = 0] = PricePropsByCondition.get(cond) || [];
         const y = +(year || 0);
-        const ymul = 1 + (y && !isNaN(y) ? YEAR_MULTIPLIER * (new Date().getUTCFullYear() - y) : 0);
+        const ymul = 1 + (y && !isNaN(y) ? ((new Date().getUTCFullYear() - y) ** (1.1)) * YEAR_MULTIPLIER : 0);
         const maxPrice = (price * (mul + MUL_PLUS_MULTIPLIER * plus) + add + ADD_PLUS_MULTIPLIER * plus) * ymul;
         const minPrice = (min + ADD_PLUS_MULTIPLIER * plus) * ymul;
         const final = Math.max(maxPrice, minPrice);

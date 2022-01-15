@@ -18,23 +18,27 @@ export function addSwapTitle() {
 }
 
 export function addThumbnails(): void {
-    for (const row of document.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr')) {
-        const { tooltipImgpath, tooltipSample, tooltipCode } = row.dataset;
-        row.querySelector('td')?.insertAdjacentHTML(
-            row.querySelector('div.reserve') || document.body.id === 'swap-list' ? 'beforebegin' : 'afterend',
-            `
+    // add thumbnails only if auto-update is not in progress
+    const updating = location.hash?.includes('update-prices');
+    if (!updating) {
+        for (const row of document.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr')) {
+            const { tooltipImgpath, tooltipSample, tooltipCode } = row.dataset;
+            row.querySelector('td')?.insertAdjacentHTML(
+                row.querySelector('div.reserve') || document.body.id === 'swap-list' ? 'beforebegin' : 'afterend',
+                `
             <th style='width: 100px' class='thumbnails'>
                 ${
                     tooltipImgpath && tooltipSample && tooltipCode
                         ? `
-                    <img src='${tooltipImgpath}/${tooltipSample}-1c/${tooltipCode}.jpg' class='thumbnail' loading='lazy' alt='obverse'/>
-                    <img src='${tooltipImgpath}/${tooltipSample}-2c/${tooltipCode}.jpg' class='thumbnail' loading='lazy' alt='reverse'/>
+                    <img src='${tooltipImgpath}/${tooltipSample}-1s/${tooltipCode}.jpg' class='thumbnail' loading='lazy' alt='obverse'/>
+                    <img src='${tooltipImgpath}/${tooltipSample}-2s/${tooltipCode}.jpg' class='thumbnail' loading='lazy' alt='reverse'/>
                 `
                         : ''
                 }
             </th>
         `
-        );
+            );
+        }
     }
 }
 
@@ -137,6 +141,7 @@ export function calcTotalPrices(): void {
                 const country = getCountryId(tree.previousElementSibling?.querySelector('.gray-11')?.textContent || '');
                 const shippingPrice = getShippingPrice(country, weight);
                 const totalPrice = currentPrice + shippingPrice;
+                const totalDescription = `${currentPrice.toFixed(2)} + ${shippingPrice.toFixed(2)}`;
                 const [paypalPrice, paypalDescription] = getPayPalPrice(country, totalPrice);
 
                 weightLine?.insertAdjacentHTML(
@@ -146,14 +151,15 @@ export function calcTotalPrices(): void {
                         <div class='left lgray-11'>Shipping</div>
                         <div class='right gray-11'>€ ${shippingPrice.toFixed(2)}</div>
                     </a>
-                    <a class='region price-line'>
+                    <a class='region price-line price-double'>
                         <div class='left lgray-11'>Total</div>
                         <div class='right gray-11'>€ ${totalPrice.toFixed(2)}</div>
+                        <div class='right lgray-11'><small>(</small>${totalDescription}<small>)</small></div>
                     </a>
                     <a class='region price-line price-double'>
                         <div class='left lgray-11'>PayPal</div>
                         <div class='right gray-11'>€ ${paypalPrice.toFixed(2)}</div>
-                        <div class='right lgray-11'>${paypalDescription}</div>
+                        <div class='right lgray-11'><small>(</small>${paypalDescription}<small>)</small></div>
                     </a>
                     `
                 );
@@ -164,71 +170,33 @@ export function calcTotalPrices(): void {
 
 function getShippingPrice(country: string, weight: number): number {
     if (country === 'lithuania') {
-        if (weight <= 450) {
+        if (weight <= 50) {
             return 1.5;
         }
-        if (weight <= 900) {
+        if (weight <= 450) {
             return 2;
         }
-        if (weight <= 1900) {
+        if (weight <= 900) {
             return 2.5;
+        }
+        if (weight <= 1900) {
+            return 3;
         }
         return 5;
     }
 
-    if (countryRegions[country].includes(Europe)) {
-        if (weight <= 450) {
-            return 4.5;
-        }
-        if (weight <= 900) {
-            return 7.5;
-        }
-        if (weight <= 1900) {
-            return 10;
-        }
-        if (weight <= 2900) {
-            return 20;
-        }
-        if (weight <= 5500) {
-            return 25;
-        }
-        if (weight <= 8500) {
-            return 30;
-        }
-        return 50;
-    }
-
+    const isEurope = countryRegions[country].includes(Europe);
     if (weight <= 450) {
-        return 5.5;
+        return isEurope ? 6 : 7;
     }
     if (weight <= 900) {
-        return 10;
+        return isEurope ? 8 : 12;
     }
     if (weight <= 1900) {
-        return 15;
+        return isEurope ? 11 : 17;
     }
-    if (weight <= 2900) {
-        return 40;
-    }
-    if (weight <= 3800) {
-        return 50;
-    }
-    if (weight <= 4700) {
-        return 60;
-    }
-    if (weight <= 5500) {
-        return 70;
-    }
-    if (weight <= 6500) {
-        return 80;
-    }
-    if (weight <= 7500) {
-        return 90;
-    }
-    if (weight <= 8500) {
-        return 100;
-    }
-    return 150;
+
+    return getShippingPrice(country, 1900) * Math.floor(weight / 1900) + getShippingPrice(country, weight % 1900);
 }
 
 function getPayPalPrice(country: string, price: number): [number, string] {
@@ -396,7 +364,10 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string) {
         );
     }
     if (location.href.includes(`?uid=${UID}`)) {
-        if (!tr.querySelector<HTMLAnchorElement>(`th a[title*="."]`)) {
+        if (
+            !tr.querySelector<HTMLAnchorElement>(`th a[title*="."]`) &&
+            !tr.querySelector<HTMLAnchorElement>(`th a[title^="Reserve for "]`)
+        ) {
             let plus = 0;
             const condTitle = cond === Condition.UNC ? Condition.AU : cond;
             const title = tr.querySelector<HTMLAnchorElement>(`th a[title^="${condTitle}"]`)?.title;
@@ -668,8 +639,10 @@ export async function addPriceUpdateButton() {
         `
     );
     continueCheckbox = link.parentElement!.querySelector('#continue');
+    const minDelay = continueCheckbox?.checked ? 5_000 : 3_000;
+    const rndDelay = continueCheckbox?.checked ? 5_000 : 2_000;
     if (checked) {
-        await randomDelay(2000, 3000);
+        await randomDelay(rndDelay, minDelay);
         await updatePrices();
     }
 
@@ -704,19 +677,19 @@ export async function addPriceUpdateButton() {
                 if (first) {
                     first = false;
                 } else {
-                    await randomDelay(2000, 3000);
+                    await randomDelay(rndDelay, minDelay);
                 }
                 try {
                     const response = await fetch(url.href);
                     if (!response.ok) {
                         console.error(`Response was not OK:\n${JSON.stringify(response, null, 4)}`);
-                        await randomDelay(2000, 3000);
+                        await randomDelay(rndDelay, minDelay);
                         location.reload();
                         return;
                     }
                 } catch (e) {
                     console.error(e);
-                    await randomDelay(2000, 3000);
+                    await randomDelay(rndDelay, minDelay);
                     location.reload();
                     return;
                 }
@@ -740,14 +713,14 @@ export async function addPriceUpdateButton() {
                 `#swap-list div.pages a[href$="&page=${nextPage}"]`
             );
             if (nextPageElement) {
+                await randomDelay(10_000, 10_000);
                 nextPageElement.href = `${nextPageElement.href}#update-prices`;
-                await randomDelay(5000, 5000);
                 nextPageElement.click();
                 return;
             }
             const firstPageElement = page!.querySelector<HTMLAnchorElement>(`#swap-list div.pages a:first-child`);
             if (firstPageElement && !firstPageElement?.classList.contains('current')) {
-                await randomDelay(5000, 5000);
+                await randomDelay(10_000, 10_000);
                 firstPageElement.click();
                 return;
             }

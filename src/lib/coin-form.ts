@@ -47,6 +47,18 @@ export class CoinForm extends AbstractForm {
         return await this.update();
     }
 
+    private tagsInitialized = false;
+
+    private updateTags() {
+        if (this.tagsInitialized) {
+            [...document.querySelectorAll<HTMLScriptElement>('script')]
+                .filter((s) => s.textContent?.includes('#tag'))
+                .forEach((s) => eval(s.textContent!));
+        } else {
+            this.tagsInitialized = true;
+        }
+    }
+
     protected async update(): Promise<void> {
         if (!this.func) {
             return;
@@ -80,6 +92,8 @@ export class CoinForm extends AbstractForm {
                     await handleLinkSubmit(link, async () => await this.updateFragment(await getFragment(link.href)));
                 }
             }
+
+            this.updateTags();
         }
     }
 
@@ -89,7 +103,10 @@ export class CoinForm extends AbstractForm {
             let { buy_year_month: buyYearMonth } = this.form;
             hide(buyYear, buyMonth);
             if (!buyYearMonth) {
-                buyYear.insertAdjacentHTML('afterend', `<input id='buy_year_month' name='buy_year_month' type='month'/>`);
+                buyYear.insertAdjacentHTML(
+                    'afterend',
+                    `<input id='buy_year_month' name='buy_year_month' type='month'/>`
+                );
                 buyYearMonth = this.form.buy_year_month;
             }
 
@@ -148,7 +165,7 @@ export class CoinForm extends AbstractForm {
     }
 
     private async postForm(): Promise<boolean> {
-        if (this.form && await postFragment(location.href, new FormData(this.form))) {
+        if (this.form && (await postFragment(location.href, new FormData(this.form)))) {
             return true;
         }
         return !!reload();

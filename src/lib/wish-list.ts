@@ -10,19 +10,44 @@ import { WishFormAction } from './wish-form';
 export const CoinWishFormOnMatcher = /CoinWishFormOn\('(?<uwid>[^']*)', '(?<cond>[^']*)'/;
 
 export async function syncCoinWish() {
-    const coinForm = new FormData(document.querySelector<HTMLFormElement>('#edit-coin-form form')!);
-    const value = coinForm.get('condition');
+    const coinForm = document.querySelector<HTMLFormElement>('#edit-coin-form form');
+    if (!coinForm) {
+        return;
+    }
+
+    const coinFormData = new FormData(coinForm);
+    const value = coinFormData.get('condition');
     if (!value) {
         return;
     }
 
-    const wishForm = new FormData(document.querySelector<HTMLFormElement>('#wish-form')!);
+    const form = document.querySelector<HTMLFormElement>('#wish-form');
+    if (!form) {
+        return;
+    }
+
+    const wishForm = new FormData(form);
+    console.debug('is_type', wishForm.get('is_type'));
+    const wishType = form.querySelector<HTMLInputElement>('#wish-type')?.value;
+    if (wishType) {
+        console.debug('is_type', wishType);
+        wishForm.set('is_type', wishType);
+    }
+
+    const wishVariety = wishForm.get('wish-variety');
+    console.debug('wish-variety', wishVariety);
+    if (wishVariety) {
+        wishForm.set('wish-variety', '');
+    }
+
     const links = document.querySelectorAll<HTMLAnchorElement>('#wish-block a.list-link');
 
     const condition = +value as FormValue;
+    console.debug('condition', condition);
     switch (condition) {
         case FormValue.PROOF:
         case FormValue.UNC:
+            console.debug('deleting', links.length);
             if (!links.length) {
                 return;
             }
@@ -52,7 +77,11 @@ export async function syncCoinWish() {
                     break;
             }
 
+            console.debug('wishCondition', wishCondition);
+            console.debug('links', links.length);
+
             if (!links.length) {
+                console.debug('adding');
                 wishForm.set('uwid', '');
                 wishForm.set('wish-variety', '');
                 wishForm.set('condition', `${wishCondition}`);
@@ -67,21 +96,18 @@ export async function syncCoinWish() {
                 return;
             }
 
-            if (links.length > 1) {
-                let first = true;
-                for (const a of links) {
-                    const m = a.getAttribute('onClick')?.match(CoinWishFormOnMatcher) as CoinWishFormOnMatchResult;
+            console.debug('updating', links.length);
+            let first = true;
+            for (const a of links) {
+                const m = a.getAttribute('onClick')?.match(CoinWishFormOnMatcher) as CoinWishFormOnMatchResult;
+                if (m?.groups.uwid) {
+                    wishForm.set('uwid', m.groups.uwid);
+                    wishForm.set('condition', first ? `${wishCondition}` : '');
+                    wishForm.set('action', first ? WishFormAction.EDIT : WishFormAction.DELETE);
+                    await randomDelay();
                     if (first) {
-                        first = false;
-                        continue;
-                    }
-
-                    if (m?.groups.uwid) {
-                        wishForm.set('uwid', m.groups.uwid);
-                        wishForm.set('condition', first ? `${wishCondition}` : '');
-                        wishForm.set('action', first ? WishFormAction.EDIT : WishFormAction.DELETE);
-                        await randomDelay();
-                        if (first) {
+                        console.debug(m.groups.cond, wishCondition);
+                        if (+m?.groups.cond! !== wishCondition) {
                             const block = (await postFragment(location.href, wishForm)).querySelector<HTMLElement>(
                                 '#wish-block'
                             );
@@ -90,11 +116,14 @@ export async function syncCoinWish() {
                                 block.querySelector('center')?.remove();
                                 document.querySelector('#wish-block')?.replaceWith(block);
                             }
-                        } else {
-                            await post(location.href, wishForm);
-                            a.remove();
                         }
+                    } else {
+                        await post(location.href, wishForm);
+                        a.remove();
                     }
+                }
+                if (first) {
+                    first = false;
                 }
             }
             return;

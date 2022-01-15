@@ -538,6 +538,10 @@ body {
 
     .price-double {
         height: 2.4em !important;
+
+        .lgray-11 {
+            clear: both;
+        }
     }
 
     .price-triple {
@@ -689,5 +693,30 @@ ul.hor-switcher {
 .filter-container {
     label {
         margin-top: 3px;
+    }
+}
+
+@keyframes display_delay {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+#display-delay {
+    position: fixed;
+    inset-block-end: 0;
+    inset-inline: 0;
+    height: 3px;
+
+    > div {
+        position: absolute;
+        inset: 0;
+        background: rgba(60, 150, 30, .5);
+        animation-name: display_delay;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
     }
 }
