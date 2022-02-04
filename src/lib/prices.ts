@@ -1,3 +1,5 @@
+import { countryRegions } from '../data/countries';
+import { Europe, PayPal_Europe, PayPal_UK } from '../data/regions';
 import { Condition, ConditionValues } from './cond';
 import { cmp } from './swap-list-sort';
 
@@ -146,7 +148,7 @@ export function estimateWeightPrice(): void {
     }
 
     const weightPrice = `<br/><price class='right' title='${priceSource}: ${price.toFixed(5)}'>€ ${price.toFixed(
-        2
+        2,
     )}</price>`;
 
     if (!aPrice) {
@@ -176,8 +178,8 @@ export function estimateWeightPrice(): void {
         head?.insertAdjacentHTML(
             'beforebegin',
             `<a href='#price' class='gray-12 right pricewj'>Value:&nbsp;€ <span>${showPrices.join(
-                isAproximate ? '~' : '-'
-            )}</span>${weightPrice}</a>`
+                isAproximate ? '~' : '-',
+            )}</span>${weightPrice}</a>`,
         );
     } else {
         aPrice.insertAdjacentHTML('beforeend', weightPrice);
@@ -226,4 +228,61 @@ export function getPriceByConditions(price: number, cond: Condition, year?: stri
         return final.toFixed(2);
     }
     return '';
+}
+
+export function getShippingPrice(country: string, weight: number): number {
+    if (country === 'lithuania') {
+        if (weight <= 50) {
+            return 1.5;
+        }
+        if (weight <= 450) {
+            return 2;
+        }
+        if (weight <= 900) {
+            return 2.5;
+        }
+        if (weight <= 1900) {
+            return 3;
+        }
+        return 5;
+    }
+
+    const isEurope = countryRegions[country].includes(Europe);
+    if (weight <= 450) {
+        return isEurope ? 6 : 7;
+    }
+    if (weight <= 900) {
+        return isEurope ? 8 : 12;
+    }
+    if (weight <= 1900) {
+        return isEurope ? 11 : 17;
+    }
+
+    return getShippingPrice(country, 1900) * Math.floor(weight / 1900) + getShippingPrice(country, weight % 1900);
+}
+
+export function getPayPalPrice(country: string, price: number): PayPalPrice {
+    let percents = 3.4;
+    let fixed = 0.35;
+
+    if (countryRegions[country].includes(PayPal_UK)) {
+        percents += 1.29;
+    } else if (!countryRegions[country].includes(PayPal_Europe)) {
+        percents += 1.99;
+    }
+
+    const charges = price * (percents / 100) + fixed;
+    return {
+        price: price + charges,
+        charges,
+        percents,
+        fixed,
+    };
+}
+
+export interface PayPalPrice {
+    price: number;
+    charges: number;
+    percents: number;
+    fixed: number;
 }

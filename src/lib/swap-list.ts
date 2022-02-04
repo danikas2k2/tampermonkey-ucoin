@@ -1,9 +1,9 @@
-import { countryRegions, getCountryId, separateCountries } from '../data/countries';
-import { Europe, PayPal_Europe, PayPal_UK } from '../data/regions';
+import { getCountryId, separateCountries } from '../data/countries';
 import { get } from './ajax';
 import { Color, ColorValues, Condition, ConditionValues } from './cond';
 import { randomDelay } from './delay';
-import { getPriceByConditions } from './prices';
+import { _ } from './lang';
+import { getPayPalPrice, getPriceByConditions, getShippingPrice } from './prices';
 import { UID } from './uid';
 import { getHashParam, updateLocationHash } from './url';
 import { cancel, scrollIntoView } from './utils';
@@ -141,25 +141,30 @@ export function calcTotalPrices(): void {
                 const country = getCountryId(tree.previousElementSibling?.querySelector('.gray-11')?.textContent || '');
                 const shippingPrice = getShippingPrice(country, weight);
                 const totalPrice = currentPrice + shippingPrice;
-                const totalDescription = `${currentPrice.toFixed(2)} + ${shippingPrice.toFixed(2)}`;
-                const [paypalPrice, paypalDescription] = getPayPalPrice(country, totalPrice);
+                const totalDescription = `${currentPrice.toFixed(2)} + ${shippingPrice.toFixed(2)} <s>${_(
+                    'shipping'
+                )}</s>`;
+                const { price: ppPrice, charges: ppCharges } = getPayPalPrice(country, totalPrice);
+                const ppDescription = `${totalPrice.toFixed(2)} + ${ppCharges.toFixed(2)} <s>${_(
+                    'PayPal charges'
+                )}</s>`;
 
                 weightLine?.insertAdjacentHTML(
                     'afterend',
                     `
                     <a class='region price-line'>
-                        <div class='left lgray-11'>Shipping</div>
-                        <div class='right gray-11'>€ ${shippingPrice.toFixed(2)}</div>
+                        <div class='left lgray-11'>${_('Shipping')}</div>
+                        <div class='right gray-11'><u>€</u>${shippingPrice.toFixed(2)}</div>
                     </a>
                     <a class='region price-line price-double'>
-                        <div class='left lgray-11'>Total</div>
-                        <div class='right gray-11'>€ ${totalPrice.toFixed(2)}</div>
-                        <div class='right lgray-11'><small>(</small>${totalDescription}<small>)</small></div>
+                        <div class='left lgray-11'>${_('Total')}</div>
+                        <div class='right gray-11'><u>€</u>${totalPrice.toFixed(2)}</div>
+                        <div class='right lgray-11'>&hairsp;<small>(</small>${totalDescription}<small>)</small></div>
                     </a>
                     <a class='region price-line price-double'>
                         <div class='left lgray-11'>PayPal</div>
-                        <div class='right gray-11'>€ ${paypalPrice.toFixed(2)}</div>
-                        <div class='right lgray-11'><small>(</small>${paypalDescription}<small>)</small></div>
+                        <div class='right gray-11'><u>€</u>${ppPrice.toFixed(2)}</div>
+                        <div class='right lgray-11'>&hairsp;<small>(</small>${ppDescription}<small>)</small></div>
                     </a>
                     `
                 );
@@ -168,58 +173,12 @@ export function calcTotalPrices(): void {
     }
 }
 
-function getShippingPrice(country: string, weight: number): number {
-    if (country === 'lithuania') {
-        if (weight <= 50) {
-            return 1.5;
-        }
-        if (weight <= 450) {
-            return 2;
-        }
-        if (weight <= 900) {
-            return 2.5;
-        }
-        if (weight <= 1900) {
-            return 3;
-        }
-        return 5;
-    }
-
-    const isEurope = countryRegions[country].includes(Europe);
-    if (weight <= 450) {
-        return isEurope ? 6 : 7;
-    }
-    if (weight <= 900) {
-        return isEurope ? 8 : 12;
-    }
-    if (weight <= 1900) {
-        return isEurope ? 11 : 17;
-    }
-
-    return getShippingPrice(country, 1900) * Math.floor(weight / 1900) + getShippingPrice(country, weight % 1900);
-}
-
-function getPayPalPrice(country: string, price: number): [number, string] {
-    let percents = 3.4;
-    let fixed = 0.35;
-
-    if (countryRegions[country].includes(PayPal_UK)) {
-        percents += 1.29;
-    } else if (!countryRegions[country].includes(PayPal_Europe)) {
-        percents += 1.99;
-    }
-
-    return [
-        price * (1 + percents / 100) + fixed,
-        `${price.toFixed(2)} + ${percents.toFixed(2)}% + ${fixed.toFixed(2)}`,
-    ];
-}
-
 const TAB_PARAM = 't';
 const TAB_TAKE = 'take';
 const TAB_NEED = 'need';
 
 async function setActiveSwapTab(tab: string) {
+    await localStorage.setItem(TAB_PARAM, tab);
     await updateLocationHash((params) => params.set(TAB_PARAM, tab));
 }
 
@@ -233,7 +192,10 @@ export function addOpenedTabsHandler(): void {
             .querySelector('#tree .user-info + div span[class^="swap-status"]')
             ?.className.match(/swap-status(\d+)/) || [];
     console.info(get, status);
-    let currentTab = getHashParam(TAB_PARAM) || (get === '0' || status === '1' || status === '2' ? TAB_TAKE : TAB_NEED);
+    let currentTab =
+        getHashParam(TAB_PARAM) ||
+        localStorage.getItem(TAB_PARAM) ||
+        (get === '0' || status === '1' || status === '2' ? TAB_TAKE : TAB_NEED);
     if (needTab) {
         needTab.addEventListener('click', () => setActiveSwapTab(TAB_NEED));
         if (currentTab === TAB_NEED) {

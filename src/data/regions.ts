@@ -1,3 +1,5 @@
+import { Translations } from '../lib/lang';
+
 export const Euro = 'Euro';
 export const Euro_A = 'A-K';
 export const Euro_L = 'L-Z';
@@ -106,7 +108,7 @@ export const regionTree: Regions = {
     [Oceania]: {},
 };
 
-export const regionNames: Record<string, Record<string, string>> = {
+export const regionNames: Translations = {
     [Euro]: { lt: 'Eurai' },
     [Euro_A]: { lt: Euro_A },
     [Euro_L]: { lt: Euro_L },

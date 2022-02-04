@@ -1,3 +1,4 @@
+import { Translations } from '../lib/lang';
 import {
     Africa as F,
     America as M,
@@ -79,7 +80,7 @@ export const countryRegions: Record<string, string[]> = {
     australia: [O, OA],
     austria: [E, EC, EU, EUA, PPEU],
     austrian_netherlands: [E, EW],
-    azerbaijan: [S, SW/*, E, EE*/],
+    azerbaijan: [S, SW /*, E, EE*/],
     azores: [E, ES, ESW],
     baden: [E, EC],
     bahamas: [M, MCR, MR],
@@ -202,7 +203,7 @@ export const countryRegions: Record<string, string[]> = {
     galicia_lodomeria: [E, EE],
     gambia: [F, FNW, FW],
     genoa: [E, ES, ESW],
-    georgia: [S, SW/*, E, EE*/],
+    georgia: [S, SW /*, E, EE*/],
     german_democratic_republic: [E, DE],
     german_east_africa: [F, FE, FEC],
     german_empire: [E, DE],
@@ -506,7 +507,7 @@ export const countryRegions: Record<string, string[]> = {
     zimbabwe: [F, FCS, FSE],
 };
 
-export const countryNames: Record<string, Record<string, string>> = {
+export const countryNames: Translations = {
     abkhazia: { en: 'Abkhazia', lt: 'Abchazija', ru: 'Абхазия' },
     afars_issas: {
         en: 'French Afars and Issas',
