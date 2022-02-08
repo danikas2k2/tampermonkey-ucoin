@@ -76,7 +76,7 @@ export const countryRegions: Record<string, string[]> = {
     armavir: [S, SW],
     armenia: [S, SW],
     aruba: [M, MCR, MR],
-    ascension_island: [F, FNW, FW, UK],
+    ascension_island: [/*F, FNW, FW,*/ UK],
     australia: [O, OA],
     austria: [E, EC, EU, EUA, PPEU],
     austrian_netherlands: [E, EW],
@@ -390,7 +390,7 @@ export const countryRegions: Record<string, string[]> = {
     rwanda: [F, FE, FEC],
     ryukyu: [S, SCE, SE],
     saar: [E, DE],
-    saint_helena: [F, FNW, FW, UK],
+    saint_helena: [/*F, FNW, FW,*/ UK],
     saint_helena_ascension: [F, FNW, FW],
     saint_kitts_nevis: [M, MCR, MR],
     saint_lucia: [M, MCR, MR],
@@ -468,7 +468,7 @@ export const countryRegions: Record<string, string[]> = {
     transylvania: [E, EE],
     travancore: [S, SSE, SSN],
     trinidad_tobago: [M, MCR, MR],
-    tristan_da_cunha: [F, FNW, FW, UK],
+    tristan_da_cunha: [/*F, FNW, FW,*/ UK],
     tunisia: [F, FNW, FN],
     turkey: [S, SW],
     turkmenistan: [S, SCE, SC],
@@ -1039,7 +1039,7 @@ export const countryNames: Translations = {
 };
 
 const nameToCountry = Object.fromEntries(
-    Object.entries(countryNames).flatMap(([id, variants]) => Object.values(variants).map((variant) => [variant, id]))
+    Object.entries(countryNames).flatMap(([id, variants]) => Object.values(variants).map((variant) => [variant, id])),
 );
 
 export function getCountryId(name: string) {
