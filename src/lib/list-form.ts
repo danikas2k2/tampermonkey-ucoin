@@ -183,7 +183,7 @@ export abstract class ListForm extends AbstractForm {
     }
 
     protected updateFormHandlers(): void {
-        const { unsafeWindow: userScope } = <{ unsafeWindow: Record<string, () => void> }>(<unknown>global);
+        const userScope = (globalThis as unknown) as Record<string, () => void>;
         userScope[this.formOnFunctionName] = (...args: string[]) => this.formOnHandler(...args);
         userScope[this.formOffFunctionName] = () => this.formOffHandler();
     }

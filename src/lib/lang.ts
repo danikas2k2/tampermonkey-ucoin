@@ -20,4 +20,9 @@ export const messages: Translations = {
     shipping: { lt: 'siuntimas', ru: 'почта' },
     Total: { lt: 'Viso', ru: 'Всего' },
     'PayPal charges': { lt: 'PayPal mokesčiai', ru: 'PayPal сборы' },
+    Sorting: { lt: 'Rikiuoti', ru: 'Сортировка' },
+    Year: { lt: 'Metai', ru: 'Год' },
+    'Facial value': { lt: 'Vertė', ru: 'Номинал' },
+    Subject: { lt: 'Tema', ru: 'Наименование' },
+    // 'Krause': { lt: 'Krause', ru: 'Krause' },
 };

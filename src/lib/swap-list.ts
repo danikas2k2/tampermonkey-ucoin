@@ -75,6 +75,8 @@ export function addTrackingLinks(): void {
     }
 }
 
+const NF = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
 export function calcTotalPrices(): void {
     const tree = document.querySelector('#swap-mgr #tree');
     if (tree) {
@@ -107,14 +109,14 @@ export function calcTotalPrices(): void {
                 sum += +p;
             }
             price.classList.add('blue-13');
-            const currentPrice = +(price.textContent || 0);
+            const currentPrice = +(price.textContent?.replace(/[^\d.]/g, '') || 0);
             const diff = currentPrice - sum;
             price.parentElement?.insertAdjacentHTML(
                 'beforeend',
                 `
                 <span class='lgray-11 price-tooltip'>
                     ${price.previousElementSibling?.textContent}
-                    ${sum.toFixed(2)}
+                    ${NF.format(sum)}
                     ${price.nextElementSibling?.textContent}
                 </span>
                 ${
@@ -125,7 +127,7 @@ export function calcTotalPrices(): void {
                         }'>
                             ${diff > 0 ? '+' : '&minus;'}
                             ${price.previousElementSibling?.textContent}
-                            ${Math.abs(diff).toFixed(2)}
+                            ${NF.format(Math.abs(diff))}
                             ${price.nextElementSibling?.textContent}
                         </span>
                         `
@@ -137,15 +139,15 @@ export function calcTotalPrices(): void {
 
             if (i) {
                 const weightLine = price.closest('a.region')?.nextElementSibling;
-                const weight = +(weightLine?.querySelector('.right')?.textContent || 0);
+                const weight = +(weightLine?.querySelector('.right')?.textContent?.replace(/[^\d.]/g, '') || 0);
                 const country = getCountryId(tree.previousElementSibling?.querySelector('.gray-11')?.textContent || '');
                 const shippingPrice = getShippingPrice(country, weight);
                 const totalPrice = currentPrice + shippingPrice;
-                const totalDescription = `${currentPrice.toFixed(2)} + ${shippingPrice.toFixed(2)} <s>${_(
+                const totalDescription = `${NF.format(currentPrice)} + ${NF.format(shippingPrice)} <s>${_(
                     'shipping'
                 )}</s>`;
                 const { price: ppPrice, charges: ppCharges } = getPayPalPrice(country, totalPrice);
-                const ppDescription = `${totalPrice.toFixed(2)} + ${ppCharges.toFixed(2)} <s>${_(
+                const ppDescription = `${NF.format(totalPrice)} + ${NF.format(ppCharges)} <s>${_(
                     'PayPal charges'
                 )}</s>`;
 
@@ -154,16 +156,16 @@ export function calcTotalPrices(): void {
                     `
                     <a class='region price-line'>
                         <div class='left lgray-11'>${_('Shipping')}</div>
-                        <div class='right gray-11'><u>€</u>${shippingPrice.toFixed(2)}</div>
+                        <div class='right gray-11'><u>€</u>${NF.format(shippingPrice)}</div>
                     </a>
                     <a class='region price-line price-double'>
                         <div class='left lgray-11'>${_('Total')}</div>
-                        <div class='right gray-11'><u>€</u>${totalPrice.toFixed(2)}</div>
+                        <div class='right gray-11'><u>€</u>${NF.format(totalPrice)}</div>
                         <div class='right lgray-11'>&hairsp;<small>(</small>${totalDescription}<small>)</small></div>
                     </a>
                     <a class='region price-line price-double'>
                         <div class='left lgray-11'>PayPal</div>
-                        <div class='right gray-11'><u>€</u>${ppPrice.toFixed(2)}</div>
+                        <div class='right gray-11'><u>€</u>${NF.format(ppPrice)}</div>
                         <div class='right lgray-11'>&hairsp;<small>(</small>${ppDescription}<small>)</small></div>
                     </a>
                     `
@@ -320,9 +322,7 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string) {
         }
         td.insertAdjacentHTML(
             'beforeend',
-            `${percent}<span class='gray-11 price-tooltip' data-price-tooltip>${prefix}${price.toFixed(
-                2
-            )}${suffix}</span>`
+            `${percent}<span class='gray-11 price-tooltip' data-price-tooltip>${prefix}${NF.format(price)}${suffix}</span>`
         );
     }
     if (location.href.includes(`?uid=${UID}`)) {

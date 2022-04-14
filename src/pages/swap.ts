@@ -13,7 +13,8 @@ import {
     removeRowHrefFromSwapList,
     showAllPrices,
 } from '../lib/swap-list';
-import { addFilteringOptions, addSortingOptions } from '../lib/swap-list-sort';
+import { addFilteringOptions } from '../lib/swap-list-filter';
+import { addSortingOptions } from '../lib/swap-list-sort';
 
 export async function handleSwapPage(): Promise<void> {
     addSwapTitle();

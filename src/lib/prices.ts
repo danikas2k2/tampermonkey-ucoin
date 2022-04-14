@@ -1,7 +1,7 @@
 import { countryRegions } from '../data/countries';
 import { Europe, PayPal_Europe, PayPal_UK } from '../data/regions';
 import { Condition, ConditionValues } from './cond';
-import { cmp } from './swap-list-sort';
+import { cmp } from './sort';
 
 type YearMap = Map<string, number[]>;
 type MintMap = Map<string, YearMap>;
@@ -19,10 +19,10 @@ const RX_SILVER = /Silver|Серебро|Sidabras/;
 const RX_GOLD = /Gold|Золото|Auksas/;
 export const RX_YEAR = /Year|Год|Metai/;
 
-const RU_PRICE = 0.0075; //      3-8e/kg
-const EU_PRICE = 0.0125; //    10-15e/kg
-const AG_PRICE = 0.66; //   .60-.80e/g
-const AU_PRICE = 50.0; // 45.0-55.0e/g
+const RU_PRICE = 0.006; //      3-8e/kg
+const EU_PRICE = 0.012; //    10-15e/kg
+const AG_PRICE = 0.728; //   .60-.80e/g
+const AU_PRICE = 56.09; // 44.0-65.0e/g
 
 function sortByCondition(a: Condition, b: Condition): number {
     const A = ConditionValues[a] || 0;
@@ -148,7 +148,7 @@ export function estimateWeightPrice(): void {
     }
 
     const weightPrice = `<br/><price class='right' title='${priceSource}: ${price.toFixed(5)}'>€ ${price.toFixed(
-        2,
+        2
     )}</price>`;
 
     if (!aPrice) {
@@ -178,8 +178,8 @@ export function estimateWeightPrice(): void {
         head?.insertAdjacentHTML(
             'beforebegin',
             `<a href='#price' class='gray-12 right pricewj'>Value:&nbsp;€ <span>${showPrices.join(
-                isAproximate ? '~' : '-',
-            )}</span>${weightPrice}</a>`,
+                isAproximate ? '~' : '-'
+            )}</span>${weightPrice}</a>`
         );
     } else {
         aPrice.insertAdjacentHTML('beforeend', weightPrice);
@@ -188,36 +188,47 @@ export function estimateWeightPrice(): void {
 
 // { [condition]: [mul, add, min] }
 export const PricePropsByCondition = new Map<Condition, [number, number, number]>([
-    [Condition.UNC, [1.75, 0.5, 0.5]],
-    [Condition.AU, [1.5, 0.25, 0.3]],
-    [Condition.XF_, [1.25, 0.1, 0.2]],
-    [Condition.XF, [1.1, 0.05, 0.15]],
-    [Condition.VF_, [1.05, 0.025, 0.12]],
+    [Condition.UNC, [1.5, 0.5, 0.5]],
+    [Condition.AU, [1.25, 0.25, 0.3]],
+    [Condition.XF_, [1.1, 0.1, 0.2]],
+    [Condition.XF, [1.05, 0.05, 0.15]],
+    [Condition.VF_, [1.02, 0.025, 0.12]],
     [Condition.VF, [1, 0, 0.1]],
     [Condition.F, [0.98, -0.05, 0.08]],
     [Condition.VG, [0.95, -0.1, 0.07]],
-    [Condition.G, [0.90, -0.1, 0.06]],
+    [Condition.G, [0.9, -0.1, 0.06]],
 ]);
 
-const YEAR_MULTIPLIER = 0.001;
+const YEAR_MULTIPLIER = 0.05;
+const YEAR_POWER = 0.01;
 const MUL_PLUS_MULTIPLIER = 0.001;
 const ADD_PLUS_MULTIPLIER = 0.01;
 
 export function getPriceByConditions(price: number, cond: Condition, year?: string | null, plus = 0): string {
     if (price && PricePropsByCondition.has(cond)) {
-        const [mul = 1, add = 0, min = 0] = PricePropsByCondition.get(cond) || [];
         const y = +(year || 0);
-        const ymul = 1 + (y && !isNaN(y) ? ((new Date().getUTCFullYear() - y) ** (1.1)) * YEAR_MULTIPLIER : 0);
-        const maxPrice = (price * (mul + MUL_PLUS_MULTIPLIER * plus) + add + ADD_PLUS_MULTIPLIER * plus) * ymul;
-        const minPrice = (min + ADD_PLUS_MULTIPLIER * plus) * ymul;
+        const yDiff = y && !isNaN(y) ? new Date().getUTCFullYear() - y : 0;
+        const yPow = 1 + yDiff * YEAR_POWER;
+        const yBase = 1 + (yPow - 1) * YEAR_MULTIPLIER;
+        const yMul = yBase ** (yPow - 1);
+        const addPlus = plus * ADD_PLUS_MULTIPLIER;
+        const mulPlus = plus * MUL_PLUS_MULTIPLIER;
+        const [mul = 1, add = 0, min = 0] = PricePropsByCondition.get(cond) || [];
+        const maxPrice = (price + addPlus) * (mul + mulPlus) * yMul + add;
+        const minPrice = (min + addPlus) * yMul;
         const final = Math.max(maxPrice, minPrice);
+
         console.debug('', {
             price,
             cond,
             year,
             plus,
-            yplus: new Date().getUTCFullYear() - y,
-            ymul,
+            addPlus,
+            mulPlus,
+            yDiff,
+            yPow,
+            yBase,
+            yMul,
             mul,
             add,
             min,
@@ -230,6 +241,7 @@ export function getPriceByConditions(price: number, cond: Condition, year?: stri
     return '';
 }
 
+// TODO add currency support for shipping prices
 export function getShippingPrice(country: string, weight: number): number {
     if (country === 'lithuania') {
         if (weight <= 50) {
@@ -258,9 +270,10 @@ export function getShippingPrice(country: string, weight: number): number {
         return isEurope ? 11 : 17;
     }
 
-    return getShippingPrice(country, 1900) * Math.floor(weight / 1900) + getShippingPrice(country, weight % 1900);
+    return Math.floor(weight / 1900) * getShippingPrice(country, 1900) + getShippingPrice(country, weight % 1900);
 }
 
+// TODO add discount/custom prices
 export function getPayPalPrice(country: string, price: number): PayPalPrice {
     let percents = 3.4;
     let fixed = 0.35;
