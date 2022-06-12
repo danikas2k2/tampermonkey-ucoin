@@ -6,17 +6,7 @@ import { getFragment, postFragment } from './ajax';
 import { Color, FormColorValues, FormValue, FormValueColors } from './cond';
 import { AbstractForm } from './form';
 import { id } from './selectors';
-import {
-    cancel,
-    handleFormSubmit,
-    handleLinkSubmit,
-    hide,
-    reload,
-    show,
-    todayMonth,
-    updateOptionalElement,
-    updateRequiredElement,
-} from './utils';
+import { cancel, handleFormSubmit, handleLinkSubmit, hide, reload, show, todayMonth, updateOptionalElement, updateRequiredElement } from './utils';
 
 export class CoinForm extends AbstractForm {
     protected addFormId = 'add-coin-form';
@@ -84,7 +74,7 @@ export class CoinForm extends AbstractForm {
 
             await handleFormSubmit(
                 this.form,
-                async () => await this.updateFragment(await postFragment(location.href, new FormData(this.form!)))
+                async () => await this.updateFragment(await postFragment(location.href, new FormData(this.form!))),
             );
 
             if (this.view) {
@@ -105,7 +95,7 @@ export class CoinForm extends AbstractForm {
             if (!buyYearMonth) {
                 buyYear.insertAdjacentHTML(
                     'afterend',
-                    `<input id='buy_year_month' name='buy_year_month' type='month'/>`
+                    `<input id='buy_year_month' name='buy_year_month' type='month'/>`,
                 );
                 buyYearMonth = this.form.buy_year_month;
             }
@@ -202,6 +192,19 @@ export class CoinForm extends AbstractForm {
                 return;
             }
             this.form.public.checked = !this.form.public.checked;
+            if (this.form.public.checked) {
+                const tags = [...document.querySelectorAll('.textboxlist-bit-box')].filter(x => x.textContent === '+');
+                if (tags.length) {
+                    const url = new URL(location.href);
+                    url.pathname = '/coin/';
+                    url.searchParams.set('action', 'deltag');
+                    for (const x of tags) {
+                        url.searchParams.set('tag', '+');
+                        await fetch(url.href);
+                        x.remove();
+                    }
+                }
+            }
             if (await this.postForm()) {
                 updateStatus();
             }
@@ -248,7 +251,7 @@ export class CoinForm extends AbstractForm {
                     if (tbody) {
                         tbody.insertAdjacentHTML(
                             'beforeend',
-                            `<tr><td class='lgray-12' colspan='2'><span class='set status2 wrap' style='max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;'>Need to replace</span></td></tr>`
+                            `<tr><td class='lgray-12' colspan='2'><span class='set status2 wrap' style='max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;'>Need to replace</span></td></tr>`,
                         );
                         status = tbody.querySelector('tr:last-child');
                     }

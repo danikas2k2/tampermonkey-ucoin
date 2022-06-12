@@ -391,7 +391,7 @@ export const countryRegions: Record<string, string[]> = {
     ryukyu: [S, SCE, SE],
     saar: [E, DE],
     saint_helena: [/*F, FNW, FW,*/ UK],
-    saint_helena_ascension: [F, FNW, FW],
+    saint_helena_ascension: [/*F, FNW, FW,*/ UK],
     saint_kitts_nevis: [M, MCR, MR],
     saint_lucia: [M, MCR, MR],
     saint_pierre_miquelon: [M, MN],

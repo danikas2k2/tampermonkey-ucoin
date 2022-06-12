@@ -193,7 +193,7 @@ export function addOpenedTabsHandler(): void {
         document
             .querySelector('#tree .user-info + div span[class^="swap-status"]')
             ?.className.match(/swap-status(\d+)/) || [];
-    console.info(get, status);
+    console.debug(get, status);
     let currentTab =
         getHashParam(TAB_PARAM) ||
         localStorage.getItem(TAB_PARAM) ||
