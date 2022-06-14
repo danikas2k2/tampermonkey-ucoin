@@ -200,9 +200,9 @@ export const PricePropsByCondition = new Map<Condition, [number, number, number]
 ]);
 
 const YEAR_MULTIPLIER = 0.05;
-const YEAR_POWER = 0.01;
-const MUL_PLUS_MULTIPLIER = 0.001;
-const ADD_PLUS_MULTIPLIER = 0.01;
+const YEAR_POWER = 0.012;
+const MUL_PLUS_MULTIPLIER = 0.0015;
+const ADD_PLUS_MULTIPLIER = 0.015;
 
 export function getPriceByConditions(price: number, cond: Condition, year?: string | null, plus = 0): string {
     if (price && PricePropsByCondition.has(cond)) {

@@ -10,5 +10,6 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js
 // @match        https://*.ucoin.net/*
 // @run-at       document-end
+// @grant        none
 // ==/UserScript==
 */

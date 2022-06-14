@@ -192,6 +192,7 @@ export class SwapFormList {
                     if (!l.hasAttribute('onClick')) {
                         continue;
                     }
+
                     const m = l.getAttribute('onClick')?.match(CoinSwapFormOnMatcher) as CoinSwapFormOnMatchResult;
                     const usid = m && m.groups && m.groups.usid;
                     if (!usid || links.has(usid)) {
