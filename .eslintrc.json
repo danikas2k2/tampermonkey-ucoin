@@ -1,13 +1,15 @@
 {
     "env": {
         "browser": true,
-        "es6": true
+        "es6": true,
+        "jest/globals": true
     },
     "extends": [
         "eslint:recommended",
         "node",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:jest/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -35,12 +37,15 @@
             }
         }
     },
+    "plugins": [
+        "jest"
+    ],
     "rules": {
         "@typescript-eslint/explicit-function-return-type": ["warn", {"allowExpressions": true}],
         "@typescript-eslint/no-angle-bracket-type-assertion": "off",
         "@typescript-eslint/no-unused-expressions": "error",
         "@typescript-eslint/no-unused-vars": "error",
-        "@typescript-eslint/consistent-type-assertions": ["error", {"assertionStyle":  "angle-bracket"}],
+        "@typescript-eslint/consistent-type-assertions": ["error", {"assertionStyle":  "as"}],
         "comma-dangle": ["error", "only-multiline"],
         "import/no-nodejs-modules": "off",
         "import/no-unresolved": ["error", {"commonjs": true, "caseSensitive": true}],
@@ -52,6 +57,12 @@
         "no-unused-vars": "error",
         "no-useless-rename": "error",
         "padded-blocks": ["error", "never"],
-        "semi": ["error", "always"]
+        "semi": ["error", "always"],
+        "eqeqeq": ["error", "always", { "null": "ignore" }],
+        "jest/no-disabled-tests": "warn",
+        "jest/no-focused-tests": "error",
+        "jest/no-identical-title": "error",
+        "jest/prefer-to-have-length": "warn",
+        "jest/valid-expect": "error"
     }
 }
