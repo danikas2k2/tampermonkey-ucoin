@@ -1,3 +1,5 @@
+import { documentFragment } from './utils';
+
 type RequestMethod = 'GET' | 'POST';
 
 export async function get(url: RequestInfo, body: BodyInit | null = null): Promise<Response> {
@@ -24,7 +26,7 @@ async function responseOrError(
     return response;
 }
 
-export async function getJson<T = any>(
+export async function getJson<T = unknown>(
     url: RequestInfo,
     body: BodyInit | null = null,
     autoRedirect = true
@@ -32,7 +34,7 @@ export async function getJson<T = any>(
     return await (await responseOrError(url, 'GET', body, autoRedirect)).json();
 }
 
-export async function postJson<T = any>(
+export async function postJson<T = unknown>(
     url: RequestInfo,
     body: BodyInit | null = null,
     autoRedirect = true
@@ -40,18 +42,20 @@ export async function postJson<T = any>(
     return await (await responseOrError(url, 'POST', body, autoRedirect)).json();
 }
 
-export async function getText(url: RequestInfo, body: BodyInit | null = null, autoRedirect = true): Promise<string> {
+export async function getText(
+    url: RequestInfo,
+    body: BodyInit | null = null,
+    autoRedirect = true
+): Promise<string> {
     return await (await responseOrError(url, 'GET', body, autoRedirect)).text();
 }
 
-export async function postText(url: RequestInfo, body: BodyInit | null = null, autoRedirect = true): Promise<string> {
+export async function postText(
+    url: RequestInfo,
+    body: BodyInit | null = null,
+    autoRedirect = true
+): Promise<string> {
     return await (await responseOrError(url, 'POST', body, autoRedirect)).text();
-}
-
-export function documentFragment(src: string): DocumentFragment {
-    const temp = document.createElement('template');
-    temp.innerHTML = src;
-    return temp.content;
 }
 
 export async function getFragment(

@@ -59,8 +59,12 @@ export function addSortingOptions(): void {
             s(`${_('Sorting')}: ${_(sortOptions[currentOption]?.label)}`, currentOrder),
             Object.entries(sortOptions).map(
                 ([field, { label }]) => `
-                    <a class='list-link' data-option='${field}' data-order='a'>${o(_(label))}${a()}</a>
-                    <a class='list-link' data-option='${field}' data-order='d'>${o(_(label))}${d()}</a>
+                    <a class='list-link' data-option='${field}' data-order='a'>${o(
+                    _(label)
+                )}${a()}</a>
+                    <a class='list-link' data-option='${field}' data-order='d'>${o(
+                    _(label)
+                )}${d()}</a>
                 `
             )
         )}</div>`
@@ -76,11 +80,13 @@ export function addSortingOptions(): void {
 
     sortFilter.addEventListener('click', (e) => {
         cancel(e);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         sortDialog!.style.display = 'block';
     });
 
     sortDialog.addEventListener('click', async (e) => {
         cancel(e);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         sortDialog!.style.display = 'none';
 
         const item = (e.target as HTMLElement).closest('a');
@@ -95,7 +101,11 @@ export function addSortingOptions(): void {
 
         currentOption = option;
         currentOrder = order as SortOrder;
-        sortFilter!.innerHTML = s(`${_('Sorting')}: ${_(sortOptions[currentOption]?.label)}`, currentOrder);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        sortFilter!.innerHTML = s(
+            `${_('Sorting')}: ${_(sortOptions[currentOption]?.label)}`,
+            currentOrder
+        );
         await setActiveSortOption(currentOption, currentOrder);
         sortBy(sections, sortOptions[currentOption]?.sort, currentOrder);
     });
@@ -117,7 +127,9 @@ export function addSortingOptions(): void {
                 d[name] = year;
                 d.sortMm = mm.join(' ');
             } else if (field === 'km') {
-                const m = t.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i);
+                const m = t.match(
+                    /(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i
+                );
                 if (m && m.groups) {
                     const {
                         groups: { cat, num, prefix, suffix },

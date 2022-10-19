@@ -3,7 +3,9 @@ import { Condition, ConditionColors } from './cond';
 export const CoinSwapFormOnMatcher =
     /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
 
-export function* getSwapLinks(d: Document | DocumentFragment = document): IterableIterator<HTMLAnchorElement> {
+export function* getSwapLinks(
+    d: Document | DocumentFragment = document
+): IterableIterator<HTMLAnchorElement> {
     const swapBlock = d.getElementById('swap-block');
     if (swapBlock) {
         const listOfLinks = swapBlock.querySelectorAll<HTMLAnchorElement>('a.list-link');
@@ -19,7 +21,9 @@ export function* getSwapLinksWithMatches(): IterableIterator<CoinSwapAnchorAndMa
             continue;
         }
         if (a.hasAttribute('onClick')) {
-            const m = a.getAttribute('onClick')?.match(CoinSwapFormOnMatcher) as CoinSwapFormOnMatchResult;
+            const m = a
+                .getAttribute('onClick')
+                ?.match(CoinSwapFormOnMatcher) as CoinSwapFormOnMatchResult;
             if (m && m.groups) {
                 const { cond, info, vid } = m.groups;
                 yield { a, m: { ...m.groups, uniq: `${cond} ${vid} ${info}` } };
@@ -45,7 +49,10 @@ export function styleSwapLink(a: HTMLAnchorElement): void {
     const y = parts?.shift();
     if (parts?.length) {
         mintBlock.textContent = y || '';
-        mintBlock.insertAdjacentHTML('beforeend', ` <span class="lgray-11">${parts.join(' ')}</span>`);
+        mintBlock.insertAdjacentHTML(
+            'beforeend',
+            ` <span class="lgray-11">${parts.join(' ')}</span>`
+        );
     }
 }
 
@@ -58,7 +65,9 @@ export function styleListLinks(list: HTMLElement): void {
 
 export function addComment(a: HTMLAnchorElement): void {
     if (a.hasAttribute('onClick')) {
-        const m = a.getAttribute('onClick')?.match(CoinSwapFormOnMatcher) as CoinSwapFormOnMatchResult;
+        const m = a
+            .getAttribute('onClick')
+            ?.match(CoinSwapFormOnMatcher) as CoinSwapFormOnMatchResult;
         if (m?.groups) {
             const { info } = m.groups;
             if (info && !a.querySelector('.comments')) {

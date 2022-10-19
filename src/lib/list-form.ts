@@ -1,18 +1,17 @@
 import { getFragment, postFragment } from './ajax';
 import { Color, CondValue } from './cond';
 import { AbstractForm } from './form';
-import { id } from './selectors';
 import { styleListLinks } from './swap-links';
 import {
     cancel,
     disable,
     enable,
-    handleFormSubmit,
-    handleLinkSubmit,
+    handleLinkClick,
     hide,
     show,
     toggle,
     updateRequiredElement,
+    wrapFormSubmit,
 } from './utils';
 
 export abstract class ListForm extends AbstractForm {
@@ -132,16 +131,30 @@ export abstract class ListForm extends AbstractForm {
 
     protected formOnHandler(uid?: string, ...other: string[]): void {
         this.formClickTimeout = setTimeout(() => {
-            this.listBlock && hide(this.listBlock);
-            this.form && this.formClose && show(this.form, this.formClose);
-            this.func && disable(this.func);
-            this.widgetHeader?.removeEventListener('click', (e) => this.widgetHeaderRedirectHandler?.(e));
-            this.widgetHeader?.addEventListener('click', (e) => this.widgetHeaderCloseHandler(e));
+            if (this.listBlock) {
+                hide(this.listBlock);
+            }
+            if (this.form && this.formClose) {
+                show(this.form, this.formClose);
+            }
+            if (this.func) {
+                disable(this.func);
+            }
+            if (this.widgetHeaderRedirectHandler) {
+                this.widgetHeader?.removeEventListener('click', this.widgetHeaderRedirectHandler);
+            }
+            this.widgetHeader?.addEventListener('click', this.widgetHeaderCloseHandler);
             this.fillForm(uid, ...other);
-            this.cancelButton && show(this.cancelButton);
-            this.addButton && toggle(!uid, this.addButton);
+            if (this.cancelButton) {
+                show(this.cancelButton);
+            }
+            if (this.addButton) {
+                toggle(!uid, this.addButton);
+            }
             if (this.deleteButton) {
-                this.editButton && toggle(!!uid, this.editButton, this.deleteButton);
+                if (this.editButton) {
+                    toggle(!!uid, this.editButton, this.deleteButton);
+                }
                 this.deleteButton.href = `?action=del${this.formType}coin&${this.formUid}=${uid}`;
             }
             (uid ? this.editButton : this.addButton)?.focus();
@@ -155,12 +168,20 @@ export abstract class ListForm extends AbstractForm {
     }
 
     protected formOffHandler(): void {
-        this.form && this.formClose && hide(this.form, this.formClose);
-        this.listBlock && show(this.listBlock);
-        this.func && enable(this.func);
+        if (this.form && this.formClose) {
+            hide(this.form, this.formClose);
+        }
+        if (this.listBlock) {
+            show(this.listBlock);
+        }
+        if (this.func) {
+            enable(this.func);
+        }
 
-        this.widgetHeader?.removeEventListener('click', (e) => this.widgetHeaderCloseHandler(e));
-        this.widgetHeader?.addEventListener('click', (e) => this.widgetHeaderRedirectHandler?.(e));
+        this.widgetHeader?.removeEventListener('click', this.widgetHeaderCloseHandler);
+        if (this.widgetHeaderRedirectHandler) {
+            this.widgetHeader?.addEventListener('click', this.widgetHeaderRedirectHandler);
+        }
     }
 
     protected widgetHeaderCloseHandler(e: Event): void {
@@ -183,7 +204,7 @@ export abstract class ListForm extends AbstractForm {
     }
 
     protected updateFormHandlers(): void {
-        const userScope = (globalThis as unknown) as Record<string, () => void>;
+        const userScope = globalThis as unknown as Record<string, () => void>;
         userScope[this.formOnFunctionName] = (...args: string[]) => this.formOnHandler(...args);
         userScope[this.formOffFunctionName] = () => this.formOffHandler();
     }
@@ -193,20 +214,22 @@ export abstract class ListForm extends AbstractForm {
             show(this.main);
             this.removeOneButton();
             this.updateWidget();
-            this.updateForm();
+            await this.updateForm();
         }
         this.updateList();
     }
 
     protected updateButtonSet(): void {
-        const oneButton = this.listBlock?.querySelector<HTMLButtonElement>('center button.btn-s.btn-gray');
+        const oneButton = this.listBlock?.querySelector<HTMLButtonElement>(
+            'center button.btn-s.btn-gray'
+        );
         if (!oneButton) {
             return;
         }
 
-        oneButton.insertAdjacentHTML('afterend', `<div id="${this.buttonSetId}" class="btn-set"/>`);
+        oneButton.insertAdjacentHTML('afterend', `<div id='${this.buttonSetId}' class='btn-set'/>`);
         oneButton.remove();
-        const buttonSet = this.main?.querySelector(id(this.buttonSetId));
+        const buttonSet = this.main?.querySelector(`#${this.buttonSetId}`);
         if (!buttonSet) {
             return;
         }
@@ -214,8 +237,11 @@ export abstract class ListForm extends AbstractForm {
         const addColorButton = (text: string, color: Color, value: CondValue): void => {
             const markerId = `${this.formType}-marker-${value}`;
             const markerClass = `btn-marker marked-${color}`;
-            buttonSet.insertAdjacentHTML('beforeend', `<div id="${markerId}" class="${markerClass}">${text}</div>`);
-            const marker = buttonSet.querySelector(id(markerId));
+            buttonSet.insertAdjacentHTML(
+                'beforeend',
+                `<div id='${markerId}' class='${markerClass}'>${text}</div>`
+            );
+            const marker = buttonSet.querySelector(`#${markerId}`);
             if (marker) {
                 marker.addEventListener('click', () => this.formOnHandler('', `${value}`));
                 marker.addEventListener('dblclick', () => this.formOnHandlerSubmit('', `${value}`));
@@ -233,7 +259,7 @@ export abstract class ListForm extends AbstractForm {
         const condition: HTMLSelectElement = this.form?.condition;
         condition.insertAdjacentHTML(
             'afterend',
-            `<fieldset name="conditionFieldset"><legend class="gray-12" style="padding:5px;">Condition</legend></fieldset>`
+            `<fieldset name='conditionFieldset'><legend class='gray-12' style='padding:5px;'>Condition</legend></fieldset>`
         );
         const fieldset = this.form?.conditionFieldset;
         for (const o of condition.options) {
@@ -242,7 +268,7 @@ export abstract class ListForm extends AbstractForm {
                 const { text, value, checked, style } = c;
                 fieldset.insertAdjacentHTML(
                     'beforeend',
-                    `<label class="dgray-12" style="margin-top:0;${style}"><input name="condition" value="${value}" ${checked} type="radio"/>${text}</label>`
+                    `<label class='dgray-12' style='margin-top:0;${style}'><input name='condition' value='${value}' ${checked} type='radio'/>${text}</label>`
                 );
             }
         }
@@ -251,17 +277,17 @@ export abstract class ListForm extends AbstractForm {
 
     protected updateFormButtons(): void {
         if (this.form) {
-            this.cancelButton = this.form.querySelector(id(this.cancelButtonId));
-            this.addButton = this.form.querySelector(id(this.addButtonId));
-            this.editButton = this.form.querySelector(id(this.editButtonId));
-            this.deleteButton = this.form.querySelector(id(this.deleteButtonId));
+            this.cancelButton = this.form.querySelector(`#${this.cancelButtonId}`);
+            this.addButton = this.form.querySelector(`#${this.addButtonId}`);
+            this.editButton = this.form.querySelector(`#${this.editButtonId}`);
+            this.deleteButton = this.form.querySelector(`#${this.deleteButtonId}`);
             this.deleteButton?.classList.add('btn-red');
         }
     }
 
     protected updateWidget(): void {
         if (this.main) {
-            this.widgetHeader = this.main.querySelector<HTMLElement>(id(this.headerId));
+            this.widgetHeader = this.main.querySelector<HTMLElement>(`#${this.headerId}`);
             if (this.widgetHeader) {
                 this.widgetHeaderRedirectHandler = this.widgetHeader.onclick;
                 this.widgetHeader.removeAttribute('onclick');
@@ -270,7 +296,7 @@ export abstract class ListForm extends AbstractForm {
     }
 
     protected async updateFragment(fragment: DocumentFragment): Promise<void> {
-        this.main = updateRequiredElement(fragment, this.main);
+        updateRequiredElement(fragment, this.main);
         return await this.update();
     }
 
@@ -278,20 +304,26 @@ export abstract class ListForm extends AbstractForm {
         if (!this.main) {
             return;
         }
-        this.func = this.main.querySelector<HTMLElement>(id(this.funcId));
-        this.form = this.main.querySelector<HTMLFormElement>(id(this.formId));
-        this.formClose = this.main.querySelector<HTMLElement>(id(this.formCloseId));
+        this.func = this.main.querySelector<HTMLElement>(`#${this.funcId}`);
+        this.form = this.main.querySelector<HTMLFormElement>(`#${this.formId}`);
+        this.formClose = this.main.querySelector<HTMLElement>(`#${this.formCloseId}`);
         if (!this.form) {
             return;
         }
 
-        await handleFormSubmit(
-            this.form,
-            async () => await this.updateFragment(await postFragment(location.href, new FormData(this.form!)))
+        await wrapFormSubmit(this.form, async () =>
+            this.form
+                ? await this.updateFragment(
+                      await postFragment(location.href, new FormData(this.form))
+                  )
+                : undefined
         );
 
         for (const link of this.form.querySelectorAll<HTMLAnchorElement>('a[type=submit]')) {
-            await handleLinkSubmit(link, async () => await this.updateFragment(await getFragment(link.href)));
+            await handleLinkClick(
+                link,
+                async () => await this.updateFragment(await getFragment(link.href))
+            );
         }
 
         this.updateFormButtons();

@@ -27,7 +27,9 @@
         ],
         "types": [
             "node",
-            "jest"
+            "jest",
+            "@types/jquery",
+            "@types/tampermonkey"
         ]
     },
     "include": [

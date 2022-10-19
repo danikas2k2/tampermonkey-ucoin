@@ -55,8 +55,12 @@ export function addSortingOptions(): void {
             s(_(sortOptions[currentOption]?.label), currentOrder),
             Object.entries(sortOptions).map(
                 ([field, { label }]) => `
-                    <a class='list-link' data-option='${field}' data-order='a'>${o(_(label))}${a()}</a>
-                    <a class='list-link' data-option='${field}' data-order='d'>${o(_(label))}${d()}</a>
+                    <a class='list-link' data-option='${field}' data-order='a'>${o(
+                    _(label)
+                )}${a()}</a>
+                    <a class='list-link' data-option='${field}' data-order='d'>${o(
+                    _(label)
+                )}${d()}</a>
                 `
             )
         )
@@ -118,7 +122,9 @@ export function addSortingOptions(): void {
             } else if (field === 'cond') {
                 d[name] = `${ConditionValues[t]}`;
             } else if (field === 'km') {
-                const m = t.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i);
+                const m = t.match(
+                    /(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i
+                );
                 if (m && m.groups) {
                     const {
                         groups: { cat, num, prefix, suffix },

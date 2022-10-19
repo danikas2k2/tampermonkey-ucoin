@@ -8,7 +8,7 @@ import { UID } from './uid';
 import { getHashParam, updateLocationHash } from './url';
 import { cancel, scrollIntoView } from './utils';
 
-export function addSwapTitle() {
+export function addSwapTitle(): void {
     const title = [...document.querySelectorAll('#swap-mgr div.leftCol > div.user-info > .wrap')]
         .map((e) => e.textContent)
         .join(' / ');
@@ -24,7 +24,9 @@ export function addThumbnails(): void {
         for (const row of document.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr')) {
             const { tooltipImgpath, tooltipSample, tooltipCode } = row.dataset;
             row.querySelector('td')?.insertAdjacentHTML(
-                row.querySelector('div.reserve') || document.body.id === 'swap-list' ? 'beforebegin' : 'afterend',
+                row.querySelector('div.reserve') || document.body.id === 'swap-list'
+                    ? 'beforebegin'
+                    : 'afterend',
                 `
             <th style='width: 100px' class='thumbnails'>
                 ${
@@ -43,13 +45,17 @@ export function addThumbnails(): void {
 }
 
 export function markSeparateCountries(): void {
-    for (const list of document.querySelectorAll<HTMLHeadingElement>('#swap-list, #take-swap-list')) {
+    for (const list of document.querySelectorAll<HTMLHeadingElement>(
+        '#swap-list, #take-swap-list'
+    )) {
         for (const h2 of list.querySelectorAll<HTMLHeadingElement>('h2')) {
             if (separateCountries.includes(h2.id)) {
                 h2.classList.add('separate-country');
             }
         }
-        for (const a of list.querySelectorAll<HTMLHeadingElement>('table.swap-coin td a.dgray-13')) {
+        for (const a of list.querySelectorAll<HTMLHeadingElement>(
+            'table.swap-coin td a.dgray-13'
+        )) {
             if (a.textContent?.includes('euro')) {
                 a.classList.add('separate-country');
             }
@@ -99,11 +105,13 @@ export function calcTotalPrices(): void {
                 if (!currentPrice) {
                     continue;
                 }
-                let p = currentPrice.textContent!;
-                const suffixes = currentPrice!.parentElement!.querySelectorAll('.gray-11');
-                for (const s of suffixes) {
-                    if (s !== currentPrice) {
-                        p = p.replace(s.textContent!, '');
+                let p = currentPrice.textContent ?? '';
+                const suffixes = currentPrice.parentElement?.querySelectorAll('.gray-11');
+                if (suffixes) {
+                    for (const s of suffixes) {
+                        if (s !== currentPrice) {
+                            p = p.replace(s.textContent ?? '', '');
+                        }
                     }
                 }
                 sum += +p;
@@ -135,17 +143,24 @@ export function calcTotalPrices(): void {
                 }
                 `
             );
-            price.parentElement?.parentElement?.classList.add(diff ? 'price-triple' : 'price-double');
+            price.parentElement?.parentElement?.classList.add(
+                diff ? 'price-triple' : 'price-double'
+            );
 
             if (i) {
                 const weightLine = price.closest('a.region')?.nextElementSibling;
-                const weight = +(weightLine?.querySelector('.right')?.textContent?.replace(/[^\d.]/g, '') || 0);
-                const country = getCountryId(tree.previousElementSibling?.querySelector('.gray-11')?.textContent || '');
+                const weight = +(
+                    weightLine?.querySelector('.right')?.textContent?.replace(/[^\d.]/g, '') ?? 0
+                );
+                const country =
+                    getCountryId(
+                        tree.previousElementSibling?.querySelector('.gray-11')?.textContent ?? ''
+                    ) ?? '';
                 const shippingPrice = getShippingPrice(country, weight);
                 const totalPrice = currentPrice + shippingPrice;
-                const totalDescription = `${NF.format(currentPrice)} + ${NF.format(shippingPrice)} <s>${_(
-                    'shipping'
-                )}</s>`;
+                const totalDescription = `${NF.format(currentPrice)} + ${NF.format(
+                    shippingPrice
+                )} <s>${_('shipping')}</s>`;
                 const { price: ppPrice, charges: ppCharges } = getPayPalPrice(country, totalPrice);
                 const ppDescription = `${NF.format(totalPrice)} + ${NF.format(ppCharges)} <s>${_(
                     'PayPal charges'
@@ -179,7 +194,7 @@ const TAB_PARAM = 't';
 const TAB_TAKE = 'take';
 const TAB_NEED = 'need';
 
-async function setActiveSwapTab(tab: string) {
+async function setActiveSwapTab(tab: string): Promise<void> {
     await localStorage.setItem(TAB_PARAM, tab);
     await updateLocationHash((params) => params.set(TAB_PARAM, tab));
 }
@@ -188,13 +203,14 @@ export function addOpenedTabsHandler(): void {
     const [needTab, takeTab] = document.querySelectorAll<HTMLLIElement>(
         `#swap-mgr div.widerightCol > ul.region-list > li.region`
     );
-    const get = document.querySelector('#tree a.list-link:not([href]):first-child .right')?.textContent || '0';
+    const get =
+        document.querySelector('#tree a.list-link:not([href]):first-child .right')?.textContent ||
+        '0';
     const [, status] =
         document
             .querySelector('#tree .user-info + div span[class^="swap-status"]')
             ?.className.match(/swap-status(\d+)/) || [];
-    console.debug(get, status);
-    let currentTab =
+    const currentTab =
         getHashParam(TAB_PARAM) ||
         localStorage.getItem(TAB_PARAM) ||
         (get === '0' || status === '1' || status === '2' ? TAB_TAKE : TAB_NEED);
@@ -250,7 +266,7 @@ export function duplicatePagination(): void {
 
 const INVALID_PRICE_CLASS = 'price-invalid';
 
-function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string) {
+function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string): void {
     const tdCond = tr.querySelector('.td-cond');
     if (!tdCond) {
         return;
@@ -322,7 +338,9 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string) {
         }
         td.insertAdjacentHTML(
             'beforeend',
-            `${percent}<span class='gray-11 price-tooltip' data-price-tooltip>${prefix}${NF.format(price)}${suffix}</span>`
+            `${percent}<span class='gray-11 price-tooltip' data-price-tooltip>${prefix}${NF.format(
+                price
+            )}${suffix}</span>`
         );
     }
     if (location.href.includes(`?uid=${UID}`)) {
@@ -337,16 +355,14 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string) {
                 if (title?.startsWith('AU')) {
                     cond = Condition.AU;
                 }
-            } else {
-                if (title) {
-                    plus = [...title].filter((c) => c === '+').length;
-                    if (cond === Condition.XF) {
-                        cond = Condition.XF_;
-                        plus--;
-                    } else if (cond === Condition.VF) {
-                        cond = Condition.VF_;
-                        plus--;
-                    }
+            } else if (title) {
+                plus = [...title].filter((c) => c === '+').length;
+                if (cond === Condition.XF) {
+                    cond = Condition.XF_;
+                    plus--;
+                } else if (cond === Condition.VF) {
+                    cond = Condition.VF_;
+                    plus--;
                 }
             }
             const year = tr.querySelector('td')?.childNodes?.[0]?.textContent;
@@ -418,7 +434,9 @@ function highlightConflicts(): void {
             } else {
                 selector = `${selector}tr[data-tooltip-name=${JSON.stringify(tooltipName)}]`;
                 if (tooltipSubject) {
-                    selector = `${selector}[data-tooltip-subject=${JSON.stringify(tooltipSubject)}]`;
+                    selector = `${selector}[data-tooltip-subject=${JSON.stringify(
+                        tooltipSubject
+                    )}]`;
                 }
             }
             if (tooltipVariety) {
@@ -439,7 +457,9 @@ function highlightConflicts(): void {
 export function addConflictHandling(): void {
     highlightConflicts();
 
-    const checkboxes = document.querySelectorAll<HTMLInputElement>('#swap-list table.swap-coin input.swap-checkbox');
+    const checkboxes = document.querySelectorAll<HTMLInputElement>(
+        '#swap-list table.swap-coin input.swap-checkbox'
+    );
     for (const checkbox of checkboxes) {
         checkbox.addEventListener('click', (e) => {
             const target = e.target as HTMLInputElement;
@@ -453,7 +473,9 @@ export function addConflictHandling(): void {
         });
     }
 
-    const countryCheckboxes = document.querySelectorAll<HTMLInputElement>('#swap-list h2 input.swap-country-checkbox');
+    const countryCheckboxes = document.querySelectorAll<HTMLInputElement>(
+        '#swap-list h2 input.swap-country-checkbox'
+    );
     for (const checkbox of countryCheckboxes) {
         checkbox.addEventListener('click', (e) => {
             const target = e.target as HTMLInputElement;
@@ -516,10 +538,14 @@ export function checkSold(): void {
             isFirstRequest = false;
 
             const a = sold.querySelector<HTMLAnchorElement>('a.act');
-            a && (await get(a.href));
+            if (a) {
+                await get(a.href);
+            }
 
             const tree = document.getElementById('tree');
-            const soldCountElement = tree?.querySelector('a.region.list-link div.right.blue-13 sup');
+            const soldCountElement = tree?.querySelector(
+                'a.region.list-link div.right.blue-13 sup'
+            );
             if (soldCountElement) {
                 if (--soldCount) {
                     soldCountElement.textContent = `&nbsp;-${soldCount}`;
@@ -542,9 +568,13 @@ export function ignoreUnwanted(): void {
             for (const tr of rows) {
                 const markedElement = tr.querySelector('td span[class^="marked-"]');
                 const markedClass = markedElement && markedElement.classList.item(0);
-                const myCond = (markedClass && ColorValues[+(markedClass.split('marked-').pop() || 0) as Color]) || 0;
+                const myCond =
+                    (markedClass &&
+                        ColorValues[+(markedClass.split('marked-').pop() || 0) as Color]) ||
+                    0;
                 const condElement = tr.querySelector('td.td-cond');
-                const cond = (condElement && ConditionValues[condElement.textContent as Condition]) || 0;
+                const cond =
+                    (condElement && ConditionValues[condElement.textContent as Condition]) || 0;
                 if (myCond && (!cond || cond <= myCond)) {
                     tr.classList.add('ignore');
                 }
@@ -565,8 +595,8 @@ export function removeRowHrefFromSwapList(): void {
     }
 }
 
-export async function addPriceUpdateButton() {
-    let continueCheckbox: HTMLInputElement | null;
+export async function addPriceUpdateButton(): Promise<void> {
+    let continueCheckbox: Optional<HTMLInputElement>;
     const page = document.getElementById('swap-list');
     if (!page) {
         return;
@@ -585,7 +615,7 @@ export async function addPriceUpdateButton() {
     });
     updateIcon();
 
-    continueCheckbox = link.parentElement!.querySelector('#continue');
+    continueCheckbox = link.parentElement?.querySelector('#continue');
     if (continueCheckbox) {
         return;
     }
@@ -600,7 +630,7 @@ export async function addPriceUpdateButton() {
         </label>
         `
     );
-    continueCheckbox = link.parentElement!.querySelector('#continue');
+    continueCheckbox = link.parentElement?.querySelector('#continue');
     const minDelay = continueCheckbox?.checked ? 5_000 : 3_000;
     const rndDelay = continueCheckbox?.checked ? 5_000 : 2_000;
     if (checked) {
@@ -608,70 +638,72 @@ export async function addPriceUpdateButton() {
         await updatePrices();
     }
 
-    function updateIcon() {
+    function updateIcon(): void {
         const icon = link?.querySelector('div.ico-16');
         if (icon) {
-            const hasCondPrices = !!page!.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr[data-cond-price]')
-                ?.length;
+            const hasCondPrices = !!page?.querySelectorAll<HTMLTableRowElement>(
+                'table.swap-coin tr[data-cond-price]'
+            )?.length;
             icon.classList.toggle('ico-16-swap1', hasCondPrices);
             icon.classList.toggle('ico-16-check1', !hasCondPrices);
         }
     }
 
-    async function updatePrices() {
-        const rows = page!.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr');
-        let first = true;
-        for (const row of rows) {
-            const condPrice = row.dataset.condPrice;
-            if (condPrice) {
-                const usid = row.id.substr(4);
-                const cond = row.querySelector<HTMLSelectElement>(`#cond-${usid}`)?.value || '';
-                const qty = row.querySelector<HTMLInputElement>(`#qty-${usid}`)?.value || '';
-                const url = new URL('/swap-list/', location.href);
-                url.searchParams.set('single-edit', '1');
-                url.searchParams.set('usid', usid);
-                url.searchParams.set('cond', cond);
-                url.searchParams.set('price', condPrice);
-                url.searchParams.set('qty', qty);
-                console.debug('UPDATE', url.href);
+    async function updatePrices(): Promise<void> {
+        const rows = page?.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr');
+        if (rows) {
+            let first = true;
+            for (const row of rows) {
+                const condPrice = row.dataset.condPrice;
+                if (condPrice) {
+                    const usid = row.id.slice(4);
+                    const cond = row.querySelector<HTMLSelectElement>(`#cond-${usid}`)?.value || '';
+                    const qty = row.querySelector<HTMLInputElement>(`#qty-${usid}`)?.value || '';
+                    const url = new URL('/swap-list/', location.href);
+                    url.searchParams.set('single-edit', '1');
+                    url.searchParams.set('usid', usid);
+                    url.searchParams.set('cond', cond);
+                    url.searchParams.set('price', condPrice);
+                    url.searchParams.set('qty', qty);
 
-                scrollIntoView(row);
-                if (first) {
-                    first = false;
-                } else {
-                    await randomDelay(rndDelay, minDelay);
-                }
-                try {
-                    const response = await fetch(url.href);
-                    if (!response.ok) {
-                        console.error(`Response was not OK:\n${JSON.stringify(response, null, 4)}`);
+                    scrollIntoView(row);
+                    if (first) {
+                        first = false;
+                    } else {
+                        await randomDelay(rndDelay, minDelay);
+                    }
+                    try {
+                        const response = await fetch(url.href);
+                        if (!response.ok) {
+                            await randomDelay(rndDelay, minDelay);
+                            location.reload();
+                            return;
+                        }
+                    } catch (e) {
                         await randomDelay(rndDelay, minDelay);
                         location.reload();
                         return;
                     }
-                } catch (e) {
-                    console.error(e);
-                    await randomDelay(rndDelay, minDelay);
-                    location.reload();
-                    return;
-                }
 
-                delete row.dataset.condPrice;
-                row.classList.remove(INVALID_PRICE_CLASS);
-                updatePriceCol(row, condPrice);
+                    delete row.dataset.condPrice;
+                    row.classList.remove(INVALID_PRICE_CLASS);
+                    updatePriceCol(row, condPrice);
+                }
             }
         }
         updateIcon();
 
         if (!continueCheckbox?.checked) {
-            scrollIntoView(link!);
+            scrollIntoView(link);
             return;
         }
 
-        const currentPageElement = page!.querySelector<HTMLAnchorElement>('#swap-list div.pages a.current');
+        const currentPageElement = page?.querySelector<HTMLAnchorElement>(
+            '#swap-list div.pages a.current'
+        );
         if (currentPageElement) {
             const nextPage = +(currentPageElement.textContent || 0) + 1;
-            const nextPageElement = page!.querySelector<HTMLAnchorElement>(
+            const nextPageElement = page?.querySelector<HTMLAnchorElement>(
                 `#swap-list div.pages a[href$="&page=${nextPage}"]`
             );
             if (nextPageElement) {
@@ -680,7 +712,9 @@ export async function addPriceUpdateButton() {
                 nextPageElement.click();
                 return;
             }
-            const firstPageElement = page!.querySelector<HTMLAnchorElement>(`#swap-list div.pages a:first-child`);
+            const firstPageElement = page?.querySelector<HTMLAnchorElement>(
+                `#swap-list div.pages a:first-child`
+            );
             if (firstPageElement && !firstPageElement?.classList.contains('current')) {
                 await randomDelay(10_000, 10_000);
                 firstPageElement.click();

@@ -1,7 +1,6 @@
 import { Color, Condition, FormValue, FormValueCondition, SwapValue } from './cond';
 import { ListForm } from './list-form';
 import { getPriceByConditions } from './prices';
-import { id } from './selectors';
 import { SwapFormList } from './swap-form-list';
 import { addLinkComments, styleListLinks } from './swap-links';
 import { getCurrentVarietyId } from './vid';
@@ -32,7 +31,15 @@ export class SwapForm extends ListForm {
     // eslint-disable-next-line no-invalid-this
     private swapListManager = new SwapFormList(this);
 
-    protected fillForm(uid = '', cond = '', price = '', info = '', vid = '', qty = '', replica = ''): void {
+    protected fillForm(
+        uid = '',
+        cond = '',
+        price = '',
+        info = '',
+        vid = '',
+        qty = '',
+        replica = ''
+    ): void {
         super.fillForm(uid, cond || (replica && '100'), price, vid || getCurrentVarietyId());
         const { form } = this;
         if (!form) {
@@ -40,6 +47,7 @@ export class SwapForm extends ListForm {
         }
         form.comment.value = info;
         form.qty.value = qty || '1';
+        // eslint-disable-next-line eqeqeq
         if (!form.price.value || form.price.value == this.getDefaultPrice(vid)) {
             form.price.value = this.getPriceByCondition(vid);
             debug(form.price.value);
@@ -50,7 +58,7 @@ export class SwapForm extends ListForm {
         this.listBlock = document.getElementById(this.listId);
         if (this.listBlock) {
             this.swapListManager.update(this.listBlock);
-            for (const list of document.querySelectorAll<HTMLElement>(id(this.listId))) {
+            for (const list of document.querySelectorAll<HTMLElement>(`#${this.listId}`)) {
                 styleListLinks(list);
             }
             addLinkComments();
@@ -63,7 +71,7 @@ export class SwapForm extends ListForm {
         const DIV_ID = 'some-strange-div';
         console.log(DIV_ID);
         listBlock.insertAdjacentHTML('afterbegin', `<div id="${DIV_ID}" style="max-height:400px;overflow-x:hidden;overflow-y:auto;background:red"/>`);
-        const div = listBlock.querySelector(id(DIV_ID));
+        const div = listBlock.querySelector(`#${DIV_ID}`);
         for (const {a} of getSwapLinksWithMatches()) {
             div.insertAdjacentElement('beforeend', a);
         }
@@ -145,22 +153,24 @@ export class SwapForm extends ListForm {
         );
 
         form.resetprice.addEventListener('click', () => {
-            form.price.value = this.getPriceByCondition((this.formVariety && form[this.formVariety]?.value) || '');
+            form.price.value = this.getPriceByCondition(
+                (this.formVariety && form[this.formVariety]?.value) || ''
+            );
             debug(form.price.value);
         });
     }
 
-    getDefaultPrice(vid = '') {
+    getDefaultPrice(vid = ''): number {
         const { form } = this;
         return +(
             (vid &&
-                document.querySelector(`#coin table.tbl tr td a[href$="&vid=${vid}#price"]`)?.childNodes?.[1]
-                    ?.textContent) ||
+                document.querySelector(`#coin table.tbl tr td a[href$="&vid=${vid}#price"]`)
+                    ?.childNodes?.[1]?.textContent) ||
             form?.price.placeholder
         );
     }
 
-    getPriceByCondition(vid = '') {
+    getPriceByCondition(vid = ''): string | void {
         const { form } = this;
         if (!form) {
             return;
@@ -185,7 +195,8 @@ export class SwapForm extends ListForm {
             plus--;
         }
 
-        const year = document.querySelector('#swap-block span.gray-13')?.childNodes?.[0]?.textContent;
+        const year = document.querySelector('#swap-block span.gray-13')?.childNodes?.[0]
+            ?.textContent;
 
         return getPriceByConditions(this.getDefaultPrice(vid), cond, year, plus);
     }

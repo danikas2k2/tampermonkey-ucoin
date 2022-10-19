@@ -14,14 +14,14 @@ export interface SortOption {
 export const x = (name: string): string =>
     `<div class='right close' title='Clear filter' data-filter-clear='${name}'>×</div>`;
 
-export const a = (ord: string = 'a'): string =>
+export const a = (ord: SortOrder = 'a'): string =>
     `<div class='right'><span class='arrow ${ord === 'a' ? 'at' : 'ab'}'></span></div>`;
 
-export const d = (ord: string = 'd'): string => a(ord);
+export const d = (ord: SortOrder = 'd'): string => a(ord);
 
 export const o = (opt: string): string => `<div class='left gray-13'>${opt}</div>`;
 
-export const s = (option: string, order: SortOrder) => `${o(option)}${a(order)}`;
+export const s = (option: string, order: SortOrder): string => `${o(option)}${a(order)}`;
 
 export function c(html: string | undefined): string {
     if (!html) {
@@ -34,7 +34,7 @@ export function c(html: string | undefined): string {
     return template.innerHTML;
 }
 
-export function dropdown(id: string, selected: string, options: string[]) {
+export function dropdown(id: string, selected: string, options: string[]): string {
     return `
     <div class='right filter-container'>
         <div class='filter-box' id='${id}'>
@@ -51,7 +51,7 @@ export const num = (s: string | undefined): number => (s ? +s.replace(/[^.\d]/g,
 
 export const cmp = <T = string | number>(a: T, b: T): number => -(a < b) || +(a > b);
 
-export const sortField = <T extends string>(field: T) => `sort${tt(field)}`;
+export const sortField = <T extends string>(field: T): string => `sort${tt(field)}`;
 
 export const cmpNum = <T extends string>(a: DOMStringMap, b: DOMStringMap, field: T): number =>
     cmp(num(a[sortField(field)]), num(b[sortField(field)]));
@@ -63,7 +63,10 @@ export const cmpYear = (a: DOMStringMap, b: DOMStringMap, o = 1): number =>
     o * cmpNum(a, b, 'year') || o * cmpStr(a, b, 'mm');
 
 export const cmpKm = (a: DOMStringMap, b: DOMStringMap, o = 1): number =>
-    o * cmpStr(a, b, 'kmc') || o * cmpNum(a, b, 'km') || o * cmpStr(a, b, 'kma') || o * cmpYear(a, b);
+    o * cmpStr(a, b, 'kmc') ||
+    o * cmpNum(a, b, 'km') ||
+    o * cmpStr(a, b, 'kma') ||
+    o * cmpYear(a, b);
 
 export const cmpFace = (a: DOMStringMap, b: DOMStringMap, o = 1): number =>
     o * cmpStr(a, b, 'face') || o * cmpKm(a, b, -1);
@@ -71,12 +74,17 @@ export const cmpFace = (a: DOMStringMap, b: DOMStringMap, o = 1): number =>
 export const cmpSubject = (a: DOMStringMap, b: DOMStringMap, o = 1): number =>
     o * cmpStr(a, b, 'subject') || cmpFace(a, b);
 
-export const cmpCond = (a: DOMStringMap, b: DOMStringMap, o = 1): number => o * cmpNum(a, b, 'cond') || cmpFace(a, b);
+export const cmpCond = (a: DOMStringMap, b: DOMStringMap, o = 1): number =>
+    o * cmpNum(a, b, 'cond') || cmpFace(a, b);
 
 export const cmpValue = (a: DOMStringMap, b: DOMStringMap, o = 1): number =>
     o * cmpNum(a, b, 'value') || cmpCond(a, b, -1);
 
-export function sortBy(sections: NodeListOf<HTMLTableSectionElement>, sort: SortFunction, order: SortOrder): void {
+export function sortBy(
+    sections: NodeListOf<HTMLTableSectionElement>,
+    sort: SortFunction,
+    order: SortOrder
+): void {
     const ord = order === 'a' ? 1 : -1;
     for (const section of sections) {
         const rows = [...section.querySelectorAll('tr')];
@@ -95,7 +103,7 @@ export const getActiveSortOption = (): [string, SortOrder] => {
     return [field, order as SortOrder];
 };
 
-export const setActiveSortOption = async (option: string, order: SortOrder) =>
+export const setActiveSortOption = async (option: string, order: SortOrder): Promise<void> =>
     updateLocationHash((params) => {
         params.set(ORDER_PARAM, `${option}${ORDER_SEPARATOR}${order}`);
     });

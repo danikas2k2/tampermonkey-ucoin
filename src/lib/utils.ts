@@ -1,13 +1,12 @@
-export function sp(str: string): string {
-    return `${str || ''}`
-        .replace(/\u{00A0}+/gu, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
+export const sp = (str = ''): string => str.replace(/\p{Z}+/gu, ' ').trim();
+
+export function tt(str = ''): string {
+    const index = str.match(/\P{Z}/u)?.index ?? 0;
+    return `${str.slice(0, index)}${str.charAt(index).toUpperCase()}${str.slice(index + 1)}`;
 }
 
-export function tt(str: string): string {
-    str = `${str || ''}`;
-    return `${str.charAt(0).toUpperCase()}${str.substr(1)}`;
+export function isHidden(element: HTMLElement): boolean {
+    return element.classList.contains('hide');
 }
 
 export function show(...elements: HTMLElement[]): void {
@@ -47,50 +46,51 @@ export function cancel(e: Event): void {
     }
 }
 
-// export function immediateCancel(e: Event) {
-//     if (e) {
-//         e.preventDefault();
-//         e.stopPropagation();
-//     }
-// }
-//
-// export function preventDefault(e: Event) {
-//     e && e.preventDefault();
-// }
-//
-// export function stopPropagation(e: Event) {
-//     e && e.stopPropagation();
-// }
-//
-// export function stopImmediatePropagation(e: Event) {
-//     e && e.stopImmediatePropagation();
-// }
-
 export function reload(): null {
     location.reload();
     return null;
 }
 
-export function updateRequiredElement(fragment: DocumentFragment, element: HTMLElement | null): HTMLElement | null {
-    if (element) {
-        const newElement = fragment.getElementById(element.id);
-        if (!newElement) {
-            return reload();
-        }
-        element.innerHTML = newElement.innerHTML;
-        element.querySelectorAll('[data-href]').forEach((el: HTMLElement) => {
-            el.addEventListener('click',  (e) => {
-                cancel(e);
-                const a = document.createElement('a');
-                a.href = el.dataset.href!;
-                a.dispatchEvent(new MouseEvent(e.type, e));
-            });
-        });
-    }
-    return element;
+export function documentFragment(src: string): DocumentFragment {
+    const temp = document.createElement('template');
+    temp.innerHTML = src;
+    return temp.content;
 }
 
-export function updateOptionalElement(fragment: DocumentFragment, element: HTMLElement | null): HTMLElement | null {
+export function dataHrefClickHandler(e: Event): void {
+    cancel(e);
+    const a = document.createElement('a');
+    a.href = (e.target as HTMLElement | null)?.dataset?.href ?? '';
+    a.dispatchEvent(new MouseEvent(e.type, e));
+}
+
+export function wrapDataHrefClicks(element: HTMLElement): void {
+    element.querySelectorAll('[data-href]').forEach((el: HTMLElement) => {
+        el.addEventListener('click', dataHrefClickHandler);
+    });
+}
+
+export function updateRequiredElement(
+    fragment: DocumentFragment,
+    element: HTMLElement | null,
+    onUpdated: (element: HTMLElement) => void = wrapDataHrefClicks,
+    onMissing: (element: HTMLElement) => void = reload
+): void {
+    if (!element) {
+        return;
+    }
+    const newElement = fragment.getElementById(element.id);
+    if (!newElement) {
+        return onMissing?.(element);
+    }
+    element.innerHTML = newElement.innerHTML;
+    onUpdated?.(element);
+}
+
+export function updateOptionalElement(
+    fragment: DocumentFragment,
+    element: HTMLElement | null
+): HTMLElement | null {
     if (element) {
         const newElement = fragment.getElementById(element.id);
         if (newElement) {
@@ -103,7 +103,7 @@ export function updateOptionalElement(fragment: DocumentFragment, element: HTMLE
     return element;
 }
 
-export async function updateParts(
+/*export async function updateParts(
     fragment: DocumentFragment,
     callback: UpdateCallback,
     required: HTMLElement[],
@@ -114,34 +114,50 @@ export async function updateParts(
         optional.map((element) => updateOptionalElement(fragment, element));
     }
     return await callback();
+}*/
+
+export async function formSubmitHandler(
+    e: Event,
+    onSubmit?: EventHandler<HTMLFormElement, boolean> | null,
+    onSuccess?: UpdateCallback
+): Promise<void> {
+    cancel(e);
+    const form = e.target as HTMLFormElement;
+    if (onSubmit?.call(form, e) !== false) {
+        return onSuccess?.(form);
+    }
 }
 
-export async function handleFormSubmit(form: HTMLFormElement, callback: RequestCallback): Promise<void> {
+export function wrapFormSubmit(form: HTMLFormElement, onSuccess?: UpdateCallback): void {
     form.addEventListener(
         'submit',
-        ((onsubmit) => async (e: Event) => {
-            cancel(e);
-            const form = e.target as HTMLFormElement;
-            if (onsubmit && onsubmit.call(form, e) === false) {
-                return;
-            }
-            await callback();
-        })(form.onsubmit)
+        (
+            (onSubmit) => async (e: Event) =>
+                await formSubmitHandler(e, onSubmit, onSuccess)
+        )(form.onsubmit)
     );
     form.removeAttribute('onsubmit');
 }
 
-export async function handleLinkSubmit(link: HTMLAnchorElement, callback: RequestCallback): Promise<void> {
+export async function linkClickHandler(
+    e: Event,
+    onClick?: EventHandler<HTMLAnchorElement, boolean> | null,
+    onSuccess?: UpdateCallback
+): Promise<void> {
+    cancel(e);
+    const link = e.target as HTMLAnchorElement;
+    if (onClick?.call(link, e) !== false) {
+        return onSuccess?.(link);
+    }
+}
+
+export function handleLinkClick(link: HTMLAnchorElement, onSuccess: RequestCallback): void {
     link.addEventListener(
         'click',
-        ((onclick) => async (e: Event) => {
-            cancel(e);
-            const link = e.target as HTMLAnchorElement;
-            if (onclick?.call(link, e) === false) {
-                return;
-            }
-            await callback();
-        })(link.onclick)
+        (
+            (onClick) => (e: Event) =>
+                linkClickHandler(e, onClick, onSuccess)
+        )(link.onclick)
     );
     link.removeAttribute('onclick');
 }
@@ -158,6 +174,6 @@ export function slug(s: string): string {
     return s.replace(/\W+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
 }
 
-export function scrollIntoView(element: HTMLElement) {
-    element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+export function scrollIntoView(element?: HTMLElement | null): void {
+    element?.scrollIntoView?.({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
 }

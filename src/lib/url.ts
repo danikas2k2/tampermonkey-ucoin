@@ -14,7 +14,8 @@ export function setHash(hash: HashValue): void {
     }
 }
 
-export const getUrl = (href: UrlType): URL => (typeof href === 'string' ? new URL(href, location.href) : href);
+export const getUrl = (href: UrlType): URL =>
+    typeof href === 'string' ? new URL(href, location.href) : href;
 
 export const hashSearchParams = (url: UrlType = loc()): URLSearchParams =>
     new URLSearchParams(getUrl(url).hash.slice(1));

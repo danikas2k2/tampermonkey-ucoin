@@ -4,11 +4,15 @@
         "es6": true,
         "jest/globals": true
     },
+    "parser": "@typescript-eslint/parser",
     "extends": [
         "eslint:recommended",
         "node",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
+        "plugin:react/recommended",
+        "plugin:jsx-a11y/recommended",
         "plugin:jest/recommended"
     ],
     "globals": {
@@ -17,7 +21,10 @@
     },
     "parserOptions": {
         "ecmaVersion": 2018,
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
     },
     "settings": {
         "import/extensions": [
@@ -26,7 +33,7 @@
             ".js",
             ".jsx"
         ],
-        "import/resolver":  {
+        "import/resolver": {
             "node": {
                 "extensions": [
                     ".ts",
@@ -35,30 +42,67 @@
                     ".jsx"
                 ]
             }
+        },
+        "react": {
+            "version": "detect"
         }
     },
     "plugins": [
+        "@typescript-eslint",
+        "react",
+        "jsx-a11y",
         "jest"
     ],
     "rules": {
-        "@typescript-eslint/explicit-function-return-type": ["warn", {"allowExpressions": true}],
+        "@typescript-eslint/explicit-function-return-type": [
+            "warn",
+            {
+                "allowExpressions": true
+            }
+        ],
         "@typescript-eslint/no-angle-bracket-type-assertion": "off",
         "@typescript-eslint/no-unused-expressions": "error",
         "@typescript-eslint/no-unused-vars": "error",
-        "@typescript-eslint/consistent-type-assertions": ["error", {"assertionStyle":  "as"}],
-        "comma-dangle": ["error", "only-multiline"],
+        "@typescript-eslint/consistent-type-assertions": [
+            "error",
+            {
+                "assertionStyle": "as"
+            }
+        ],
+        "comma-dangle": [
+            "error",
+            "only-multiline"
+        ],
         "import/no-nodejs-modules": "off",
-        "import/no-unresolved": ["error", {"commonjs": true, "caseSensitive": true}],
+        "import/no-unresolved": [
+            "error",
+            {
+                "commonjs": true,
+                "caseSensitive": true
+            }
+        ],
         "import/prefer-default-export": "off",
-        "indent": ["error", 4, { "SwitchCase": 1 }],
         "no-console": "error",
         "no-unused-expressions": "error",
         "no-unused-labels": "error",
         "no-unused-vars": "error",
         "no-useless-rename": "error",
-        "padded-blocks": ["error", "never"],
-        "semi": ["error", "always"],
-        "eqeqeq": ["error", "always", { "null": "ignore" }],
+        "padded-blocks": [
+            "error",
+            "never"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "eqeqeq": [
+            "error",
+            "always",
+            {
+                "null": "ignore"
+            }
+        ],
+        "prettier/prettier": "error",
         "jest/no-disabled-tests": "warn",
         "jest/no-focused-tests": "error",
         "jest/no-identical-title": "error",

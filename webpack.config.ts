@@ -14,7 +14,7 @@ const config = (): webpack.Configuration => ({
         rules: [
             { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },
             { test: /\.svg$/, use: 'svg-inline-loader' },
-            { test: /\.less$/, use: [{ loader: 'css-loader' }, { loader: 'less-loader' }] },
+            { test: /\.less$/, use: ['style-loader', 'css-loader', 'less-loader'] },
             {
                 test: /\.ts$/,
                 use: [
@@ -33,9 +33,17 @@ const config = (): webpack.Configuration => ({
             },
         ],
     },
+    externals: {
+        react: 'React',
+        'react-dom': 'ReactDOM',
+        'react-dom/server': 'ReactDOMServer',
+    },
     plugins: [
         new webpack.BannerPlugin({
-            banner: fs.readFileSync('./USERSCRIPT.ts', 'utf8').replace(/{{project\.version}}/g, PACKAGE.version),
+            // eslint-disable-next-line no-sync
+            banner: fs
+                .readFileSync('./USERSCRIPT.ts', 'utf8')
+                .replace(/{{project\.version}}/g, PACKAGE.version),
             entryOnly: true,
             raw: true,
         }),

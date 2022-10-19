@@ -4,7 +4,7 @@ import { lang } from './lang';
 import { getHashParam, updateLocationHash } from './url';
 import { slug, unique } from './utils';
 
-export async function handleCountryRegions() {
+export async function handleCountryRegions(): Promise<void> {
     const headingList = document.querySelector('ul.hor-switcher ~ ul.region-list');
     if (!headingList) {
         return;
@@ -26,7 +26,8 @@ export async function handleCountryRegions() {
         for (const [k, sub] of Object.entries(regions)) {
             const id = slug(k);
             const active = currentRegion && id === currentRegion ? ' active' : '';
-            const hide = currentRegion && id !== currentRegion && topRegions.includes(k) ? ` hide` : '';
+            const hide =
+                currentRegion && id !== currentRegion && topRegions.includes(k) ? ` hide` : '';
             container.insertAdjacentHTML(
                 'beforeend',
                 `<li class='region${hide}${active}' id='${id}'><h2>${
@@ -34,9 +35,15 @@ export async function handleCountryRegions() {
                 }</h2><ul class='regions'></ul><div class='country-list catalog-list'></div></li>`
             );
             const region = container.querySelector(`#${id} .regions`);
-            region && renderRegions(region, sub);
+            if (region) {
+                renderRegions(region, sub);
+            }
         }
-    })(countryList.previousElementSibling!, regionTree);
+    })(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        countryList.previousElementSibling!,
+        regionTree
+    );
 
     // move countries to regions
     const coinCounts: Record<string, number> = {};
@@ -50,7 +57,7 @@ export async function handleCountryRegions() {
         //     unique(regions).forEach((r) => {
         const regions = countryRegions[cid];
         if (regions) {
-            for (let r of unique(regions)) {
+            for (const r of unique(regions)) {
                 const id = slug(r);
                 const cl = document.querySelector(`.region#${id} > .country-list`);
                 if (cl && !cl.querySelector(`#${cid}`)) {
@@ -67,9 +74,13 @@ export async function handleCountryRegions() {
                         p = r.parentElement
                     ) {
                         const rid = r.id;
-                        coinCounts[rid] = (coinCounts[rid] || 0) >= coinCount ? coinCounts[rid] - coinCount : 0;
-                        countryCounts[rid] = (countryCounts[rid] || 0) >= 1 ? countryCounts[rid] - 1 : 0;
-                        r.parentElement?.querySelector(`#${rid} > .country-list > #${cid}`)?.remove();
+                        coinCounts[rid] =
+                            (coinCounts[rid] || 0) >= coinCount ? coinCounts[rid] - coinCount : 0;
+                        countryCounts[rid] =
+                            (countryCounts[rid] || 0) >= 1 ? countryCounts[rid] - 1 : 0;
+                        r.parentElement
+                            ?.querySelector(`#${rid} > .country-list > #${cid}`)
+                            ?.remove();
                     }
                 }
             }
@@ -102,7 +113,9 @@ export async function handleCountryRegions() {
                     .querySelector('h2')
                     ?.insertAdjacentHTML(
                         'beforeend',
-                        `<span class='lgray-13'>( ${countryCounts[r.id]} / ${coinCounts[r.id]} )</span>`
+                        `<span class='lgray-13'>( ${countryCounts[r.id]} / ${
+                            coinCounts[r.id]
+                        } )</span>`
                     )
         );
 
@@ -136,13 +149,17 @@ export async function handleCountryRegions() {
         const id = li.dataset.id;
         if (!id) {
             await updateLocationHash((params) => params.delete(REGION_TAB));
-            document.querySelectorAll<HTMLDivElement>('.region-list ~ .regions > li.region').forEach((c) => {
-                c.classList.remove('active');
-                c.classList.remove('hide');
-            });
+            document
+                .querySelectorAll<HTMLDivElement>('.region-list ~ .regions > li.region')
+                .forEach((c) => {
+                    c.classList.remove('active');
+                    c.classList.remove('hide');
+                });
         } else {
             await updateLocationHash((params) => params.set(REGION_TAB, id));
-            const cc = document.querySelectorAll<HTMLDivElement>(`.region-list ~ .regions > li.region:not(#${id})`);
+            const cc = document.querySelectorAll<HTMLDivElement>(
+                `.region-list ~ .regions > li.region:not(#${id})`
+            );
             for (const c of cc) {
                 c.classList.remove('active');
                 c.classList.add('hide');

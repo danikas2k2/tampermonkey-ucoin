@@ -13,7 +13,11 @@ function updateStatusElements(): void {
     publicStatus = gallery?.querySelectorAll<HTMLDivElement>('.coin .desc-block span.status1');
 }
 
-async function postPublicityForm(url: RequestInfo, form: HTMLFormElement, checked: boolean): Promise<Response> {
+async function postPublicityForm(
+    url: RequestInfo,
+    form: HTMLFormElement,
+    checked: boolean
+): Promise<Response> {
     const publicInput = form.querySelector<HTMLInputElement>('input[name=public]');
     if (publicInput) {
         publicInput.checked = checked;
@@ -40,7 +44,9 @@ function addVisibilityToggleButton(
         button = document.getElementById(buttonId) as HTMLButtonElement;
         button.addEventListener(
             'click',
-            () => confirm(`Are you sure to ${text.toLowerCase()}?`) && callback(container, visibility)
+            () =>
+                // eslint-disable-next-line no-alert
+                confirm(`Are you sure to ${text.toLowerCase()}?`) && callback(container, visibility)
         );
     }
 
@@ -54,8 +60,22 @@ function addVisibilityToggleButton(
 }
 
 function toggleButtonVisibility(container: HTMLElement, callback: VisibilityToggleCallback): void {
-    addVisibilityToggleButton(container, 'Show', 'btn-blue', true, privateStatus?.length || 0, callback);
-    addVisibilityToggleButton(container, 'Hide', 'btn-gray', false, publicStatus?.length || 0, callback);
+    addVisibilityToggleButton(
+        container,
+        'Show',
+        'btn-blue',
+        true,
+        privateStatus?.length || 0,
+        callback
+    );
+    addVisibilityToggleButton(
+        container,
+        'Hide',
+        'btn-gray',
+        false,
+        publicStatus?.length || 0,
+        callback
+    );
 }
 
 async function toggleGroupVisibility(container: HTMLElement, checked: boolean): Promise<void> {
@@ -69,7 +89,8 @@ async function toggleGroupVisibility(container: HTMLElement, checked: boolean): 
     }
 
     for await (const status of statusList) {
-        const url = status.parentElement?.querySelector<HTMLAnchorElement>(`.coin-desc div a`)?.href;
+        const url =
+            status.parentElement?.querySelector<HTMLAnchorElement>(`.coin-desc div a`)?.href;
         if (!url) {
             continue;
         }
@@ -81,7 +102,8 @@ async function toggleGroupVisibility(container: HTMLElement, checked: boolean): 
         temp.innerHTML = responseText;
         const fragment: DocumentFragment = temp.content;
 
-        const coinForm = fragment.getElementById('edit-coin-form') || document.getElementById('add-coin-form');
+        const coinForm =
+            fragment.getElementById('edit-coin-form') || document.getElementById('add-coin-form');
         if (!coinForm) {
             continue;
         }

@@ -83,7 +83,9 @@ describe('hashSearchParams', () => {
 
 describe('updateHashHref', () => {
     it('update location hash by string', async () => {
-        expect(await updateHashHref('foo=bar&baz=qux')).toEqual('http://localhost/#foo=bar&baz=qux');
+        expect(await updateHashHref('foo=bar&baz=qux')).toEqual(
+            'http://localhost/#foo=bar&baz=qux'
+        );
     });
 
     it('update location hash by search params', async () => {
@@ -108,9 +110,9 @@ describe('updateHashHref', () => {
     });
 
     it('update location hash by async processor returning params', async () => {
-        expect(await updateHashHref(async () => new URLSearchParams({ foo: 'bar', baz: 'qux' }))).toEqual(
-            'http://localhost/#foo=bar&baz=qux'
-        );
+        expect(
+            await updateHashHref(async () => new URLSearchParams({ foo: 'bar', baz: 'qux' }))
+        ).toEqual('http://localhost/#foo=bar&baz=qux');
     });
 
     it('update location hash by async processor updating params', async () => {
@@ -129,14 +131,20 @@ describe('updateHashHref', () => {
     });
 
     it('update location hash from custom url by search params', async () => {
-        expect(await updateHashHref(new URLSearchParams({ foo: 'bar', baz: 'qux' }), getUrl('/que#bar=baz'))).toEqual(
-            'http://localhost/que#foo=bar&baz=qux'
-        );
+        expect(
+            await updateHashHref(
+                new URLSearchParams({ foo: 'bar', baz: 'qux' }),
+                getUrl('/que#bar=baz')
+            )
+        ).toEqual('http://localhost/que#foo=bar&baz=qux');
     });
 
     it('update location hash from custom url by processor returning params', async () => {
         expect(
-            await updateHashHref(() => new URLSearchParams({ foo: 'bar', baz: 'qux' }), getUrl('/que#bar=baz'))
+            await updateHashHref(
+                () => new URLSearchParams({ foo: 'bar', baz: 'qux' }),
+                getUrl('/que#bar=baz')
+            )
         ).toEqual('http://localhost/que#foo=bar&baz=qux');
     });
 
@@ -151,7 +159,10 @@ describe('updateHashHref', () => {
 
     it('update location hash from custom url by async processor returning params', async () => {
         expect(
-            await updateHashHref(async () => new URLSearchParams({ foo: 'bar', baz: 'qux' }), getUrl('/que#bar=baz'))
+            await updateHashHref(
+                async () => new URLSearchParams({ foo: 'bar', baz: 'qux' }),
+                getUrl('/que#bar=baz')
+            )
         ).toEqual('http://localhost/que#foo=bar&baz=qux');
     });
 
@@ -175,7 +186,9 @@ describe('setHashParam', () => {
     });
 
     it('add param by name to location hash', async () => {
-        expect(await setHashParam('bar', 'baz')).toEqual('http://localhost/#foo=bar&baz=qux&bar=baz');
+        expect(await setHashParam('bar', 'baz')).toEqual(
+            'http://localhost/#foo=bar&baz=qux&bar=baz'
+        );
     });
 });
 
@@ -282,12 +295,18 @@ describe('updateLocationHash', () => {
     });
 
     it('update location hash from custom url by search params', async () => {
-        await updateLocationHash(new URLSearchParams({ foo: 'bar', baz: 'qux' }), getUrl('#bar=baz'));
+        await updateLocationHash(
+            new URLSearchParams({ foo: 'bar', baz: 'qux' }),
+            getUrl('#bar=baz')
+        );
         expect(location.hash).toEqual('#foo=bar&baz=qux');
     });
 
     it('update location hash from custom url by processor returning params', async () => {
-        await updateLocationHash(() => new URLSearchParams({ foo: 'bar', baz: 'qux' }), getUrl('#bar=baz'));
+        await updateLocationHash(
+            () => new URLSearchParams({ foo: 'bar', baz: 'qux' }),
+            getUrl('#bar=baz')
+        );
         expect(location.hash).toEqual('#foo=bar&baz=qux');
     });
 
@@ -300,7 +319,10 @@ describe('updateLocationHash', () => {
     });
 
     it('update location hash from custom url by async processor returning params', async () => {
-        await updateLocationHash(async () => new URLSearchParams({ foo: 'bar', baz: 'qux' }), getUrl('#bar=baz'));
+        await updateLocationHash(
+            async () => new URLSearchParams({ foo: 'bar', baz: 'qux' }),
+            getUrl('#bar=baz')
+        );
         expect(location.hash).toEqual('#foo=bar&baz=qux');
     });
 

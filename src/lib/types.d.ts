@@ -1,5 +1,6 @@
 declare module '*.svg' {
     const svgCntent: string;
+    // noinspection JSUnusedGlobalSymbols
     export default svgCntent;
 }
 
@@ -58,17 +59,11 @@ type SwapFormAction = 'addswapcoin' | 'delswapcoin' | 'editswapcoin';
 
 type SwapListManageRole = 'expand' | 'combine';
 
-interface UpdateElements {
-    required: HTMLElement[];
-    optional?: HTMLElement[];
-}
-
 // type UpdateCallback = (update: UpdateElements) => Promise<UpdateElements>;
-type UpdateCallback = () => Promise<void>;
+type UpdateCallback = (target: EventTarget) => Promise<void>;
+type RequestCallback = (target: EventTarget) => Promise<void>;
 
-type RequestCallback = () => Promise<void>;
-
-type EventHandler = (e: Event) => void;
+type EventHandler<T = HTMLElement, R = void> = (this: T, e: Event) => R;
 
 interface ConditionOption {
     text: string;
@@ -77,10 +72,18 @@ interface ConditionOption {
     style: string;
 }
 
-declare class Converter {
-    makeHtml(t: string): string;
-}
+// declare class Converter {
+//     makeHtml(t: string): string;
+// }
 
-declare const showdown: {
-    Converter: typeof Converter;
-};
+// declare const showdown: {
+//     Converter: typeof Converter;
+// };
+
+type Optional<T> = T | null | undefined;
+
+// noinspection JSUnusedGlobalSymbols
+declare interface JQueryStatic {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    TextboxList: any;
+}

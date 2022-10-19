@@ -1,7 +1,6 @@
 import { getFragment, postFragment } from './ajax';
 import { randomDelay } from './delay';
 import { ListForm } from './list-form';
-import { id } from './selectors';
 import {
     addComment,
     CoinSwapFormOnMatcher,
@@ -36,7 +35,8 @@ export class SwapFormList {
             this.listBlock = listBlock;
         }
         this.form =
-            listBlock.querySelector(id(this.listForm.formId)) || document.querySelector(id(this.listForm.formId));
+            listBlock.querySelector(`#${this.listForm.formId}`) ||
+            document.querySelector(`#${this.listForm.formId}`);
         this.buttonSet = listBlock.querySelector('center');
         if (this.buttonSet) {
             /*const oldButton = this.buttonSet.querySelector('button.btn-s.btn-gray');
@@ -51,12 +51,17 @@ export class SwapFormList {
         }
     }
 
-    private addButton(role: SwapListManageRole, qty: number, text: string, clickHandler: (qty: number) => void): void {
+    private addButton(
+        role: SwapListManageRole,
+        qty: number,
+        text: string,
+        clickHandler: (qty: number) => void
+    ): void {
         if (!this.buttonSet) {
             return;
         }
         const buttonId = `${role}-qty`;
-        const expand = this.buttonSet.querySelector<HTMLElement>(id(buttonId));
+        const expand = this.buttonSet.querySelector<HTMLElement>(`#${buttonId}`);
         if (expand) {
             show(expand);
         } else {
@@ -64,7 +69,7 @@ export class SwapFormList {
                 'beforeend',
                 `<button id='${buttonId}' type='button' class='btn--${role} btn-s btn-blue'>${text}</button>`
             );
-            this.buttonSet.querySelector(id(buttonId))?.addEventListener('click', async () => {
+            this.buttonSet.querySelector(`#${buttonId}`)?.addEventListener('click', async () => {
                 this.hideButtons();
                 await clickHandler(qty);
                 this.updateButtons();
@@ -78,7 +83,15 @@ export class SwapFormList {
         this.variants.clear();
 
         for (const { m } of getSwapLinksWithMatches()) {
-            const { uniq = '', usid = '', cond = '', price = '', info = '', vid = '', strqty = 0 } = m;
+            const {
+                uniq = '',
+                usid = '',
+                cond = '',
+                price = '',
+                info = '',
+                vid = '',
+                strqty = 0,
+            } = m;
             const qty = +strqty;
             if (qty > 1) {
                 this.expandAvailable = true;
@@ -102,13 +115,23 @@ export class SwapFormList {
     }
 
     private showButtons(role?: SwapListManageRole): void {
-        this.buttonSet &&
-            show(...this.buttonSet.querySelectorAll<HTMLButtonElement>(`button${role ? `.btn--${role}` : ''}`));
+        if (this.buttonSet) {
+            show(
+                ...this.buttonSet.querySelectorAll<HTMLButtonElement>(
+                    `button${role ? `.btn--${role}` : ''}`
+                )
+            );
+        }
     }
 
     private hideButtons(role?: SwapListManageRole): void {
-        this.buttonSet &&
-            hide(...this.buttonSet.querySelectorAll<HTMLButtonElement>(`button${role ? `.btn--${role}` : ''}`));
+        if (this.buttonSet) {
+            hide(
+                ...this.buttonSet.querySelectorAll<HTMLButtonElement>(
+                    `button${role ? `.btn--${role}` : ''}`
+                )
+            );
+        }
     }
 
     private showExpandButtons(): void {
@@ -153,7 +176,15 @@ export class SwapFormList {
         let isFirstQuery = true;
 
         for await (const { a, m } of getSwapLinksWithMatches()) {
-            const { uniq = '', usid = '', cond = '', price = '', info = '', vid = '', strqty = 0 } = m;
+            const {
+                uniq = '',
+                usid = '',
+                cond = '',
+                price = '',
+                info = '',
+                vid = '',
+                strqty = 0,
+            } = m;
             const qty = +strqty;
 
             const n = expandTo > 0 ? Math.min(qty, expandTo) : qty;
@@ -182,7 +213,9 @@ export class SwapFormList {
                         continue;
                     }
 
-                    const m = l.getAttribute('onClick')?.match(CoinSwapFormOnMatcher) as CoinSwapFormOnMatchResult;
+                    const m = l
+                        .getAttribute('onClick')
+                        ?.match(CoinSwapFormOnMatcher) as CoinSwapFormOnMatchResult;
                     if (m && m.groups) {
                         links.add(m.groups.usid);
                     }
@@ -193,7 +226,9 @@ export class SwapFormList {
                         continue;
                     }
 
-                    const m = l.getAttribute('onClick')?.match(CoinSwapFormOnMatcher) as CoinSwapFormOnMatchResult;
+                    const m = l
+                        .getAttribute('onClick')
+                        ?.match(CoinSwapFormOnMatcher) as CoinSwapFormOnMatchResult;
                     const usid = m && m.groups && m.groups.usid;
                     if (!usid || links.has(usid)) {
                         continue;
@@ -255,10 +290,14 @@ export class SwapFormList {
             debug(`REMOVING ${[...remove].join(', ')}`);
             const deleteContent = await this.deleteSwapCoin(remove);
             if (deleteContent) {
-                const newListBlock = deleteContent.getElementById(this.listForm.listId);
+                const newListBlock = deleteContent.querySelector<HTMLElement>(
+                    `#${this.listForm.listId}`
+                );
                 if (newListBlock && this.listBlock) {
                     const center = this.listBlock.querySelector('center');
-                    center && newListBlock.querySelector('center')?.replaceWith(center);
+                    if (center) {
+                        newListBlock.querySelector('center')?.replaceWith(center);
+                    }
                     styleListLinks(newListBlock);
                     this.update(newListBlock);
                 }
@@ -270,11 +309,15 @@ export class SwapFormList {
             debug(`UPDATING ${usid}`);
             const updateContent = await this.updateSwapCoin(usid, { ...variant, qty: total });
             if (updateContent) {
-                const newListBlock = updateContent.getElementById(this.listForm.listId);
+                const newListBlock = updateContent.querySelector<HTMLElement>(
+                    `#${this.listForm.listId}`
+                );
                 debug(this.listForm.listId, this.listBlock, newListBlock);
                 if (newListBlock && this.listBlock) {
                     const center = this.listBlock.querySelector('center');
-                    center && newListBlock.querySelector('center')?.replaceWith(center);
+                    if (center) {
+                        newListBlock.querySelector('center')?.replaceWith(center);
+                    }
                     styleListLinks(newListBlock);
                     this.update(newListBlock);
                 }
@@ -316,10 +359,10 @@ export class SwapFormList {
         debug(fragment);
         debug('this.listForm.mainId');
         debug(this.listForm.mainId);
-        debug('fragment.getElementById(this.listForm.mainId)');
-        debug(fragment.getElementById(this.listForm.mainId));
+        debug('fragment.querySelector(`#${this.listForm.mainId}`');
+        debug(fragment.querySelector(`#${this.listForm.mainId}`));
 
-        if (!fragment.getElementById(this.listForm.mainId)) {
+        if (!fragment.querySelector(`#${this.listForm.mainId}`)) {
             return reload();
         }
 
@@ -330,7 +373,8 @@ export class SwapFormList {
         return await this.updateSwapCoin('', data, 'addswapcoin');
     }
 
-    private deleteSwapCoin = async (usid: string | Set<string>): Promise<DocumentFragment | null> => {
+    // eslint-disable-next-line class-methods-use-this
+    private async deleteSwapCoin(usid: string | Set<string>): Promise<DocumentFragment | null> {
         if (!UID) {
             return null;
         }
@@ -349,9 +393,10 @@ export class SwapFormList {
             return reload();
         }
         return fragment;
-    };
+    }
 
-    private updateLinkQty = (a: HTMLAnchorElement, qty: number): void => {
+    // eslint-disable-next-line class-methods-use-this
+    private updateLinkQty(a: HTMLAnchorElement, qty: number): void {
         if (a.hasAttribute('onClick')) {
             const onClick = a
                 .getAttribute('onClick')
@@ -359,15 +404,20 @@ export class SwapFormList {
                     CoinSwapFormOnMatcher,
                     `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${qty}', '$<replica>'`
                 );
-            onClick && a.setAttribute('onClick', onClick);
+            if (onClick) {
+                a.setAttribute('onClick', onClick);
+            }
         }
         for (const span of a.querySelectorAll('span.left.dblue-13')) {
             span.remove();
         }
         if (qty > 1) {
             for (const span of a.querySelectorAll('span.left.gray-13.wrap')) {
-                span.insertAdjacentHTML('afterend', `<span class='left dblue-13'><span>&times;</span>${qty}</span>`);
+                span.insertAdjacentHTML(
+                    'afterend',
+                    `<span class='left dblue-13'><span>&times;</span>${qty}</span>`
+                );
             }
         }
-    };
+    }
 }

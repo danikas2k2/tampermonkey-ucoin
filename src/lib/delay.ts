@@ -1,6 +1,6 @@
 type DelayDecorator = (time: number, decorateFrom: number) => void;
 
-export function decorateDelay(time: number) {
+export function decorateDelay(time: number): void {
     const id = 'display-delay';
     let el = document.getElementById(id);
     if (!el) {

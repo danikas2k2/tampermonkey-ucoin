@@ -34,7 +34,9 @@ export class WishForm extends ListForm {
         if (varieties) {
             const firstVariety = varieties[0].parentElement as HTMLLabelElement;
             const anyVariety = firstVariety.cloneNode() as HTMLLabelElement;
-            const anyVarietyInput = firstVariety.querySelector('input')?.cloneNode() as HTMLInputElement;
+            const anyVarietyInput = firstVariety
+                .querySelector('input')
+                ?.cloneNode() as HTMLInputElement;
             anyVarietyInput.value = '';
             anyVariety.insertAdjacentElement('beforeend', anyVarietyInput);
             anyVariety.insertAdjacentText('beforeend', 'ANY');
@@ -47,10 +49,10 @@ export class WishForm extends ListForm {
         const { value, textContent } = o;
         if (value || textContent?.includes('ANY')) {
             return {
-                text: textContent!,
+                text: textContent ?? '',
                 value,
                 checked: value === '3' ? 'checked' : '',
-                style: o.getAttribute('style') || '',
+                style: o.getAttribute('style') ?? '',
             };
         }
     }

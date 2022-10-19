@@ -17,12 +17,12 @@ const RX_RUSSIA = /Russia|Россия|Rusija|USSR|СССР|TSRS/;
 const RX_COMPOSITION = /Composition|Материал|Sudėtis/;
 const RX_SILVER = /Silver|Серебро|Sidabras/;
 const RX_GOLD = /Gold|Золото|Auksas/;
-export const RX_YEAR = /Year|Год|Metai/;
+// export const RX_YEAR = /Year|Год|Metai/;
 
 const RU_PRICE = 0.006; //      3-8e/kg
 const EU_PRICE = 0.012; //    10-15e/kg
-const AG_PRICE = 0.728; //   .60-.80e/g
-const AU_PRICE = 56.09; // 44.0-65.0e/g
+const AG_PRICE = 0.621; //   .60-.80e/g
+const AU_PRICE = 54.56; // 44.0-65.0e/g
 
 function sortByCondition(a: Condition, b: Condition): number {
     const A = ConditionValues[a] || 0;
@@ -80,7 +80,7 @@ export function estimateSwapPrices(): void {
     function addPricesByType(byType: Map<string, number[]>): void {
         for (const cond of [...byType.keys()].sort(sortByCondition)) {
             const p: number[] = byType.get(cond)?.sort(cmp) || [];
-            let { length } = p;
+            const { length } = p;
             if (length === 1) {
                 p.push(p[0]);
             }
@@ -103,7 +103,7 @@ export function estimateWeightPrice(): void {
     }
     const aPrice = coinBlock.querySelector('.right.pricewj');
     const head = coinBlock.querySelector('h1');
-    const trs = coinBlock.querySelectorAll<HTMLTableHeaderCellElement>('.coin-info tr');
+    const trs = coinBlock.querySelectorAll<HTMLTableCellElement>('.coin-info tr');
 
     let weight = NaN;
     let isRussia = false;
@@ -147,9 +147,9 @@ export function estimateWeightPrice(): void {
         priceSource = '--';
     }
 
-    const weightPrice = `<br/><price class='right' title='${priceSource}: ${price.toFixed(5)}'>€ ${price.toFixed(
-        2
-    )}</price>`;
+    const weightPrice = `<br/><price class='right' title='${priceSource}: ${price.toFixed(
+        5
+    )}'>€ ${price.toFixed(2)}</price>`;
 
     if (!aPrice) {
         let isAproximate = false;
@@ -188,23 +188,28 @@ export function estimateWeightPrice(): void {
 
 // { [condition]: [mul, add, min] }
 export const PricePropsByCondition = new Map<Condition, [number, number, number]>([
-    [Condition.UNC, [1.5, 0.5, 0.5]],
-    [Condition.AU, [1.25, 0.25, 0.3]],
-    [Condition.XF_, [1.1, 0.1, 0.2]],
-    [Condition.XF, [1.05, 0.05, 0.15]],
-    [Condition.VF_, [1.02, 0.025, 0.12]],
-    [Condition.VF, [1, 0, 0.1]],
-    [Condition.F, [0.98, -0.05, 0.08]],
-    [Condition.VG, [0.95, -0.1, 0.07]],
-    [Condition.G, [0.9, -0.1, 0.06]],
+    [Condition.UNC, [1.75, 0.5, 0.5]],
+    [Condition.AU, [1.5, 0.25, 0.4]],
+    [Condition.XF_, [1.3, 0.1, 0.3]],
+    [Condition.XF, [1.2, 0.05, 0.2]],
+    [Condition.VF_, [1.1, 0.03, 0.15]],
+    [Condition.VF, [1.05, 0.01, 0.1]],
+    [Condition.F, [0.98, 0, 0.09]],
+    [Condition.VG, [0.95, -0.05, 0.08]],
+    [Condition.G, [0.9, -0.1, 0.07]],
 ]);
 
 const YEAR_MULTIPLIER = 0.05;
-const YEAR_POWER = 0.012;
-const MUL_PLUS_MULTIPLIER = 0.0015;
-const ADD_PLUS_MULTIPLIER = 0.015;
+const YEAR_POWER = 0.015;
+const MUL_PLUS_MULTIPLIER = 0.002;
+const ADD_PLUS_MULTIPLIER = 0.02;
 
-export function getPriceByConditions(price: number, cond: Condition, year?: string | null, plus = 0): string {
+export function getPriceByConditions(
+    price: number,
+    cond: Condition,
+    year?: string | null,
+    plus = 0
+): string {
     if (price && PricePropsByCondition.has(cond)) {
         const y = +(year || 0);
         const yDiff = y && !isNaN(y) ? new Date().getUTCFullYear() - y : 0;
@@ -217,25 +222,6 @@ export function getPriceByConditions(price: number, cond: Condition, year?: stri
         const maxPrice = (price + addPlus) * (mul + mulPlus) * yMul + add;
         const minPrice = (min + addPlus) * yMul;
         const final = Math.max(maxPrice, minPrice);
-
-        console.debug('', {
-            price,
-            cond,
-            year,
-            plus,
-            addPlus,
-            mulPlus,
-            yDiff,
-            yPow,
-            yBase,
-            yMul,
-            mul,
-            add,
-            min,
-            maxPrice: maxPrice.toFixed(2),
-            minPrice: minPrice.toFixed(2),
-            final: final.toFixed(2),
-        });
         return final.toFixed(2);
     }
     return '';
@@ -270,13 +256,23 @@ export function getShippingPrice(country: string, weight: number): number {
         return isEurope ? 11 : 17;
     }
 
-    return Math.floor(weight / 1900) * getShippingPrice(country, 1900) + getShippingPrice(country, weight % 1900);
+    return (
+        Math.floor(weight / 1900) * getShippingPrice(country, 1900) +
+        getShippingPrice(country, weight % 1900)
+    );
+}
+
+export interface PayPalPrice {
+    price: number;
+    charges: number;
+    percents: number;
+    fixed: number;
 }
 
 // TODO add discount/custom prices
 export function getPayPalPrice(country: string, price: number): PayPalPrice {
     let percents = 3.4;
-    let fixed = 0.35;
+    const fixed = 0.35;
 
     if (countryRegions[country].includes(PayPal_UK)) {
         percents += 1.29;
@@ -291,11 +287,4 @@ export function getPayPalPrice(country: string, price: number): PayPalPrice {
         percents,
         fixed,
     };
-}
-
-export interface PayPalPrice {
-    price: number;
-    charges: number;
-    percents: number;
-    fixed: number;
 }

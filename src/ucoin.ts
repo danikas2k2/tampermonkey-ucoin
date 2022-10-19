@@ -1,6 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import style from '../styles/ucoin.less';
+import '../styles/ucoin.less';
 import { handleCountryRegions } from './lib/regions';
 import { UID } from './lib/uid';
 import { loc } from './lib/url';
@@ -12,8 +10,6 @@ import { handleMessagePage } from './pages/message';
 import { handleSwapPage } from './pages/swap';
 import { handleTablePage } from './pages/table';
 import { handleWishPage } from './pages/wish';
-
-document.head.insertAdjacentHTML('beforeend', `<style>${style}</style>`);
 
 (function () {
     const { pathname: path, searchParams: params } = loc();

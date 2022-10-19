@@ -19,7 +19,9 @@ export function updateLinkHref(a: HTMLAnchorElement): void {
         newParams.delete('view');
     } else if (a.classList.contains('switcher')) {
         const view = oldParams.get('view');
-        view && newParams.delete(view);
+        if (view) {
+            newParams.delete(view);
+        }
     }
 
     a.href = newUrl.href;
@@ -48,7 +50,9 @@ export function updateOnClickHref(div: HTMLDivElement, remove?: string[]): void 
             if (a) {
                 newParams.delete('view');
                 const view = new URL(a.href, loc).searchParams.get('view');
-                view && newParams.delete(view);
+                if (view) {
+                    newParams.delete(view);
+                }
             }
         }
 

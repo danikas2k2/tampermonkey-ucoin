@@ -1,5 +1,6 @@
 //@import (css) url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600&display=swap');
-@import (css) url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+//noinspection CssUnknownTarget
+@import (css) url(https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap);
 
 :root {
     //--base-font-family: 'Open Sans', sans-serif;
@@ -38,7 +39,6 @@
 
     --color-separate-country: #000;
 }
-
 
 //
 // Customize main site
@@ -80,16 +80,15 @@ body {
     }
 }
 
-
 .btn-red {
     background-color: var(--color-error-surface);
     border: 1px solid var(--color-error-border);
 
-    &, &:hover {
+    &,
+    &:hover {
         color: var(--color-error-sufrace-hover);
     }
 }
-
 
 #table {
     a.cell {
@@ -109,7 +108,6 @@ body {
         }
     }
 }
-
 
 //
 // Add extension styles
@@ -191,7 +189,8 @@ body {
     }
 
     .tbl {
-        td, th {
+        td,
+        th {
             border: none;
         }
     }
@@ -199,7 +198,6 @@ body {
     .coin-info {
         th {
             background-color: var(--color-surface-info);
-
         }
 
         tr + tr {
@@ -274,13 +272,17 @@ body {
                 background-position: -16px 0;
             }
 
-            &:active, &:focus, &:hover {
+            &:active,
+            &:focus,
+            &:hover {
                 max-width: 100%;
                 overflow: visible;
             }
         }
 
-        &:active, &:focus, &:hover {
+        &:active,
+        &:focus,
+        &:hover {
             .comments {
                 max-width: 100%;
                 overflow: visible;
@@ -334,7 +336,7 @@ body {
     }
 
     .swap-coin tr {
-        transition: opacity .25s, background .25s;
+        transition: opacity 0.25s, background 0.25s;
 
         &.conflict {
             background: var(--color-surface-warning);
@@ -345,11 +347,11 @@ body {
         }
 
         &.ignore {
-            opacity: .5;
+            opacity: 0.5;
 
             &.conflict,
             &.mark {
-                opacity: .75;
+                opacity: 0.75;
             }
         }
 
@@ -381,7 +383,7 @@ body {
         width: auto;
 
         div {
-            position: initial !important;
+            //position: initial !important;
         }
     }
 
@@ -400,12 +402,15 @@ body {
             .flag {
                 margin-right: 4px;
             }
-
         }
 
         .filter-dialog {
             max-height: 300px;
             overflow: auto;
+        }
+
+        .filter-label {
+            max-width: 140px;
         }
     }
 }
@@ -419,7 +424,8 @@ body {
         &.filter-box-disabled {
             color: var(--color-input-content-disabled);
 
-            &, &:hover {
+            &,
+            &:hover {
                 border-color: var(--color-input-border-disabled);
             }
         }
@@ -453,7 +459,8 @@ body {
 #swap-list,
 #take-swap-list {
     div {
-        h2, a {
+        h2,
+        a {
             &.separate-country {
                 font-weight: bold;
                 color: var(--color-separate-country);
@@ -510,7 +517,8 @@ body {
     }
 }
 
-#swap-list, #swap-mgr {
+#swap-list,
+#swap-mgr {
     .price-times {
         color: darkred;
         font-weight: bold;
@@ -524,7 +532,9 @@ body {
         color: green;
     }
 
-    .price-times, .price-over, .price-under {
+    .price-times,
+    .price-over,
+    .price-under {
         &.gray-11 {
             padding-left: 6px;
         }
@@ -611,7 +621,8 @@ body {
     }
 
     #catalog-tree {
-        .country, .period {
+        .country,
+        .period {
             .hide {
                 display: none;
             }
@@ -664,7 +675,8 @@ body {
     }
 }
 
-.country-list, .catalog-list {
+.country-list,
+.catalog-list {
     a {
         border: none;
     }
@@ -672,7 +684,7 @@ body {
 
 ul.regions {
     margin-block-start: 2em;
-    padding-inline-start: .5em;
+    padding-inline-start: 0.5em;
 
     li.region {
         display: block;
@@ -747,7 +759,7 @@ ul.hor-switcher {
     > div {
         position: absolute;
         inset: 0;
-        background: rgba(60, 150, 30, .5);
+        background: rgba(60, 150, 30, 0.5);
         animation-name: display_delay;
         animation-timing-function: linear;
         animation-fill-mode: both;

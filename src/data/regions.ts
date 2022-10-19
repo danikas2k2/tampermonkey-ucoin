@@ -67,6 +67,7 @@ export const Worldwide = 'Worldwide';
 export const PayPal_Europe = 'PayPal - Europe';
 export const PayPal_UK = 'PayPal - UK';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Regions extends Record<string, Regions> {}
 
 export const regionTree: Regions = {

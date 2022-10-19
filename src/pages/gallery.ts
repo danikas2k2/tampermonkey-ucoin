@@ -24,8 +24,8 @@ export async function handleGalleryPage(): Promise<void> {
         }
 
         const count = gallery.querySelectorAll('.coin').length;
-        const pages = +gallery.querySelector('.pages a:last-child')?.textContent!;
-        const current = +gallery.querySelector('.pages a.current')?.textContent!;
+        const pages = +(gallery.querySelector('.pages a:last-child')?.textContent ?? 0);
+        const current = +(gallery.querySelector('.pages a.current')?.textContent ?? 0);
         if (count) {
             const isLast = current === pages;
             const total = isLast ? (pages - 1) * 12 + count : (pages - 1) * 12;
@@ -34,7 +34,9 @@ export async function handleGalleryPage(): Promise<void> {
                 ?.insertAdjacentHTML(
                     'beforeend',
                     ` <small>(${count}${
-                        pages ? ` <small>of ${isLast ? total : `${total + 1}~${total + 12}`}</small>` : ''
+                        pages
+                            ? ` <small>of ${isLast ? total : `${total + 1}~${total + 12}`}</small>`
+                            : ''
                     })</small>`
                 );
         }

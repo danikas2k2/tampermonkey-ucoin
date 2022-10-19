@@ -134,6 +134,6 @@ describe('decorateDelay', () => {
         decorateDelay(1000);
         const decorator = document.getElementById('display-delay');
         expect(decorator).toBeInTheDocument();
-        expect(decorator!.firstChild).toHaveStyle('animation-duration: 1000ms');
+        expect(decorator?.firstChild).toHaveStyle('animation-duration: 1000ms');
     });
 });
