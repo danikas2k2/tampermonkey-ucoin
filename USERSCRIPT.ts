@@ -13,7 +13,7 @@
 // @require      https://ucoin.net/js/auto/TextboxList.Autocomplete.js
 // @require      https://unpkg.com/showdown@1.9/dist/showdown.min.js
 // @require      https://unpkg.com/react@18/umd/react.production.min.js
-// @require      https://unpkg.com/react-dom@18/umd/react-dom-server.browser.production.min.js
+// @require      https://unpkg.com/react-dom@18/umd/react-dom-server-legacy.browser.production.min.js
 // @match        https://*.ucoin.net/*
 // @run-at       document-end
 // @grant        GM_xmlhttpRequest
