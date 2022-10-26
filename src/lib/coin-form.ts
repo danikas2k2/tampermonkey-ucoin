@@ -91,7 +91,7 @@ export class CoinForm extends AbstractForm {
             }
         }
 
-        updateTags();
+        return updateTags();
     }
 }
 
