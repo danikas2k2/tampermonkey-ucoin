@@ -32,6 +32,13 @@ export function addFilteringOptions(): void {
     // TODO add more advance filter dialogs for years (columns, ranges), values (columns, ranges), km (columns, masks)
 
     const filterProps = new Map<FilterName, FilterProps>();
+    const filterNames: FilterName[] = [
+        FilterName.COUNTRY,
+        FilterName.YEAR,
+        FilterName.VALUE,
+        FilterName.KM,
+    ];
+    const filterValues = new Map<FilterName, string>();
 
     const countryHeadings = swapList.querySelectorAll('h2');
     filterProps.set(FilterName.COUNTRY, {
@@ -87,7 +94,6 @@ export function addFilteringOptions(): void {
     });
 
     const kmMatch = /([a-z]*)([0-9]*)((?:\.[0-9]+)?[a-z]*)/i;
-
     filterProps.set(FilterName.KM, {
         placeholder: 'KM#',
         width: 110,
@@ -111,8 +117,6 @@ export function addFilteringOptions(): void {
         ),
     });
 
-    const filterNames = Object.values(FilterName);
-    const filterValues = new Map<FilterName, string>();
     for (const filter of filterNames) {
         const value = getHashParam(filter);
         if (value) {

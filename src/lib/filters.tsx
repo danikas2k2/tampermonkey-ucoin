@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react';
 
 export type FilterDirection = 'left' | 'right';
 
-export enum FilterName {
+export const enum FilterName {
     COUNTRY = 'country',
     YEAR = 'year',
     VALUE = 'value',
@@ -55,13 +55,20 @@ export function Filter({
                 })}
                 style={{ width: width - 24 }}
             >
-                <div className={classNames('left', { 'blue-13': value })}>
-                    {(disabled &&
-                        (options.get([...options.keys()].filter((k) => k !== '').pop() || '') ||
-                            placeholder)) ||
-                        (value && (options.get(value) || value)) ||
-                        placeholder}
-                </div>
+                <div
+                    className={classNames('left', { 'blue-13': value })}
+                    dangerouslySetInnerHTML={{
+                        __html:
+                            (disabled &&
+                                (options.get(
+                                    [...options.keys()].filter((k) => k !== '').pop() || ''
+                                ) ||
+                                    placeholder)) ||
+                            (value && (options.get(value) || value)) ||
+                            placeholder ||
+                            '',
+                    }}
+                />
                 {(!disabled &&
                     (value ? (
                         <div className="right close" title="Clear filter" data-filter-clear={name}>
