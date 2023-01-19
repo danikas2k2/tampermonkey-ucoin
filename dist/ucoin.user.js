@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/
-// @version      1.10.3
+// @version      1.10.4
 // @author       danikas2k2
 // @icon         https://i.ibb.co/Tc6q9x3/apple-touch-icon-152.png
 // @downloadURL  https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js
