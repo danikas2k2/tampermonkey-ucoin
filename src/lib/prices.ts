@@ -101,7 +101,7 @@ export function estimateWeightPrice(): void {
     if (!coinBlock) {
         return;
     }
-    const aPrice = coinBlock.querySelector('.right.pricewj');
+    const aPrice = coinBlock.querySelector('.right.price-container');
     const head = coinBlock.querySelector('h1');
     const trs = coinBlock.querySelectorAll<HTMLTableCellElement>('.coin-info tr');
 
@@ -167,20 +167,22 @@ export function estimateWeightPrice(): void {
                 isAproximate = true;
             }
         }
-        const min = Math.min(...prices);
-        const max = Math.max(...prices);
-        const showPrices = [min.toFixed(2)];
-        if (max > min) {
-            showPrices.push(max.toFixed(2));
-        } else if (isAproximate) {
-            showPrices.unshift('');
+        if (prices.length) {
+            const min = Math.min(...prices);
+            const max = Math.max(...prices);
+            const showPrices = [min.toFixed(2)];
+            if (max > min) {
+                showPrices.push(max.toFixed(2));
+            } else if (isAproximate) {
+                showPrices.unshift('');
+            }
+            head?.insertAdjacentHTML(
+                'beforebegin',
+                `<a href='#price' class='gray-12 right price-container'>Value:&nbsp;€ <span>${showPrices.join(
+                    isAproximate ? '~' : '-'
+                )}</span>${weightPrice}</a>`
+            );
         }
-        head?.insertAdjacentHTML(
-            'beforebegin',
-            `<a href='#price' class='gray-12 right pricewj'>Value:&nbsp;€ <span>${showPrices.join(
-                isAproximate ? '~' : '-'
-            )}</span>${weightPrice}</a>`
-        );
     } else {
         aPrice.insertAdjacentHTML('beforeend', weightPrice);
     }

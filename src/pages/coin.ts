@@ -15,6 +15,14 @@ export async function handleCoinPage(): Promise<void> {
         }
     }
 
+    // hide coin chooser dialog by default
+    (() => {
+        const chooser = document.getElementById('coin-chooser-dialog');
+        if (chooser && !chooser.style.display) {
+            chooser.style.display = 'none';
+        }
+    })();
+
     await new CoinForm().handle();
     await new SwapForm().handle();
     await estimateSwapPrices();

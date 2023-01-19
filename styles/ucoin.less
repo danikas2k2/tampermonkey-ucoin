@@ -180,7 +180,7 @@ body {
         color: var(--color-content-header);
     }
 
-    .pricewj {
+    .price-container {
         border: none;
 
         span {
@@ -635,23 +635,23 @@ body {
 }
 
 #coin-chooser-dialog {
-    --width: 200px;
-    --height: 36px;
-    --gap: 20px;
+    --width: 160px;
+    --height: 32px;
+    --gap: 16px;
     --columns: 3;
     --rows: 20;
 
+    display: grid;
+    grid: auto-flow var(--height) / repeat(2, var(--width));
+    gap: calc(var(--gap) / 2) var(--gap);
     width: max-content;
     min-width: var(--width);
     max-width: calc((var(--width) + var(--gap)) * var(--columns) - var(--gap));
     max-height: calc(var(--height) * var(--rows)) !important;
-    column-width: var(--width);
-    column-gap: var(--gap);
-    right: 0;
 
     .list-link {
-        display: inline-block;
         width: calc(var(--width) - 24px);
+        border-bottom: none;
     }
 }
 
@@ -763,5 +763,15 @@ ul.hor-switcher {
         animation-name: display_delay;
         animation-timing-function: linear;
         animation-fill-mode: both;
+    }
+}
+
+.list-link {
+    border-bottom: none;
+}
+
+table.my-func-info {
+    tr {
+        border-bottom: none;
     }
 }
