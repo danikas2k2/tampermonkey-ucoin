@@ -1,4 +1,5 @@
 import { Color, Condition, FormValue, FormValueCondition, SwapValue } from './cond';
+import { getDetails } from './details';
 import { ListForm } from './list-form';
 import { getPriceByConditions } from './prices';
 import { SwapFormList } from './swap-form-list';
@@ -185,9 +186,9 @@ export class SwapForm extends ListForm {
         if (comment.startsWith('au')) {
             cond = Condition.AU;
         } else if (comment.startsWith('xf+')) {
-            cond = Condition.XF_;
+            cond = Condition.XXF;
         } else if (comment.startsWith('vf+')) {
-            cond = Condition.VF_;
+            cond = Condition.VXF;
         }
 
         let plus = [...comment].filter((c) => c === '+').length;
@@ -195,9 +196,12 @@ export class SwapForm extends ListForm {
             plus--;
         }
 
-        const year = document.querySelector('#swap-block span.gray-13')?.childNodes?.[0]
-            ?.textContent;
-
-        return getPriceByConditions(this.getDefaultPrice(vid), cond, year, plus);
+        return getPriceByConditions(
+            this.getDefaultPrice(vid),
+            cond,
+            plus,
+            getDetails('Denomination'),
+            getDetails('Year')
+        );
     }
 }

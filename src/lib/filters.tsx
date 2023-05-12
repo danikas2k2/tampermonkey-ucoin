@@ -10,7 +10,12 @@ export const enum FilterName {
     KM = 'km',
 }
 
-export type FilterOptions = Map<string, string>;
+export interface FilterOption {
+    name: string;
+    count: number;
+}
+
+export type FilterOptions = Map<string, FilterOption>;
 
 interface CommonFilterProps {
     width: number;
@@ -43,6 +48,21 @@ export function Filter({
     options,
 }: FilterComponentProps): ReactElement {
     const disabled = options.size <= 1;
+
+    let display = placeholder || '';
+    let option: FilterOption | undefined;
+    if (disabled) {
+        const key = [...options.keys()].filter((k) => k !== '').pop() || '';
+        option = options.get(key);
+    } else if (value) {
+        option = options.get(value);
+    }
+    if (option?.name) {
+        display = `${option?.name} (${option?.count})`;
+    } else if (value) {
+        display = value;
+    }
+
     return (
         <div className={classNames('filter', direction || 'left')}>
             <div
@@ -57,17 +77,7 @@ export function Filter({
             >
                 <div
                     className={classNames('left', { 'blue-13': value })}
-                    dangerouslySetInnerHTML={{
-                        __html:
-                            (disabled &&
-                                (options.get(
-                                    [...options.keys()].filter((k) => k !== '').pop() || ''
-                                ) ||
-                                    placeholder)) ||
-                            (value && (options.get(value) || value)) ||
-                            placeholder ||
-                            '',
-                    }}
+                    dangerouslySetInnerHTML={{ __html: display }}
                 />
                 {(!disabled &&
                     (value ? (
@@ -82,13 +92,18 @@ export function Filter({
                     ''}
             </div>
             <div className="drop hide filter-dialog" data-filter-dialog={name} style={{ width }}>
-                {[['', 'All'], ...options.entries()].map(([value, label]) => (
+                {[['', 'All'], ...options.entries()].map(([value, option]) => (
                     <>
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a className="list-link" data-filter-by={name} data-filter-value={value}>
                             <span
                                 className="left gray-13 wrap filter-label"
-                                dangerouslySetInnerHTML={{ __html: label }}
+                                dangerouslySetInnerHTML={{
+                                    __html:
+                                        typeof option === 'string'
+                                            ? option
+                                            : `${option.name} (${option.count})`,
+                                }}
                             />
                         </a>
                     </>

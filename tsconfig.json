@@ -20,25 +20,9 @@
         "preserveConstEnums": false,
         "sourceMap": true,
         "pretty": false,
-        "lib": [
-            "esnext",
-            "dom",
-            "dom.iterable"
-        ],
-        "types": [
-            "node",
-            "jest",
-            "@types/jquery",
-            "@types/tampermonkey"
-        ]
+        "lib": ["esnext", "dom", "dom.iterable"],
+        "types": ["node", "jest", "@types/jquery", "@types/tampermonkey"]
     },
-    "include": [
-        "**/*"
-    ],
-    "exclude": [
-        "dist",
-        "node_modules",
-        "coverage",
-        "**/*.spec.ts"
-    ]
+    "include": ["**/*"],
+    "exclude": ["dist", "node_modules", "coverage", "**/*.spec.ts"]
 }

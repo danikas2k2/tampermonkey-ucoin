@@ -1,0 +1,222 @@
+{
+    "euro": {
+        "en": "Euro",
+        "lt": "Eurai"
+    },
+    "euro-ak": {
+        "en": "A-K",
+        "lt": "A-K"
+    },
+    "euro-lz": {
+        "en": "L-Z",
+        "lt": "L-Z"
+    },
+    "lt": {
+        "en": "Lithuania",
+        "lt": "Lietuva"
+    },
+    "pl": {
+        "en": "Poland",
+        "lt": "Lenkija"
+    },
+    "de": {
+        "en": "Germany",
+        "lt": "Vokietija"
+    },
+    "uk": {
+        "en": "United Kingdom",
+        "lt": "Jungtinė Karalystė"
+    },
+    "ru": {
+        "en": "Russia",
+        "lt": "Rusija"
+    },
+    "ru-sx": {
+        "en": "Russian Empire & USSR",
+        "lt": "Rusijos Imperija ir TSRS"
+    },
+    "ru-rf": {
+        "en": "Russian Federation",
+        "lt": "Rusijos Federacija"
+    },
+    "eu": {
+        "en": "Europe",
+        "lt": "Europa"
+    },
+    "eu-n": {
+        "en": "Northern Europe",
+        "lt": "Šiaurės Europa"
+    },
+    "eu-e": {
+        "en": "Eastern Europe",
+        "lt": "Rytų Europa"
+    },
+    "eu-c": {
+        "en": "Central Europe",
+        "lt": "Vidurio Europa"
+    },
+    "eu-w": {
+        "en": "Western Europe",
+        "lt": "Vakarų Europa"
+    },
+    "eu-s": {
+        "en": "Southern Europe",
+        "lt": "Pietų Europa"
+    },
+    "eu-se": {
+        "en": "Southeast Europe",
+        "lt": "Pietryčių Europa"
+    },
+    "eu-sc": {
+        "en": "South-Central Europe",
+        "lt": "Pietų Europa"
+    },
+    "eu-sw": {
+        "en": "Southwest Europe",
+        "lt": "Pietvakarių Europa"
+    },
+    "az": {
+        "en": "Asia",
+        "lt": "Azija"
+    },
+    "az-n": {
+        "en": "Northern Asia",
+        "lt": "Šiaurės Azija"
+    },
+    "az-ce": {
+        "en": "Central and Eastern Asia",
+        "lt": "Vidurio ir Rytų Azija"
+    },
+    "az-c": {
+        "en": "Central Asia",
+        "lt": "Vidurio Azija"
+    },
+    "az-e": {
+        "en": "Eastern Asia",
+        "lt": "Rytų Azija"
+    },
+    "az-se": {
+        "en": "Southeast Asia",
+        "lt": "Pietryčių Azija"
+    },
+    "az-ml": {
+        "en": "Mainland Southeast Asia",
+        "lt": "Žemyninė Pietryčių Azija"
+    },
+    "az-mr": {
+        "en": "Maritime Southeast Asia",
+        "lt": "Jūrinė Pietryčių Azija"
+    },
+    "az-s": {
+        "en": "Southern Asia",
+        "lt": "Pietų Azija"
+    },
+    "az-w": {
+        "en": "Western Asia",
+        "lt": "Vakarų Azija"
+    },
+    "af": {
+        "en": "Africa",
+        "lt": "Afrika"
+    },
+    "af-nw": {
+        "en": "Northern and Western Africa",
+        "lt": "Šiaurės ir Vakarų Afrika"
+    },
+    "af-n": {
+        "en": "Northern Africa",
+        "lt": "Šiaurės Afrika"
+    },
+    "af-e": {
+        "en": "Eastern Africa",
+        "lt": "Rytų Afrika"
+    },
+    "af-ec": {
+        "en": "East African Community",
+        "lt": "Rytų Afrikos Bendrija"
+    },
+    "af-eh": {
+        "en": "Horn of Africa",
+        "lt": "Afrikos Kyšulys"
+    },
+    "af-eo": {
+        "en": "Indian Ocean Islands",
+        "lt": "Indijos Vandenyno Salos"
+    },
+    "af-en": {
+        "en": "Nile Valley",
+        "lt": "Nilo Slėnis"
+    },
+    "af-cs": {
+        "en": "Central and Southern Africa",
+        "lt": "Vidurio ir Pietų Afrika"
+    },
+    "af-c": {
+        "en": "Central Africa",
+        "lt": "Vidurio Afrika"
+    },
+    "af-se": {
+        "en": "Southeast Africa",
+        "lt": "Pietryčių Afrika"
+    },
+    "af-s": {
+        "en": "Southern Africa",
+        "lt": "Pietų Afrika"
+    },
+    "af-w": {
+        "en": "Western Africa",
+        "lt": "Vakarų Afrika"
+    },
+    "am": {
+        "en": "America",
+        "lt": "Amerika"
+    },
+    "am-n": {
+        "en": "Northern America",
+        "lt": "Šiaurės Amerika"
+    },
+    "am-cr": {
+        "en": "Central America and Caribbean",
+        "lt": "Vidurio Amerika ir Karibai"
+    },
+    "am-r": {
+        "en": "Caribbean",
+        "lt": "Karibai"
+    },
+    "am-c": {
+        "en": "Central America",
+        "lt": "Vidurio Amerika"
+    },
+    "am-s": {
+        "en": "Southern America",
+        "lt": "Pietų Amerika"
+    },
+    "oc": {
+        "en": "Australia and Oceania",
+        "lt": "Australija ir Okeanija"
+    },
+    "oc-az": {
+        "en": "Australia and New Zealand",
+        "lt": "Australija ir Naujoji Zelandija"
+    },
+    "oc-ml": {
+        "en": "Melanesia",
+        "lt": "Melanezija"
+    },
+    "oc-mr": {
+        "en": "Micronesia",
+        "lt": "Mikronezija"
+    },
+    "oc-pl": {
+        "en": "Polynesia",
+        "lt": "Polinezija"
+    },
+    "an": {
+        "en": "Antarctica",
+        "lt": "Antarktida"
+    },
+    "ww": {
+        "en": "Worldwide",
+        "lt": "Viso Pasaulio"
+    }
+}

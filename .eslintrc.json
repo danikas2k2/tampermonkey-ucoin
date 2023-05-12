@@ -27,32 +27,17 @@
         }
     },
     "settings": {
-        "import/extensions": [
-            ".ts",
-            ".tsx",
-            ".js",
-            ".jsx"
-        ],
+        "import/extensions": [".ts", ".tsx", ".js", ".jsx"],
         "import/resolver": {
             "node": {
-                "extensions": [
-                    ".ts",
-                    ".tsx",
-                    ".js",
-                    ".jsx"
-                ]
+                "extensions": [".ts", ".tsx", ".js", ".jsx"]
             }
         },
         "react": {
             "version": "detect"
         }
     },
-    "plugins": [
-        "@typescript-eslint",
-        "react",
-        "jsx-a11y",
-        "jest"
-    ],
+    "plugins": ["@typescript-eslint", "react", "jsx-a11y", "jest"],
     "rules": {
         "@typescript-eslint/explicit-function-return-type": [
             "warn",
@@ -69,10 +54,7 @@
                 "assertionStyle": "as"
             }
         ],
-        "comma-dangle": [
-            "error",
-            "only-multiline"
-        ],
+        "comma-dangle": ["error", "only-multiline"],
         "import/no-nodejs-modules": "off",
         "import/no-unresolved": [
             "error",
@@ -87,14 +69,8 @@
         "no-unused-labels": "error",
         "no-unused-vars": "error",
         "no-useless-rename": "error",
-        "padded-blocks": [
-            "error",
-            "never"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ],
+        "padded-blocks": ["error", "never"],
+        "semi": ["error", "always"],
         "eqeqeq": [
             "error",
             "always",

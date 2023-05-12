@@ -1,9 +1,12 @@
-import { getCountryId, separateCountries } from '../data/countries';
+import { getCountryId } from '../data/countries';
+import separateCountries from '../data/separate-countries.json';
 import { get } from './ajax';
 import { Color, ColorValues, Condition, ConditionValues } from './cond';
-import { randomDelay } from './delay';
+import { randomDecoratedDelay } from './delay';
 import { _ } from './lang';
-import { getPayPalPrice, getPriceByConditions, getShippingPrice } from './prices';
+import { getPayPalPrice } from './paypal';
+import { getPriceByConditions } from './prices';
+import { getShippingPrice } from './shipping';
 import { UID } from './uid';
 import { getHashParam, updateLocationHash } from './url';
 import { cancel, scrollIntoView } from './utils';
@@ -326,6 +329,7 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string): void {
             myPriceElement.classList.add('price-times');
         } else {
             const prel = (rel - 1) * 100;
+            // TODO avoid +0%
             if (prel >= 50) {
                 percent = `<span class='gray-11 price-times' data-price-percent>+${prel.toFixed()}%</span>`;
             } else if (prel >= 0) {
@@ -358,15 +362,18 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string): void {
             } else if (title) {
                 plus = [...title].filter((c) => c === '+').length;
                 if (cond === Condition.XF) {
-                    cond = Condition.XF_;
+                    cond = Condition.XXF;
                     plus--;
                 } else if (cond === Condition.VF) {
-                    cond = Condition.VF_;
+                    cond = Condition.VXF;
                     plus--;
                 }
             }
-            const year = tr.querySelector('td')?.childNodes?.[0]?.textContent;
-            const condPrice = getPriceByConditions(price, cond as Condition, year, plus);
+
+            const cells = tr.querySelectorAll('td');
+            const year = cells[0]?.childNodes?.[0]?.textContent ?? undefined;
+            const name = cells[1]?.textContent ?? undefined;
+            const condPrice = getPriceByConditions(price, cond as Condition, plus, name, year);
             if (myPrice && condPrice && myPrice !== +condPrice) {
                 tr.classList.add(INVALID_PRICE_CLASS);
                 tr.dataset.condPrice = condPrice;
@@ -533,7 +540,7 @@ export function checkSold(): void {
         let isFirstRequest = true;
         for await (const sold of soldList) {
             if (!isFirstRequest) {
-                await randomDelay();
+                await randomDecoratedDelay();
             }
             isFirstRequest = false;
 
@@ -634,7 +641,7 @@ export async function addPriceUpdateButton(): Promise<void> {
     const minDelay = continueCheckbox?.checked ? 5_000 : 3_000;
     const rndDelay = continueCheckbox?.checked ? 5_000 : 2_000;
     if (checked) {
-        await randomDelay(rndDelay, minDelay);
+        await randomDecoratedDelay(rndDelay, minDelay);
         await updatePrices();
     }
 
@@ -670,17 +677,17 @@ export async function addPriceUpdateButton(): Promise<void> {
                     if (first) {
                         first = false;
                     } else {
-                        await randomDelay(rndDelay, minDelay);
+                        await randomDecoratedDelay(rndDelay, minDelay);
                     }
                     try {
                         const response = await fetch(url.href);
                         if (!response.ok) {
-                            await randomDelay(rndDelay, minDelay);
+                            await randomDecoratedDelay(rndDelay, minDelay);
                             location.reload();
                             return;
                         }
                     } catch (e) {
-                        await randomDelay(rndDelay, minDelay);
+                        await randomDecoratedDelay(rndDelay, minDelay);
                         location.reload();
                         return;
                     }
@@ -707,7 +714,7 @@ export async function addPriceUpdateButton(): Promise<void> {
                 `#swap-list div.pages a[href$="&page=${nextPage}"]`
             );
             if (nextPageElement) {
-                await randomDelay(10_000, 10_000);
+                await randomDecoratedDelay(10_000, 10_000);
                 nextPageElement.href = `${nextPageElement.href}#update-prices`;
                 nextPageElement.click();
                 return;
@@ -716,7 +723,7 @@ export async function addPriceUpdateButton(): Promise<void> {
                 `#swap-list div.pages a:first-child`
             );
             if (firstPageElement && !firstPageElement?.classList.contains('current')) {
-                await randomDelay(10_000, 10_000);
+                await randomDecoratedDelay(10_000, 10_000);
                 firstPageElement.click();
                 return;
             }

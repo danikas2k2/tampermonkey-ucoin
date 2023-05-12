@@ -1,0 +1,2082 @@
+{
+    "abkhazia": [
+        "az",
+        "az-w"
+    ],
+    "afars_issas": [
+        "af",
+        "af-e",
+        "af-eh"
+    ],
+    "afghanistan": [
+        "az",
+        "az-s"
+    ],
+    "ajman": [
+        "az",
+        "az-w"
+    ],
+    "albania": [
+        "eu",
+        "eu-s",
+        "eu-se"
+    ],
+    "alderney": [
+        "eu",
+        "eu-w"
+    ],
+    "algeria": [
+        "af",
+        "af-nw",
+        "af-n"
+    ],
+    "american_samoa": [
+        "oc",
+        "oc-pl"
+    ],
+    "andorra": [
+        "eu",
+        "eu-s",
+        "eu-sw",
+        "euro",
+        "euro-ak"
+    ],
+    "angola": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "anguilla": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "anhalt_bernburg": [
+        "eu",
+        "eu-c"
+    ],
+    "antigua_barbuda": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "argentina": [
+        "am",
+        "am-s"
+    ],
+    "argentine_provinces": [
+        "am",
+        "am-s"
+    ],
+    "armavir": [
+        "az",
+        "az-w"
+    ],
+    "armenia": [
+        "az",
+        "az-w"
+    ],
+    "aruba": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "ascension_island": [
+        "uk"
+    ],
+    "ascension_island__": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "australia": [
+        "oc",
+        "oc-az"
+    ],
+    "austria": [
+        "eu",
+        "eu-c",
+        "euro",
+        "euro-ak"
+    ],
+    "austrian_netherlands": [
+        "eu",
+        "eu-w"
+    ],
+    "azerbaijan": [
+        "az",
+        "az-w"
+    ],
+    "azerbaijan__": [
+        "eu",
+        "eu-e"
+    ],
+    "azores": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "baden": [
+        "eu",
+        "eu-c"
+    ],
+    "bahamas": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "bahawalpur": [
+        "az",
+        "az-s"
+    ],
+    "bahrain": [
+        "az",
+        "az-w"
+    ],
+    "bangladesh": [
+        "az",
+        "az-s"
+    ],
+    "barbados": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "baroda": [
+        "az",
+        "az-s"
+    ],
+    "bavaria": [
+        "eu",
+        "eu-c"
+    ],
+    "belarus": [
+        "eu",
+        "eu-e"
+    ],
+    "belgian_congo": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "belgium": [
+        "eu",
+        "eu-w",
+        "euro",
+        "euro-ak"
+    ],
+    "belize": [
+        "am",
+        "am-cr",
+        "am-c"
+    ],
+    "benin": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "berg": [
+        "eu",
+        "eu-c"
+    ],
+    "bermuda": [
+        "am",
+        "am-n"
+    ],
+    "bhopal": [
+        "az",
+        "az-s"
+    ],
+    "bhutan": [
+        "az",
+        "az-s"
+    ],
+    "biafra": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "bikaner": [
+        "az",
+        "az-s"
+    ],
+    "biot": [
+        "az",
+        "az-s"
+    ],
+    "bohemia": [
+        "eu",
+        "eu-c"
+    ],
+    "bohemia_moravia": [
+        "eu",
+        "eu-c"
+    ],
+    "bolivia": [
+        "am",
+        "am-s"
+    ],
+    "bosnia_herzegovina": [
+        "eu",
+        "eu-s",
+        "eu-se"
+    ],
+    "botswana": [
+        "af",
+        "af-cs",
+        "af-s"
+    ],
+    "brandenburg_prussia": [
+        "eu",
+        "eu-c"
+    ],
+    "brazil": [
+        "am",
+        "am-s"
+    ],
+    "bremen": [
+        "eu",
+        "eu-c"
+    ],
+    "british_antarctic_territory": [
+        "an"
+    ],
+    "british_east_africa": [
+        "af",
+        "af-e",
+        "af-ec"
+    ],
+    "british_east_indies": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "british_guiana": [
+        "am",
+        "am-s"
+    ],
+    "british_honduras": [
+        "am",
+        "am-cr",
+        "am-c"
+    ],
+    "british_india": [
+        "az",
+        "az-s"
+    ],
+    "british_west_africa": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "british_west_indies": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "brunei": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "brunswick": [
+        "eu",
+        "eu-c"
+    ],
+    "brunswick_luneburg": [
+        "eu",
+        "eu-c"
+    ],
+    "brunswick_wolfenbuttel": [
+        "eu",
+        "eu-c"
+    ],
+    "bukhara": [
+        "az",
+        "az-ce",
+        "az-c"
+    ],
+    "bulgaria": [
+        "eu",
+        "eu-e"
+    ],
+    "burgau": [
+        "eu",
+        "eu-c"
+    ],
+    "burkina_faso": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "burundi": [
+        "af",
+        "af-e",
+        "af-ec"
+    ],
+    "cambodia": [
+        "az",
+        "az-se",
+        "az-ml"
+    ],
+    "cameroon": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "canada": [
+        "am",
+        "am-n"
+    ],
+    "canadian_provinces": [
+        "am",
+        "am-n"
+    ],
+    "cape_verde": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "caribbean_netherlands": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "catalonia": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "cayman_islands": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "central_africa": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "central_african_republic": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "central_american_republic": [
+        "am",
+        "am-cr",
+        "am-c"
+    ],
+    "ceylon": [
+        "az",
+        "az-s"
+    ],
+    "chad": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "chile": [
+        "am",
+        "am-s"
+    ],
+    "china": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "china_empire": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "china_republic": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "colombia": [
+        "am",
+        "am-s"
+    ],
+    "comoros": [
+        "af",
+        "af-e",
+        "af-eo"
+    ],
+    "congo_democratic_republic": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "congo_free_state": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "cook_islands": [
+        "oc",
+        "oc-pl"
+    ],
+    "costa_rica": [
+        "am",
+        "am-cr",
+        "am-c"
+    ],
+    "cote_d_ivoire": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "courland_semigallia": [
+        "eu",
+        "eu-c"
+    ],
+    "crete": [
+        "eu",
+        "eu-s",
+        "eu-se"
+    ],
+    "crimea": [
+        "eu",
+        "eu-e"
+    ],
+    "croatia": [
+        "eu",
+        "eu-s",
+        "eu-se"
+    ],
+    "cuba": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "curacao": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "cyprus": [
+        "eu",
+        "eu-e",
+        "euro",
+        "euro-ak"
+    ],
+    "czech_republic": [
+        "eu",
+        "eu-c"
+    ],
+    "czechoslovakia": [
+        "eu",
+        "eu-c"
+    ],
+    "danish_west_indies": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "danzig": [
+        "eu",
+        "pl"
+    ],
+    "darfur": [
+        "af",
+        "af-e",
+        "af-en"
+    ],
+    "demerara_essequibo": [
+        "am",
+        "am-s"
+    ],
+    "denmark": [
+        "eu",
+        "eu-n"
+    ],
+    "djibouti": [
+        "af",
+        "af-e",
+        "af-eh"
+    ],
+    "dominica": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "dominican_republic": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "dutch_republic": [
+        "eu",
+        "eu-w"
+    ],
+    "east_timor": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "eastern_caribbean": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "ecuador": [
+        "am",
+        "am-s"
+    ],
+    "egypt": [
+        "af",
+        "af-nw",
+        "af-n"
+    ],
+    "el_salvador": [
+        "am",
+        "am-cr",
+        "am-c"
+    ],
+    "england": [
+        "eu",
+        "eu-w"
+    ],
+    "equatorial_african_states": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "equatorial_guinea": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "eritrea": [
+        "af",
+        "af-e",
+        "af-eh"
+    ],
+    "estonia": [
+        "eu",
+        "eu-n",
+        "euro",
+        "euro-ak"
+    ],
+    "ethiopia": [
+        "af",
+        "af-e",
+        "af-eh"
+    ],
+    "eu": [
+        "eu",
+        "euro"
+    ],
+    "falkland_islands": [
+        "am",
+        "am-s"
+    ],
+    "faroes": [
+        "eu",
+        "eu-n"
+    ],
+    "fiji": [
+        "oc",
+        "oc-ml"
+    ],
+    "finland": [
+        "eu",
+        "eu-n",
+        "euro",
+        "euro-ak"
+    ],
+    "france": [
+        "eu",
+        "eu-w",
+        "euro",
+        "euro-ak"
+    ],
+    "frankfurt": [
+        "eu",
+        "eu-c"
+    ],
+    "french_cochinchina": [
+        "az",
+        "az-se",
+        "az-ml"
+    ],
+    "french_colonies": [
+        "ww"
+    ],
+    "french_equatorial_africa": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "french_guiana": [
+        "am",
+        "am-s"
+    ],
+    "french_indochina": [
+        "az",
+        "az-se",
+        "az-ml"
+    ],
+    "french_oceania": [
+        "oc",
+        "oc-pl"
+    ],
+    "french_pacific_territories": [
+        "oc",
+        "oc-pl"
+    ],
+    "french_polinesia": [
+        "oc",
+        "oc-pl"
+    ],
+    "french_somaliland": [
+        "af",
+        "af-e",
+        "af-eh"
+    ],
+    "french_west_africa": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "fujairah": [
+        "az",
+        "az-w"
+    ],
+    "further_austria": [
+        "eu",
+        "eu-c"
+    ],
+    "gabon": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "galicia_lodomeria": [
+        "eu",
+        "eu-e"
+    ],
+    "gambia": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "genoa": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "georgia": [
+        "az",
+        "az-w"
+    ],
+    "georgia__": [
+        "eu",
+        "eu-e"
+    ],
+    "german_democratic_republic": [
+        "eu",
+        "de"
+    ],
+    "german_east_africa": [
+        "af",
+        "af-e",
+        "af-ec"
+    ],
+    "german_empire": [
+        "eu",
+        "de"
+    ],
+    "german_new_guinea": [
+        "oc",
+        "oc-ml"
+    ],
+    "germany": [
+        "eu",
+        "de",
+        "euro",
+        "euro-ak"
+    ],
+    "ghana": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "gibraltar": [
+        "eu",
+        "uk"
+    ],
+    "gorizia_gradisca": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "greece": [
+        "eu",
+        "eu-s",
+        "eu-se",
+        "euro",
+        "euro-ak"
+    ],
+    "greenland": [
+        "am",
+        "am-n",
+        "eu",
+        "eu-n"
+    ],
+    "grenada": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "guadeloupe": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "guatemala": [
+        "am",
+        "am-cr",
+        "am-c"
+    ],
+    "gubbio": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "guernsey": [
+        "eu",
+        "uk"
+    ],
+    "guinea": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "guinea_bissau": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "guyana": [
+        "am",
+        "am-s"
+    ],
+    "gwalior": [
+        "az",
+        "az-s"
+    ],
+    "haiti": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "hamburg": [
+        "eu",
+        "eu-c"
+    ],
+    "hannover": [
+        "eu",
+        "eu-c"
+    ],
+    "hawaii": [
+        "oc",
+        "oc-pl",
+        "am",
+        "am-n"
+    ],
+    "hejaz": [
+        "az",
+        "az-w"
+    ],
+    "hesse_kassel": [
+        "eu",
+        "eu-c"
+    ],
+    "hessen_darmstadt": [
+        "eu",
+        "eu-c"
+    ],
+    "hessen_homburg": [
+        "eu",
+        "eu-c"
+    ],
+    "honduras": [
+        "am",
+        "am-cr",
+        "am-c"
+    ],
+    "hong_kong": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "hungary": [
+        "eu",
+        "eu-c"
+    ],
+    "hutt_river": [
+        "oc",
+        "oc-az"
+    ],
+    "hyderabad": [
+        "az",
+        "az-s"
+    ],
+    "iceland": [
+        "eu",
+        "eu-n"
+    ],
+    "india": [
+        "az",
+        "az-s"
+    ],
+    "indonesia": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "indore": [
+        "az",
+        "az-s"
+    ],
+    "ionian_islands": [
+        "eu",
+        "eu-s",
+        "eu-se"
+    ],
+    "iran": [
+        "az",
+        "az-w"
+    ],
+    "iraq": [
+        "az",
+        "az-w"
+    ],
+    "ireland": [
+        "eu",
+        "eu-w",
+        "euro",
+        "euro-ak"
+    ],
+    "isle_of_man": [
+        "eu",
+        "uk"
+    ],
+    "israel": [
+        "az",
+        "az-w"
+    ],
+    "italian_eritrea": [
+        "af",
+        "af-e",
+        "af-eh"
+    ],
+    "italian_somaliland": [
+        "af",
+        "af-e",
+        "af-eh"
+    ],
+    "italy": [
+        "eu",
+        "eu-s",
+        "eu-sc",
+        "euro",
+        "euro-ak"
+    ],
+    "jaipur": [
+        "az",
+        "az-s"
+    ],
+    "jamaica": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "jaora": [
+        "az",
+        "az-s"
+    ],
+    "japan": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "japanese_china": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "jersey": [
+        "eu",
+        "uk"
+    ],
+    "jodhpur": [
+        "az",
+        "az-s"
+    ],
+    "jordan": [
+        "az",
+        "az-w"
+    ],
+    "julich_berg": [
+        "eu",
+        "eu-c"
+    ],
+    "junagadh": [
+        "az",
+        "az-s"
+    ],
+    "katanga": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "kazakhstan": [
+        "az",
+        "az-ce",
+        "az-c"
+    ],
+    "kenya": [
+        "af",
+        "af-e",
+        "af-ec"
+    ],
+    "khiva": [
+        "az",
+        "az-ce",
+        "az-c"
+    ],
+    "khorezm": [
+        "az",
+        "az-ce",
+        "az-c"
+    ],
+    "kiau_chau": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "kiribati": [
+        "oc",
+        "oc-mr"
+    ],
+    "korea": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "krakow": [
+        "eu",
+        "eu-c"
+    ],
+    "kutch": [
+        "az",
+        "az-s"
+    ],
+    "kuwait": [
+        "az",
+        "az-w"
+    ],
+    "kyrgyzstan": [
+        "az",
+        "az-ce",
+        "az-c"
+    ],
+    "laos": [
+        "az",
+        "az-se",
+        "az-ml"
+    ],
+    "latvia": [
+        "eu",
+        "eu-c",
+        "euro",
+        "euro-lz"
+    ],
+    "lebanon": [
+        "az",
+        "az-w"
+    ],
+    "lesotho": [
+        "af",
+        "af-cs",
+        "af-s"
+    ],
+    "liberia": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "libya": [
+        "af",
+        "af-nw",
+        "af-n"
+    ],
+    "liechtenstein": [
+        "eu",
+        "eu-w"
+    ],
+    "liege": [
+        "eu",
+        "eu-c"
+    ],
+    "lippe": [
+        "eu",
+        "eu-c"
+    ],
+    "lithuania": [
+        "eu",
+        "lt",
+        "euro",
+        "euro-lz"
+    ],
+    "livonia": [
+        "eu",
+        "eu-c"
+    ],
+    "lombardy_venetia": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "lubeck": [
+        "eu",
+        "eu-c"
+    ],
+    "lucca": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "lundy": [
+        "eu",
+        "eu-w"
+    ],
+    "luxembourg": [
+        "eu",
+        "eu-w",
+        "euro",
+        "euro-lz"
+    ],
+    "macau": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "macedonia": [
+        "eu",
+        "eu-s",
+        "eu-se"
+    ],
+    "madagascar": [
+        "af",
+        "af-e",
+        "af-eo"
+    ],
+    "madeira_islands": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "mainz": [
+        "eu",
+        "eu-c"
+    ],
+    "majorca": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "malawi": [
+        "af",
+        "af-cs",
+        "af-se"
+    ],
+    "malaya": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "malaya_british_borneo": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "malaysia": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "maldives": [
+        "az",
+        "az-s"
+    ],
+    "mali": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "malta": [
+        "eu",
+        "eu-e",
+        "euro",
+        "euro-lz"
+    ],
+    "mantua": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "marshall_islands": [
+        "oc",
+        "oc-mr"
+    ],
+    "martinique": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "mauritania": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "mauritius": [
+        "af",
+        "af-e",
+        "af-eo"
+    ],
+    "mecklenburg_schwerin": [
+        "eu",
+        "eu-c"
+    ],
+    "mecklenburg_strelitz": [
+        "eu",
+        "eu-c"
+    ],
+    "mewar": [
+        "az",
+        "az-s"
+    ],
+    "mexico": [
+        "am",
+        "am-cr",
+        "am-c"
+    ],
+    "milan": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "moldavia_and_wallachia": [
+        "eu",
+        "eu-e"
+    ],
+    "moldova": [
+        "eu",
+        "eu-e"
+    ],
+    "mombasa": [
+        "af",
+        "af-e",
+        "af-ec"
+    ],
+    "monaco": [
+        "eu",
+        "eu-w",
+        "euro",
+        "euro-lz"
+    ],
+    "mongolia": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "montenegro": [
+        "eu",
+        "eu-s",
+        "eu-se"
+    ],
+    "montserrat": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "morocco": [
+        "af",
+        "af-nw",
+        "af-n"
+    ],
+    "mozambique": [
+        "af",
+        "af-cs",
+        "af-se"
+    ],
+    "mughal_empire": [
+        "az",
+        "az-s"
+    ],
+    "myanmar": [
+        "az",
+        "az-se",
+        "az-ml"
+    ],
+    "nagorno_karabakh": [
+        "az",
+        "az-w"
+    ],
+    "namibia": [
+        "af",
+        "af-cs",
+        "af-s"
+    ],
+    "naples": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "nassau": [
+        "eu",
+        "eu-c"
+    ],
+    "nassau_usingen": [
+        "eu",
+        "eu-c"
+    ],
+    "nassau_weilburg": [
+        "eu",
+        "eu-c"
+    ],
+    "nauru": [
+        "oc",
+        "oc-mr"
+    ],
+    "navarra": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "nawanagar": [
+        "az",
+        "az-s"
+    ],
+    "nepal": [
+        "az",
+        "az-s"
+    ],
+    "netherlands": [
+        "eu",
+        "eu-w",
+        "euro",
+        "euro-lz"
+    ],
+    "netherlands_antilles": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "netherlands_east_indies": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "new_caledonia": [
+        "oc",
+        "oc-ml"
+    ],
+    "new_guinea": [
+        "oc",
+        "oc-ml"
+    ],
+    "new_hebrides": [
+        "oc",
+        "oc-ml"
+    ],
+    "new_zealand": [
+        "oc",
+        "oc-az"
+    ],
+    "newfoundland": [
+        "am",
+        "am-n"
+    ],
+    "nicaragua": [
+        "am",
+        "am-cr",
+        "am-c"
+    ],
+    "niger": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "nigeria": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "niue": [
+        "oc",
+        "oc-pl"
+    ],
+    "north_borneo": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "north_korea": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "norway": [
+        "eu",
+        "eu-n"
+    ],
+    "oldenburg": [
+        "eu",
+        "eu-c"
+    ],
+    "oman": [
+        "az",
+        "az-w"
+    ],
+    "order_of_malta": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "ottoman_empire": [
+        "az",
+        "az-w"
+    ],
+    "oudh": [
+        "az",
+        "az-s"
+    ],
+    "pakistan": [
+        "az",
+        "az-s"
+    ],
+    "palatinate": [
+        "eu",
+        "eu-c"
+    ],
+    "palatine_zweibrucken": [
+        "eu",
+        "eu-c"
+    ],
+    "palau": [
+        "oc",
+        "oc-mr"
+    ],
+    "palestine": [
+        "az",
+        "az-w"
+    ],
+    "panama": [
+        "am",
+        "am-cr",
+        "am-c"
+    ],
+    "papal_states": [
+        "eu",
+        "eu-s",
+        "eu-sc"
+    ],
+    "papua_new_guinea": [
+        "oc",
+        "oc-ml"
+    ],
+    "paraguay": [
+        "am",
+        "am-s"
+    ],
+    "parma": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "peru": [
+        "am",
+        "am-s"
+    ],
+    "philippines": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "piedmont": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "pitcairn_islands": [
+        "oc",
+        "oc-pl"
+    ],
+    "poland": [
+        "eu",
+        "pl"
+    ],
+    "porbandar": [
+        "az",
+        "az-s"
+    ],
+    "portugal": [
+        "eu",
+        "eu-s",
+        "eu-sw",
+        "euro",
+        "euro-lz"
+    ],
+    "portuguese_india": [
+        "az",
+        "az-s"
+    ],
+    "portuguese_timor": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "prussia": [
+        "eu",
+        "de"
+    ],
+    "pudukkottai": [
+        "az",
+        "az-s"
+    ],
+    "puerto_rico": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "qatar": [
+        "az",
+        "az-w"
+    ],
+    "qatar_dubai": [
+        "az",
+        "az-w"
+    ],
+    "ras_al_khaimah": [
+        "az",
+        "az-w"
+    ],
+    "ratlam": [
+        "az",
+        "az-s"
+    ],
+    "reunion": [
+        "af",
+        "af-e",
+        "af-eo"
+    ],
+    "reuss_gera": [
+        "eu",
+        "eu-c"
+    ],
+    "reuss_greiz": [
+        "eu",
+        "eu-c"
+    ],
+    "rhodesia": [
+        "af",
+        "af-cs",
+        "af-se"
+    ],
+    "rhodesia_nyasaland": [
+        "af",
+        "af-cs",
+        "af-se"
+    ],
+    "roman_republic": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "romania": [
+        "eu",
+        "eu-e"
+    ],
+    "ruanda_burundi": [
+        "af",
+        "af-e",
+        "af-ec"
+    ],
+    "ruanda_urundi": [
+        "af",
+        "af-e",
+        "af-ec"
+    ],
+    "russia": [
+        "eu",
+        "ru",
+        "ru-rf"
+    ],
+    "russia_empire": [
+        "eu",
+        "ru",
+        "ru-rf"
+    ],
+    "rwanda": [
+        "af",
+        "af-e",
+        "af-ec"
+    ],
+    "ryukyu": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "saar": [
+        "eu",
+        "de"
+    ],
+    "saint_helena": [
+        "uk"
+    ],
+    "saint_helena__": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "saint_helena_ascension": [
+        "uk"
+    ],
+    "saint_helena_ascension__": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "saint_kitts_nevis": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "saint_lucia": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "saint_pierre_miquelon": [
+        "am",
+        "am-n"
+    ],
+    "saint_vincent_grenadines": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "salzburg": [
+        "eu",
+        "eu-c"
+    ],
+    "samoa": [
+        "oc",
+        "oc-pl"
+    ],
+    "san_marino": [
+        "eu",
+        "eu-s",
+        "eu-sc",
+        "euro",
+        "euro-lz"
+    ],
+    "sao_tome_principe": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "sarawak": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "sardinia": [
+        "eu",
+        "eu-s",
+        "eu-sc"
+    ],
+    "saudi_arabia": [
+        "az",
+        "az-w"
+    ],
+    "saxe_altenburg": [
+        "eu",
+        "eu-c"
+    ],
+    "saxe_coburg_gotha": [
+        "eu",
+        "eu-c"
+    ],
+    "saxe_gotha_altenburg": [
+        "eu",
+        "eu-c"
+    ],
+    "saxe_hildburghausen": [
+        "eu",
+        "eu-c"
+    ],
+    "saxe_meiningen": [
+        "eu",
+        "eu-c"
+    ],
+    "saxe_weimar_eisenach": [
+        "eu",
+        "eu-c"
+    ],
+    "saxony": [
+        "eu",
+        "eu-c"
+    ],
+    "schaumburg_lippe": [
+        "eu",
+        "eu-c"
+    ],
+    "schleswig_holstein": [
+        "eu",
+        "eu-c"
+    ],
+    "schwarzburg_rudolstadt": [
+        "eu",
+        "eu-c"
+    ],
+    "schwarzburg_sondershausen": [
+        "eu",
+        "eu-c"
+    ],
+    "scotland": [
+        "eu",
+        "eu-w"
+    ],
+    "sealand": [
+        "eu",
+        "eu-w"
+    ],
+    "seborga": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "senegal": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "serbia": [
+        "eu",
+        "eu-s",
+        "eu-se"
+    ],
+    "seychelles": [
+        "af",
+        "af-e",
+        "af-eo"
+    ],
+    "sharjah": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "sicily": [
+        "eu",
+        "eu-s",
+        "eu-sc"
+    ],
+    "sierra_leone": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "silesia": [
+        "eu",
+        "eu-c"
+    ],
+    "singapore": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "slovakia": [
+        "eu",
+        "eu-c",
+        "euro",
+        "euro-lz"
+    ],
+    "slovenia": [
+        "eu",
+        "eu-s",
+        "eu-se",
+        "euro",
+        "euro-lz"
+    ],
+    "solomon_islands": [
+        "oc",
+        "oc-ml"
+    ],
+    "somalia": [
+        "af",
+        "af-e",
+        "af-eh"
+    ],
+    "somaliland": [
+        "af",
+        "af-e",
+        "af-eh"
+    ],
+    "south_africa": [
+        "af",
+        "af-cs",
+        "af-s"
+    ],
+    "south_arabia": [
+        "az",
+        "az-w"
+    ],
+    "south_georgia": [
+        "am",
+        "am-s"
+    ],
+    "south_korea": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "south_sudan": [
+        "af",
+        "af-e",
+        "af-ec"
+    ],
+    "south_vietnam": [
+        "az",
+        "az-se",
+        "az-ml"
+    ],
+    "south_yemen": [
+        "az",
+        "az-w"
+    ],
+    "southern_rhodesia": [
+        "af",
+        "af-cs",
+        "af-se"
+    ],
+    "spain": [
+        "eu",
+        "eu-s",
+        "eu-sw",
+        "euro",
+        "euro-lz"
+    ],
+    "spainish_provinces": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "span_civil_war": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "spanish_netherlands": [
+        "eu",
+        "eu-w"
+    ],
+    "spitsbergen": [
+        "eu",
+        "eu-n"
+    ],
+    "sri_lanka": [
+        "az",
+        "az-s"
+    ],
+    "straits_settlements": [
+        "az",
+        "az-se",
+        "az-mr"
+    ],
+    "sudan": [
+        "af",
+        "af-e",
+        "af-en"
+    ],
+    "suriname": [
+        "am",
+        "am-s"
+    ],
+    "swaziland": [
+        "af",
+        "af-cs",
+        "af-s"
+    ],
+    "sweden": [
+        "eu",
+        "eu-n"
+    ],
+    "swiss_cantons": [
+        "eu",
+        "eu-w"
+    ],
+    "switzerland": [
+        "eu",
+        "eu-w"
+    ],
+    "syria": [
+        "az",
+        "az-w"
+    ],
+    "taiwan": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "tajikistan": [
+        "az",
+        "az-ce",
+        "az-c"
+    ],
+    "tannu_tuva": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "tanzania": [
+        "af",
+        "af-e",
+        "af-ec"
+    ],
+    "thailand": [
+        "az",
+        "az-se",
+        "az-ml"
+    ],
+    "third_reich": [
+        "eu",
+        "de"
+    ],
+    "tibet": [
+        "az",
+        "az-ce",
+        "az-e"
+    ],
+    "togo": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "tokelau": [
+        "oc",
+        "oc-pl"
+    ],
+    "tonga": [
+        "oc",
+        "oc-pl"
+    ],
+    "tonk": [
+        "az",
+        "az-s"
+    ],
+    "tonkin": [
+        "az",
+        "az-se",
+        "az-ml"
+    ],
+    "transnistria": [
+        "eu",
+        "eu-e"
+    ],
+    "transylvania": [
+        "eu",
+        "eu-e"
+    ],
+    "travancore": [
+        "az",
+        "az-se",
+        "az-ml"
+    ],
+    "trinidad_tobago": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "tristan_da_cunha": [
+        "uk"
+    ],
+    "tristan_da_cunha__": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "tunisia": [
+        "af",
+        "af-nw",
+        "af-n"
+    ],
+    "turkey": [
+        "az",
+        "az-w"
+    ],
+    "turkmenistan": [
+        "az",
+        "az-ce",
+        "az-c"
+    ],
+    "turks_caicos_islands": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "tuscany": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "tuvalu": [
+        "oc",
+        "oc-pl"
+    ],
+    "two_sicilies": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "uganda": [
+        "af",
+        "af-e",
+        "af-ec"
+    ],
+    "ukraine": [
+        "eu",
+        "eu-e"
+    ],
+    "umm_al_qaiwain": [
+        "az",
+        "az-w"
+    ],
+    "united_arab_emirates": [
+        "az",
+        "az-w"
+    ],
+    "united_kingdom": [
+        "eu",
+        "uk"
+    ],
+    "uruguay": [
+        "am",
+        "am-s"
+    ],
+    "usa": [
+        "am",
+        "am-n"
+    ],
+    "ussr": [
+        "eu",
+        "ru",
+        "ru-sx"
+    ],
+    "uzbekistan": [
+        "az",
+        "az-ce",
+        "az-c"
+    ],
+    "vanuatu": [
+        "oc",
+        "oc-ml"
+    ],
+    "vatican_city": [
+        "eu",
+        "eu-s",
+        "eu-sc",
+        "euro",
+        "euro-lz"
+    ],
+    "venezuela": [
+        "am",
+        "am-s"
+    ],
+    "venice": [
+        "eu",
+        "eu-s",
+        "eu-sw"
+    ],
+    "vietnam": [
+        "az",
+        "az-se",
+        "az-ml"
+    ],
+    "virgin_islands_british": [
+        "am",
+        "am-cr",
+        "am-r"
+    ],
+    "waldeck": [
+        "eu",
+        "eu-c"
+    ],
+    "west_congo": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "western_africa": [
+        "af",
+        "af-nw",
+        "af-w"
+    ],
+    "western_sahara": [
+        "af",
+        "af-nw",
+        "af-n"
+    ],
+    "westphalia": [
+        "eu",
+        "eu-c"
+    ],
+    "wurttemberg": [
+        "eu",
+        "eu-c"
+    ],
+    "wurzburg": [
+        "eu",
+        "eu-c"
+    ],
+    "yemen": [
+        "az",
+        "az-w"
+    ],
+    "yugoslavia": [
+        "eu",
+        "eu-s",
+        "eu-se"
+    ],
+    "zaire": [
+        "af",
+        "af-cs",
+        "af-c"
+    ],
+    "zambia": [
+        "af",
+        "af-cs",
+        "af-se"
+    ],
+    "zanzibar": [
+        "af",
+        "af-e",
+        "af-ec"
+    ],
+    "zar": [
+        "af",
+        "af-cs",
+        "af-s"
+    ],
+    "zimbabwe": [
+        "af",
+        "af-cs",
+        "af-se"
+    ]
+}

@@ -64,7 +64,7 @@ const config = (): webpack.Configuration => ({
                 extractComments: false,
                 terserOptions: {
                     format: {
-                        comments: /^\**!/,
+                        comments: /^\**!!/,
                     },
                 },
             }),

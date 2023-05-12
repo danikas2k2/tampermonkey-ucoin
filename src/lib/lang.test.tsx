@@ -26,20 +26,6 @@ describe('lang', () => {
     });
 });
 
-describe('messages', () => {
-    it('return a default bunch of translated messages', async () => {
-        jest.isolateModules(() => {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
-            expect(require('./lang').messages).toEqual(
-                expect.objectContaining({
-                    Shipping: expect.objectContaining({ lt: 'Siuntimas', ru: 'Почта' }),
-                    Total: expect.objectContaining({ lt: 'Viso', ru: 'Всего' }),
-                })
-            );
-        });
-    });
-});
-
 describe('translations', () => {
     jest.isolateModules(() => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -53,7 +39,15 @@ describe('translations', () => {
             expect(_('Total', 'lt')).toEqual('Viso');
         });
 
+        it('return a translation from custom messages', async () => {
+            expect(_('Total', { Total: { en: 'Complete' } })).toEqual('Complete');
+        });
+
         it('return a translation for specified language from custom messages', async () => {
+            expect(_('Total', { Total: { de: 'Gesamt' } }, 'de')).toEqual('Gesamt');
+        });
+
+        it('return a translation for specified language from custom messages with different argument order', async () => {
             expect(_('Total', 'de', { Total: { de: 'Gesamt' } })).toEqual('Gesamt');
         });
     });

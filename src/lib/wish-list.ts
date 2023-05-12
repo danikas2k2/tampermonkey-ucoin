@@ -1,6 +1,6 @@
 import { post, postFragment } from './ajax';
 import { FormValue, WishValue } from './cond';
-import { randomDelay } from './delay';
+import { randomDecoratedDelay } from './delay';
 import { lang } from './lang';
 import { styleListLinks } from './swap-links';
 import { getHashParam, updateHashHref, updateLocationHash } from './url';
@@ -53,7 +53,7 @@ export async function syncCoinWish(): Promise<void> {
                 if (m) {
                     wishForm.set('uwid', m.groups.uwid || '');
                     wishForm.set('action', WishFormAction.DELETE);
-                    await randomDelay();
+                    await randomDecoratedDelay();
                     await post(location.href, wishForm);
                     a.remove();
                 }
@@ -80,7 +80,7 @@ export async function syncCoinWish(): Promise<void> {
                 wishForm.set('wish-variety', '');
                 wishForm.set('condition', `${wishCondition}`);
                 wishForm.set('action', WishFormAction.ADD);
-                await randomDelay();
+                await randomDecoratedDelay();
                 const block = (
                     await postFragment(location.href, wishForm)
                 ).querySelector<HTMLElement>('#wish-block');
@@ -101,7 +101,7 @@ export async function syncCoinWish(): Promise<void> {
                     wishForm.set('uwid', m.groups.uwid);
                     wishForm.set('condition', first ? `${wishCondition}` : '');
                     wishForm.set('action', first ? WishFormAction.EDIT : WishFormAction.DELETE);
-                    await randomDelay();
+                    await randomDecoratedDelay();
                     if (first) {
                         if (+(m?.groups.cond ?? 0) !== wishCondition) {
                             const block = (
@@ -176,7 +176,7 @@ export async function syncListWish(): Promise<void> {
         }
 
         for (const coin of coins) {
-            await randomDelay();
+            await randomDecoratedDelay();
 
             scrollIntoView(coin);
             const { screenLeft: wl, screenTop: wt, outerWidth: ww, outerHeight: wh } = window;
@@ -191,7 +191,7 @@ export async function syncListWish(): Promise<void> {
                 ].join(',')
             );
             if (o) {
-                await randomDelay(5000, 5000);
+                await randomDecoratedDelay(5000, 5000);
                 o.close();
             }
 
@@ -224,7 +224,7 @@ export async function syncListWish(): Promise<void> {
             return disableSync();
         }
 
-        await randomDelay(5000, 5000);
+        await randomDecoratedDelay(5000, 5000);
         location.href = await updateHashHref((hash) => {
             hash.set(SYNC_ID, SYNC_ON);
         }, nextPageLink.href);

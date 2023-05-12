@@ -1,3 +1,5 @@
+import labels from '../data/labels.json';
+
 export const lang: string = (() => {
     const a = document.querySelector<HTMLAnchorElement>('.bottom-lang a.active');
     if (a) {
@@ -11,22 +13,17 @@ export const lang: string = (() => {
 
 export type Translations = Record<string, Record<string, string>>;
 
-export const messages: Translations = {
-    Shipping: { lt: 'Siuntimas', ru: 'Почта' },
-    shipping: { lt: 'siuntimas', ru: 'почта' },
-    Total: { lt: 'Viso', ru: 'Всего' },
-    'PayPal charges': { lt: 'PayPal mokesčiai', ru: 'PayPal сборы' },
-    Sorting: { lt: 'Rikiuoti', ru: 'Сортировка' },
-    Year: { lt: 'Metai', ru: 'Год' },
-    'Facial value': { lt: 'Vertė', ru: 'Номинал' },
-    Subject: { lt: 'Tema', ru: 'Наименование' },
-    // 'Krause': { lt: 'Krause', ru: 'Krause' },
-};
-
+export function _(message: string, language?: string, messages?: Translations): string;
+export function _(message: string, messages?: Translations, language?: string): string;
 export function _(
     message: string,
-    language: string = lang,
-    translations: Translations = messages
+    messages?: Translations | string,
+    language?: string | Translations
 ): string {
-    return translations?.[message]?.[language] || message;
+    if (typeof messages === 'string') {
+        [messages, language] = [language, messages];
+    }
+    return (
+        ((messages as Translations) ?? labels)?.[message]?.[(language as string) ?? lang] || message
+    );
 }

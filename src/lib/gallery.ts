@@ -1,5 +1,5 @@
 import { get, post } from './ajax';
-import { randomDelay } from './delay';
+import { randomDecoratedDelay } from './delay';
 
 type VisibilityToggleCallback = (container: HTMLElement, checked: boolean) => void;
 
@@ -120,7 +120,7 @@ async function toggleGroupVisibility(container: HTMLElement, checked: boolean): 
 
         updateStatusElements();
         toggleButtonVisibility(container, toggleGroupVisibility);
-        await randomDelay();
+        await randomDecoratedDelay();
     }
 }
 

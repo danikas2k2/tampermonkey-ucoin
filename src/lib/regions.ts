@@ -1,6 +1,7 @@
-import { countryRegions } from '../data/countries';
-import { regionNames, regionTree } from '../data/regions';
-import { lang } from './lang';
+import countryRegions from '../data/country-regions.json';
+import regionNames from '../data/region-names.json';
+import regionTree from '../data/region-tree.json';
+import { _ } from './lang';
 import { getHashParam, updateLocationHash } from './url';
 import { slug, unique } from './utils';
 
@@ -22,17 +23,21 @@ export async function handleCountryRegions(): Promise<void> {
 
     // add all regions
     countryList.insertAdjacentHTML('beforebegin', `<ul class='regions'></ul>`);
-    (function renderRegions(container: Element, regions) {
-        for (const [k, sub] of Object.entries(regions)) {
+    (function renderRegions(container: Element, regions: Record<string, string[]> | string[]) {
+        const entries: [string, string[]][] = Array.isArray(regions)
+            ? regions.map((r) => [r, []])
+            : Object.entries(regions);
+        for (const [k, sub] of entries) {
             const id = slug(k);
             const active = currentRegion && id === currentRegion ? ' active' : '';
             const hide =
                 currentRegion && id !== currentRegion && topRegions.includes(k) ? ` hide` : '';
             container.insertAdjacentHTML(
                 'beforeend',
-                `<li class='region${hide}${active}' id='${id}'><h2>${
-                    regionNames[k]?.[lang] || k
-                }</h2><ul class='regions'></ul><div class='country-list catalog-list'></div></li>`
+                `<li class='region${hide}${active}' id='${id}'><h2>${_(
+                    k,
+                    regionNames
+                )}</h2><ul class='regions'></ul><div class='country-list catalog-list'></div></li>`
             );
             const region = container.querySelector(`#${id} .regions`);
             if (region) {
@@ -55,7 +60,7 @@ export async function handleCountryRegions(): Promise<void> {
         //     const { regions, periods } = found;
         //     periods?.forEach((p) => p.regions && regions.push(...p.regions));
         //     unique(regions).forEach((r) => {
-        const regions = countryRegions[cid];
+        const regions = (countryRegions as Record<string, string[]>)[cid];
         if (regions) {
             for (const r of unique(regions)) {
                 const id = slug(r);
@@ -131,9 +136,10 @@ export async function handleCountryRegions(): Promise<void> {
         if (document.querySelector(`.region#${id}`)) {
             headingList.insertAdjacentHTML(
                 'beforeend',
-                `<li class='region${currentRegion === id ? ` ${ACTIVE}` : ''}' data-id='${id}'>${
-                    regionNames[r]?.[lang] || r
-                }</li>`
+                `<li class='region${currentRegion === id ? ` ${ACTIVE}` : ''}' data-id='${id}'>${_(
+                    r,
+                    regionNames
+                )}</li>`
             );
         }
     }

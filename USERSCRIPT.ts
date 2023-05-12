@@ -1,4 +1,4 @@
-/*!
+/**!!
 // ==UserScript==
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/

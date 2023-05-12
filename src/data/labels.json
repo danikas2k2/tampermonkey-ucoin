@@ -1,0 +1,47 @@
+{
+    "Shipping": {
+        "lt": "Siuntimas",
+        "ru": "Почта",
+        "de": "Versand"
+    },
+    "shipping": {
+        "lt": "siuntimas",
+        "ru": "почта",
+        "de": "versand"
+    },
+    "Total": {
+        "lt": "Viso",
+        "ru": "Всего",
+        "de": "Gesamt"
+    },
+    "PayPal charges": {
+        "lt": "PayPal mokesčiai",
+        "ru": "PayPal сборы",
+        "de": "PayPal Gebühren"
+    },
+    "Sorting": {
+        "lt": "Rikiuoti",
+        "ru": "Сортировка",
+        "de": "Sortierung"
+    },
+    "Year": {
+        "lt": "Metai",
+        "ru": "Год",
+        "de": "Jahr"
+    },
+    "Facial value": {
+        "lt": "Vertė",
+        "ru": "Номинал",
+        "de": "Wert"
+    },
+    "Subject": {
+        "lt": "Tema",
+        "ru": "Наименование",
+        "de": "Thema"
+    },
+    "Denomination": {
+        "lt": "Nominalioji vertė",
+        "ru": "Номинал",
+        "de": "Wert"
+    }
+}

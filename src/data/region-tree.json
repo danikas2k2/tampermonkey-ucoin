@@ -1,0 +1,39 @@
+{
+    "euro": [
+        "euro-ak",
+        "euro-lz"
+    ],
+    "eu": [
+        "lt",
+        "pl",
+        "ru-sx",
+        "ru-rf",
+        "de",
+        "eu-e",
+        "eu-c",
+        "eu-n",
+        "eu-sw",
+        "eu-sc",
+        "eu-se",
+        "eu-w",
+        "uk"
+    ],
+    "az": [
+        "az-ce",
+        "az-se",
+        "az-s",
+        "az-w",
+        "az-n"
+    ],
+    "af": [
+        "af-nw",
+        "af-e",
+        "af-cs"
+    ],
+    "am": [
+        "am-n",
+        "am-cr",
+        "am-s"
+    ],
+    "oc": []
+}

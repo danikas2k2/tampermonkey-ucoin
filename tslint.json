@@ -1,9 +1,6 @@
 {
     "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended",
-        "tslint-config-prettier"
-    ],
+    "extends": ["tslint:recommended", "tslint-config-prettier"],
     "rulesDirectory": [],
     "rules": {
         "arrow-parens": [true, "ban-single-arg-parens"],
@@ -21,10 +18,21 @@
         "no-empty": [true, "allow-empty-catch"],
         "no-empty-interface": false,
         "no-unnecessary-callback-wrapper": true,
-        "no-unused-expression": [true, "allow-fast-null-checks", "allow-new", "allow-tagged-template"],
+        "no-unused-expression": [
+            true,
+            "allow-fast-null-checks",
+            "allow-new",
+            "allow-tagged-template"
+        ],
         "no-unused-variable": [true, "check-parameters"],
         "object-literal-shorthand": true,
-        "object-literal-sort-keys": [true, "ignore-case", "locale-compare", "match-declaration-order", "shorthand-first"],
+        "object-literal-sort-keys": [
+            true,
+            "ignore-case",
+            "locale-compare",
+            "match-declaration-order",
+            "shorthand-first"
+        ],
         "prefer-object-spread": true,
         "prefer-template": true,
         "quotemark": [true, "single", "jsx-double", "avoid-escape"],

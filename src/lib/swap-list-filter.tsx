@@ -40,6 +40,8 @@ export function addFilteringOptions(): void {
     ];
     const filterValues = new Map<FilterName, string>();
 
+    const isVisible = (el: HTMLElement): boolean => el.style.display !== 'none';
+
     const countryHeadings = swapList.querySelectorAll('h2');
     filterProps.set(FilterName.COUNTRY, {
         placeholder: 'Country',
@@ -50,7 +52,20 @@ export function addFilteringOptions(): void {
                 for (const el of hc.querySelectorAll('input, sup')) {
                     el.remove();
                 }
-                r.set(hc.id, hc.innerHTML);
+
+                const rows = h.nextElementSibling?.querySelectorAll('tr') || [];
+                console.info(rows.length, rows);
+                const filtered = [...rows].filter(isVisible);
+                console.info(filtered.length, filtered);
+                const mapped = filtered.map((el) => el.style.display);
+                console.info(mapped);
+
+                r.set(hc.id, {
+                    name: hc.innerHTML,
+                    count: [...(h.nextElementSibling?.querySelectorAll('tr') || [])].filter(
+                        isVisible
+                    ).length,
+                });
                 return r;
             }, new Map())
         ),
@@ -64,7 +79,12 @@ export function addFilteringOptions(): void {
                 (r: FilterOptions, o) => {
                     const y = o.dataset.sortYear;
                     if (y) {
-                        r.set(y, y);
+                        r.set(y, {
+                            name: y,
+                            count: [
+                                ...swapList.querySelectorAll(`tr[data-sort-year="${y}"]`),
+                            ].filter(isVisible).length,
+                        });
                     }
                     return r;
                 },
@@ -83,7 +103,13 @@ export function addFilteringOptions(): void {
                     const f = o.dataset.sortFace;
                     if (f) {
                         const [v] = f.split(' ');
-                        r.set(v, v);
+                        r.set(v, {
+                            name: v,
+                            count: [
+                                ...swapList.querySelectorAll(`tr[data-sort-face="${v}"]`),
+                                ...swapList.querySelectorAll(`tr[data-sort-face^="${v} "]`),
+                            ].filter(isVisible).length,
+                        });
                     }
                     return r;
                 },
@@ -103,7 +129,14 @@ export function addFilteringOptions(): void {
                     const { sortKmc: c = '', sortKm: k = '', sortKma: a = '' } = o.dataset;
                     const v = `${c.toLowerCase()}${k}${a}`;
                     if (v) {
-                        r.set(v, `${c}# ${k}${a}`);
+                        r.set(v, {
+                            name: `${c}# ${k}${a}`,
+                            count: [
+                                ...swapList.querySelectorAll(
+                                    `tr[data-sort-kmc="${c}"][data-sort-km="${k}"][data-sort-kma="${a}"]`
+                                ),
+                            ].filter(isVisible).length,
+                        });
                     }
                     return r;
                 },

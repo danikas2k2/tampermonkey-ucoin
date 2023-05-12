@@ -1,5 +1,5 @@
 import { getFragment, postFragment } from './ajax';
-import { randomDelay } from './delay';
+import { randomDecoratedDelay } from './delay';
 import { ListForm } from './list-form';
 import {
     addComment,
@@ -196,7 +196,7 @@ export class SwapFormList {
             for (let i = n, qq = qty, q = Math.floor(qq / i); i > 1; i--, q = Math.floor(qq / i)) {
                 qq -= q;
                 if (!isFirstQuery) {
-                    await randomDelay();
+                    await randomDecoratedDelay();
                 }
                 isFirstQuery = false;
 
@@ -240,7 +240,7 @@ export class SwapFormList {
                 }
 
                 if (!isFirstQuery) {
-                    await randomDelay();
+                    await randomDecoratedDelay();
                 }
                 isFirstQuery = false;
 
