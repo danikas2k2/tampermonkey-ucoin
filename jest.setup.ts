@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom';
-import '@testing-library/jest-dom/extend-expect';
 import 'jest-expect-message';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
