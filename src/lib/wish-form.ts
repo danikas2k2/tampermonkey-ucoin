@@ -5,31 +5,31 @@ import { ListForm } from './list-form';
 // declare let CoinWishFormOff: (...other: string[]) => void;
 
 export class WishForm extends ListForm {
-    protected formType: FormType = 'wish';
-    protected formTypeMethod: FormTypeMethod = 'Wish';
-    protected formTypePrefix: FormTypePrefix = 'w';
-    protected formUidPrefix: FormUidPrefix = 'w';
+    formType: FormType = 'wish';
+    formTypeMethod: FormTypeMethod = 'Wish';
+    formTypePrefix: FormTypePrefix = 'w';
+    formUidPrefix: FormUidPrefix = 'w';
 
-    protected buttonSetButtons: Map<string, [Color, WishValue]> = new Map([
+    buttonSetButtons: Map<string, [Color, WishValue]> = new Map([
         ['*', [Color.ANY, WishValue.ANY]],
         ['VF+', [Color.VF, WishValue.VF]],
         ['XF+', [Color.XF, WishValue.XF]],
         ['UN', [Color.UNC, WishValue.UNC]],
     ]);
 
-    protected fillForm(uid = '', cond = '', price = '', _tid?: string, vid = ''): void {
+    fillForm(uid = '', cond = '', price = '', _tid?: string, vid = ''): void {
         super.fillForm(uid, cond, price, vid);
         if (this.form?.is_type) {
             this.form.is_type.checked = true;
         }
     }
 
-    protected async updateForm(): Promise<void> {
+    async updateForm(): Promise<void> {
         await super.updateForm();
         this.updateVarieties();
     }
 
-    protected updateVarieties(): void {
+    updateVarieties(): void {
         const varieties: RadioNodeList = this.form?.[this.formVariety];
         if (varieties) {
             const firstVariety = varieties[0].parentElement as HTMLLabelElement;
@@ -45,7 +45,7 @@ export class WishForm extends ListForm {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    protected getConditionOption(o: HTMLOptionElement): ConditionOption | undefined {
+    getConditionOption(o: HTMLOptionElement): ConditionOption | undefined {
         const { value, textContent } = o;
         if (value || textContent?.includes('ANY')) {
             return {

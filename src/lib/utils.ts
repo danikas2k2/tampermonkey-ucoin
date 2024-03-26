@@ -5,35 +5,35 @@ export function tt(str = ''): string {
     return `${str.slice(0, index)}${str.charAt(index).toUpperCase()}${str.slice(index + 1)}`;
 }
 
-export function isHidden(element: HTMLElement): boolean {
-    return element.classList.contains('hide');
+export function isHidden(element: HTMLElement | null): boolean {
+    return !!element?.classList.contains('hide');
 }
 
-export function show(...elements: HTMLElement[]): void {
+export function show(...elements: (HTMLElement | null)[]): void {
     for (const element of elements) {
         element?.classList.remove('hide');
     }
 }
 
-export function hide(...elements: HTMLElement[]): void {
+export function hide(...elements: (HTMLElement | null)[]): void {
     for (const element of elements) {
         element?.classList.add('hide');
     }
 }
 
-export function toggle(visible: boolean, ...elements: HTMLElement[]): void {
+export function toggle(visible: boolean, ...elements: (HTMLElement | null)[]): void {
     for (const element of elements) {
         element?.classList.toggle('hide', !visible);
     }
 }
 
-export function enable(...elements: HTMLElement[]): void {
+export function enable(...elements: (HTMLElement | null)[]): void {
     for (const element of elements) {
         element?.classList.remove('disable');
     }
 }
 
-export function disable(...elements: HTMLElement[]): void {
+export function disable(...elements: (HTMLElement | null)[]): void {
     for (const element of elements) {
         element?.classList.add('disable');
     }
@@ -64,8 +64,8 @@ export function dataHrefClickHandler(e: Event): void {
     a.dispatchEvent(new MouseEvent(e.type, e));
 }
 
-export function wrapDataHrefClicks(element: HTMLElement): void {
-    element.querySelectorAll('[data-href]').forEach((el: HTMLElement) => {
+export function wrapDataHrefClicks(element: HTMLElement | null): void {
+    element?.querySelectorAll('[data-href]').forEach((el: HTMLElement) => {
         el.addEventListener('click', dataHrefClickHandler);
     });
 }
@@ -73,8 +73,8 @@ export function wrapDataHrefClicks(element: HTMLElement): void {
 export function updateRequiredElement(
     fragment: DocumentFragment,
     element: HTMLElement | null,
-    onUpdated: (element: HTMLElement) => void = wrapDataHrefClicks,
-    onMissing: (element: HTMLElement) => void = reload
+    onUpdated: (element: HTMLElement | null) => void = wrapDataHrefClicks,
+    onMissing: (element: HTMLElement | null) => void = reload
 ): void {
     if (!element) {
         return;

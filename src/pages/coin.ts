@@ -1,6 +1,6 @@
-import { CoinForm } from '../lib/coin-form';
+import { updateCoinForm } from '../lib/coin-form';
 import { updateLinkHref } from '../lib/links';
-import { estimateSwapPrices, estimateWeightPrice } from '../lib/prices';
+import { /*estimateSwapPrices,*/ estimateWeightPrice } from '../lib/prices';
 import { SwapForm } from '../lib/swap-form';
 import { WishForm } from '../lib/wish-form';
 import { syncCoinWish } from '../lib/wish-list';
@@ -23,9 +23,9 @@ export async function handleCoinPage(): Promise<void> {
         }
     })();
 
-    await new CoinForm().handle();
+    await updateCoinForm();
     await new SwapForm().handle();
-    await estimateSwapPrices();
+    // await estimateSwapPrices();
     await estimateWeightPrice();
     await new WishForm().handle();
 

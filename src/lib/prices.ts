@@ -1,12 +1,12 @@
 import { Condition, ConditionValues } from './cond';
 import { cmp } from './sort';
 
-type YearMap = Map<string, number[]>;
-type MintMap = Map<string, YearMap>;
+// type YearMap = Map<string, number[]>;
+// type MintMap = Map<string, YearMap>;
 
 const COIN_ID = 'coin';
-const SWAP_ID = 'swap';
-const SWAP_BLOCK_ID = 'swap-block';
+// const SWAP_ID = 'swap';
+// const SWAP_BLOCK_ID = 'swap-block';
 
 const RX_GRAMMS = /\([gг]/;
 const RX_COUNTRY = /Country|Страна|Valstybė/;
@@ -21,6 +21,7 @@ const EU_PRICE = 0.012; //    10-15e/kg
 const AG_PRICE = 0.75; //   .60-.80e/g
 const AU_PRICE = 59.55; // 45.0-65.0e/g
 
+/*
 function sortByCondition(a: Condition, b: Condition): number {
     const A = ConditionValues[a] || 0;
     const B = ConditionValues[b] || 0;
@@ -92,6 +93,7 @@ export function estimateSwapPrices(): void {
         }
     }
 }
+*/
 
 export function estimateWeightPrice(): void {
     const coinBlock = document.getElementById(COIN_ID);

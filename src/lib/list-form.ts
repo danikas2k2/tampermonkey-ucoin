@@ -1,6 +1,5 @@
 import { getFragment, postFragment } from './ajax';
 import { Color, CondValue } from './cond';
-import { AbstractForm } from './form';
 import { styleListLinks } from './swap-links';
 import {
     cancel,
@@ -14,122 +13,134 @@ import {
     wrapFormSubmit,
 } from './utils';
 
-export abstract class ListForm extends AbstractForm {
-    protected widgetHeader: HTMLElement | null;
-    protected listBlock: HTMLElement | null;
-    protected formClose: HTMLElement | null;
-    protected cancelButton: HTMLButtonElement | null;
-    protected addButton: HTMLButtonElement | null;
-    protected editButton: HTMLButtonElement | null;
-    protected deleteButton: HTMLAnchorElement | null;
+export abstract class ListForm {
+    abstract formType: FormType;
+    abstract formTypeMethod: FormTypeMethod;
+    abstract formTypePrefix: FormTypePrefix;
+    abstract formUidPrefix: FormUidPrefix;
+    abstract buttonSetButtons: Map<string, [Color, CondValue]>;
 
-    protected buttonSetButtons: Map<string, [Color, CondValue]>;
+    get listSelector(): string {
+        return `#${this.formType}-block`;
+    }
 
-    protected abstract formType: FormType;
-    protected abstract formTypeMethod: FormTypeMethod;
-    protected abstract formTypePrefix: FormTypePrefix;
-    protected abstract formUidPrefix: FormUidPrefix;
-    protected funcId = 'my-coin-func-block';
-    protected widgetHeaderRedirectHandler: EventHandler | null;
+    get listBlock(): HTMLElement | null {
+        return document.querySelector(this.listSelector);
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    get funcSelector(): string | null {
+        return '#my-coin-func-block';
+    }
+
+    widgetHeaderRedirectHandler: EventHandler | null;
     private formClickTimeout: NodeJS.Timeout;
 
-    public get mainId(): string {
-        return `my-${this.formType}-block`;
+    get mainSelector(): string {
+        return `#my-${this.formType}-block, #${this.formType}-block`;
     }
 
-    public get formId(): string {
-        return `${this.formType}-form`;
+    get main(): HTMLElement | null {
+        return (this.mainSelector && document.querySelector(this.mainSelector)) || null;
     }
 
-    public get listId(): string {
-        return `${this.formType}-block`;
+    get formSelector(): string {
+        return `#${this.formType}-form`;
     }
 
-    protected get headerId(): string {
-        return `widget-${this.formType}-header`;
+    get form(): HTMLFormElement | null {
+        return (this.formSelector && this.main?.querySelector(this.formSelector)) || null;
     }
 
-    protected get formCloseId(): string {
-        return `${this.formType}-form-close`;
+    get formClose(): HTMLFormElement | null {
+        return (
+            (this.formSelector && this.main?.querySelector(`${this.formSelector}-close`)) || null
+        );
     }
 
-    protected get formUid(): string {
+    get formUid(): string {
         return `u${this.formUidPrefix}id`;
     }
 
-    protected get formVariety(): string {
+    get formVariety(): string {
         return `${this.formType}-variety`;
     }
 
-    protected get buttonSetId(): string {
+    get buttonSetId(): string {
         return `${this.formType}-button-set`;
     }
 
-    protected get cancelButtonId(): string {
-        return `btn-${this.formTypePrefix}cancel`;
-    }
-
-    protected get addButtonId(): string {
-        return `btn-${this.formTypePrefix}add`;
-    }
-
-    protected get editButtonId(): string {
-        return `btn-${this.formTypePrefix}edit`;
-    }
-
-    protected get deleteButtonId(): string {
-        return `btn-${this.formTypePrefix}del`;
-    }
-
-    protected get formOnFunctionName(): string {
+    get formOnFunctionName(): string {
         return `Coin${this.formTypeMethod}FormOn`;
     }
 
-    protected get formOffFunctionName(): string {
+    get formOffFunctionName(): string {
         return `Coin${this.formTypeMethod}FormOff`;
     }
 
-    public async handle(): Promise<void> {
-        this.main = document.getElementById(this.mainId);
+    async handle(): Promise<void> {
         if (!this.main) {
             return;
         }
-
-        // this.listBlock = document.getElementById(this.listId);
-        // if (!this.listBlock) {
-        //     return;
-        // }
-
         this.updateFormHandlers();
-
-        await this.update();
+        return this.update();
     }
 
-    protected fillForm(uid = '', cond = '', price = '', vid = ''): void {
-        if (this.form) {
-            if (this.form[this.formUid]) {
-                this.form[this.formUid].value = uid;
-            }
-            if (this.form.condition) {
+    fillForm(uid = '', cond = '', price = '', vid = ''): void {
+        if (!this.form) {
+            return;
+        }
+        if (this.form[this.formUid]) {
+            this.form[this.formUid].value = uid;
+        }
+        if (this.form.condition) {
+            if (!cond || cond === '0') {
+                const input = this.form.querySelector<HTMLInputElement>(
+                    'input[name=condition][value="0"], input[name=condition][value=""]'
+                );
+                if (input) {
+                    input.checked = true;
+                }
+            } else {
                 this.form.condition.value = cond;
             }
-            if (this.form.price) {
-                this.form.price.value = price;
-            }
-            if (this.form[this.formVariety]) {
-                if (vid) {
-                    this.form[this.formVariety].value = vid;
-                } else {
-                    this.form[this.formVariety][0].checked = true;
-                }
-            }
-            (this.form.action as unknown as HTMLInputElement).value = uid
-                ? `edit${this.formType}coin`
-                : `add${this.formType}coin`;
         }
+        if (this.form.price) {
+            this.form.price.value = price;
+        }
+        if (this.form[this.formVariety]) {
+            if (vid) {
+                this.form[this.formVariety].value = vid;
+            } else {
+                this.form[this.formVariety][0].checked = true;
+            }
+        }
+        (this.form.action as unknown as HTMLInputElement).value = uid
+            ? `edit${this.formType}coin`
+            : `add${this.formType}coin`;
     }
 
-    protected formOnHandler(uid?: string, ...other: string[]): void {
+    get widgetHeader(): HTMLElement | null {
+        return this.main?.querySelector(`#widget-${this.formType}-header`) || null;
+    }
+
+    get cancelButton(): HTMLButtonElement | null {
+        return this.form?.querySelector(`#btn-${this.formTypePrefix}cancel}`) || null;
+    }
+
+    get addButton(): HTMLButtonElement | null {
+        return this.form?.querySelector(`#btn-${this.formTypePrefix}add`) || null;
+    }
+
+    get editButton(): HTMLButtonElement | null {
+        return this.form?.querySelector(`#btn-${this.formTypePrefix}edit`) || null;
+    }
+
+    get deleteButton(): HTMLAnchorElement | null {
+        return this.form?.querySelector(`#btn-${this.formTypePrefix}del`) || null;
+    }
+
+    formOnHandler(uid?: string, ...other: string[]): void {
         this.formClickTimeout = setTimeout(() => {
             if (this.listBlock) {
                 hide(this.listBlock);
@@ -161,13 +172,13 @@ export abstract class ListForm extends AbstractForm {
         }, 300);
     }
 
-    protected formOnHandlerSubmit(uid?: string, ...other: string[]): void {
+    formOnHandlerSubmit(uid?: string, ...other: string[]): void {
         clearTimeout(this.formClickTimeout);
         this.fillForm(uid, ...other);
         this.form?.submit();
     }
 
-    protected formOffHandler(): void {
+    formOffHandler(): void {
         if (this.form && this.formClose) {
             hide(this.form, this.formClose);
         }
@@ -184,32 +195,29 @@ export abstract class ListForm extends AbstractForm {
         }
     }
 
-    protected widgetHeaderCloseHandler(e: Event): void {
+    widgetHeaderCloseHandler(e: Event): void {
         cancel(e);
         this.formOffHandler();
     }
 
-    protected updateList(): void {
-        this.listBlock = document.getElementById(this.listId);
-        if (this.listBlock) {
-            styleListLinks(this.listBlock);
-        }
+    updateList(): void {
+        styleListLinks(this.listBlock);
     }
 
-    protected removeOneButton(): void {
+    removeOneButton(): void {
         const oneButtonBlock = this.main?.previousElementSibling;
         if (oneButtonBlock?.matches('center.action-btn')) {
             oneButtonBlock.remove();
         }
     }
 
-    protected updateFormHandlers(): void {
+    updateFormHandlers(): void {
         const userScope = unsafeWindow as unknown as Record<string, () => void>;
         userScope[this.formOnFunctionName] = (...args: string[]) => this.formOnHandler(...args);
         userScope[this.formOffFunctionName] = () => this.formOffHandler();
     }
 
-    protected async update(): Promise<void> {
+    async update(): Promise<void> {
         if (this.main) {
             show(this.main);
             this.removeOneButton();
@@ -219,29 +227,35 @@ export abstract class ListForm extends AbstractForm {
         this.updateList();
     }
 
-    protected updateButtonSet(): void {
-        const oneButton = this.listBlock?.querySelector<HTMLButtonElement>(
-            'center button.btn-s.btn-gray'
-        );
-        if (!oneButton) {
+    get oneButton(): HTMLButtonElement | null {
+        return this.listBlock?.querySelector(`center button.btn-s.btn-gray`) || null;
+    }
+
+    get buttonSet(): HTMLElement | null {
+        return this.main?.querySelector(`#${this.buttonSetId}`) || null;
+    }
+
+    updateButtonSet(): void {
+        if (!this.oneButton) {
             return;
         }
-
-        oneButton.insertAdjacentHTML('afterend', `<div id='${this.buttonSetId}' class='btn-set'/>`);
-        oneButton.remove();
-        const buttonSet = this.main?.querySelector(`#${this.buttonSetId}`);
-        if (!buttonSet) {
+        this.oneButton.insertAdjacentHTML(
+            'afterend',
+            `<div id='${this.buttonSetId}' class='btn-set'/>`
+        );
+        this.oneButton.remove();
+        if (!this.buttonSet) {
             return;
         }
 
         const addColorButton = (text: string, color: Color, value: CondValue): void => {
             const markerId = `${this.formType}-marker-${value}`;
             const markerClass = `btn-marker marked-${color}`;
-            buttonSet.insertAdjacentHTML(
+            this.buttonSet?.insertAdjacentHTML(
                 'beforeend',
                 `<div id='${markerId}' class='${markerClass}'>${text}</div>`
             );
-            const marker = buttonSet.querySelector(`#${markerId}`);
+            const marker = this.buttonSet?.querySelector(`#${markerId}`);
             if (marker) {
                 marker.addEventListener('click', () => this.formOnHandler('', `${value}`));
                 marker.addEventListener('dblclick', () => this.formOnHandlerSubmit('', `${value}`));
@@ -253,9 +267,9 @@ export abstract class ListForm extends AbstractForm {
         }
     }
 
-    protected abstract getConditionOption(o: HTMLOptionElement): ConditionOption | undefined;
+    abstract getConditionOption(o: HTMLOptionElement): ConditionOption | undefined;
 
-    protected updateCondition(): void {
+    updateCondition(): void {
         const condition: HTMLSelectElement = this.form?.condition;
         condition.insertAdjacentHTML(
             'afterend',
@@ -275,55 +289,42 @@ export abstract class ListForm extends AbstractForm {
         condition.remove();
     }
 
-    protected updateFormButtons(): void {
-        if (this.form) {
-            this.cancelButton = this.form.querySelector(`#${this.cancelButtonId}`);
-            this.addButton = this.form.querySelector(`#${this.addButtonId}`);
-            this.editButton = this.form.querySelector(`#${this.editButtonId}`);
-            this.deleteButton = this.form.querySelector(`#${this.deleteButtonId}`);
-            this.deleteButton?.classList.add('btn-red');
+    updateFormButtons(): void {
+        const classList = this.deleteButton?.classList;
+        if (classList && !classList.contains('btn-red')) {
+            classList.add('btn-red');
         }
     }
 
-    protected updateWidget(): void {
-        if (this.main) {
-            this.widgetHeader = this.main.querySelector<HTMLElement>(`#${this.headerId}`);
-            if (this.widgetHeader) {
-                this.widgetHeaderRedirectHandler = this.widgetHeader.onclick;
-                this.widgetHeader.removeAttribute('onclick');
-            }
+    updateWidget(): void {
+        if (this.widgetHeader) {
+            this.widgetHeaderRedirectHandler = this.widgetHeader.onclick;
+            this.widgetHeader.removeAttribute('onclick');
         }
     }
 
-    protected async updateFragment(fragment: DocumentFragment): Promise<void> {
+    async updateFragment(fragment: DocumentFragment): Promise<void> {
         updateRequiredElement(fragment, this.main);
-        return await this.update();
+        return this.update();
     }
 
-    protected async updateForm(): Promise<void> {
-        if (!this.main) {
-            return;
-        }
-        this.func = this.main.querySelector<HTMLElement>(`#${this.funcId}`);
-        this.form = this.main.querySelector<HTMLFormElement>(`#${this.formId}`);
-        this.formClose = this.main.querySelector<HTMLElement>(`#${this.formCloseId}`);
-        if (!this.form) {
+    get func(): HTMLElement | null {
+        return (this.funcSelector && this.main?.querySelector(this.funcSelector)) || null;
+    }
+
+    async updateForm(): Promise<void> {
+        if (!this.main || !this.form) {
             return;
         }
 
-        await wrapFormSubmit(this.form, async () =>
+        wrapFormSubmit(this.form, async () =>
             this.form
-                ? await this.updateFragment(
-                      await postFragment(location.href, new FormData(this.form))
-                  )
+                ? this.updateFragment(await postFragment(location.href, new FormData(this.form)))
                 : undefined
         );
 
         for (const link of this.form.querySelectorAll<HTMLAnchorElement>('a[type=submit]')) {
-            await handleLinkClick(
-                link,
-                async () => await this.updateFragment(await getFragment(link.href))
-            );
+            handleLinkClick(link, async () => this.updateFragment(await getFragment(link.href)));
         }
 
         this.updateFormButtons();

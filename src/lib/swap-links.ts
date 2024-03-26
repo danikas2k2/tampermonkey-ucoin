@@ -1,4 +1,5 @@
 import { Condition, ConditionColors } from './cond';
+import { UID } from './uid';
 
 export const CoinSwapFormOnMatcher =
     /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
@@ -33,6 +34,13 @@ export function* getSwapLinksWithMatches(): IterableIterator<CoinSwapAnchorAndMa
 }
 
 export function styleSwapLink(a: HTMLAnchorElement): void {
+    if (
+        !a.href.endsWith(`?uid=${UID}`) &&
+        (a.previousElementSibling as HTMLAnchorElement)?.href.endsWith(`?uid=${UID}`)
+    ) {
+        a.classList.add('with-separator');
+    }
+
     const condBlock = a.querySelector(`.left.dgray-11`);
     if (condBlock) {
         const cond = condBlock.textContent?.trim() as Condition;
@@ -56,8 +64,8 @@ export function styleSwapLink(a: HTMLAnchorElement): void {
     }
 }
 
-export function styleListLinks(list: HTMLElement): void {
-    const listOfLinks = list.querySelectorAll<HTMLAnchorElement>('a.list-link');
+export function styleListLinks(list?: HTMLElement | null): void {
+    const listOfLinks = list?.querySelectorAll<HTMLAnchorElement>('a.list-link') ?? [];
     for (const a of listOfLinks) {
         styleSwapLink(a);
     }

@@ -15,29 +15,35 @@ import { hide, reload, show } from './utils';
 const { debug } = console;
 
 export class SwapFormList {
-    private variants = new Map<string, CoinSwapVariant>();
-    private expandAvailable = false;
-    private combineAvailable = false;
-    private listBlock: HTMLElement | null;
-    private buttonSet: HTMLElement | null;
-    private form: HTMLFormElement | null;
+    #variants = new Map<string, CoinSwapVariant>();
+    #expandAvailable = false;
+    #combineAvailable = false;
+    #listBlock: HTMLElement | undefined | null;
+    #listForm: ListForm;
 
-    private listForm: ListForm;
-
-    public constructor(listForm: ListForm) {
-        this.listForm = listForm;
+    constructor(listForm: ListForm) {
+        this.#listForm = listForm;
     }
 
-    public update(listBlock: HTMLElement): void {
-        if (this.listBlock) {
-            this.listBlock.replaceWith(listBlock);
+    get form(): HTMLFormElement | null {
+        return (
+            this.#listBlock?.querySelector(this.#listForm.formSelector) ||
+            document.querySelector(this.#listForm.formSelector) ||
+            null
+        );
+    }
+
+    get buttonSet(): HTMLElement | null {
+        return this.#listBlock?.querySelector('center') || null;
+    }
+
+    public update(listBlock: HTMLElement | null): void {
+        if (this.#listBlock && listBlock) {
+            this.#listBlock.replaceWith(listBlock);
         } else {
-            this.listBlock = listBlock;
+            this.#listBlock = listBlock;
         }
-        this.form =
-            listBlock.querySelector(`#${this.listForm.formId}`) ||
-            document.querySelector(`#${this.listForm.formId}`);
-        this.buttonSet = listBlock.querySelector('center');
+
         if (this.buttonSet) {
             /*const oldButton = this.buttonSet.querySelector('button.btn-s.btn-gray');
             if (oldButton) {
@@ -78,9 +84,9 @@ export class SwapFormList {
     }
 
     private updateVariants(): void {
-        this.expandAvailable = false;
-        this.combineAvailable = false;
-        this.variants.clear();
+        this.#expandAvailable = false;
+        this.#combineAvailable = false;
+        this.#variants.clear();
 
         for (const { m } of getSwapLinksWithMatches()) {
             const {
@@ -94,22 +100,22 @@ export class SwapFormList {
             } = m;
             const qty = +strqty;
             if (qty > 1) {
-                this.expandAvailable = true;
+                this.#expandAvailable = true;
             }
 
             let variant: CoinSwapVariant | undefined;
-            if (this.variants.has(uniq)) {
-                variant = this.variants.get(uniq);
+            if (this.#variants.has(uniq)) {
+                variant = this.#variants.get(uniq);
                 if (variant) {
                     variant.usids.add(usid);
                     variant.total += qty;
                 }
-                this.combineAvailable = true;
+                this.#combineAvailable = true;
             } else {
                 variant = { usid, usids: new Set([usid]), cond, price, info, vid, qty, total: qty };
             }
             if (variant) {
-                this.variants.set(uniq, variant);
+                this.#variants.set(uniq, variant);
             }
         }
     }
@@ -152,13 +158,13 @@ export class SwapFormList {
 
     private updateButtons(): void {
         this.updateVariants();
-        if (this.expandAvailable) {
+        if (this.#expandAvailable) {
             this.showExpandButtons();
         } else {
             this.hideExpandButtons();
         }
 
-        if (this.combineAvailable) {
+        if (this.#combineAvailable) {
             this.showCombineButtons();
         } else {
             this.hideCombineButtons();
@@ -274,7 +280,7 @@ export class SwapFormList {
         let isDelFailed = false;
         let isUpdFailed = false;
 
-        for (const variant of [...this.variants.values()]) {
+        for (const variant of [...this.#variants.values()]) {
             const { usid, usids, qty = 0, total } = variant;
             debug(`VARIANT usid=${usid} usids=${[...usids].join(',')} qty=${qty} total=${total}`);
             if (total <= qty) {
@@ -291,10 +297,10 @@ export class SwapFormList {
             const deleteContent = await this.deleteSwapCoin(remove);
             if (deleteContent) {
                 const newListBlock = deleteContent.querySelector<HTMLElement>(
-                    `#${this.listForm.listId}`
+                    this.#listForm.listSelector
                 );
-                if (newListBlock && this.listBlock) {
-                    const center = this.listBlock.querySelector('center');
+                if (newListBlock && this.#listBlock) {
+                    const center = this.#listBlock.querySelector('center');
                     if (center) {
                         newListBlock.querySelector('center')?.replaceWith(center);
                     }
@@ -310,11 +316,11 @@ export class SwapFormList {
             const updateContent = await this.updateSwapCoin(usid, { ...variant, qty: total });
             if (updateContent) {
                 const newListBlock = updateContent.querySelector<HTMLElement>(
-                    `#${this.listForm.listId}`
+                    this.#listForm.listSelector
                 );
-                debug(this.listForm.listId, this.listBlock, newListBlock);
-                if (newListBlock && this.listBlock) {
-                    const center = this.listBlock.querySelector('center');
+                debug(this.#listForm.listSelector, this.#listBlock, newListBlock);
+                if (newListBlock && this.#listBlock) {
+                    const center = this.#listBlock.querySelector('center');
                     if (center) {
                         newListBlock.querySelector('center')?.replaceWith(center);
                     }
@@ -357,12 +363,12 @@ export class SwapFormList {
 
         debug('fragment');
         debug(fragment);
-        debug('this.listForm.mainId');
-        debug(this.listForm.mainId);
-        debug('fragment.querySelector(`#${this.listForm.mainId}`');
-        debug(fragment.querySelector(`#${this.listForm.mainId}`));
+        debug('this.listForm.mainSelector');
+        debug(this.#listForm.mainSelector);
+        debug('fragment.querySelector(this.listForm.mainSelector)');
+        debug(fragment.querySelector(this.#listForm.mainSelector));
 
-        if (!fragment.querySelector(`#${this.listForm.mainId}`)) {
+        if (!fragment.querySelector(this.#listForm.mainSelector)) {
             return reload();
         }
 

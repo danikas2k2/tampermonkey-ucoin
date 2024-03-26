@@ -1,9 +1,7 @@
-//@import (css) url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600&display=swap');
 //noinspection CssUnknownTarget
 @import (css) url(https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap);
 
 :root {
-    //--base-font-family: 'Open Sans', sans-serif;
     --base-font-family: 'Noto Sans', sans-serif;
     --base-font-size: 14px;
 
@@ -294,9 +292,8 @@ body {
 
     center div.btn-set {
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
         margin: 0 auto;
-        width: fit-content;
 
         div {
             font-size: 11px;
@@ -331,7 +328,6 @@ body {
 #swap-mgr {
     .leftCol {
         display: block;
-        position: -webkit-sticky;
         position: sticky;
         top: 10px;
         z-index: 200;
@@ -368,7 +364,6 @@ body {
 
     #take-swap-list {
         .filter-container {
-            position: -webkit-sticky;
             position: sticky;
             z-index: 100;
             top: 0;
@@ -805,6 +800,19 @@ ul.hor-switcher {
 
 .list-link {
     border-bottom: none;
+
+    &.with-separator {
+        position: relative;
+        margin-block-start: 12px;
+
+        &:before, &::before {
+            content: "";
+            display: block;
+            position: absolute;
+            inset: -10px 0 auto;
+            border-block-start: 2px double var(--color-input-border-disabled);
+        }
+    }
 }
 
 table.my-func-info {

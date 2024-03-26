@@ -347,6 +347,7 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string): void {
             )}${suffix}</span>`
         );
     }
+
     if (location.href.includes(`?uid=${UID}`)) {
         if (
             !tr.querySelector<HTMLAnchorElement>(`th a[title*="."]`) &&
@@ -373,7 +374,13 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string): void {
             const cells = tr.querySelectorAll('td');
             const year = cells[0]?.childNodes?.[0]?.textContent ?? undefined;
             const name = cells[1]?.textContent ?? undefined;
-            const condPrice = getPriceByConditions(price, cond as Condition, plus, name, year);
+            let condPrice = getPriceByConditions(price, cond as Condition, plus, name, year);
+            if (myPrice < +condPrice) {
+                condPrice = myPrice.toFixed(2);
+            }
+            if (price < +condPrice) {
+                condPrice = price.toFixed(2);
+            }
             if (myPrice && condPrice && myPrice !== +condPrice) {
                 tr.classList.add(INVALID_PRICE_CLASS);
                 tr.dataset.condPrice = condPrice;

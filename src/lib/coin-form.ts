@@ -4,7 +4,6 @@ import REPLACE from '../../images/replace.svg';
 import SHOW from '../../images/show.svg';
 import { getFragment, postFragment } from './ajax';
 import { Color, FormColorValues, FormValue, FormValueColors } from './cond';
-import { AbstractForm } from './form';
 import { updateTags } from './tags';
 import {
     cancel,
@@ -20,79 +19,48 @@ import {
     wrapFormSubmit,
 } from './utils';
 
-export class CoinForm extends AbstractForm {
-    protected addFormId = 'add-coin-form';
-    protected editFormId = 'edit-coin-form';
-    protected funcId = 'my-func-block';
-    protected viewId = 'ucid-block';
+const getCoinFormMainBlock = (): HTMLElement | null => document.querySelector('#my-func-block');
+const getCoinFormViewBlock = (): HTMLElement | null => document.querySelector('#ucid-block');
 
-    private addForm: HTMLFormElement | null;
-    private editForm: HTMLFormElement | null;
-    private view: HTMLElement | null;
-
-    public async handle(/*loc: string*/): Promise<void> {
-        this.func = document.getElementById(this.funcId) as HTMLElement;
-        if (!this.func) {
-            return;
-        }
-
-        await this.update();
+export async function updateCoinForm(
+    main: HTMLElement | null = getCoinFormMainBlock(),
+    view: HTMLElement | null = getCoinFormViewBlock()
+): Promise<void> {
+    show(main);
+    updateFormButtons(main);
+    updateTitleToggle(main);
+    for (const form of main?.querySelectorAll<HTMLFormElement>('form') || []) {
+        await updateCoinFormInputs(view, form);
+        addPublicityToggle(view, form);
+        addReplacementToggle(view, form);
     }
+}
 
-    protected async updateFragment(fragment: DocumentFragment): Promise<void> {
-        updateRequiredElement(fragment, this.func);
-        updateCoinChooser(fragment);
-        return await this.update();
+async function updateCoinFormFragment(fragment: DocumentFragment): Promise<void> {
+    updateRequiredElement(fragment, getCoinFormMainBlock());
+    updateOptionalElement(fragment, document.querySelector('#coin-chooser-dialog'));
+    return updateCoinForm();
+}
+
+async function updateCoinFormInputs(
+    view: HTMLElement | null,
+    form: HTMLFormElement
+): Promise<void> {
+    updateBuyDateInput(form);
+    addSyncConditionToColorTable(form);
+    wrapFormSubmit(form, async (form: HTMLFormElement) => {
+        if (form) {
+            await updateCoinFormFragment(await postFragment(location.href, new FormData(form)));
+        }
+    });
+    for (const link of view?.querySelectorAll<HTMLAnchorElement>('a[type=submit]') || []) {
+        handleLinkClick(
+            link,
+            async ({ href }: HTMLAnchorElement) =>
+                await updateCoinFormFragment(await getFragment(href))
+        );
     }
-
-    protected async update(): Promise<void> {
-        if (!this.func) {
-            return;
-        }
-        show(this.func);
-        updateButtons(this.func);
-        updateTitleToggle(this.func);
-
-        this.addForm = this.func.querySelector<HTMLFormElement>(`#${this.addFormId} form`);
-        this.editForm = this.func.querySelector<HTMLFormElement>(`#${this.editFormId} form`);
-
-        this.form = this.editForm || this.addForm;
-        this.view = this.func.querySelector<HTMLDivElement>(`#${this.viewId}`);
-        if (this.view && this.form) {
-            addPublicityToggle(this.view, this.form);
-            addReplacementToggle(this.view, this.form);
-        }
-
-        if (this.addForm) {
-            await this.updateForm(this.view, this.addForm);
-        }
-        if (this.editForm) {
-            await this.updateForm(this.view, this.editForm);
-        }
-    }
-
-    private async updateForm(view: HTMLElement | null, form: HTMLFormElement): Promise<void> {
-        updateBuyDateInput(form);
-        addSyncConditionToColorTable(form);
-
-        wrapFormSubmit(form, async (form: HTMLFormElement) => {
-            if (form) {
-                await this.updateFragment(await postFragment(location.href, new FormData(form)));
-            }
-        });
-
-        if (view) {
-            for (const link of view.querySelectorAll<HTMLAnchorElement>('a[type=submit]')) {
-                await handleLinkClick(
-                    link,
-                    async ({ href }: HTMLAnchorElement) =>
-                        await this.updateFragment(await getFragment(href))
-                );
-            }
-        }
-
-        return updateTags();
-    }
+    return updateTags();
 }
 
 async function postForm(form: HTMLFormElement | undefined): Promise<boolean> {
@@ -102,15 +70,15 @@ async function postForm(form: HTMLFormElement | undefined): Promise<boolean> {
     return !!reload();
 }
 
-function addPublicityToggle(view: HTMLElement, form: HTMLFormElement): void {
-    // const form = view.nextElementSibling.querySelector<HTMLFormElement>('form');
+function addPublicityToggle(view: HTMLElement | null, form: HTMLFormElement): void {
     const status = view?.querySelector<HTMLDivElement>('.status-line .left');
     const buttons = view?.querySelector('.func-button');
     if (!status || !buttons) {
         return;
     }
 
-    const buttonId = 'coin-form-visibility';
+    const formId = form.parentElement?.id || '';
+    const buttonId = `${formId}-coin-form-visibility`;
     buttons.insertAdjacentHTML(
         'afterbegin',
         `<button id='${buttonId}' class='btn-l btn-i btn-narrow'/>`
@@ -159,7 +127,7 @@ function addPublicityToggle(view: HTMLElement, form: HTMLFormElement): void {
     updateStatus();
 }
 
-function addReplacementToggle(view: HTMLElement, form: HTMLFormElement): void {
+function addReplacementToggle(view: HTMLElement | null, form: HTMLFormElement): void {
     if (!view) {
         return;
     }
@@ -176,7 +144,8 @@ function addReplacementToggle(view: HTMLElement, form: HTMLFormElement): void {
         return;
     }
 
-    const buttonId = 'coin-form-replacement';
+    const formId = form.parentElement?.id || '';
+    const buttonId = `${formId}-coin-form-replacement`;
     buttons.insertAdjacentHTML(
         'afterbegin',
         `<button id='${buttonId}' class='btn-l btn-i btn-narrow'/>`
@@ -283,45 +252,41 @@ function addSyncConditionToColorTable(form: HTMLFormElement): void {
     });
 }
 
-function updateButtons(func: HTMLElement): void {
-    const buttons = func?.querySelectorAll<HTMLElement>('.func-button .btn-l');
-    if (buttons?.length) {
-        for (const button of buttons) {
-            button.classList.add('btn-narrow');
-            if (button.matches('a')) {
-                button.classList.replace('btn-gray', 'btn-red');
-                button.setAttribute('type', 'submit');
-            }
+function updateFormButtons(main: HTMLElement | null): void {
+    for (const button of main?.querySelectorAll('.func-button .btn-l') || []) {
+        button.classList.add('btn-narrow');
+        if (button.matches('a')) {
+            button.classList.replace('btn-gray', 'btn-red');
+            button.setAttribute('type', 'submit');
         }
     }
 }
 
-function toggleTitle(e: MouseEvent | TouchEvent): void {
+function toggleTitle(e: PointerEvent): void {
     const title = e.target as HTMLElement;
-    if (title) {
-        const list = title.parentElement?.querySelector<HTMLElement>('#coin-list');
-        if (list) {
-            const hidden = isHidden(list);
-            toggle(hidden, list);
-            const arrow = title.querySelector<HTMLElement>('.arrow');
-            if (arrow) {
-                arrow.classList.toggle('atw', hidden);
-                arrow.classList.toggle('abw', !hidden);
-            }
-        }
+    if (!title) {
+        return;
+    }
+    const list = title.parentElement?.querySelector<HTMLElement>('#coin-list');
+    if (!list) {
+        return;
+    }
+    const hidden = isHidden(list);
+    toggle(hidden, list);
+    const arrow = title.querySelector<HTMLElement>('.arrow');
+    if (arrow) {
+        arrow.classList.toggle('atw', hidden);
+        arrow.classList.toggle('abw', !hidden);
     }
 }
 
-function updateTitleToggle(func: HTMLElement): void {
-    const toggle = func?.querySelector<HTMLElement>('.my-collection-block');
+function updateTitleToggle(main: HTMLElement | null): void {
+    const toggle = main?.querySelector<HTMLElement>('.my-collection-block');
     if (toggle) {
+        // TODO why replace?
         const clone = toggle.cloneNode(true);
         clone.addEventListener('click', toggleTitle);
         clone.addEventListener('touchstart', toggleTitle);
         toggle.replaceWith(clone);
     }
-}
-
-function updateCoinChooser(fragment: DocumentFragment): void {
-    updateOptionalElement(fragment, document.getElementById('coin-chooser-dialog'));
 }
