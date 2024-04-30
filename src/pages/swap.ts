@@ -1,3 +1,8 @@
+import {
+    improveCheckboxSelection,
+    improveHeadingCheckboxes,
+    syncHeadingCheckbox,
+} from '../lib/checkboxes';
 import { updateLinkHref, updateOnClickHref } from '../lib/links';
 import {
     addConflictHandling,
@@ -14,6 +19,7 @@ import {
     removeRowHrefFromSwapList,
     showAllPrices,
 } from '../lib/swap-list';
+import { improveSwapButtons } from '../lib/swap-list-actions';
 import { addFilteringOptions } from '../lib/swap-list-filter';
 import { addSortingOptions } from '../lib/swap-list-sort';
 
@@ -31,28 +37,33 @@ export async function handleSwapPage(): Promise<void> {
     ignoreUnwanted();
     removeRowHrefFromSwapList();
     await addPriceUpdateButton();
-
     addTrackingLinks();
     calcTotalPrices();
 
-    const tree = document.getElementById('tree') as HTMLDivElement;
-    if (tree) {
-        const filterLinks = tree.querySelectorAll<HTMLAnchorElement>(
-            '.filter-container .list-link'
-        );
-        for (const a of filterLinks) {
-            updateLinkHref(a);
-        }
+    improveCheckboxSelection('.edit-checkbox', syncHeadingCheckbox);
+    improveHeadingCheckboxes();
+    improveSwapButtons();
+    // TODO add async load on filters and sorting
+    // TODO add a11y kbd navigation to filters
 
-        const filterBoxes = tree.querySelectorAll<HTMLDivElement>(
-            '.filter-container .filter-box-active'
-        );
-        for (const filter of filterBoxes) {
-            const name = filter.getAttribute('id')?.replace(/-filter/, '');
-            const div = filter.querySelector<HTMLDivElement>('.close');
-            if (name && div) {
-                updateOnClickHref(div, [name]);
-            }
+    const tree = document.querySelector<HTMLDivElement>('#tree');
+    if (!tree) {
+        return;
+    }
+
+    const filterLinks = tree.querySelectorAll<HTMLAnchorElement>('.filter-container .list-link');
+    for (const a of filterLinks) {
+        updateLinkHref(a);
+    }
+
+    const filterBoxes = tree.querySelectorAll<HTMLDivElement>(
+        '.filter-container .filter-box-active'
+    );
+    for (const filter of filterBoxes) {
+        const name = filter.getAttribute('id')?.replace(/-filter/, '');
+        const div = filter.querySelector<HTMLDivElement>('.close');
+        if (name && div) {
+            updateOnClickHref(div, [name]);
         }
     }
 }

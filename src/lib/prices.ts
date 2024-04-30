@@ -1,5 +1,4 @@
-import { Condition, ConditionValues } from './cond';
-import { cmp } from './sort';
+import { Condition } from './cond';
 
 // type YearMap = Map<string, number[]>;
 // type MintMap = Map<string, YearMap>;
@@ -146,9 +145,9 @@ export function estimateWeightPrice(): void {
         priceSource = '--';
     }
 
-    const weightPrice = `<br/><price class='right' title='${priceSource}: ${price.toFixed(
+    const weightPrice = `<br/><price class="right" title="${priceSource}: ${price.toFixed(
         5
-    )}'>€ ${price.toFixed(2)}</price>`;
+    )}">€ ${price.toFixed(2)}</price>`;
 
     if (!aPrice) {
         let isAproximate = false;

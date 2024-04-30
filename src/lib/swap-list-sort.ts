@@ -56,11 +56,11 @@ export function addSortingOptions(): void {
             Object.entries(sortOptions).map(
                 ([field, { label }]) => `
                     <a class='list-link' data-option='${field}' data-order='a'>${o(
-                    _(label)
-                )}${a()}</a>
+                        _(label)
+                    )}${a()}</a>
                     <a class='list-link' data-option='${field}' data-order='d'>${o(
-                    _(label)
-                )}${d()}</a>
+                        _(label)
+                    )}${d()}</a>
                 `
             )
         )

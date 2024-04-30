@@ -11,40 +11,44 @@ import { handleSwapPage } from './pages/swap';
 import { handleTablePage } from './pages/table';
 import { handleWishPage } from './pages/wish';
 
-(function () {
+(async function () {
+    const actions: Promise<void>[] = [];
+
     const { pathname: path, searchParams: params } = loc();
 
     if (path.includes(`/uid${UID}`)) {
-        void handleHomePage();
+        actions.push(handleHomePage());
     }
 
     if (path.includes('/coin')) {
-        void handleCoinPage();
+        actions.push(handleCoinPage());
     }
 
     if (path.includes('/gallery') && params.get('uid') === UID) {
-        void handleGalleryPage();
+        actions.push(handleGalleryPage());
         if (params.get('view') === 'country') {
-            void handleCountryRegions();
+            actions.push(handleCountryRegions());
         }
     }
 
     if (path.includes('/swap-')) {
-        void handleSwapPage();
+        actions.push(handleSwapPage());
     }
 
     if (path.includes('/wish-')) {
-        void handleWishPage();
+        actions.push(handleWishPage());
     }
 
     if (path.includes('/table/')) {
-        void handleTablePage();
+        actions.push(handleTablePage());
     }
 
     if (path.includes('/messages/')) {
-        void handleMessagePage();
+        actions.push(handleMessagePage());
     }
 
-    void handleTree();
-    void handleLanguages();
+    actions.push(handleTree());
+    actions.push(handleLanguages());
+
+    await Promise.all(actions);
 })();

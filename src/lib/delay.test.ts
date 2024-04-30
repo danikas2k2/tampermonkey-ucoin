@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/dom';
-import { decorateDelay, decoratedDelay, randomDecoratedDelay } from './delay';
+import { decoratedDelay, decorateDelay, randomDecoratedDelay } from './delay';
 
 describe('delay', () => {
     const mockComplete = jest.fn();

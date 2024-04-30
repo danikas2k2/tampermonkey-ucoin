@@ -8,7 +8,7 @@ import { getPayPalPrice } from './paypal';
 import { getPriceByConditions } from './prices';
 import { getShippingPrice } from './shipping';
 import { UID } from './uid';
-import { getHashParam, updateLocationHash } from './url';
+import { getHashParam, loc, updateLocationHash } from './url';
 import { cancel, scrollIntoView } from './utils';
 
 export function addSwapTitle(): void {
@@ -22,28 +22,29 @@ export function addSwapTitle(): void {
 
 export function addThumbnails(): void {
     // add thumbnails only if auto-update is not in progress
-    const updating = location.hash?.includes('update-prices');
-    if (!updating) {
-        for (const row of document.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr')) {
-            const { tooltipImgpath, tooltipSample, tooltipCode } = row.dataset;
-            row.querySelector('td')?.insertAdjacentHTML(
-                row.querySelector('div.reserve') || document.body.id === 'swap-list'
-                    ? 'beforebegin'
-                    : 'afterend',
-                `
-            <th style='width: 100px' class='thumbnails'>
-                ${
-                    tooltipImgpath && tooltipSample && tooltipCode
-                        ? `
-                    <img src='${tooltipImgpath}/${tooltipSample}-1s/${tooltipCode}.jpg' class='thumbnail' loading='lazy' alt='obverse'/>
-                    <img src='${tooltipImgpath}/${tooltipSample}-2s/${tooltipCode}.jpg' class='thumbnail' loading='lazy' alt='reverse'/>
-                `
-                        : ''
-                }
-            </th>
-        `
-            );
-        }
+    const updating = loc().hash?.includes('update-prices');
+    if (updating) {
+        return;
+    }
+
+    for (const row of document.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr')) {
+        const { tooltipImgpath, tooltipSample, tooltipCode } = row.dataset;
+        row.querySelector('td')?.insertAdjacentHTML(
+            row.querySelector('div.reserve') || document.body.id === 'swap-list'
+                ? 'beforebegin'
+                : 'afterend',
+            `
+        <th style="width: 100px" class="thumbnails">
+            ${
+                tooltipImgpath && tooltipSample && tooltipCode
+                    ? `
+                <img src="${tooltipImgpath}/${tooltipSample}-1s/${tooltipCode}.jpg" class="thumbnail" loading="lazy" alt="obverse"/>
+                <img src="${tooltipImgpath}/${tooltipSample}-2s/${tooltipCode}.jpg" class="thumbnail" loading="lazy" alt="reverse"/>`
+                    : ''
+            }
+        </th>
+    `
+        );
     }
 }
 
@@ -78,7 +79,7 @@ export function addTrackingLinks(): void {
             const next = div.nextElementSibling;
             const text = next?.textContent;
             if (text) {
-                next.innerHTML = `<a href='https://www.17track.net/en/track?nums=${text}' target='_blank'>${text}</a>`;
+                next.innerHTML = `<a href="https://www.17track.net/en/track?nums=${text}" target="_blank">${text}</a>`;
             }
         }
     }
@@ -125,7 +126,7 @@ export function calcTotalPrices(): void {
             price.parentElement?.insertAdjacentHTML(
                 'beforeend',
                 `
-                <span class='lgray-11 price-tooltip'>
+                <span class="lgray-11 price-tooltip">
                     ${price.previousElementSibling?.textContent}
                     ${NF.format(sum)}
                     ${price.nextElementSibling?.textContent}
@@ -133,9 +134,9 @@ export function calcTotalPrices(): void {
                 ${
                     diff
                         ? `
-                        <span class='lgray-11 price-tooltip ${
+                        <span class="lgray-11 price-tooltip ${
                             (i ? diff < 0 : diff > 0) ? 'price-over' : 'price-under'
-                        }'>
+                        }">
                             ${diff > 0 ? '+' : '&minus;'}
                             ${price.previousElementSibling?.textContent}
                             ${NF.format(Math.abs(diff))}
@@ -172,19 +173,19 @@ export function calcTotalPrices(): void {
                 weightLine?.insertAdjacentHTML(
                     'afterend',
                     `
-                    <a class='region price-line'>
-                        <div class='left lgray-11'>${_('Shipping')}</div>
-                        <div class='right gray-11'><u>€</u>${NF.format(shippingPrice)}</div>
+                    <a class="region price-line">
+                        <div class="left lgray-11">${_('Shipping')}</div>
+                        <div class="right gray-11"><u>€</u>${NF.format(shippingPrice)}</div>
                     </a>
-                    <a class='region price-line price-double'>
-                        <div class='left lgray-11'>${_('Total')}</div>
-                        <div class='right gray-11'><u>€</u>${NF.format(totalPrice)}</div>
-                        <div class='right lgray-11'>&hairsp;<small>(</small>${totalDescription}<small>)</small></div>
+                    <a class="region price-line price-double">
+                        <div class="left lgray-11">${_('Total')}</div>
+                        <div class="right gray-11"><u>€</u>${NF.format(totalPrice)}</div>
+                        <div class="right lgray-11">&hairsp;<small>(</small>${totalDescription}<small>)</small></div>
                     </a>
-                    <a class='region price-line price-double'>
-                        <div class='left lgray-11'>PayPal</div>
-                        <div class='right gray-11'><u>€</u>${NF.format(ppPrice)}</div>
-                        <div class='right lgray-11'>&hairsp;<small>(</small>${ppDescription}<small>)</small></div>
+                    <a class="region price-line price-double">
+                        <div class="left lgray-11">PayPal</div>
+                        <div class="right gray-11"><u>€</u>${NF.format(ppPrice)}</div>
+                        <div class="right lgray-11">&hairsp;<small>(</small>${ppDescription}<small>)</small></div>
                     </a>
                     `
                 );
@@ -323,7 +324,7 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string): void {
         const rel = myPrice / price;
         let percent;
         if (rel >= 2) {
-            percent = `<span class='gray-11 price-times' data-price-percent>&times;${rel
+            percent = `<span class="gray-11 price-times" data-price-percent>&times;${rel
                 .toFixed(rel >= 10 ? 0 : 1)
                 .replace('.0', '')}</span>`;
             myPriceElement.classList.add('price-times');
@@ -331,18 +332,18 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string): void {
             const prel = (rel - 1) * 100;
             // TODO avoid +0%
             if (prel >= 50) {
-                percent = `<span class='gray-11 price-times' data-price-percent>+${prel.toFixed()}%</span>`;
+                percent = `<span class="gray-11 price-times" data-price-percent>+${prel.toFixed()}%</span>`;
             } else if (prel >= 0) {
-                percent = `<span class='gray-11 price-over' data-price-percent>+${prel.toFixed()}%</span>`;
+                percent = `<span class="gray-11 price-over" data-price-percent>+${prel.toFixed()}%</span>`;
             } else {
-                percent = `<span class='gray-11 price-under' data-price-percent>&minus;${Math.abs(
+                percent = `<span class="gray-11 price-under" data-price-percent>&minus;${Math.abs(
                     prel
                 ).toFixed()}%</span>`;
             }
         }
         td.insertAdjacentHTML(
             'beforeend',
-            `${percent}<span class='gray-11 price-tooltip' data-price-tooltip>${prefix}${NF.format(
+            `${percent}<span class="gray-11 price-tooltip" data-price-tooltip>${prefix}${NF.format(
                 price
             )}${suffix}</span>`
         );
@@ -386,7 +387,7 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string): void {
                 tr.dataset.condPrice = condPrice;
                 td.insertAdjacentHTML(
                     'beforeend',
-                    `<span class='gray-11 price-cond' data-price-cond>${prefix}${condPrice}${suffix}</span>`
+                    `<span class="gray-11 price-cond" data-price-cond>${prefix}${condPrice}${suffix}</span>`
                 );
             }
         }
@@ -530,7 +531,7 @@ export function checkSold(): void {
 
     actionBoard.insertAdjacentHTML(
         'beforeend',
-        `<a class='btn-s btn-gray ico-del' id='${delAllButtonId}' style='float: right;'><div class='ico-16'></div></a>`
+        `<a class="btn-s btn-gray ico-del" id="${delAllButtonId}" style="float: right;"><div class="ico-16"></div></a>`
     );
 
     const button = document.getElementById(delAllButtonId);
@@ -638,8 +639,8 @@ export async function addPriceUpdateButton(): Promise<void> {
     link.insertAdjacentHTML(
         'afterend',
         `
-        <label class='btn-s'>
-            <input type='checkbox' id='continue' ${checked ? `checked='checked'` : ''} />
+        <label class="btn-s">
+            <input type="checkbox" id="continue" ${checked ? `checked='checked'` : ''} />
             Continue update on next page
         </label>
         `

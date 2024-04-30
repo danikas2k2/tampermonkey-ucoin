@@ -85,25 +85,20 @@ function filterCountryTree(value: string): void {
 
 export async function handleTree(): Promise<void> {
     const tree = document.getElementById('catalog-tree');
-    if (tree) {
-        const treeSearchId = 'tree-search';
-        const treeSearch = document.getElementById(treeSearchId);
-        if (treeSearch) {
-            treeSearch.closest('div')?.remove();
-        }
-
-        const searchInputId = 'search-input-id';
-        tree.insertAdjacentHTML(
-            'beforebegin',
-            `<input id='${searchInputId}' class='tree-filter' placeholder='Search'/>`
-        );
-
-        document
-            .getElementById(searchInputId)
-            ?.addEventListener('input', (e) =>
-                filterCountryTree((e.target as HTMLInputElement).value)
-            );
+    if (!tree) {
+        return;
     }
+
+    const treeSearchId = 'tree-search';
+    document.getElementById(treeSearchId)?.closest('div')?.remove();
+    const searchInputId = 'search-input-id';
+    tree.insertAdjacentHTML(
+        'beforebegin',
+        `<input id="${searchInputId}" class="tree-filter" placeholder="Search"/>`
+    );
+    document
+        .getElementById(searchInputId)
+        ?.addEventListener('input', (e) => filterCountryTree((e.target as HTMLInputElement).value));
 }
 
 export async function handleLanguages(): Promise<void> {

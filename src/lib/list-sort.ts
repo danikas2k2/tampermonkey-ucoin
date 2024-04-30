@@ -29,7 +29,7 @@ let currentOption = 'year';
 let currentOrder: SortOrder = 'd';
 
 export function addSortingOptions(): void {
-    const table = document.querySelector('#table table.table') as HTMLTableElement;
+    const table = document.querySelector<HTMLTableElement>('#table table.table');
     if (!table) {
         return;
     }
@@ -39,7 +39,7 @@ export function addSortingOptions(): void {
         return;
     }
 
-    const filters = table.parentElement?.querySelector('div.filters');
+    const filters = table.parentElement?.querySelector<HTMLDivElement>('div.filters');
     if (!filters) {
         return;
     }
@@ -48,31 +48,35 @@ export function addSortingOptions(): void {
     if (sortFilter) {
         sortFilter.remove();
     }
+
     let sortDialog = filters.querySelector<HTMLDivElement>('#sort-filter-dialog');
     if (sortDialog) {
         sortDialog.remove();
     }
+
     filters.insertAdjacentHTML(
         'beforeend',
-        `<div class='right filter-container' style='margin-right:0;'>${dropdown(
+        `<div class="right filter-container" style="margin-right:0;">${dropdown(
             'sort-filter',
             s(`${_('Sorting')}: ${_(sortOptions[currentOption]?.label)}`, currentOrder),
             Object.entries(sortOptions).map(
                 ([field, { label }]) => `
-                    <a class='list-link' data-option='${field}' data-order='a'>${o(
-                    _(label)
-                )}${a()}</a>
-                    <a class='list-link' data-option='${field}' data-order='d'>${o(
-                    _(label)
-                )}${d()}</a>
+                    <a class="list-link" data-option="${field}" data-order="a">${o(
+                        _(label)
+                    )}${a()}</a>
+                    <a class="list-link" data-option="${field}" data-order="d">${o(
+                        _(label)
+                    )}${d()}</a>
                 `
             )
         )}</div>`
     );
+
     sortFilter = filters.querySelector<HTMLDivElement>('#sort-filter');
     if (!sortFilter) {
         return;
     }
+
     sortDialog = filters.querySelector<HTMLDivElement>('#sort-filter-dialog');
     if (!sortDialog) {
         return;

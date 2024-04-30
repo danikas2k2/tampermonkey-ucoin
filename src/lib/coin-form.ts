@@ -77,8 +77,12 @@ function addPublicityToggle(view: HTMLElement | null, form: HTMLFormElement): vo
         return;
     }
 
-    const formId = form.parentElement?.id || '';
-    const buttonId = `${formId}-coin-form-visibility`;
+    // const formId = form.parentElement?.id || '';
+    const buttonId = `coin-form-visibility`;
+    if (buttons.querySelector(`#${buttonId}`)) {
+        return;
+    }
+
     buttons.insertAdjacentHTML(
         'afterbegin',
         `<button id='${buttonId}' class='btn-l btn-i btn-narrow'/>`
@@ -144,8 +148,12 @@ function addReplacementToggle(view: HTMLElement | null, form: HTMLFormElement): 
         return;
     }
 
-    const formId = form.parentElement?.id || '';
-    const buttonId = `${formId}-coin-form-replacement`;
+    // const formId = form.parentElement?.id || '';
+    const buttonId = `coin-form-replacement`;
+    if (buttons.querySelector(`#${buttonId}`)) {
+        return;
+    }
+
     buttons.insertAdjacentHTML(
         'afterbegin',
         `<button id='${buttonId}' class='btn-l btn-i btn-narrow'/>`

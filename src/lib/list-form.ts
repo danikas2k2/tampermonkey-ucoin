@@ -19,6 +19,12 @@ export abstract class ListForm {
     abstract formTypePrefix: FormTypePrefix;
     abstract formUidPrefix: FormUidPrefix;
     abstract buttonSetButtons: Map<string, [Color, CondValue]>;
+    widgetHeaderRedirectHandler: EventHandler | null;
+    private formClickTimeout: NodeJS.Timeout;
+
+    constructor() {
+        this.widgetHeaderCloseHandler = this.widgetHeaderCloseHandler.bind(this);
+    }
 
     get listSelector(): string {
         return `#${this.formType}-block`;
@@ -32,9 +38,6 @@ export abstract class ListForm {
     get funcSelector(): string | null {
         return '#my-coin-func-block';
     }
-
-    widgetHeaderRedirectHandler: EventHandler | null;
-    private formClickTimeout: NodeJS.Timeout;
 
     get mainSelector(): string {
         return `#my-${this.formType}-block, #${this.formType}-block`;
@@ -78,6 +81,38 @@ export abstract class ListForm {
         return `Coin${this.formTypeMethod}FormOff`;
     }
 
+    get widgetHeader(): HTMLElement | null {
+        return this.main?.querySelector(`#widget-${this.formType}-header`) || null;
+    }
+
+    get cancelButton(): HTMLButtonElement | null {
+        return this.form?.querySelector(`#btn-${this.formTypePrefix}cancel`) || null;
+    }
+
+    get addButton(): HTMLButtonElement | null {
+        return this.form?.querySelector(`#btn-${this.formTypePrefix}add`) || null;
+    }
+
+    get editButton(): HTMLButtonElement | null {
+        return this.form?.querySelector(`#btn-${this.formTypePrefix}edit`) || null;
+    }
+
+    get deleteButton(): HTMLAnchorElement | null {
+        return this.form?.querySelector(`#btn-${this.formTypePrefix}del`) || null;
+    }
+
+    get oneButton(): HTMLButtonElement | null {
+        return this.listBlock?.querySelector(`center button.btn-s.btn-gray`) || null;
+    }
+
+    get buttonSet(): HTMLElement | null {
+        return this.main?.querySelector(`#${this.buttonSetId}`) || null;
+    }
+
+    get func(): HTMLElement | null {
+        return (this.funcSelector && this.main?.querySelector(this.funcSelector)) || null;
+    }
+
     async handle(): Promise<void> {
         if (!this.main) {
             return;
@@ -118,26 +153,6 @@ export abstract class ListForm {
         (this.form.action as unknown as HTMLInputElement).value = uid
             ? `edit${this.formType}coin`
             : `add${this.formType}coin`;
-    }
-
-    get widgetHeader(): HTMLElement | null {
-        return this.main?.querySelector(`#widget-${this.formType}-header`) || null;
-    }
-
-    get cancelButton(): HTMLButtonElement | null {
-        return this.form?.querySelector(`#btn-${this.formTypePrefix}cancel}`) || null;
-    }
-
-    get addButton(): HTMLButtonElement | null {
-        return this.form?.querySelector(`#btn-${this.formTypePrefix}add`) || null;
-    }
-
-    get editButton(): HTMLButtonElement | null {
-        return this.form?.querySelector(`#btn-${this.formTypePrefix}edit`) || null;
-    }
-
-    get deleteButton(): HTMLAnchorElement | null {
-        return this.form?.querySelector(`#btn-${this.formTypePrefix}del`) || null;
     }
 
     formOnHandler(uid?: string, ...other: string[]): void {
@@ -227,14 +242,6 @@ export abstract class ListForm {
         this.updateList();
     }
 
-    get oneButton(): HTMLButtonElement | null {
-        return this.listBlock?.querySelector(`center button.btn-s.btn-gray`) || null;
-    }
-
-    get buttonSet(): HTMLElement | null {
-        return this.main?.querySelector(`#${this.buttonSetId}`) || null;
-    }
-
     updateButtonSet(): void {
         if (!this.oneButton) {
             return;
@@ -306,10 +313,6 @@ export abstract class ListForm {
     async updateFragment(fragment: DocumentFragment): Promise<void> {
         updateRequiredElement(fragment, this.main);
         return this.update();
-    }
-
-    get func(): HTMLElement | null {
-        return (this.funcSelector && this.main?.querySelector(this.funcSelector)) || null;
     }
 
     async updateForm(): Promise<void> {

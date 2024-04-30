@@ -1,6 +1,6 @@
 import { updateCoinForm } from '../lib/coin-form';
 import { updateLinkHref } from '../lib/links';
-import { /*estimateSwapPrices,*/ estimateWeightPrice } from '../lib/prices';
+import { estimateWeightPrice } from '../lib/prices';
 import { SwapForm } from '../lib/swap-form';
 import { WishForm } from '../lib/wish-form';
 import { syncCoinWish } from '../lib/wish-list';
@@ -16,17 +16,15 @@ export async function handleCoinPage(): Promise<void> {
     }
 
     // hide coin chooser dialog by default
-    (() => {
-        const chooser = document.getElementById('coin-chooser-dialog');
-        if (chooser && !chooser.style.display) {
-            chooser.style.display = 'none';
-        }
-    })();
+    const chooser = document.getElementById('coin-chooser-dialog');
+    if (chooser && !chooser.style.display) {
+        chooser.style.display = 'none';
+    }
 
     await updateCoinForm();
     await new SwapForm().handle();
     // await estimateSwapPrices();
-    await estimateWeightPrice();
+    estimateWeightPrice();
     await new WishForm().handle();
 
     await syncCoinWish();

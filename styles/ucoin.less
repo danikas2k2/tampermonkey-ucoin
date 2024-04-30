@@ -47,6 +47,13 @@
 body {
     font-family: var(--base-font-family);
     font-size: var(--base-font-size);
+    font-style: normal;
+    font-optical-sizing: auto;
+    font-variation-settings: "wdth" 100;
+    font-variant-ligatures: common-ligatures discretionary-ligatures historical-ligatures contextual;
+    //font-variant-numeric: diagonal-fractions;
+    font-variant-alternates: styleset(ss01);
+    font-feature-settings: "liga" 1, "clig" 1, "dlig" 1;
 }
 
 .widget {
@@ -90,6 +97,10 @@ body {
     }
 }
 
+.gray-11, .lgray-11 {
+    font-size: inherit;
+}
+
 #table {
     a.cell {
         position: relative;
@@ -114,8 +125,13 @@ body {
 //
 
 .btn-set {
-    .btn-marker:hover {
-        filter: brightness(1.2);
+    .btn-marker {
+        border-radius: 2px;
+        transition: filter 0.5s;
+
+        &:hover {
+            filter: brightness(1.2);
+        }
     }
 }
 
@@ -164,6 +180,10 @@ body {
             width: 15px;
             height: 15px;
         }
+    }
+
+    table span[class^="marked-"] {
+        border-radius: 4px;
     }
 }
 
@@ -224,6 +244,7 @@ body {
         .dgray-11 {
             width: 32px !important;
             margin: 0 4px;
+            border-radius: 4px;
         }
     }
 
@@ -479,6 +500,41 @@ body {
         &.right {
             .filter-dialog {
                 right: 0;
+            }
+        }
+    }
+
+    .widerightCol {
+        position: relative;
+
+        h1 {
+            + br {
+                display: none;
+
+                + a.btn-gray {
+                    margin: 0 !important;
+                    border: 0 !important;
+                    color: var(--color-error-surface) !important;
+                    font-size: 1rem !important;
+                    line-height: 2 !important;
+                }
+            }
+
+            ~ div {
+                position: sticky;
+                background: var(--color-surface);
+                margin-top: 0 !important;
+                padding: 1rem 0;
+                z-index: 100;
+
+                &:nth-of-type(2) {
+                    top: 0;
+
+                    + div {
+                        top: 3.6rem;
+                        margin-bottom: -1rem !important;
+                    }
+                }
             }
         }
     }

@@ -5,6 +5,9 @@ import { _ } from './lang';
 import { getHashParam, updateLocationHash } from './url';
 import { slug, unique } from './utils';
 
+const REGION_TAB = 'r';
+const ACTIVE = 'active';
+
 export async function handleCountryRegions(): Promise<void> {
     const headingList = document.querySelector('ul.hor-switcher ~ ul.region-list');
     if (!headingList) {
@@ -17,12 +20,11 @@ export async function handleCountryRegions(): Promise<void> {
     }
 
     const allText = headingList?.querySelector('li.region[value="0"]')?.textContent;
-    const REGION_TAB = 'r';
     const currentRegion = getHashParam(REGION_TAB);
     const topRegions = Object.keys(regionTree);
 
     // add all regions
-    countryList.insertAdjacentHTML('beforebegin', `<ul class='regions'></ul>`);
+    countryList.insertAdjacentHTML('beforebegin', `<ul class="regions"></ul>`);
     (function renderRegions(container: Element, regions: Record<string, string[]> | string[]) {
         const entries: [string, string[]][] = Array.isArray(regions)
             ? regions.map((r) => [r, []])
@@ -34,10 +36,10 @@ export async function handleCountryRegions(): Promise<void> {
                 currentRegion && id !== currentRegion && topRegions.includes(k) ? ` hide` : '';
             container.insertAdjacentHTML(
                 'beforeend',
-                `<li class='region${hide}${active}' id='${id}'><h2>${_(
+                `<li class="region${hide}${active}" id="${id}"><h2>${_(
                     k,
                     regionNames
-                )}</h2><ul class='regions'></ul><div class='country-list catalog-list'></div></li>`
+                )}</h2><ul class="regions"></ul><div class="country-list catalog-list"></div></li>`
             );
             const region = container.querySelector(`#${id} .regions`);
             if (region) {
@@ -118,25 +120,23 @@ export async function handleCountryRegions(): Promise<void> {
                     .querySelector('h2')
                     ?.insertAdjacentHTML(
                         'beforeend',
-                        `<span class='lgray-13'>( ${countryCounts[r.id]} / ${
+                        `<span class="lgray-13">( ${countryCounts[r.id]} / ${
                             coinCounts[r.id]
                         } )</span>`
                     )
         );
 
-    const ACTIVE = 'active';
-
     headingList.innerHTML = '';
     headingList.insertAdjacentHTML(
         'beforeend',
-        `<li class='region${!currentRegion ? ` ${ACTIVE}` : ''}'>${allText}</li>`
+        `<li class="region${!currentRegion ? ` ${ACTIVE}` : ''}">${allText}</li>`
     );
     for (const r of topRegions) {
         const id = slug(r);
         if (document.querySelector(`.region#${id}`)) {
             headingList.insertAdjacentHTML(
                 'beforeend',
-                `<li class='region${currentRegion === id ? ` ${ACTIVE}` : ''}' data-id='${id}'>${_(
+                `<li class="region${currentRegion === id ? ` ${ACTIVE}` : ''}" data-id="${id}">${_(
                     r,
                     regionNames
                 )}</li>`

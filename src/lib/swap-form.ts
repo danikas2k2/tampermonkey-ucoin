@@ -1,9 +1,12 @@
-import { Color, /*Condition, FormValue, FormValueCondition,*/ SwapValue } from './cond';
+import { Color, Condition, ConditionValues, SwapValue } from './cond';
 // import { getDetails } from './details';
 import { ListForm } from './list-form';
+import { cmp } from './sort';
 // import { getPriceByConditions } from './prices';
 import { SwapFormList } from './swap-form-list';
-import { addLinkComments, styleListLinks } from './swap-links';
+import { addLinkComments, CoinSwapFormOnMatcher, styleListLinks } from './swap-links';
+import { UID } from './uid';
+import { loc } from './url';
 import { getCurrentVarietyId } from './vid';
 
 // const { debug } = console;
@@ -49,9 +52,11 @@ export class SwapForm extends ListForm {
 
     updateList(): void {
         this.swapListManager.update(this.listBlock);
+        const vid = loc().searchParams.get('vid');
         for (const list of document.querySelectorAll<HTMLElement>(this.listSelector)) {
             styleListLinks(list);
         }
+        sortSwapLinks(this.listBlock, vid);
         addLinkComments();
     }
 
@@ -108,7 +113,7 @@ export class SwapForm extends ListForm {
         ): void => {
             qty.insertAdjacentHTML(
                 where,
-                `<button name='${name}' type='button' class='btn-s btn-gray btn-ctrl'>${text}</button>`
+                `<button name="${name}" type="button" class="btn-s btn-gray btn-ctrl">${text}</button>`
             );
             form[name].addEventListener('click', () => {
                 qty.value = `${valueChanger(+qty.value)}`;
@@ -193,4 +198,40 @@ export class SwapForm extends ListForm {
     //         getDetails('Year')
     //     );
     // }
+}
+
+function sortSwapLinks(block: HTMLElement | null, vid?: string | null): void {
+    const links = Array.from(block?.querySelectorAll<HTMLAnchorElement>('a.list-link') || []);
+
+    for (const a of links) {
+        a.dataset.vid =
+            (a.getAttribute('onClick')?.match(CoinSwapFormOnMatcher) as CoinSwapFormOnMatchResult)
+                ?.groups?.vid || '';
+    }
+
+    links.sort((a, b) => {
+        const [aQ, , aY] = Array.from(a.querySelectorAll('span')).map((span) => span.textContent);
+        const [bQ, , bY] = Array.from(b.querySelectorAll('span')).map((span) => span.textContent);
+        return (
+            cmp(a.href.endsWith(`=${UID}`), b.href.endsWith(`=${UID}`)) ||
+            cmp(a.dataset.vid === vid, b.dataset.vid === vid) ||
+            cmp(bY, aY) ||
+            cmp(ConditionValues[aQ as Condition], ConditionValues[bQ as Condition])
+        );
+    });
+
+    for (const a of links) {
+        block?.prepend(a);
+    }
+
+    for (const a of Array.from(block?.querySelectorAll<HTMLAnchorElement>('a.list-link') || [])) {
+        if (
+            (a.dataset.vid !== vid &&
+                (a.previousElementSibling as HTMLElement)?.dataset.vid === vid) ||
+            (!a.href.endsWith(`=${UID}`) &&
+                (a.previousElementSibling as HTMLAnchorElement)?.href.endsWith(`=${UID}`))
+        ) {
+            a.classList.add('with-separator');
+        }
+    }
 }

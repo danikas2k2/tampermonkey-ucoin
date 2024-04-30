@@ -22,7 +22,7 @@ export function getShippingPrice(country: string, weight: number): number {
         return +(
             getShippingPrice(country, weight % Weight.LARGE_PACKAGE) +
             getShippingPrice(country, Weight.LARGE_PACKAGE) *
-            Math.floor(weight / Weight.LARGE_PACKAGE)
+                Math.floor(weight / Weight.LARGE_PACKAGE)
         ).toFixed(2);
     }
 

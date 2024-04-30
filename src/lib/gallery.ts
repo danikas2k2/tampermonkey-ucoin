@@ -39,7 +39,7 @@ function addVisibilityToggleButton(
     if (!button) {
         container.insertAdjacentHTML(
             'beforeend',
-            `<button id='${buttonId}' class='btn-l ${className}' style='padding: 0 14px; height: 26px'>${text} <small></small></button>`
+            `<button id="${buttonId}" class="btn-l ${className}" style="padding: 0 14px; height: 26px">${text} <small></small></button>`
         );
         button = document.getElementById(buttonId) as HTMLButtonElement;
         button.addEventListener(
@@ -131,7 +131,7 @@ export function addGalleryVisibilityToggle(): void {
     const sortFilter = document.getElementById('sort-filter')?.parentElement;
     sortFilter?.insertAdjacentHTML(
         'afterend',
-        `<div id='${buttonContainerId}' class='left filter-container' style='float:right'>`
+        `<div id="${buttonContainerId}" class="left filter-container" style="float:right">`
     );
 
     const container = document.getElementById(buttonContainerId);
