@@ -7,7 +7,6 @@ import { updateLinkHref, updateOnClickHref } from '../lib/links';
 import {
     addConflictHandling,
     addOpenedTabsHandler,
-    addPriceUpdateButton,
     addSwapTitle,
     addThumbnails,
     addTrackingLinks,
@@ -36,7 +35,6 @@ export async function handleSwapPage(): Promise<void> {
     checkSold();
     ignoreUnwanted();
     removeRowHrefFromSwapList();
-    await addPriceUpdateButton();
     addTrackingLinks();
     calcTotalPrices();
 

@@ -5,11 +5,8 @@ import { Color, ColorValues, Condition, ConditionValues } from './cond';
 import { randomDecoratedDelay } from './delay';
 import { _ } from './lang';
 import { getPayPalPrice } from './paypal';
-import { getPriceByConditions } from './prices';
 import { getShippingPrice } from './shipping';
-import { UID } from './uid';
 import { getHashParam, loc, updateLocationHash } from './url';
-import { cancel, scrollIntoView } from './utils';
 
 export function addSwapTitle(): void {
     const title = [...document.querySelectorAll('#swap-mgr div.leftCol > div.user-info > .wrap')]
@@ -199,7 +196,7 @@ const TAB_TAKE = 'take';
 const TAB_NEED = 'need';
 
 async function setActiveSwapTab(tab: string): Promise<void> {
-    await localStorage.setItem(TAB_PARAM, tab);
+    localStorage.setItem(TAB_PARAM, tab);
     await updateLocationHash((params) => params.set(TAB_PARAM, tab));
 }
 
@@ -268,8 +265,6 @@ export function duplicatePagination(): void {
     heading.insertAdjacentElement('beforebegin', clone);
 }
 
-const INVALID_PRICE_CLASS = 'price-invalid';
-
 function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string): void {
     const tdCond = tr.querySelector('.td-cond');
     if (!tdCond) {
@@ -282,7 +277,6 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string): void {
     }
 
     td.classList.add('td-price');
-    let cond = (tdCond.querySelector('span.txt')?.textContent || tdCond.textContent) as Condition;
     const myPriceElement = td.querySelector<HTMLSpanElement>('span.blue-13');
     if (!myPriceElement) {
         return;
@@ -329,15 +323,15 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string): void {
                 .replace('.0', '')}</span>`;
             myPriceElement.classList.add('price-times');
         } else {
-            const prel = (rel - 1) * 100;
+            const pRel = (rel - 1) * 100;
             // TODO avoid +0%
-            if (prel >= 50) {
-                percent = `<span class="gray-11 price-times" data-price-percent>+${prel.toFixed()}%</span>`;
-            } else if (prel >= 0) {
-                percent = `<span class="gray-11 price-over" data-price-percent>+${prel.toFixed()}%</span>`;
+            if (pRel >= 50) {
+                percent = `<span class="gray-11 price-times" data-price-percent>+${pRel.toFixed()}%</span>`;
+            } else if (pRel >= 0) {
+                percent = `<span class="gray-11 price-over" data-price-percent>+${pRel.toFixed()}%</span>`;
             } else {
                 percent = `<span class="gray-11 price-under" data-price-percent>&minus;${Math.abs(
-                    prel
+                    pRel
                 ).toFixed()}%</span>`;
             }
         }
@@ -347,50 +341,6 @@ function updatePriceCol(tr: HTMLTableRowElement, newPrice?: string): void {
                 price
             )}${suffix}</span>`
         );
-    }
-
-    if (location.href.includes(`?uid=${UID}`)) {
-        if (
-            !tr.querySelector<HTMLAnchorElement>(`th a[title*="."]`) &&
-            !tr.querySelector<HTMLAnchorElement>(`th a[title^="Reserve for "]`)
-        ) {
-            let plus = 0;
-            const condTitle = cond === Condition.UNC ? Condition.AU : cond;
-            const title = tr.querySelector<HTMLAnchorElement>(`th a[title^="${condTitle}"]`)?.title;
-            if (cond === Condition.UNC) {
-                if (title?.startsWith('AU')) {
-                    cond = Condition.AU;
-                }
-            } else if (title) {
-                plus = [...title].filter((c) => c === '+').length;
-                if (cond === Condition.XF) {
-                    cond = Condition.XXF;
-                    plus--;
-                } else if (cond === Condition.VF) {
-                    cond = Condition.VXF;
-                    plus--;
-                }
-            }
-
-            const cells = tr.querySelectorAll('td');
-            const year = cells[0]?.childNodes?.[0]?.textContent ?? undefined;
-            const name = cells[1]?.textContent ?? undefined;
-            let condPrice = getPriceByConditions(price, cond as Condition, plus, name, year);
-            if (myPrice < +condPrice) {
-                condPrice = myPrice.toFixed(2);
-            }
-            if (price < +condPrice) {
-                condPrice = price.toFixed(2);
-            }
-            if (myPrice && condPrice && myPrice !== +condPrice) {
-                tr.classList.add(INVALID_PRICE_CLASS);
-                tr.dataset.condPrice = condPrice;
-                td.insertAdjacentHTML(
-                    'beforeend',
-                    `<span class="gray-11 price-cond" data-price-cond>${prefix}${condPrice}${suffix}</span>`
-                );
-            }
-        }
     }
 }
 
@@ -607,134 +557,5 @@ export function removeRowHrefFromSwapList(): void {
     const rows = swapMgr.querySelectorAll('table.offer-list tr[data-href]');
     for (const row of rows) {
         row.removeAttribute('data-href');
-    }
-}
-
-export async function addPriceUpdateButton(): Promise<void> {
-    let continueCheckbox: Optional<HTMLInputElement>;
-    const page = document.getElementById('swap-list');
-    if (!page) {
-        return;
-    }
-
-    const link = page.querySelector<HTMLAnchorElement>('a.ico-ref');
-    if (!link) {
-        return;
-    }
-
-    link.href = '#';
-    link.classList.remove('ico-ref');
-    link.addEventListener('click', (e) => {
-        cancel(e);
-        updatePrices();
-    });
-    updateIcon();
-
-    continueCheckbox = link.parentElement?.querySelector('#continue');
-    if (continueCheckbox) {
-        return;
-    }
-
-    const checked = location.hash?.includes('update-prices');
-    link.insertAdjacentHTML(
-        'afterend',
-        `
-        <label class="btn-s">
-            <input type="checkbox" id="continue" ${checked ? `checked='checked'` : ''} />
-            Continue update on next page
-        </label>
-        `
-    );
-    continueCheckbox = link.parentElement?.querySelector('#continue');
-    const minDelay = continueCheckbox?.checked ? 5_000 : 3_000;
-    const rndDelay = continueCheckbox?.checked ? 5_000 : 2_000;
-    if (checked) {
-        await randomDecoratedDelay(rndDelay, minDelay);
-        await updatePrices();
-    }
-
-    function updateIcon(): void {
-        const icon = link?.querySelector('div.ico-16');
-        if (icon) {
-            const hasCondPrices = !!page?.querySelectorAll<HTMLTableRowElement>(
-                'table.swap-coin tr[data-cond-price]'
-            )?.length;
-            icon.classList.toggle('ico-16-swap1', hasCondPrices);
-            icon.classList.toggle('ico-16-check1', !hasCondPrices);
-        }
-    }
-
-    async function updatePrices(): Promise<void> {
-        const rows = page?.querySelectorAll<HTMLTableRowElement>('table.swap-coin tr');
-        if (rows) {
-            let first = true;
-            for (const row of rows) {
-                const condPrice = row.dataset.condPrice;
-                if (condPrice) {
-                    const usid = row.id.slice(4);
-                    const cond = row.querySelector<HTMLSelectElement>(`#cond-${usid}`)?.value || '';
-                    const qty = row.querySelector<HTMLInputElement>(`#qty-${usid}`)?.value || '';
-                    const url = new URL('/swap-list/', location.href);
-                    url.searchParams.set('single-edit', '1');
-                    url.searchParams.set('usid', usid);
-                    url.searchParams.set('cond', cond);
-                    url.searchParams.set('price', condPrice);
-                    url.searchParams.set('qty', qty);
-
-                    scrollIntoView(row);
-                    if (first) {
-                        first = false;
-                    } else {
-                        await randomDecoratedDelay(rndDelay, minDelay);
-                    }
-                    try {
-                        const response = await fetch(url.href);
-                        if (!response.ok) {
-                            await randomDecoratedDelay(rndDelay, minDelay);
-                            location.reload();
-                            return;
-                        }
-                    } catch (e) {
-                        await randomDecoratedDelay(rndDelay, minDelay);
-                        location.reload();
-                        return;
-                    }
-
-                    delete row.dataset.condPrice;
-                    row.classList.remove(INVALID_PRICE_CLASS);
-                    updatePriceCol(row, condPrice);
-                }
-            }
-        }
-        updateIcon();
-
-        if (!continueCheckbox?.checked) {
-            scrollIntoView(link);
-            return;
-        }
-
-        const currentPageElement = page?.querySelector<HTMLAnchorElement>(
-            '#swap-list div.pages a.current'
-        );
-        if (currentPageElement) {
-            const nextPage = +(currentPageElement.textContent || 0) + 1;
-            const nextPageElement = page?.querySelector<HTMLAnchorElement>(
-                `#swap-list div.pages a[href$="&page=${nextPage}"]`
-            );
-            if (nextPageElement) {
-                await randomDecoratedDelay(10_000, 10_000);
-                nextPageElement.href = `${nextPageElement.href}#update-prices`;
-                nextPageElement.click();
-                return;
-            }
-            const firstPageElement = page?.querySelector<HTMLAnchorElement>(
-                `#swap-list div.pages a:first-child`
-            );
-            if (firstPageElement && !firstPageElement?.classList.contains('current')) {
-                await randomDecoratedDelay(10_000, 10_000);
-                firstPageElement.click();
-                return;
-            }
-        }
     }
 }

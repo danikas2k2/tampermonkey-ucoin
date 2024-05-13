@@ -24,25 +24,33 @@ function improveDeleteButton(): void {
         }
 
         const { href } = e.currentTarget as HTMLAnchorElement;
-        const response = await get(href);
-        if (!response.ok) {
-            // eslint-disable-next-line no-console
-            console.error(response);
-            return reload();
-        }
+        const responsePromise = get(href);
 
         const url = new URL(href);
         const ids = url.searchParams.get('usid') ?? url.searchParams.get('amp;usid');
         for (const id of ids?.split(',') ?? []) {
             const row = document.querySelector(`tr#usid${id}`);
             const table = row?.closest('table');
+            row?.querySelector<HTMLInputElement>('input[type="checkbox"]:checked')?.click();
             row?.remove();
+
             if (table && !table.querySelectorAll('tr')?.length) {
-                if (table.previousElementSibling?.matches('h2')) {
-                    table.previousElementSibling.remove();
+                const heading = table.previousElementSibling;
+                if (heading?.matches('h2')) {
+                    heading
+                        ?.querySelector<HTMLInputElement>('input[type="checkbox"]:checked')
+                        ?.click();
+                    heading.remove();
                 }
                 table.remove();
             }
+        }
+
+        const response = await responsePromise;
+        if (!response.ok) {
+            // eslint-disable-next-line no-console
+            console.error(response);
+            return reload();
         }
     });
 }
