@@ -3,7 +3,7 @@ import { postJson } from './ajax';
 // wait for first time
 let timeout = 1000;
 
-export async function updateTags(): Promise<void> {
+export function updateTags(): void {
     setTimeout(() => {
         const tag = document.querySelector('#tag');
         const tagsContent = document.querySelector('#tags .textboxlist');

@@ -4,6 +4,7 @@ import REPLACE from '../../images/replace.svg';
 import SHOW from '../../images/show.svg';
 import { getFragment, postFragment } from './ajax';
 import { Color, FormColorValues, FormValue, FormValueColors } from './cond';
+import { _ } from './lang';
 import { updateTags } from './tags';
 import {
     cancel,
@@ -30,9 +31,12 @@ export async function updateCoinForm(
     updateFormButtons(main);
     updateTitleToggle(main);
     for (const form of main?.querySelectorAll<HTMLFormElement>('form') || []) {
-        await updateCoinFormInputs(view, form);
-        addPublicityToggle(view, form);
-        addReplacementToggle(view, form);
+        updateCoinFormInputs(form);
+        updateCoinViewLinks(view);
+        if (form.parentElement?.matches('#edit-coin-form')) {
+            addPublicityToggle(view, form);
+            addReplacementToggle(view, form);
+        }
     }
 }
 
@@ -42,10 +46,15 @@ async function updateCoinFormFragment(fragment: DocumentFragment): Promise<void>
     return updateCoinForm();
 }
 
-async function updateCoinFormInputs(
-    view: HTMLElement | null,
-    form: HTMLFormElement
-): Promise<void> {
+function updateCoinViewLinks(view: HTMLElement | null) {
+    for (const link of view?.querySelectorAll<HTMLAnchorElement>('a[type=submit]') || []) {
+        handleLinkClick(link, async ({ href }: HTMLAnchorElement) =>
+            updateCoinFormFragment(await getFragment(href))
+        );
+    }
+}
+
+function updateCoinFormInputs(form: HTMLFormElement): void {
     updateBuyDateInput(form);
     addSyncConditionToColorTable(form);
     wrapFormSubmit(form, async (form: HTMLFormElement) => {
@@ -53,14 +62,7 @@ async function updateCoinFormInputs(
             await updateCoinFormFragment(await postFragment(location.href, new FormData(form)));
         }
     });
-    for (const link of view?.querySelectorAll<HTMLAnchorElement>('a[type=submit]') || []) {
-        handleLinkClick(
-            link,
-            async ({ href }: HTMLAnchorElement) =>
-                await updateCoinFormFragment(await getFragment(href))
-        );
-    }
-    return updateTags();
+    updateTags();
 }
 
 async function postForm(form: HTMLFormElement | undefined): Promise<boolean> {
@@ -94,11 +96,15 @@ function addPublicityToggle(view: HTMLElement | null, form: HTMLFormElement): vo
 
     const updateStatus = (): void => {
         const checked = form?.public?.checked;
-        button.title = checked ? 'Hide' : 'Show';
+        console.info({
+            form,
+            checked,
+        });
+        button.title = _(checked ? 'Hide' : 'Show');
         button.innerHTML = checked ? HIDE : SHOW;
         button.classList.toggle('btn-blue', !checked);
         button.classList.toggle('btn-gray', checked);
-        status.innerText = checked ? 'Public' : 'Private';
+        status.innerText = _(checked ? 'Public' : 'Private');
         status.classList.toggle('status0', !checked);
         status.classList.toggle('status1', checked);
     };

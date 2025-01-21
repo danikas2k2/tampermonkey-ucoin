@@ -43,5 +43,25 @@
         "lt": "Nominalioji vertė",
         "ru": "Номинал",
         "de": "Wert"
+    },
+    "Private": {
+        "lt": "Privatu",
+        "ru": "Личный доступ",
+        "de": "Privat"
+    },
+    "Public": {
+        "lt": "Vieša",
+        "ru": "Общий доступ",
+        "de": "Öffentlich"
+    },
+    "Show": {
+        "lt": "Rodyti",
+        "ru": "Показать",
+        "de": "Anzeigen"
+    },
+    "Hide": {
+        "lt": "Slėpti",
+        "ru": "Спрятать",
+        "de": "Verstecken"
     }
 }
