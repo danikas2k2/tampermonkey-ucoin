@@ -9,14 +9,17 @@ const REGION_TAB = 'r';
 const ACTIVE = 'active';
 
 export async function handleCountryRegions(): Promise<void> {
-    const headingList = document.querySelector('ul.hor-switcher ~ ul.region-list');
-    if (!headingList) {
+    const countryList = document.querySelector<HTMLDivElement>(
+        'ul.hor-switcher ~ div.country-list'
+    );
+    if (!countryList) {
         return;
     }
 
-    const countryList = document.querySelector<HTMLDivElement>('ul.region-list ~ div.country-list');
-    if (!countryList) {
-        return;
+    let headingList = document.querySelector('ul.hor-switcher ~ ul.region-list');
+    if (!headingList) {
+        countryList.insertAdjacentHTML('beforebegin', `<ul class="region-list"/>`);
+        headingList = document.querySelector('ul.hor-switcher ~ ul.region-list');
     }
 
     const allText = headingList?.querySelector('li.region[value="0"]')?.textContent;
@@ -126,52 +129,55 @@ export async function handleCountryRegions(): Promise<void> {
                     )
         );
 
-    headingList.innerHTML = '';
-    headingList.insertAdjacentHTML(
-        'beforeend',
-        `<li class="region${!currentRegion ? ` ${ACTIVE}` : ''}">${allText}</li>`
-    );
-    for (const r of topRegions) {
-        const id = slug(r);
-        if (document.querySelector(`.region#${id}`)) {
-            headingList.insertAdjacentHTML(
-                'beforeend',
-                `<li class="region${currentRegion === id ? ` ${ACTIVE}` : ''}" data-id="${id}">${_(
-                    r,
-                    regionNames
-                )}</li>`
-            );
-        }
-    }
-    headingList.addEventListener('click', async ({ target }) => {
-        if (!target) {
-            return;
-        }
-
-        const li = target as HTMLLIElement;
-        headingList.querySelector(`li.${ACTIVE}`)?.classList.remove(ACTIVE);
-        li.classList.add(ACTIVE);
-
-        const id = li.dataset.id;
-        if (!id) {
-            await updateLocationHash((params) => params.delete(REGION_TAB));
-            document
-                .querySelectorAll<HTMLDivElement>('.region-list ~ .regions > li.region')
-                .forEach((c) => {
-                    c.classList.remove('active');
-                    c.classList.remove('hide');
-                });
-        } else {
-            await updateLocationHash((params) => params.set(REGION_TAB, id));
-            const cc = document.querySelectorAll<HTMLDivElement>(
-                `.region-list ~ .regions > li.region:not(#${id})`
-            );
-            for (const c of cc) {
-                c.classList.remove('active');
-                c.classList.add('hide');
+    console.info(headingList);
+    if (headingList) {
+        headingList.innerHTML = '';
+        headingList.insertAdjacentHTML(
+            'beforeend',
+            `<li class="region${!currentRegion ? ` ${ACTIVE}` : ''}">${allText ?? _('All')}</li>`
+        );
+        for (const r of topRegions) {
+            const id = slug(r);
+            if (document.querySelector(`.region#${id}`)) {
+                headingList.insertAdjacentHTML(
+                    'beforeend',
+                    `<li class="region${currentRegion === id ? ` ${ACTIVE}` : ''}" data-id="${id}">${_(
+                        r,
+                        regionNames
+                    )}</li>`
+                );
             }
-            document.getElementById(id)?.classList.remove('hide');
-            document.getElementById(id)?.classList.add('active');
         }
-    });
+        headingList.addEventListener('click', async ({ target }) => {
+            if (!target) {
+                return;
+            }
+
+            const li = target as HTMLLIElement;
+            headingList.querySelector(`li.${ACTIVE}`)?.classList.remove(ACTIVE);
+            li.classList.add(ACTIVE);
+
+            const id = li.dataset.id;
+            if (!id) {
+                await updateLocationHash((params) => params.delete(REGION_TAB));
+                document
+                    .querySelectorAll<HTMLDivElement>('.region-list ~ .regions > li.region')
+                    .forEach((c) => {
+                        c.classList.remove('active');
+                        c.classList.remove('hide');
+                    });
+            } else {
+                await updateLocationHash((params) => params.set(REGION_TAB, id));
+                const cc = document.querySelectorAll<HTMLDivElement>(
+                    `.region-list ~ .regions > li.region:not(#${id})`
+                );
+                for (const c of cc) {
+                    c.classList.remove('active');
+                    c.classList.add('hide');
+                }
+                document.getElementById(id)?.classList.remove('hide');
+                document.getElementById(id)?.classList.add('active');
+            }
+        });
+    }
 }

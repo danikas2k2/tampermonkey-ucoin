@@ -63,5 +63,10 @@
         "lt": "Slėpti",
         "ru": "Спрятать",
         "de": "Verstecken"
+    },
+    "All": {
+        "lt": "Visi",
+        "ru": "Все",
+        "de": "Ales"
     }
 }
