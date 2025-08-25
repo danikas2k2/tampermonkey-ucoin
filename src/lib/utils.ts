@@ -1,3 +1,5 @@
+import { location } from './url';
+
 export const sp = (str = ''): string => str.replace(/\p{Z}+/gu, ' ').trim();
 
 export function tt(str = ''): string {
@@ -47,7 +49,7 @@ export function cancel(e: Event): void {
 }
 
 export function reload(): null {
-    location.reload();
+    location().reload();
     return null;
 }
 
@@ -133,7 +135,7 @@ export function wrapFormSubmit(form: HTMLFormElement, onSuccess?: UpdateCallback
         'submit',
         (
             (onSubmit) => async (e: Event) =>
-                await formSubmitHandler(e, onSubmit, onSuccess)
+                formSubmitHandler(e, onSubmit, onSuccess)
         )(form.onsubmit)
     );
     form.removeAttribute('onsubmit');

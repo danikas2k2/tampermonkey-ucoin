@@ -34,7 +34,6 @@ export abstract class ListForm {
         return document.querySelector(this.listSelector);
     }
 
-    // eslint-disable-next-line class-methods-use-this
     get funcSelector(): string | null {
         return '#my-coin-func-block';
     }
@@ -278,22 +277,27 @@ export abstract class ListForm {
 
     updateCondition(): void {
         const condition: HTMLSelectElement = this.form?.condition;
-        condition.insertAdjacentHTML(
-            'afterend',
-            `<fieldset name='conditionFieldset'><legend class='gray-12' style='padding:5px;'>Condition</legend></fieldset>`
-        );
-        const fieldset = this.form?.conditionFieldset;
-        for (const o of condition.options) {
-            const c = this.getConditionOption(o);
-            if (c) {
-                const { text, value, checked, style } = c;
-                fieldset.insertAdjacentHTML(
-                    'beforeend',
-                    `<label class='dgray-12' style='margin-top:0;${style}'><input name='condition' value='${value}' ${checked} type='radio'/>${text}</label>`
-                );
+        console.info(`[DEV]`, condition?.parentElement?.tagName);
+        const inForm = condition?.parentElement?.tagName === 'FORM';
+        const container = inForm ? condition : condition.parentElement;
+        if (container) {
+            container.insertAdjacentHTML(
+                inForm ? 'afterend' : 'beforebegin',
+                `<fieldset name='conditionFieldset'><legend class='gray-12' style='padding:5px;'>Condition</legend></fieldset>`
+            );
+            const fieldset = this.form?.conditionFieldset;
+            for (const o of condition.options) {
+                const c = this.getConditionOption(o);
+                if (c) {
+                    const { text, value, checked, style } = c;
+                    fieldset.insertAdjacentHTML(
+                        'beforeend',
+                        `<label class='dgray-12' style='margin-top:0;${style}'><input name='condition' value='${value}' ${checked} type='radio'/>${text}</label>`
+                    );
+                }
             }
+            condition.remove();
         }
-        condition.remove();
     }
 
     updateFormButtons(): void {

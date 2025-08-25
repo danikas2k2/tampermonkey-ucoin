@@ -1,21 +1,33 @@
-export const loc = (): URL => new URL(location.href);
-
 type ParamsProcessor = (params: URLSearchParams) => URLSearchParams | void;
 type AsyncParamsProcessor = (params: URLSearchParams) => Promise<URLSearchParams | void>;
 type HashValue = string | URLSearchParams;
 type HashType = HashValue | ParamsProcessor | AsyncParamsProcessor;
 type UrlType = URL | string;
 
+export function location(): Location {
+    return window.location;
+}
+
+export function getHref(): string {
+    return location().href;
+}
+
+export const loc = (): URL => new URL(getHref());
+
+export function getHash(): string {
+    return location().hash;
+}
+
 export function setHash(hash: HashValue): void {
     const newHash = hash.toString();
-    if (location.hash || newHash) {
-        history.replaceState({}, '', new URL(`#${newHash}`, location.href));
+    if (getHash() || newHash) {
+        history.replaceState({}, '', new URL(`#${newHash}`, getHref()));
         // location.hash = `#${newHash}`;
     }
 }
 
 export const getUrl = (href: UrlType): URL =>
-    typeof href === 'string' ? new URL(href, location.href) : href;
+    typeof href === 'string' ? new URL(href, getHref()) : href;
 
 export const hashSearchParams = (url: UrlType = loc()): URLSearchParams =>
     new URLSearchParams(getUrl(url).hash.slice(1));
@@ -31,7 +43,7 @@ async function getUpdatedHash(hash: HashType, url: UrlType = loc()): Promise<str
 
 export async function updateLocationHash(hash: HashType, url: UrlType = loc()): Promise<void> {
     const newHash = await getUpdatedHash(hash, url);
-    if (location.hash || newHash) {
+    if (getHash() || newHash) {
         history.replaceState({}, '', new URL(`#${newHash}`, url));
     }
 }

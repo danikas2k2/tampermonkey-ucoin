@@ -1,3 +1,4 @@
+import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import {
@@ -24,6 +25,7 @@ import {
     wrapDataHrefClicks,
     wrapFormSubmit,
 } from './utils';
+import * as URL from './url';
 
 describe('sp', () => {
     it('return empty string for empty string', () => {
@@ -45,7 +47,6 @@ describe('sp', () => {
                 &#x2007;
             </div>
         );
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         expect(sp(screen.getByRole('button').textContent!)).toEqual('a b c d e');
     });
 });
@@ -352,11 +353,12 @@ describe('reload', () => {
     });
 
     it('reload current page and return null', () => {
-        jest.spyOn(window, 'location', 'get').mockReturnValue({
-            reload: jest.fn(),
+        const locationReload = jest.fn();
+        jest.spyOn(URL, 'location').mockReturnValue({
+            reload: locationReload,
         } as unknown as Location);
         expect(reload()).toBeNull();
-        expect(location.reload).toHaveBeenCalled();
+        expect(locationReload).toHaveBeenCalled();
     });
 });
 
@@ -617,7 +619,7 @@ describe('wrapFormSubmit', () => {
         wrapFormSubmit(form, onSuccess);
         expect(form.onsubmit).toBeNull();
 
-        form.submit();
+        fireEvent.submit(form);
         await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(expect.any(Event)));
         expect(onSuccess).toHaveBeenCalledWith(form);
     });

@@ -22,6 +22,8 @@ import { improveSwapButtons } from '../lib/swap-list-actions';
 import { addFilteringOptions } from '../lib/swap-list-filter';
 import { addSortingOptions } from '../lib/swap-list-sort';
 
+function fixCurrencyStyle() {}
+
 export async function handleSwapPage(): Promise<void> {
     addSwapTitle();
     addThumbnails();
@@ -29,6 +31,7 @@ export async function handleSwapPage(): Promise<void> {
     addOpenedTabsHandler();
     addSortingOptions();
     addFilteringOptions();
+    fixCurrencyStyle();
     duplicatePagination();
     showAllPrices();
     addConflictHandling();

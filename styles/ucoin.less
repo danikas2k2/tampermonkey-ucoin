@@ -1,8 +1,8 @@
 //noinspection CssUnknownTarget
-@import (css) url(https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap);
+@import (css) url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&family=Noto+Sans+Display:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&family=Noto+Sans+Mono:wdth,wght@62.5..100,100..900&family=Noto+Color+Emoji&display=swap');
 
 :root {
-    --base-font-family: 'Noto Sans', sans-serif;
+    --base-font-family: 'Noto Sans Display', 'Noto Sans', 'Noto Sans Emoji', sans-serif;
     --base-font-size: 14px;
 
     --color-surface: #fff;
@@ -95,10 +95,6 @@ body {
     &:hover {
         color: var(--color-error-sufrace-hover);
     }
-}
-
-.gray-11, .lgray-11 {
-    font-size: inherit;
 }
 
 #table {
@@ -755,6 +751,7 @@ ul.regions {
 
         h2 {
             font-size: 1.6em;
+            font-weight: 600;
 
             .lgray-13 {
                 padding-inline-start: 1em;
@@ -764,16 +761,19 @@ ul.regions {
         li.region {
             h2 {
                 font-size: 1.4em;
+                font-weight: 500;
             }
 
             li.region {
                 h2 {
                     font-size: 1.2em;
+                    font-weight: 400;
                 }
 
                 li.region {
                     h2 {
                         font-size: 1.1em;
+                        font-weight: 300;
                     }
                 }
             }

@@ -32,7 +32,6 @@ export class SwapForm extends ListForm {
         ['CP', [Color.COPY, SwapValue.COPY]],
     ]);
 
-    // eslint-disable-next-line no-invalid-this
     private swapListManager = new SwapFormList(this);
 
     fillForm(uid = '', cond = '', price = '', info = '', vid = '', qty = '', replica = ''): void {
@@ -43,11 +42,6 @@ export class SwapForm extends ListForm {
         }
         form.comment.value = info;
         form.qty.value = qty || '1';
-        // eslint-disable-next-line eqeqeq
-        // if (!form.price.value || form.price.value == this.getDefaultPrice(vid)) {
-        //     form.price.value = this.getPriceByCondition(vid);
-        //     debug(form.price.value);
-        // }
     }
 
     updateList(): void {
@@ -60,19 +54,6 @@ export class SwapForm extends ListForm {
         addLinkComments();
     }
 
-    /*async update(): Promise<void> {
-        super.update();
-
-        const DIV_ID = 'some-strange-div';
-        console.log(DIV_ID);
-        listBlock.insertAdjacentHTML('afterbegin', `<div id="${DIV_ID}" style="max-height:400px;overflow-x:hidden;overflow-y:auto;background:red"/>`);
-        const div = listBlock.querySelector(`#${DIV_ID}`);
-        for (const {a} of getSwapLinksWithMatches()) {
-            div.insertAdjacentElement('beforeend', a);
-        }
-    }*/
-
-    // eslint-disable-next-line class-methods-use-this
     getConditionOption(o: HTMLOptionElement): ConditionOption {
         const { value, textContent } = o;
         return {
@@ -120,9 +101,9 @@ export class SwapForm extends ListForm {
             });
         };
 
-        addQtyCtrlButton('beforebegin', 'plus10', '+10', (v) => v + 10);
-        addQtyCtrlButton('beforebegin', 'plus5', '+5', (v) => v + 5);
-        addQtyCtrlButton('beforebegin', 'plus', '+', (v) => v + 1);
+        addQtyCtrlButton('afterend', 'plus10', '+10', (v) => v + 10);
+        addQtyCtrlButton('afterend', 'plus5', '+5', (v) => v + 5);
+        addQtyCtrlButton('afterend', 'plus', '+', (v) => v + 1);
         addQtyCtrlButton('beforebegin', 'minus', '&minus;', (v) => v - 1);
     }
 
