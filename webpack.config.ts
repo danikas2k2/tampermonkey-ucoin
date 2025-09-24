@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
+import moment from 'moment';
 import PACKAGE from './package.json';
 
 const config = (): webpack.Configuration => ({
@@ -15,22 +16,6 @@ const config = (): webpack.Configuration => ({
             { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },
             { test: /\.svg$/, use: 'svg-inline-loader' },
             { test: /\.less$/, use: ['style-loader', 'css-loader', 'less-loader'] },
-            {
-                test: /\.ts$/,
-                use: [
-                    {
-                        loader: 'webpack-replace',
-                        options: {
-                            replace: [
-                                {
-                                    from: '{{project.version}}',
-                                    to: PACKAGE.version,
-                                },
-                            ],
-                        },
-                    },
-                ],
-            },
         ],
     },
     externals: {
@@ -40,10 +25,12 @@ const config = (): webpack.Configuration => ({
     },
     plugins: [
         new webpack.BannerPlugin({
-            // eslint-disable-next-line no-sync
             banner: fs
                 .readFileSync('./USERSCRIPT.ts', 'utf8')
-                .replace(/{{project\.version}}/g, PACKAGE.version),
+                .replace(
+                    /{{project\.version}}/g,
+                    () => `${PACKAGE.version} (${moment().format()})`
+                ),
             entryOnly: true,
             raw: true,
         }),
