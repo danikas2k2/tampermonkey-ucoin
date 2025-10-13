@@ -25,12 +25,13 @@ const config = (): webpack.Configuration => ({
     },
     plugins: [
         new webpack.BannerPlugin({
-            banner: fs
-                .readFileSync('./USERSCRIPT.ts', 'utf8')
-                .replace(
-                    /{{project\.version}}/g,
-                    () => `${PACKAGE.version} (${moment().format()})`
-                ),
+            banner: () =>
+                fs
+                    .readFileSync('./USERSCRIPT.ts', 'utf8')
+                    .replace(
+                        /{{project\.version}}/g,
+                        () => `${PACKAGE.version} (${moment().utc().format('Y.M.D.H.m')})`
+                    ),
             entryOnly: true,
             raw: true,
         }),
@@ -50,6 +51,10 @@ const config = (): webpack.Configuration => ({
             new TerserPlugin({
                 extractComments: false,
                 terserOptions: {
+                    compress: {
+                        toplevel: true,
+                        passes: 2,
+                    },
                     format: {
                         comments: /^\**!!/,
                     },

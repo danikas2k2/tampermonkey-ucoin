@@ -104,10 +104,12 @@ export async function handleTree(): Promise<void> {
 export async function handleLanguages(): Promise<void> {
     let lt = document.querySelector<HTMLAnchorElement>('ul.bottom-lang a[href*="://lt."]');
     if (lt) {
+        console.error('handleLanguages: lt language already exists');
         return;
     }
     const it = document.querySelector<HTMLAnchorElement>('ul.bottom-lang a[href*="://it."]');
     if (!it) {
+        console.error('handleLanguages: it language not found');
         return;
     }
     const lit = it.closest('li');

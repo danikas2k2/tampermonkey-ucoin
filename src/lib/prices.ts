@@ -1,24 +1,50 @@
-import { Condition } from './cond';
+// import { Condition } from './cond';
 
-// type YearMap = Map<string, number[]>;
-// type MintMap = Map<string, YearMap>;
+import { Price, PriceKey } from './common/price';
+import { documentFragment } from './utils';
 
-const COIN_ID = 'coin';
-// const SWAP_ID = 'swap';
-// const SWAP_BLOCK_ID = 'swap-block';
+export function parsePrice(str?: string): number | undefined {
+    const val = str?.replaceAll(/[^\d.]/g, '');
+    if (!val) {
+        return undefined;
+    }
+    const num = +val;
+    return isNaN(num) ? undefined : num;
+}
 
-const RX_GRAMMS = /\([gг]/;
-const RX_COUNTRY = /Country|Страна|Valstybė/;
-const RX_RUSSIA = /Russia|Россия|Rusija|USSR|СССР|TSRS/;
-const RX_COMPOSITION = /Composition|Материал|Sudėtis/;
-const RX_SILVER = /Silver|Серебро|Sidabras/;
-const RX_GOLD = /Gold|Золото|Auksas/;
-// const RX_YEAR = /Year|Год|Metai/;
+const NUMBER_FORMAT: Intl.NumberFormatOptions = {
+    maximumFractionDigits: 2,
+};
+const NF = new Intl.NumberFormat('en-US', NUMBER_FORMAT);
 
-const RU_PRICE = 0.006; //      3-8e/kg
-const EU_PRICE = 0.012; //    10-15e/kg
-const AG_PRICE = 0.75; //   .60-.80e/g
-const AU_PRICE = 59.55; // 45.0-65.0e/g
+export const formatNumber = (value: number): string => NF.format(value);
+
+const PRICE_FORMAT: Intl.NumberFormatOptions = {
+    ...NUMBER_FORMAT,
+    style: 'currency',
+    currency: 'EUR',
+};
+const PF = new Intl.NumberFormat('en-US', PRICE_FORMAT);
+
+export const formatPrice = (value: number): string => PF.format(value);
+
+async function getPrice(key: PriceKey, defaultPrice: number): Promise<number> {
+    let price = +(sessionStorage.getItem(key) ?? 0);
+    if (!price || isNaN(price)) {
+        const fragment = documentFragment(await fetch(`/`).then((r) => r.text()));
+        const element = fragment.querySelector(`a[href="/catalog/?composition=${key}"] section`);
+        price = parsePrice(element?.textContent) ?? 0;
+        if (!price) {
+            price = defaultPrice;
+        }
+        sessionStorage.setItem(key, price.toString());
+    }
+    return price;
+}
+
+const getSilverPrice = async (): Promise<number> => getPrice(PriceKey.Silver, Price.Silver);
+
+const getGoldPrice = async (): Promise<number> => getPrice(PriceKey.Gold, Price.Gold);
 
 /*
 function sortByCondition(a: Condition, b: Condition): number {
@@ -28,13 +54,13 @@ function sortByCondition(a: Condition, b: Condition): number {
 }
 
 export function estimateSwapPrices(): void {
-    const theySwap = document.getElementById(SWAP_ID);
+    const theySwap = document.getElementById('swap');
     if (!theySwap) {
         return;
     }
 
     const swapBlock = theySwap.nextElementSibling;
-    if (!swapBlock || !swapBlock.matches(`#${SWAP_BLOCK_ID}`)) {
+    if (!swapBlock || !swapBlock.matches('#swap-block')) {
         return;
     }
 
@@ -94,8 +120,8 @@ export function estimateSwapPrices(): void {
 }
 */
 
-export function estimateWeightPrice(): void {
-    const coinBlock = document.getElementById(COIN_ID);
+export async function estimateWeightPrice(): Promise<void> {
+    const coinBlock = document.getElementById('coin');
     if (!coinBlock) {
         return;
     }
@@ -115,13 +141,13 @@ export function estimateWeightPrice(): void {
         const td = tr.querySelector('td');
         if (td) {
             const data = `${td.textContent}`;
-            if (head.match(RX_GRAMMS)) {
+            if (head.match(/\([gг]/)) {
                 weight = +data;
-            } else if (head.match(RX_COUNTRY)) {
-                isRussia = !!data.match(RX_RUSSIA);
-            } else if (head.match(RX_COMPOSITION)) {
-                isSilver = !!data.match(RX_SILVER);
-                isGold = !!data.match(RX_GOLD);
+            } else if (head.match(/Country|Страна|Valstybė/)) {
+                isRussia = !!data.match(/Russia|Россия|Rusija|USSR|СССР|TSRS/);
+            } else if (head.match(/Composition|Материал|Sudėtis/)) {
+                isSilver = !!data.match(/Silver|Серебро|Sidabras/);
+                isGold = !!data.match(/Gold|Золото|Auksas/);
                 if (isSilver || isGold) {
                     part = +(data.split(' ').pop() || 0);
                 }
@@ -132,25 +158,25 @@ export function estimateWeightPrice(): void {
     let price;
     let priceSource;
     if (isGold) {
-        price = weight * (part || 1) * AU_PRICE;
+        price = weight * (part || 1) * (await getGoldPrice());
         priceSource = 'au';
     } else if (isSilver) {
-        price = weight * (part || 1) * AG_PRICE;
+        price = weight * (part || 1) * (await getSilverPrice());
         priceSource = 'ag';
     } else if (isRussia) {
-        price = weight * RU_PRICE;
+        price = weight * Price.Russian;
         priceSource = 'ru';
     } else {
-        price = weight * EU_PRICE;
+        price = weight * Price.Common;
         priceSource = '--';
     }
 
     const weightPrice = `<br/><price class="right" title="${priceSource}: ${price.toFixed(
         5
-    )}">€ ${price.toFixed(2)}</price>`;
+    )}">€ ${formatPrice(price)}</price>`;
 
     if (!aPrice) {
-        let isAproximate = false;
+        let isApproximate = false;
         const prices: number[] = [];
         const all = coinBlock.querySelectorAll('#coin-list td.blue-13');
         for (const td of all) {
@@ -162,7 +188,7 @@ export function estimateWeightPrice(): void {
             if (textContent) {
                 prices.push(+textContent);
             } else {
-                isAproximate = true;
+                isApproximate = true;
             }
         }
         if (prices.length) {
@@ -171,13 +197,13 @@ export function estimateWeightPrice(): void {
             const showPrices = [min.toFixed(2)];
             if (max > min) {
                 showPrices.push(max.toFixed(2));
-            } else if (isAproximate) {
+            } else if (isApproximate) {
                 showPrices.unshift('');
             }
             head?.insertAdjacentHTML(
                 'beforebegin',
                 `<a href='#price' class='gray-12 right price-container'>Value:&nbsp;€ <span>${showPrices.join(
-                    isAproximate ? '~' : '-'
+                    isApproximate ? '~' : '-'
                 )}</span>${weightPrice}</a>`
             );
         }
@@ -187,7 +213,7 @@ export function estimateWeightPrice(): void {
 }
 
 // { [condition]: [mul, add, min] }
-export const PricePropsByCondition = new Map<Condition, [number, number, number]>([
+/*export const PricePropsByCondition = new Map<Condition, [number, number, number]>([
     [Condition.UNC, [1.25, 0.2, 0.35]],
     [Condition.AU, [1.15, 0.1, 0.3]],
     [Condition.XXF, [1.1, 0.05, 0.25]],
@@ -228,4 +254,4 @@ export function getPriceByConditions(
     const isEuro = name?.includes('euro');
     const value = Number.parseInt(name ?? '0') * (name?.includes('cent') ? 0.01 : 1);
     return (isEuro && final < value ? value : final).toFixed(2);
-}
+}*/

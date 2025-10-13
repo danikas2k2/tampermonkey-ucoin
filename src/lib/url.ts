@@ -71,6 +71,8 @@ export const setHashParam = async (name: string, value: string): Promise<string>
 
 export const hasHashParam = (name: string): boolean => hashSearchParams().has(name);
 
-export const getHashParam = (name: string): string | null => hashSearchParams().get(name);
+export const getHashParam = <T = string>(name: string): T | null =>
+    hashSearchParams().get(name) as T | null;
 
-export const getAllHashParams = (name: string): string[] => hashSearchParams().getAll(name);
+export const getAllHashParams = <T = string>(name: string): T[] =>
+    hashSearchParams().getAll(name) as T[];

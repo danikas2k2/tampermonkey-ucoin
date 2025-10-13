@@ -2,12 +2,13 @@ import HIDE from '../../images/hide.svg';
 import LEAVE from '../../images/leave.svg';
 import REPLACE from '../../images/replace.svg';
 import SHOW from '../../images/show.svg';
-import { getFragment, postFragment } from './ajax';
+import { text } from './ajax';
 import { Color, FormColorValues, FormValue, FormValueColors } from './cond';
 import { _ } from './lang';
 import { updateTags } from './tags';
 import {
     cancel,
+    documentFragment,
     handleLinkClick,
     hide,
     isHidden,
@@ -49,7 +50,7 @@ async function updateCoinFormFragment(fragment: DocumentFragment): Promise<void>
 function updateCoinViewLinks(view: HTMLElement | null) {
     for (const link of view?.querySelectorAll<HTMLAnchorElement>('a[type=submit]') || []) {
         handleLinkClick(link, async ({ href }: HTMLAnchorElement) =>
-            updateCoinFormFragment(await getFragment(href))
+            updateCoinFormFragment(documentFragment(await fetch(href).then(text)))
         );
     }
 }
@@ -59,14 +60,23 @@ function updateCoinFormInputs(form: HTMLFormElement): void {
     addSyncConditionToColorTable(form);
     wrapFormSubmit(form, async (form: HTMLFormElement) => {
         if (form) {
-            await updateCoinFormFragment(await postFragment(location.href, new FormData(form)));
+            await updateCoinFormFragment(
+                documentFragment(
+                    await fetch(location.href, { method: 'POST', body: new FormData(form) }).then(
+                        text
+                    )
+                )
+            );
         }
     });
     updateTags();
 }
 
 async function postForm(form: HTMLFormElement | undefined): Promise<boolean> {
-    if (form && (await postFragment(location.href, new FormData(form)))) {
+    if (
+        form &&
+        (await fetch(location.href, { method: 'POST', body: new FormData(form) }).then(text))
+    ) {
         return true;
     }
     return !!reload();
@@ -96,7 +106,7 @@ function addPublicityToggle(view: HTMLElement | null, form: HTMLFormElement): vo
 
     const updateStatus = (): void => {
         const checked = form?.public?.checked;
-        console.info({
+        console.debug({
             form,
             checked,
         });

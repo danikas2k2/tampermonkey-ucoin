@@ -2,8 +2,16 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { FilterName, FilterOptions, FilterProps, Filters } from './filters';
 import { c, cmp, d, num, sortField, x } from './sort';
+import { getReserveCountElement } from './swap-utils';
 import { getHashParam, updateLocationHash } from './url';
 import { cancel } from './utils';
+
+const enum ReserveColors {
+    DEFAULT = `#DDD`,
+    RESERVED = `#E4A500`,
+}
+const getReserveIcon = (color = ReserveColors.DEFAULT) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 96 960 960" width="20px" style="fill:${color}"><path d="M425 711h110V611h100V501H535V401H425v100H325v110h100v100Zm55 255q-135.091-34.197-223.045-155.842Q169 688.514 169 540V303l311-117 311 117v237q0 148.514-87.955 270.158Q615.091 931.803 480 966Zm0-78.5q102.5-33 169.25-130.603Q716 659.293 716 540V354.387L480 266l-236 88.387V540q0 119.293 66.75 216.897Q377.5 854.5 480 887.5Zm0-311Z"></path></svg>`;
 
 export function addFilteringOptions(): void {
     const swapList = document.getElementById('take-swap-list') as HTMLDivElement;
@@ -33,6 +41,7 @@ export function addFilteringOptions(): void {
 
     const filterProps = new Map<FilterName, FilterProps>();
     const filterNames: FilterName[] = [
+        FilterName.RESERVED,
         FilterName.COUNTRY,
         FilterName.YEAR,
         FilterName.VALUE,
@@ -41,6 +50,37 @@ export function addFilteringOptions(): void {
     const filterValues = new Map<FilterName, string>();
 
     const isVisible = (el: HTMLElement): boolean => el.style.display !== 'none';
+
+    const reservedCount = [...swapList.querySelectorAll('th[data-reserve="on"]')].filter(
+        isVisible
+    ).length;
+    const missingCount = [...swapList.querySelectorAll('th[data-reserve=""]')].filter(
+        isVisible
+    ).length;
+    filterProps.set(FilterName.RESERVED, {
+        placeholder: 'Reserved',
+        width: 100,
+        options: new Map(
+            reservedCount && missingCount
+                ? [
+                      [
+                          'on',
+                          {
+                              name: `<span class="left filter-label">${getReserveIcon(ReserveColors.RESERVED)}</span>`,
+                              count: reservedCount,
+                          },
+                      ],
+                      [
+                          'off',
+                          {
+                              name: `<span class="left filter-label">${getReserveIcon(ReserveColors.DEFAULT)}</span>`,
+                              count: missingCount,
+                          },
+                      ],
+                  ]
+                : []
+        ),
+    });
 
     const countryHeadings = swapList.querySelectorAll('h2');
     filterProps.set(FilterName.COUNTRY, {
@@ -54,11 +94,11 @@ export function addFilteringOptions(): void {
                 }
 
                 const rows = h.nextElementSibling?.querySelectorAll('tr') || [];
-                console.info(rows.length, rows);
+                console.debug(rows.length, rows);
                 const filtered = [...rows].filter(isVisible);
-                console.info(filtered.length, filtered);
+                console.debug(filtered.length, filtered);
                 const mapped = filtered.map((el) => el.style.display);
-                console.info(mapped);
+                console.debug(mapped);
 
                 r.set(hc.id, {
                     name: hc.innerHTML,
@@ -174,6 +214,14 @@ export function addFilteringOptions(): void {
                 const d = r.dataset;
                 for (const [filter, value] of filterValues) {
                     switch (filter) {
+                        case FilterName.RESERVED:
+                            const reserve = value === 'on' ? 'on' : '';
+                            if (value && !r.querySelector(`[data-reserve="${reserve}"]`)) {
+                                r.style.display = 'none';
+                                continue rowLoop;
+                            }
+                            break;
+
                         case FilterName.COUNTRY:
                             if (h.id !== value) {
                                 hasVisibleRows = false;
@@ -233,7 +281,7 @@ export function addFilteringOptions(): void {
             const display = document.querySelector<HTMLElement>(`[data-filter="${filter}"]`);
             if (display) {
                 if (value) {
-                    display.innerHTML = `${c(option.innerHTML)}${x(filter)}`;
+                    display.innerHTML = `${c(option.querySelector('.left')?.outerHTML)}${x(filter)}`;
                     display.classList.add('filter-box-active');
                 } else {
                     display.innerHTML = `${c(display.dataset?.filterPlaceholder)}${d()}`;
@@ -250,7 +298,7 @@ export function addFilteringOptions(): void {
         });
     }
 
-    document.querySelectorAll<HTMLElement>('[data-filter]').forEach((display) =>
+    for (const display of document.querySelectorAll<HTMLElement>('[data-filter]')) {
         display.addEventListener('click', async (e) => {
             cancel(e);
             const ds = display.dataset;
@@ -281,15 +329,15 @@ export function addFilteringOptions(): void {
                         ? 'block'
                         : 'none';
             }
-        })
-    );
+        });
+    }
 
-    document.querySelectorAll<HTMLElement>('[data-filter-dialog]').forEach((dialog) =>
+    for (const dialog of document.querySelectorAll<HTMLElement>('[data-filter-dialog]')) {
         dialog.addEventListener('click', (e) => {
             cancel(e);
             dialog.style.display = 'none';
-        })
-    );
+        });
+    }
 
     const filters = swapList.querySelectorAll<HTMLInputElement>('.filter');
     for (const filter of filters) {

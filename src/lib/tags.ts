@@ -1,4 +1,4 @@
-import { postJson } from './ajax';
+import { safe } from './ajax';
 
 // wait for first time
 let timeout = 1000;
@@ -10,28 +10,24 @@ export function updateTags(): void {
         if (tag && !tagsContent) {
             const myCss = GM_getResourceText('TextboxListStyle');
             GM_addStyle(myCss);
-
-            (() => {
+            (async () => {
                 const t = new $.TextboxList('#tag', {
                     unique: true,
                     bitsOptions: { editable: { addKeys: 188 } },
                     plugins: { autocomplete: { placeholder: 'Type to receive suggestions' } },
                 });
                 t.getContainer().addClass('textboxlist-loading');
-                postJson(
-                    '/coin/?action=autocompletetag',
-                    new URLSearchParams({ action: 'autocompletetag' })
-                )
-                    .then((r) => {
-                        t.plugins.autocomplete.setValues(r);
-                        t.getContainer().removeClass('textboxlist-loading');
-                    })
-                    .catch((/*XMLHttpRequest, textStatus, errorThrown*/) => {
-                        //alert("Status: " + textStatus); alert("Error: " + errorThrown);
-                    });
+                try {
+                    const r = await fetch('/coin/?action=autocompletetag', {
+                        method: 'POST',
+                        body: new URLSearchParams({ action: 'autocompletetag' }),
+                    }).then(safe);
+                    t.plugins.autocomplete.setValues(await r.json());
+                    t.getContainer().removeClass('textboxlist-loading');
+                } finally {
+                }
             })();
         }
-
         // don't wait for subsequent times
         timeout = 0;
     }, timeout);

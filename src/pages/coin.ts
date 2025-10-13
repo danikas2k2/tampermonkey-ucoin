@@ -24,7 +24,7 @@ export async function handleCoinPage(): Promise<void> {
     await updateCoinForm();
     await new SwapForm().handle();
     // await estimateSwapPrices();
-    estimateWeightPrice();
+    await estimateWeightPrice();
     await new WishForm().handle();
 
     await syncCoinWish();

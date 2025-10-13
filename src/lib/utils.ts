@@ -67,9 +67,12 @@ export function dataHrefClickHandler(e: Event): void {
 }
 
 export function wrapDataHrefClicks(element: HTMLElement | null): void {
-    element?.querySelectorAll('[data-href]').forEach((el: HTMLElement) => {
-        el.addEventListener('click', dataHrefClickHandler);
-    });
+    const elements = element?.querySelectorAll('[data-href]');
+    if (elements?.length) {
+        for (const el of elements) {
+            el.addEventListener('click', dataHrefClickHandler);
+        }
+    }
 }
 
 export function updateRequiredElement(

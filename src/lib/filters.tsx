@@ -4,6 +4,7 @@ import React, { ReactElement } from 'react';
 export type FilterDirection = 'left' | 'right';
 
 export const enum FilterName {
+    RESERVED = 'resedved',
     COUNTRY = 'country',
     YEAR = 'year',
     VALUE = 'value',
@@ -58,7 +59,7 @@ export function Filter({
         option = options.get(value);
     }
     if (option?.name) {
-        display = `${option?.name} (${option?.count})`;
+        display = option.name;
     } else if (value) {
         display = value;
     }
@@ -76,7 +77,7 @@ export function Filter({
                 style={{ width: width - 24 }}
             >
                 <div
-                    className={classNames('left', { 'blue-13': value })}
+                    className={classNames('left', { 'blue-13': value }, 'filter-label')}
                     dangerouslySetInnerHTML={{ __html: display }}
                 />
                 {(!disabled &&
@@ -99,12 +100,12 @@ export function Filter({
                             <span
                                 className="left gray-13 wrap filter-label"
                                 dangerouslySetInnerHTML={{
-                                    __html:
-                                        typeof option === 'string'
-                                            ? option
-                                            : `${option.name} (${option.count})`,
+                                    __html: typeof option === 'string' ? option : `${option.name}`,
                                 }}
                             />
+                            {typeof option !== 'string' && (
+                                <span className="right lgray-11">({option.count})</span>
+                            )}
                         </a>
                     </>
                 ))}

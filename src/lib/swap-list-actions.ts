@@ -1,4 +1,3 @@
-import { get } from './ajax';
 import { cancel, reload } from './utils';
 
 export function improveSwapButtons(): void {
@@ -24,7 +23,7 @@ function improveDeleteButton(): void {
         }
 
         const { href } = e.currentTarget as HTMLAnchorElement;
-        const responsePromise = get(href);
+        const promise = fetch(href);
 
         const url = new URL(href);
         const ids = url.searchParams.get('usid') ?? url.searchParams.get('amp;usid');
@@ -46,9 +45,8 @@ function improveDeleteButton(): void {
             }
         }
 
-        const response = await responsePromise;
+        const response = await promise;
         if (!response.ok) {
-            // eslint-disable-next-line no-console
             console.error(response);
             return reload();
         }

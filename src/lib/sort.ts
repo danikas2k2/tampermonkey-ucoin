@@ -36,7 +36,7 @@ export function c(html: string | undefined): string {
 
 export function dropdown(id: string, selected: string, options: string[]): string {
     return `
-    <div class='right filter-container'>
+    <div class='right filter-container filter-dropdown'>
         <div class='filter-box' id='${id}'>
             ${c(selected)}
         </div>

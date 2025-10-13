@@ -1,10 +1,10 @@
-import { post, postFragment } from './ajax';
+import { text } from './ajax';
 import { FormValue, WishValue } from './cond';
 import { randomDecoratedDelay } from './delay';
 import { lang } from './lang';
 import { styleListLinks } from './swap-links';
 import { getHashParam, updateHashHref, updateLocationHash } from './url';
-import { scrollIntoView } from './utils';
+import { documentFragment, scrollIntoView } from './utils';
 import { WishFormAction } from './wish-form';
 
 export const CoinWishFormOnMatcher = /CoinWishFormOn\('(?<uwid>[^']*)', '(?<cond>[^']*)'/;
@@ -54,7 +54,7 @@ export async function syncCoinWish(): Promise<void> {
                     wishForm.set('uwid', m.groups.uwid || '');
                     wishForm.set('action', WishFormAction.DELETE);
                     await randomDecoratedDelay();
-                    await post(location.href, wishForm);
+                    await fetch(location.href, { method: 'POST', body: wishForm });
                     a.remove();
                 }
             }
@@ -81,8 +81,8 @@ export async function syncCoinWish(): Promise<void> {
                 wishForm.set('condition', `${wishCondition}`);
                 wishForm.set('action', WishFormAction.ADD);
                 await randomDecoratedDelay();
-                const block = (
-                    await postFragment(location.href, wishForm)
+                const block = documentFragment(
+                    await fetch(location.href, { method: 'POST', body: wishForm }).then(text)
                 ).querySelector<HTMLElement>('#wish-block');
                 if (block) {
                     styleListLinks(block);
@@ -104,8 +104,10 @@ export async function syncCoinWish(): Promise<void> {
                     await randomDecoratedDelay();
                     if (first) {
                         if (+(m?.groups.cond ?? 0) !== wishCondition) {
-                            const block = (
-                                await postFragment(location.href, wishForm)
+                            const block = documentFragment(
+                                await fetch(location.href, { method: 'POST', body: wishForm }).then(
+                                    text
+                                )
                             ).querySelector<HTMLElement>('#wish-block');
                             if (block) {
                                 styleListLinks(block);
@@ -114,7 +116,7 @@ export async function syncCoinWish(): Promise<void> {
                             }
                         }
                     } else {
-                        await post(location.href, wishForm);
+                        await fetch(location.href, { method: 'POST', body: wishForm });
                         a.remove();
                     }
                 }

@@ -10,3 +10,5 @@ export const UID: string | null = (() => {
     }
     return null;
 })();
+
+export const UNAME = 'Coins′un′Notes';

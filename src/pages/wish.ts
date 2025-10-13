@@ -1,14 +1,16 @@
-import { addThumbnails } from '../lib/swap-list';
+import { addThumbnails, decorateConditionRows } from '../lib/coin-list';
 
 export async function handleWishPage(): Promise<void> {
+    const tableSelector = 'table.wish-coin';
     // addSwapTitle();
-    addThumbnails();
+    addThumbnails(tableSelector);
     // markSeparateCountries();
     // addOpenedTabsHandler();
     // addSortingOptions();
     // addFilteringOptions();
     // duplicatePagination();
     // showAllPrices();
+    decorateConditionRows(tableSelector);
     // addConflictHandling();
     // checkSold();
     // ignoreUnwanted();

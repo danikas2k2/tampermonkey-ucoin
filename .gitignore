@@ -1,4 +1,4 @@
 /profile.md
 data/*.csv
 /src/data/post-lt.json
-/src/data/prices.ts
+/src/lib/common/price.ts

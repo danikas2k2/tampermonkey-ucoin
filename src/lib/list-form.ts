@@ -1,9 +1,10 @@
-import { getFragment, postFragment } from './ajax';
+import { text } from './ajax';
 import { Color, CondValue } from './cond';
 import { styleListLinks } from './swap-links';
 import {
     cancel,
     disable,
+    documentFragment,
     enable,
     handleLinkClick,
     hide,
@@ -277,7 +278,6 @@ export abstract class ListForm {
 
     updateCondition(): void {
         const condition: HTMLSelectElement = this.form?.condition;
-        console.info(`[DEV]`, condition?.parentElement?.tagName);
         const inForm = condition?.parentElement?.tagName === 'FORM';
         const container = inForm ? condition : condition.parentElement;
         if (container) {
@@ -326,12 +326,21 @@ export abstract class ListForm {
 
         wrapFormSubmit(this.form, async () =>
             this.form
-                ? this.updateFragment(await postFragment(location.href, new FormData(this.form)))
+                ? this.updateFragment(
+                      documentFragment(
+                          await fetch(location.href, {
+                              method: 'POST',
+                              body: new FormData(this.form),
+                          }).then(text)
+                      )
+                  )
                 : undefined
         );
 
         for (const link of this.form.querySelectorAll<HTMLAnchorElement>('a[type=submit]')) {
-            handleLinkClick(link, async () => this.updateFragment(await getFragment(link.href)));
+            handleLinkClick(link, async () =>
+                this.updateFragment(documentFragment(await fetch(link.href).then(text)))
+            );
         }
 
         this.updateFormButtons();

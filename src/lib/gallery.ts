@@ -1,5 +1,5 @@
-import { get, post } from './ajax';
 import { randomDecoratedDelay } from './delay';
+import { documentFragment } from './utils';
 
 type VisibilityToggleCallback = (container: HTMLElement, checked: boolean) => void;
 
@@ -22,7 +22,7 @@ async function postPublicityForm(
     if (publicInput) {
         publicInput.checked = checked;
     }
-    return await post(url, new FormData(form));
+    return fetch(url, { method: 'POST', body: new FormData(form) });
 }
 
 function addVisibilityToggleButton(
@@ -95,13 +95,7 @@ async function toggleGroupVisibility(container: HTMLElement, checked: boolean): 
             continue;
         }
 
-        const response = await get(url);
-        const responseText = await response.text();
-
-        const temp = document.createElement('template');
-        temp.innerHTML = responseText;
-        const fragment: DocumentFragment = temp.content;
-
+        const fragment = documentFragment(await fetch(url).then((r) => r.text()));
         const coinForm =
             fragment.getElementById('edit-coin-form') || document.getElementById('add-coin-form');
         if (!coinForm) {

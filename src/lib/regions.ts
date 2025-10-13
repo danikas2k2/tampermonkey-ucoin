@@ -1,12 +1,10 @@
 import countryRegions from '../data/country-regions.json';
 import regionNames from '../data/region-names.json';
 import regionTree from '../data/region-tree.json';
+import { Param } from './common/params';
 import { _ } from './lang';
 import { getHashParam, updateLocationHash } from './url';
 import { slug, unique } from './utils';
-
-const REGION_TAB = 'r';
-const ACTIVE = 'active';
 
 export async function handleCountryRegions(): Promise<void> {
     const countryList = document.querySelector<HTMLDivElement>(
@@ -23,7 +21,7 @@ export async function handleCountryRegions(): Promise<void> {
     }
 
     const allText = headingList?.querySelector('li.region[value="0"]')?.textContent;
-    const currentRegion = getHashParam(REGION_TAB);
+    const currentRegion = getHashParam(Param.REGION);
     const topRegions = Object.keys(regionTree);
 
     // add all regions
@@ -49,22 +47,13 @@ export async function handleCountryRegions(): Promise<void> {
                 renderRegions(region, sub);
             }
         }
-    })(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        countryList.previousElementSibling!,
-        regionTree
-    );
+    })(countryList.previousElementSibling!, regionTree);
 
     // move countries to regions
     const coinCounts: Record<string, number> = {};
     const countryCounts: Record<string, number> = {};
-    countryList.querySelectorAll<HTMLDivElement>('div.cntry').forEach((c) => {
+    for (const c of countryList.querySelectorAll<HTMLDivElement>('div.cntry')) {
         const [, cid] = c.querySelector('a')?.href.match(/&country=(\w+)/) || [];
-        // const found = countries.find((o) => cid === o.cid);
-        // if (found) {
-        //     const { regions, periods } = found;
-        //     periods?.forEach((p) => p.regions && regions.push(...p.regions));
-        //     unique(regions).forEach((r) => {
         const regions = (countryRegions as Record<string, string[]>)[cid];
         if (regions) {
             for (const r of unique(regions)) {
@@ -96,10 +85,12 @@ export async function handleCountryRegions(): Promise<void> {
             }
             c.remove();
         }
-    });
+    }
 
     // cleanup empty containers
-    document.querySelectorAll('.regions .country-list:empty').forEach((l) => l.remove());
+    for (const l of document.querySelectorAll('.regions .country-list:empty')) {
+        l.remove();
+    }
     while (document.querySelectorAll('.regions .regions:empty').length) {
         for (const l of document.querySelectorAll('.regions .regions:empty')) {
             l.remove();
@@ -113,35 +104,28 @@ export async function handleCountryRegions(): Promise<void> {
     }
 
     // update region counts
-    document
-        .querySelectorAll('.regions .region')
-        .forEach(
-            (r) =>
-                countryCounts[r.id] &&
-                coinCounts[r.id] &&
-                r
-                    .querySelector('h2')
-                    ?.insertAdjacentHTML(
-                        'beforeend',
-                        `<span class="lgray-13">( ${countryCounts[r.id]} / ${
-                            coinCounts[r.id]
-                        } )</span>`
-                    )
-        );
+    for (const r of document.querySelectorAll('.regions .region')) {
+        if (countryCounts[r.id] && coinCounts[r.id]) {
+            r.querySelector('h2')?.insertAdjacentHTML(
+                'beforeend',
+                `<span class="lgray-13">( ${countryCounts[r.id]} / ${coinCounts[r.id]} )</span>`
+            );
+        }
+    }
 
-    console.info(headingList);
+    console.debug(headingList);
     if (headingList) {
         headingList.innerHTML = '';
         headingList.insertAdjacentHTML(
             'beforeend',
-            `<li class="region${!currentRegion ? ` ${ACTIVE}` : ''}">${allText ?? _('All')}</li>`
+            `<li class="region${!currentRegion ? ' active' : ''}">${allText ?? _('All')}</li>`
         );
         for (const r of topRegions) {
             const id = slug(r);
             if (document.querySelector(`.region#${id}`)) {
                 headingList.insertAdjacentHTML(
                     'beforeend',
-                    `<li class="region${currentRegion === id ? ` ${ACTIVE}` : ''}" data-id="${id}">${_(
+                    `<li class="region${currentRegion === id ? ' active' : ''}" data-id="${id}">${_(
                         r,
                         regionNames
                     )}</li>`
@@ -154,20 +138,20 @@ export async function handleCountryRegions(): Promise<void> {
             }
 
             const li = target as HTMLLIElement;
-            headingList.querySelector(`li.${ACTIVE}`)?.classList.remove(ACTIVE);
-            li.classList.add(ACTIVE);
+            headingList.querySelector('li.active')?.classList.remove('active');
+            li.classList.add('active');
 
             const id = li.dataset.id;
             if (!id) {
-                await updateLocationHash((params) => params.delete(REGION_TAB));
-                document
-                    .querySelectorAll<HTMLDivElement>('.region-list ~ .regions > li.region')
-                    .forEach((c) => {
-                        c.classList.remove('active');
-                        c.classList.remove('hide');
-                    });
+                await updateLocationHash((params) => params.delete(Param.REGION));
+                for (const c of document.querySelectorAll<HTMLDivElement>(
+                    '.region-list ~ .regions > li.region'
+                )) {
+                    c.classList.remove('active');
+                    c.classList.remove('hide');
+                }
             } else {
-                await updateLocationHash((params) => params.set(REGION_TAB, id));
+                await updateLocationHash((params) => params.set(Param.REGION, id));
                 const cc = document.querySelectorAll<HTMLDivElement>(
                     `.region-list ~ .regions > li.region:not(#${id})`
                 );

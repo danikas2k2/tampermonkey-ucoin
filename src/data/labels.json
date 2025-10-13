@@ -19,6 +19,11 @@
         "ru": "PayPal сборы",
         "de": "PayPal Gebühren"
     },
+    "Difference": {
+        "lt": "Skirtumas",
+        "ru": "Разница",
+        "de": "Unterschied"
+    },
     "Sorting": {
         "lt": "Rikiuoti",
         "ru": "Сортировка",

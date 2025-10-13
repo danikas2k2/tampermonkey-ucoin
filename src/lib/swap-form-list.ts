@@ -1,4 +1,4 @@
-import { getFragment, postFragment } from './ajax';
+import { safe, text } from './ajax';
 import { randomDecoratedDelay } from './delay';
 import { ListForm } from './list-form';
 import {
@@ -10,7 +10,7 @@ import {
     styleSwapLink,
 } from './swap-links';
 import { UID } from './uid';
-import { hide, reload, show } from './utils';
+import { documentFragment, hide, reload, show } from './utils';
 
 const { debug } = console;
 
@@ -61,11 +61,13 @@ export class SwapFormList {
         role: SwapListManageRole,
         qty: number,
         text: string,
-        clickHandler: (qty: number) => void
+        clickHandler: (qty: number) => Promise<void>
     ): void {
         if (!this.buttonSet) {
+            console.warn('No button set found');
             return;
         }
+
         const buttonId = `${role}-qty`;
         const expand = this.buttonSet.querySelector<HTMLElement>(`#${buttonId}`);
         if (expand) {
@@ -359,7 +361,9 @@ export class SwapFormList {
         data.set('price', `${price || ''}`);
         data.set('action', `${action || ''}`);
 
-        const fragment = await postFragment(location.href, data);
+        const fragment = documentFragment(
+            await fetch(location.href, { method: 'POST', body: data }).then(text)
+        );
 
         debug('fragment');
         debug(fragment);
@@ -376,10 +380,9 @@ export class SwapFormList {
     }
 
     private async addSwapCoin(data: CoinSwapVariantData): Promise<DocumentFragment | null> {
-        return await this.updateSwapCoin('', data, 'addswapcoin');
+        return this.updateSwapCoin('', data, 'addswapcoin');
     }
 
-    // eslint-disable-next-line class-methods-use-this
     private async deleteSwapCoin(usid: string | Set<string>): Promise<DocumentFragment | null> {
         if (!UID) {
             return null;
@@ -394,14 +397,17 @@ export class SwapFormList {
         p.set('usid', usid);
         p.set('uid', UID);
 
-        const fragment = await getFragment(url.href, null, false);
+        const fragment = documentFragment(
+            await fetch(url.href)
+                .then(safe)
+                .then((r) => r.text())
+        );
         if (!fragment) {
             return reload();
         }
         return fragment;
     }
 
-    // eslint-disable-next-line class-methods-use-this
     private updateLinkQty(a: HTMLAnchorElement, qty: number): void {
         if (a.hasAttribute('onClick')) {
             const onClick = a
