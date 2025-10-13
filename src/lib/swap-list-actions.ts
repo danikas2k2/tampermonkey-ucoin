@@ -12,7 +12,6 @@ function improveDeleteButton(): void {
         return;
     }
 
-    // eslint-disable-next-line no-new-func
     const onClick = new Function(deleteButton.getAttribute('onclick') ?? 'return;');
 
     deleteButton.removeAttribute('onclick');

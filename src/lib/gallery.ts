@@ -45,7 +45,6 @@ function addVisibilityToggleButton(
         button.addEventListener(
             'click',
             () =>
-                // eslint-disable-next-line no-alert
                 confirm(`Are you sure to ${text.toLowerCase()}?`) && callback(container, visibility)
         );
     }

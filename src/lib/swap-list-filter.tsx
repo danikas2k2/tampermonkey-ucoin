@@ -2,7 +2,6 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { FilterName, FilterOptions, FilterProps, Filters } from './filters';
 import { c, cmp, d, num, sortField, x } from './sort';
-import { getReserveCountElement } from './swap-utils';
 import { getHashParam, updateLocationHash } from './url';
 import { cancel } from './utils';
 
