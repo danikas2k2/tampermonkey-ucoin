@@ -12,17 +12,20 @@ export const CoinWishFormOnMatcher = /CoinWishFormOn\('(?<uwid>[^']*)', '(?<cond
 export async function syncCoinWish(): Promise<void> {
     const coinForm = document.querySelector<HTMLFormElement>('#edit-coin-form form');
     if (!coinForm) {
+        console.debug('Coin form form not found.');
         return;
     }
 
     const coinFormData = new FormData(coinForm);
     const value = coinFormData.get('condition');
     if (!value) {
+        console.debug('Condition value not found in coin form.');
         return;
     }
 
     const form = document.querySelector<HTMLFormElement>('#wish-form');
     if (!form) {
+        console.debug('Coin wish form not found.');
         return;
     }
 

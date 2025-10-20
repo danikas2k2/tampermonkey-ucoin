@@ -44,7 +44,6 @@ export class WishForm extends ListForm {
         }
     }
 
-    // eslint-disable-next-line class-methods-use-this
     getConditionOption(o: HTMLOptionElement): ConditionOption | undefined {
         const { value, textContent } = o;
         if (value || textContent?.includes('ANY')) {

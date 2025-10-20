@@ -115,6 +115,7 @@ export abstract class ListForm {
 
     async handle(): Promise<void> {
         if (!this.main) {
+            console.debug(`${this.formType} main block not found.`);
             return;
         }
         this.updateFormHandlers();
@@ -216,12 +217,18 @@ export abstract class ListForm {
     }
 
     updateList(): void {
+        if (!this.listBlock) {
+            console.debug('List block not found.');
+            return;
+        }
         styleListLinks(this.listBlock);
     }
 
     removeOneButton(): void {
         const oneButtonBlock = this.main?.previousElementSibling;
-        if (oneButtonBlock?.matches('center.action-btn')) {
+        if (!oneButtonBlock) {
+            console.debug('One button block not found.');
+        } else if (oneButtonBlock.matches('center.action-btn')) {
             oneButtonBlock.remove();
         }
     }
@@ -308,10 +315,12 @@ export abstract class ListForm {
     }
 
     updateWidget(): void {
-        if (this.widgetHeader) {
-            this.widgetHeaderRedirectHandler = this.widgetHeader.onclick;
-            this.widgetHeader.removeAttribute('onclick');
+        if (!this.widgetHeader) {
+            console.debug('Widget header not found.');
+            return;
         }
+        this.widgetHeaderRedirectHandler = this.widgetHeader.onclick;
+        this.widgetHeader.removeAttribute('onclick');
     }
 
     async updateFragment(fragment: DocumentFragment): Promise<void> {
@@ -320,7 +329,12 @@ export abstract class ListForm {
     }
 
     async updateForm(): Promise<void> {
-        if (!this.main || !this.form) {
+        if (!this.main) {
+            console.debug('Main block not found.');
+            return;
+        }
+        if (!this.form) {
+            console.debug('Form not found.');
             return;
         }
 

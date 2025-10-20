@@ -40,6 +40,54 @@
     --color-separate-country: #000;
 
     --color-loader: rgb(60 150 30);
+
+    // marked colors
+    --color-marked-0: #242633;
+    --background-marked-0: #EEEEEE;
+    --color-marked-1: #dee5f2;
+    --background-marked-1: #5A6986;
+    --background-marked-2: #206CFF;
+    --color-marked-2: #E0ECFF;
+    --background-marked-3: #0000CC;
+    --color-marked-3: #DFE2FF;
+    --background-marked-4: #5229A3;
+    --color-marked-4: #E0D5F9;
+    --background-marked-5: #854F61;
+    --color-marked-5: #FDE9F4;
+    --background-marked-6: #CC0000;
+    --color-marked-6: #FFE3E3;
+    --background-marked-7: #EC7000;
+    --color-marked-7: #FFF0E1;
+    --background-marked-8: #B36D00;
+    --color-marked-8: #FADCB3;
+    --background-marked-9: #AB8B00;
+    --color-marked-9: #F3E7B3;
+    --background-marked-10: #636330;
+    --color-marked-10: #FFFFD4;
+    --background-marked-11: #64992C;
+    --color-marked-11: #F9FFEF;
+    --background-marked-12: #006633;
+    --color-marked-12: #F1F5EC;
+    --background-marked-13: #E5C300;
+    --color-marked-13: #232323;
+    --background-marked-14: #B200A0;
+    --color-marked-14: #F1F5EC;
+
+    // rarity colors
+   --background-rarity-A: #008F01;
+   --color-rarity-A: #FFF;
+   --background-rarity-B: #A5C700;
+   --color-rarity-B: #FFF;
+   --background-rarity-C: #E5C300;
+   --color-rarity-C: #FFF;
+   --background-rarity-R: #F7A126;
+   --color-rarity-R: #FFF;
+   --background-rarity-RR: #FF5F23;
+   --color-rarity-RR: #FFF;
+   --background-rarity-RRR: #E00102;
+   --color-rarity-RRR: #FFF;
+   --background-rarity-NON: #EFEFEF;
+   --color-rarity-NON: #666 !important;
 }
 
 //
@@ -241,12 +289,94 @@ body, select, textarea, input[type="text"], input[type="password"], input[type="
         border: none;
     }
 
+    div.rarity {
+        width: 24px;
+        line-height: 24px;
+        border-radius: 50%;
+    }
+
     #swap-block,
     #wish-block {
-        .dgray-11 {
-            width: 32px !important;
+        .cond {
+            width: 24px !important;
+            line-height: 24px;
             margin: 0 4px;
-            border-radius: 16px;
+            border-radius: 50%;
+
+            &.marked-0 {
+                background: var(--background-marked-0);
+                color: var(--color-marked-0);
+            }
+
+            &.marked-1 {
+                background: var(--background-marked-1);
+                color: var(--color-marked-1);
+            }
+
+            &.marked-2 {
+                background: var(--background-marked-2);
+                color: var(--color-marked-2);
+            }
+
+            &.marked-3 {
+                background: var(--background-marked-3);
+                color: var(--color-marked-3);
+            }
+
+            &.marked-4 {
+                background: var(--background-marked-4);
+                color: var(--color-marked-4);
+            }
+
+            &.marked-5 {
+                background: var(--background-marked-5);
+                color: var(--color-marked-5);
+            }
+
+            &.marked-6 {
+                background: var(--background-marked-6);
+                color: var(--color-marked-6);
+            }
+
+            &.marked-7 {
+                background: var(--background-marked-7);
+                color: var(--color-marked-7);
+            }
+
+            &.marked-8 {
+                background: var(--background-marked-8);
+                color: var(--color-marked-8);
+            }
+
+            &.marked-9 {
+                background: var(--background-marked-9);
+                color: var(--color-marked-9);
+            }
+
+            &.marked-10 {
+                background: var(--background-marked-10);
+                color: var(--color-marked-10);
+            }
+
+            &.marked-11 {
+                background: var(--background-marked-11);
+                color: var(--color-marked-11);
+            }
+
+            &.marked-12 {
+                background: var(--background-marked-12);
+                color: var(--color-marked-12);
+            }
+
+            &.marked-13 {
+                background: var(--background-marked-13);
+                color: var(--color-marked-13);
+            }
+
+            &.marked-14 {
+                background: var(--background-marked-14);
+                color: var(--color-marked-14);
+            }
         }
     }
 
@@ -979,10 +1109,6 @@ table.my-func-info {
     tr {
         border-bottom: none;
     }
-}
-
-#coin div.rarity {
-    border-radius: 16px;
 }
 
 #act-del-all {

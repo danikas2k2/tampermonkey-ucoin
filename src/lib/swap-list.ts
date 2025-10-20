@@ -35,7 +35,7 @@ export function markSeparateCountries(): void {
         for (const a of list.querySelectorAll<HTMLHeadingElement>(
             'table.swap-coin td a.dgray-13'
         )) {
-            if (a.textContent?.includes('euro')) {
+            if (a.textContent?.match(/(eur(o|a[is])|евро)/i)) {
                 a.classList.add('separate-country');
             }
         }

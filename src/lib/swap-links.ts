@@ -7,12 +7,17 @@ export const CoinSwapFormOnMatcher =
 export function* getSwapLinks(
     d: Document | DocumentFragment = document
 ): IterableIterator<HTMLAnchorElement> {
-    const swapBlock = d.getElementById('swap-block');
-    if (swapBlock) {
-        const listOfLinks = swapBlock.querySelectorAll<HTMLAnchorElement>('a.list-link');
-        for (const a of listOfLinks) {
+    const block = d.querySelector('#swap #swap-block');
+    if (block) {
+        const links = block.querySelectorAll<HTMLAnchorElement>('a.list-link');
+        if (!links.length) {
+            console.debug('No swap links found.');
+        }
+        for (const a of links) {
             yield a;
         }
+    } else {
+        console.debug('Swap block not found.');
     }
 }
 
@@ -41,13 +46,15 @@ export function styleSwapLink(a: HTMLAnchorElement): void {
         a.classList.add('with-separator');
     }
 
-    const condBlock = a.querySelector(`.left.dgray-11`);
+    const condBlock = a.querySelector(`.cond`);
+    console.info(`[DEV]`, condBlock);
     if (condBlock) {
         const cond = condBlock.textContent?.trim() as Condition;
+        console.info(`[DEV]`, cond);
         condBlock.classList.add(`marked-${ConditionColors[cond]}`);
     }
 
-    const mintBlock = a.querySelector(`.left.gray-13`);
+    const mintBlock = a.querySelector(`.year`);
     if (!mintBlock) {
         return;
     }
@@ -64,9 +71,12 @@ export function styleSwapLink(a: HTMLAnchorElement): void {
     }
 }
 
-export function styleListLinks(list?: HTMLElement | null): void {
-    const listOfLinks = list?.querySelectorAll<HTMLAnchorElement>('a.list-link') ?? [];
-    for (const a of listOfLinks) {
+export function styleListLinks(list: HTMLElement): void {
+    const links = list.querySelectorAll<HTMLAnchorElement>('a.list-link');
+    if (!links.length) {
+        console.debug('No swap links found in the provided list.');
+    }
+    for (const a of links) {
         styleSwapLink(a);
     }
 }

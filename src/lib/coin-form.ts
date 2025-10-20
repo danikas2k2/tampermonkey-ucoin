@@ -106,10 +106,6 @@ function addPublicityToggle(view: HTMLElement | null, form: HTMLFormElement): vo
 
     const updateStatus = (): void => {
         const checked = form?.public?.checked;
-        console.debug({
-            form,
-            checked,
-        });
         button.title = _(checked ? 'Hide' : 'Show');
         button.innerHTML = checked ? HIDE : SHOW;
         button.classList.toggle('btn-blue', !checked);

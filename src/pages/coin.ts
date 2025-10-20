@@ -3,7 +3,7 @@ import { updateLinkHref } from '../lib/links';
 import { estimateWeightPrice } from '../lib/prices';
 import { SwapForm } from '../lib/swap-form';
 import { WishForm } from '../lib/wish-form';
-import { syncCoinWish } from '../lib/wish-list';
+// import { syncCoinWish } from '../lib/wish-list';
 
 export async function handleCoinPage(): Promise<void> {
     const tags = document.getElementById('tags');
@@ -22,10 +22,13 @@ export async function handleCoinPage(): Promise<void> {
     }
 
     await updateCoinForm();
+
     await new SwapForm().handle();
+
     // await estimateSwapPrices();
     await estimateWeightPrice();
+
     await new WishForm().handle();
 
-    await syncCoinWish();
+    // await syncCoinWish();
 }
