@@ -34,14 +34,33 @@ export class SwapForm extends ListForm {
 
     private swapListManager = new SwapFormList(this);
 
-    fillForm(uid = '', cond = '', price = '', info = '', vid = '', qty = '', replica = ''): void {
+    fillForm(
+        uid = '',
+        cond = '',
+        price = '',
+        privateComment = '',
+        publicComment = '',
+        vid = '',
+        qty = '',
+        replica = ''
+    ): void {
         super.fillForm(uid, cond || (replica && '100'), price, vid || getCurrentVarietyId());
+
         const { form } = this;
         if (!form) {
             return;
         }
-        form.comment.value = info;
-        form.qty.value = qty || '1';
+
+        const { elements } = form;
+        if (elements.comment_private) {
+            elements.comment_private.value = privateComment;
+        }
+        if (elements.comment_public) {
+            elements.comment_public.value = publicComment;
+        }
+        if (elements.qty) {
+            elements.qty.value = qty || '1';
+        }
     }
 
     updateList(): void {

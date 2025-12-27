@@ -19,8 +19,15 @@ export class WishForm extends ListForm {
 
     fillForm(uid = '', cond = '', price = '', _tid?: string, vid = ''): void {
         super.fillForm(uid, cond, price, vid);
-        if (this.form?.is_type) {
-            this.form.is_type.checked = true;
+
+        const { form } = this;
+        if (!form) {
+            return;
+        }
+
+        const { elements } = form;
+        if (elements.is_type instanceof HTMLInputElement) {
+            elements.is_type.checked = true;
         }
     }
 

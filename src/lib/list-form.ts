@@ -123,37 +123,40 @@ export abstract class ListForm {
     }
 
     fillForm(uid = '', cond = '', price = '', vid = ''): void {
-        if (!this.form) {
+        const { form, formUid, formVariety } = this;
+        if (!form) {
             return;
         }
-        if (this.form[this.formUid]) {
-            this.form[this.formUid].value = uid;
+
+        const { elements } = form;
+        if (elements[formUid]) {
+            elements[formUid].value = uid;
         }
-        if (this.form.condition) {
+        if (elements.condition) {
             if (!cond || cond === '0') {
-                const input = this.form.querySelector<HTMLInputElement>(
+                const input = form.querySelector<HTMLInputElement>(
                     'input[name=condition][value="0"], input[name=condition][value=""]'
                 );
                 if (input) {
                     input.checked = true;
                 }
             } else {
-                this.form.condition.value = cond;
+                elements.condition.value = cond;
             }
         }
-        if (this.form.price) {
-            this.form.price.value = price;
+        if (elements.price) {
+            elements.price.value = price;
         }
-        if (this.form[this.formVariety]) {
+        if (elements[formVariety]) {
             if (vid) {
-                this.form[this.formVariety].value = vid;
-            } else {
-                this.form[this.formVariety][0].checked = true;
+                elements[formVariety].value = vid;
+            } else if (elements[formVariety] instanceof RadioNodeList) {
+                elements[formVariety][0].checked = true;
             }
         }
-        (this.form.action as unknown as HTMLInputElement).value = uid
-            ? `edit${this.formType}coin`
-            : `add${this.formType}coin`;
+        if (elements.action) {
+            elements.action.value = uid ? `edit${this.formType}coin` : `add${this.formType}coin`;
+        }
     }
 
     formOnHandler(uid?: string, ...other: string[]): void {
