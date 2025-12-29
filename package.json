@@ -10,7 +10,7 @@
         "build": "vite build",
         "watch": "vite build --watch",
         "preversion": "git pull && pnpm test",
-        "version": "pnpm run build && git add --all && git commit -m \"$npm_package_version\"",
+        "version": "pnpm run build && git add --all",
         "postversion": "git push && git push --tags",
         "test": "jest",
         "test:coverage": "jest --coverage",
