@@ -21,10 +21,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       - name: Run the tests
-        run: pnpm test -- --coverage
+        run: npm test -- --coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
