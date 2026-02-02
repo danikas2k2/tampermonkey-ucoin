@@ -6,4 +6,10 @@ export async function handleTablePage(): Promise<void> {
     if (type && type !== '1') {
         addSortingOptions();
     }
+
+    setTimeout(() => {
+        document
+            .querySelector('a.period.selected')
+            ?.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
+    }, 100);
 }
