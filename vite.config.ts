@@ -1,35 +1,9 @@
 import fs from 'node:fs';
-import path from 'node:path';
 import moment from 'moment';
 import { defineConfig, type Plugin } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
+import monkey from 'vite-plugin-monkey';
 import PACKAGE from './package.json';
-
-function userscriptBanner(): Plugin {
-    const banner = fs
-        .readFileSync(path.resolve(__dirname, 'USERSCRIPT.ts'), 'utf8')
-        .replace(/{{project\.version}}/g, () => `${PACKAGE.version} (${moment().utc().format('Y.M.D.H.m')})`)
-        .trimEnd();
-
-    return {
-        name: 'userscript-banner',
-        apply: 'build',
-        generateBundle(_outputOptions, bundle) {
-            for (const [, item] of Object.entries(bundle)) {
-                if (item.type !== 'chunk') {
-                    continue;
-                }
-                if (!item.fileName.endsWith('.js')) {
-                    continue;
-                }
-                if (item.code.startsWith('/**!!')) {
-                    continue;
-                }
-                item.code = `${banner}\n${item.code}`;
-            }
-        },
-    };
-}
 
 function svgInlineLoader(): Plugin {
     return {
@@ -50,7 +24,47 @@ function svgInlineLoader(): Plugin {
 }
 
 export default defineConfig({
-    plugins: [svgInlineLoader(), cssInjectedByJsPlugin(), userscriptBanner()],
+    plugins: [
+        svgInlineLoader(),
+        cssInjectedByJsPlugin(),
+        monkey({
+            entry: 'src/ucoin.ts',
+            userscript: {
+                name: 'collector :: ucoin.net',
+                namespace: 'https://ucoin.net/',
+                version: `${PACKAGE.version} (${moment().utc().format('Y.M.D.H.m')})`,
+                author: 'danikas2k2',
+                icon: 'https://i.ibb.co/Tc6q9x3/apple-touch-icon-152.png',
+                downloadURL:
+                    'https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js',
+                updateURL:
+                    'https://raw.githubusercontent.com/danikas2k2/tampermonkey-ucoin/master/dist/ucoin.user.js',
+                resource: {
+                    TextboxListStyle: 'https://ucoin.net/js/auto/TextboxList.css',
+                },
+                require: [
+                    'https://ucoin.net/js/auto/GrowingInput.js',
+                    'https://ucoin.net/js/auto/TextboxList.js',
+                    'https://ucoin.net/js/auto/TextboxList.Autocomplete.js',
+                    'https://unpkg.com/showdown@1.9/dist/showdown.min.js',
+                ],
+                match: ['https://*.ucoin.net/*'],
+                'run-at': 'document-end',
+                grant: ['GM_xmlhttpRequest', 'GM_getResourceText', 'GM_addStyle'],
+            },
+            build: {
+                fileName: 'ucoin.user.js',
+                metaFileName: false,
+                externalGlobals: {
+                    react: ['React', 'https://unpkg.com/react@18/umd/react.production.min.js'],
+                    'react-dom/server': [
+                        'ReactDOMServer',
+                        'https://unpkg.com/react-dom@18/umd/react-dom-server-legacy.browser.production.min.js',
+                    ],
+                },
+            },
+        }),
+    ],
     define: {
         'process.env.NODE_ENV': JSON.stringify('production'),
     },
@@ -71,20 +85,6 @@ export default defineConfig({
             },
             format: {
                 comments: /^\**!!/,
-            },
-        },
-        rollupOptions: {
-            input: path.resolve(__dirname, 'src/ucoin.ts'),
-            external: ['react', 'react-dom', 'react-dom/server'],
-            output: {
-                dir: 'dist',
-                format: 'iife',
-                entryFileNames: 'ucoin.user.js',
-                globals: {
-                    react: 'React',
-                    'react-dom': 'ReactDOM',
-                    'react-dom/server': 'ReactDOMServer',
-                },
             },
         },
     },
