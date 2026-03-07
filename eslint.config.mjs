@@ -2,6 +2,7 @@ import ts from '@typescript-eslint/eslint-plugin';
 import parser from '@typescript-eslint/parser';
 import prettier from 'eslint-config-prettier';
 import functional from 'eslint-plugin-functional';
+import pluginPrettier from 'eslint-plugin-prettier';
 import imp from 'eslint-plugin-import'; // 'import' is ambiguous & prettier has trouble
 import jest from 'eslint-plugin-jest';
 import a11y from 'eslint-plugin-jsx-a11y';
@@ -32,11 +33,13 @@ export default [
     },
     prettier,
     {
-        ignores: [
-            'coverage/*',
-            'dist/*',
-            'node_modules/*',
-        ],
+        plugins: { prettier: pluginPrettier },
+        rules: {
+            ...pluginPrettier.configs.recommended.rules,
+        },
+    },
+    {
+        ignores: ['coverage/*', 'dist/*', 'node_modules/*'],
     },
     {
         files: ['**/*.{ts,tsx}'],
