@@ -47,10 +47,8 @@ export function styleSwapLink(a: HTMLAnchorElement): void {
     }
 
     const condBlock = a.querySelector(`.cond`);
-    console.info(`[DEV]`, condBlock);
     if (condBlock) {
         const cond = condBlock.textContent?.trim() as Condition;
-        console.info(`[DEV]`, cond);
         condBlock.classList.add(`marked-${ConditionColors[cond]}`);
     }
 

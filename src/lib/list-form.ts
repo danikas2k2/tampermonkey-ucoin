@@ -101,6 +101,10 @@ export abstract class ListForm {
         return this.form?.querySelector(`#btn-${this.formTypePrefix}del`) || null;
     }
 
+    get deleteConfirmButton(): HTMLAnchorElement | null {
+        return document.querySelector(`#btn-${this.formType}del`) || null;
+    }
+
     get oneButton(): HTMLButtonElement | null {
         return this.listBlock?.querySelector(`center button.btn-s.btn-gray`) || null;
     }
@@ -177,6 +181,10 @@ export abstract class ListForm {
             this.fillForm(uid, ...other);
             if (this.cancelButton) {
                 show(this.cancelButton);
+                this.cancelButton.setAttribute(
+                    'onclick',
+                    `LayerOff('${this.formType}-form');CoinSwapFormOff();CoinWishFormOff();LayerOn('add-button-block');`
+                );
             }
             if (this.addButton) {
                 toggle(!uid, this.addButton);
@@ -185,7 +193,9 @@ export abstract class ListForm {
                 if (this.editButton) {
                     toggle(!!uid, this.editButton, this.deleteButton);
                 }
-                this.deleteButton.href = `?action=del${this.formType}coin&${this.formUid}=${uid}`;
+                if (this.deleteConfirmButton) {
+                    this.deleteConfirmButton.href = `?action=del${this.formType}coin&${this.formUid}=${uid}`;
+                }
             }
             (uid ? this.editButton : this.addButton)?.focus();
         }, 300);

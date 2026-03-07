@@ -210,18 +210,13 @@ export function calcTotalPrices(): void {
             continue;
         }
 
-        console.info(`[DEV]`, price);
         const weightLine = price.closest('a.region')?.nextElementSibling;
-        console.info(`[DEV]`, weightLine);
         const weight = parsePrice(weightLine?.querySelector('.right')?.textContent) ?? 0;
-        console.info(`[DEV]`, weight);
         const country =
             getCountryId(
                 tree.previousElementSibling?.querySelector('.gray-11')?.textContent ?? ''
             ) ?? '';
-        console.info(`[DEV]`, country);
         const shippingPrice = getShippingPrice(country, weight);
-        console.info(`[DEV]`, shippingPrice);
         if (shippingPrice > 0) {
             totalPrice = currentPrice + shippingPrice;
             const totalDescription = `${formatNumber(currentPrice)} + ${formatNumber(
@@ -709,6 +704,10 @@ export function expandUserInfo() {
 
     const info = swapInfo.querySelector('.text');
     if (info) {
+        info.querySelectorAll('.dgray-13').forEach((e) => {
+            e.classList.remove('dgray-13');
+            e.classList.add('gray-11');
+        });
         button.insertAdjacentElement('beforebegin', info);
     }
 

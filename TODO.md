@@ -1,0 +1,3 @@
+- update confirm dialogs, focus on action buttons or fix default href, so Enter key confirms
+- fix to load "wish" list from parent page if variant active (as ucoin broken that)
+- fix add-button-block so swap/wish buttons are always visible

@@ -21,6 +21,8 @@ export async function handleCoinPage(): Promise<void> {
         chooser.style.display = 'none';
     }
 
+    await updateAddButtonBlock();
+
     await updateCoinForm();
 
     await new SwapForm().handle();
@@ -31,4 +33,23 @@ export async function handleCoinPage(): Promise<void> {
     await new WishForm().handle();
 
     // await syncCoinWish();
+}
+
+const ADD_BUTTON_BLOCK = 'add-button-block';
+
+async function updateAddButtonBlock(): Promise<void> {
+    const addButtonBlock = document.getElementById(ADD_BUTTON_BLOCK);
+    if (addButtonBlock) {
+        const addButton = addButtonBlock.querySelector<HTMLAnchorElement>('a');
+        if (addButton) {
+            addButton.href = '#';
+            addButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                const chooser = document.getElementById('coin-chooser-dialog');
+                if (chooser) {
+                    chooser.style.display = 'block';
+                }
+            });
+        }
+    }
 }
