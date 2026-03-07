@@ -108,9 +108,11 @@
     },
     "pnpm": {
         "overrides": {
+            "glob": "^11.0.0",
             "micromatch": "^4.0.8",
-            "sugarss": "^5.0.1",
-            "postcss": "^8.5.8"
+            "minimatch": "^10.2.4",
+            "postcss": "^8.5.8",
+            "sugarss": "^5.0.1"
         },
         "peerDependencyRules": {
             "allowedVersions": {
