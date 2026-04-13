@@ -566,7 +566,7 @@ describe('formSubmitHandler', () => {
         preventDefault: jest.fn(),
         stopPropagation: jest.fn(),
         target: expectedTarget,
-    } as unknown as Event;
+    } as unknown as SubmitEvent;
 
     afterEach(() => {
         jest.clearAllMocks();
@@ -631,11 +631,11 @@ describe('linkClickHandler', () => {
 
     const expectedTarget = document.createElement('a');
     const event = {
-        type: 'submit',
+        type: 'click',
         preventDefault: jest.fn(),
         stopPropagation: jest.fn(),
         target: expectedTarget,
-    } as unknown as Event;
+    } as unknown as PointerEvent;
 
     afterEach(() => {
         jest.clearAllMocks();
@@ -686,7 +686,7 @@ describe('handleLinkClick', () => {
         link.setAttribute('onclick', 'onClick(event)');
 
         void handleLinkClick(link, onSuccess);
-        expect(link.onsubmit).toBeNull();
+        expect(link.onclick).toBeNull();
 
         link.click();
         await waitFor(() => expect(onClick).toHaveBeenCalledWith(expect.any(Event)));

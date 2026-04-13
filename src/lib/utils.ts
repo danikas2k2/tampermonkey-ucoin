@@ -122,8 +122,8 @@ export function updateOptionalElement(
 }*/
 
 export async function formSubmitHandler(
-    e: Event,
-    onSubmit?: EventHandler<HTMLFormElement, boolean> | null,
+    e: SubmitEvent,
+    onSubmit?: HTMLFormElement['onsubmit'] | null,
     onSuccess?: UpdateCallback
 ): Promise<void> {
     cancel(e);
@@ -137,7 +137,7 @@ export function wrapFormSubmit(form: HTMLFormElement, onSuccess?: UpdateCallback
     form.addEventListener(
         'submit',
         (
-            (onSubmit) => async (e: Event) =>
+            (onSubmit) => async (e: SubmitEvent) =>
                 formSubmitHandler(e, onSubmit, onSuccess)
         )(form.onsubmit)
     );
@@ -145,8 +145,8 @@ export function wrapFormSubmit(form: HTMLFormElement, onSuccess?: UpdateCallback
 }
 
 export async function linkClickHandler(
-    e: Event,
-    onClick?: EventHandler<HTMLAnchorElement, boolean> | null,
+    e: PointerEvent,
+    onClick?: HTMLAnchorElement['onclick'] | null,
     onSuccess?: UpdateCallback
 ): Promise<void> {
     cancel(e);
@@ -160,7 +160,7 @@ export function handleLinkClick(link: HTMLAnchorElement, onSuccess: RequestCallb
     link.addEventListener(
         'click',
         (
-            (onClick) => (e: Event) =>
+            (onClick) => (e: PointerEvent) =>
                 linkClickHandler(e, onClick, onSuccess)
         )(link.onclick)
     );
