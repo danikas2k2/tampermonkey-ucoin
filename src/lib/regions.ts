@@ -3,8 +3,55 @@ import regionNames from '../data/region-names.json';
 import regionTree from '../data/region-tree.json';
 import { Param } from './common/params';
 import { _ } from './lang';
-import { getHashParam, updateLocationHash } from './url';
+import { getHashParam, loc, updateLocationHash } from './url';
 import { slug, unique } from './utils';
+
+function getEuroSlugsFromTree(): Set<string> {
+    const t = regionTree as Record<string, string[] | unknown>;
+    const ch = t.euro;
+    const out = [slug('euro')];
+    if (Array.isArray(ch)) {
+        for (const r of ch) {
+            if (typeof r === 'string') {
+                out.push(slug(r));
+            }
+        }
+    }
+    return new Set(out);
+}
+
+/** Parse ucoin country rows: `country` param → `span.right` (coin count) */
+function parseCoinCountsByCountryFromDoc(root: Document | ParentNode): Record<string, number> {
+    const m: Record<string, number> = {};
+    for (const c of root.querySelectorAll<HTMLDivElement>('div.cntry')) {
+        const [, cid] = c.querySelector('a')?.href.match(/&country=(\w+)/) || [];
+        if (cid) {
+            m[cid] = +(c.querySelector('span.right')?.textContent ?? 0) || 0;
+        }
+    }
+    return m;
+}
+
+function updateRegionHeadingsByDirectLists(): void {
+    for (const r of document.querySelectorAll<HTMLDivElement>('.regions .region')) {
+        r.querySelector('h2 .lgray-13')?.remove();
+        const cl = r.querySelector<HTMLDivElement>(':scope > .country-list');
+        let countryN = 0;
+        let coinN = 0;
+        if (cl) {
+            for (const cntry of cl.querySelectorAll<HTMLDivElement>(':scope > div.cntry')) {
+                countryN += 1;
+                coinN += +(cntry.querySelector('span.right')?.textContent ?? 0) || 0;
+            }
+        }
+        if (countryN && coinN) {
+            r.querySelector('h2')?.insertAdjacentHTML(
+                'beforeend',
+                `<span class="lgray-13">( ${countryN} / ${coinN} )</span>`
+            );
+        }
+    }
+}
 
 export async function handleCountryRegions(): Promise<void> {
     const countryList = document.querySelector<HTMLDivElement>(
@@ -12,6 +59,14 @@ export async function handleCountryRegions(): Promise<void> {
     );
     if (!countryList) {
         return;
+    }
+
+    const perCountryTotal: Record<string, number> = {};
+    for (const c of countryList.querySelectorAll<HTMLDivElement>('div.cntry')) {
+        const [, cid] = c.querySelector('a')?.href.match(/&country=(\w+)/) || [];
+        if (cid) {
+            perCountryTotal[cid] = +(c.querySelector('span.right')?.textContent ?? 0) || 0;
+        }
     }
 
     let headingList = document.querySelector('ul.hor-switcher ~ ul.region-list');
@@ -50,8 +105,6 @@ export async function handleCountryRegions(): Promise<void> {
     })(countryList.previousElementSibling!, regionTree);
 
     // move countries to regions
-    const coinCounts: Record<string, number> = {};
-    const countryCounts: Record<string, number> = {};
     for (const c of countryList.querySelectorAll<HTMLDivElement>('div.cntry')) {
         const [, cid] = c.querySelector('a')?.href.match(/&country=(\w+)/) || [];
         const regions = (countryRegions as Record<string, string[]>)[cid];
@@ -60,9 +113,6 @@ export async function handleCountryRegions(): Promise<void> {
                 const id = slug(r);
                 const cl = document.querySelector(`.region#${id} > .country-list`);
                 if (cl && !cl.querySelector(`#${cid}`)) {
-                    const coinCount = +(c.querySelector('span.right')?.textContent || 0);
-                    coinCounts[id] = (coinCounts[id] || 0) + coinCount;
-                    countryCounts[id] = (countryCounts[id] || 0) + 1;
                     const cc = c.cloneNode(true) as HTMLElement;
                     cc.id = cid;
                     cl.append(cc);
@@ -73,10 +123,6 @@ export async function handleCountryRegions(): Promise<void> {
                         p = r.parentElement
                     ) {
                         const rid = r.id;
-                        coinCounts[rid] =
-                            (coinCounts[rid] || 0) >= coinCount ? coinCounts[rid] - coinCount : 0;
-                        countryCounts[rid] =
-                            (countryCounts[rid] || 0) >= 1 ? countryCounts[rid] - 1 : 0;
                         r.parentElement
                             ?.querySelector(`#${rid} > .country-list > #${cid}`)
                             ?.remove();
@@ -84,6 +130,57 @@ export async function handleCountryRegions(): Promise<void> {
                 }
             }
             c.remove();
+        }
+    }
+
+    if (!loc().searchParams.has('currency')) {
+        const euroByCountry: Record<string, number> = {};
+        const fetchUrl = new URL(loc().href);
+        fetchUrl.searchParams.set('currency', '1');
+        let parsed = false;
+        try {
+            const res = await fetch(fetchUrl, { credentials: 'same-origin' });
+            if (res.ok) {
+                const eur = new DOMParser().parseFromString(await res.text(), 'text/html');
+                const list = eur.querySelector<HTMLDivElement>(
+                    'ul.hor-switcher ~ div.country-list'
+                );
+                if (list) {
+                    Object.assign(euroByCountry, parseCoinCountsByCountryFromDoc(list));
+                } else {
+                    Object.assign(euroByCountry, parseCoinCountsByCountryFromDoc(eur));
+                }
+                parsed = true;
+            }
+        } catch {
+            // leave euroByCountry empty; rows stay at full totals
+        }
+        if (parsed) {
+            const euroSlugs = getEuroSlugsFromTree();
+            const rows = document.querySelectorAll<HTMLDivElement>(
+                'ul.hor-switcher ~ ul.regions div.cntry'
+            );
+            for (const c of rows) {
+                const cid = c.id || c.querySelector('a')?.href.match(/&country=(\w+)/)?.[1];
+                if (!cid) {
+                    continue;
+                }
+                const total =
+                    perCountryTotal[cid] !== undefined
+                        ? perCountryTotal[cid]
+                        : +(c.querySelector('span.right')?.textContent ?? 0) || 0;
+                const eurC = euroByCountry[cid] ?? 0;
+                const r = c.closest<HTMLElement>('.region');
+                const inEuro = r && euroSlugs.has(r.id);
+                const n = inEuro ? eurC : Math.max(0, total - eurC);
+                const s = c.querySelector('span.right');
+                if (s) {
+                    s.textContent = String(n);
+                }
+                if (n <= 0) {
+                    c.remove();
+                }
+            }
         }
     }
 
@@ -104,14 +201,7 @@ export async function handleCountryRegions(): Promise<void> {
     }
 
     // update region counts
-    for (const r of document.querySelectorAll('.regions .region')) {
-        if (countryCounts[r.id] && coinCounts[r.id]) {
-            r.querySelector('h2')?.insertAdjacentHTML(
-                'beforeend',
-                `<span class="lgray-13">( ${countryCounts[r.id]} / ${coinCounts[r.id]} )</span>`
-            );
-        }
-    }
+    updateRegionHeadingsByDirectLists();
 
     console.debug(headingList);
     if (headingList) {
