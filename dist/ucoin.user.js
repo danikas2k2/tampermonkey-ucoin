@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/
-// @version      1.15.9 (2026.5.21.10.23)
+// @version      1.15.10 (2026.5.21.16.25)
 // @author       danikas2k2
 // @license      ISC
 // @icon         https://i.ibb.co/Tc6q9x3/apple-touch-icon-152.png
