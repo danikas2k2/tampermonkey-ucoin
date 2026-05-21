@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/
-// @version      1.15.9 (2026.4.27.14.2)
+// @version      1.15.9 (2026.5.21.10.23)
 // @author       danikas2k2
 // @license      ISC
 // @icon         https://i.ibb.co/Tc6q9x3/apple-touch-icon-152.png
@@ -25,11 +25,8428 @@
 // @run-at       document-end
 // ==/UserScript==
 
-(function (a, server) {
-	'use strict';
-
-	const d$1=new Set;const e = async e=>{d$1.has(e)||(d$1.add(e),(t=>{typeof GM_addStyle=="function"?GM_addStyle(t):(document.head||document.documentElement).appendChild(document.createElement("style")).append(t);})(e));};
-
-	e('@import"https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&family=Noto+Sans+Display:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&family=Noto+Sans+Mono:wdth,wght@62.5..100,100..900&family=Noto+Color+Emoji&display=swap";:root{--base-font-family: "Noto Sans Display", "Noto Sans", "Noto Sans Emoji", sans-serif;--base-font-size: 14px;--color-surface: #fff;--color-surface-warning: #fdd;--color-surface-error: #fed;--color-surface-info: #eee;--color-surface-reserve: honeydew;--color-surface-duplicate: mistyrose;--color-content-header: #333;--color-content-total: #666;--color-border-total: #060;--color-content-link: #37e;--color-input-sufrace: var(--color-surface);--color-input-content: #222;--color-input-content-disabled: #444;--color-input-border: #aaa;--color-input-border-disabled: #eee;--color-input-shadow: 0 2px 1px #0001 inset;--color-ignore-content: #ccc;--color-ignore-surface: #333a;--color-ignore-content-hover: #fff;--color-ignore-sufrace-hover: #000a;--color-error-surface: #c00;--color-error-border: #0002;--color-error-sufrace-hover: #eee;--color-widget-content: #333;--color-widget-surface: #ccc;--color-separate-country: #000;--color-loader: #3c961e;--color-marked-0: #242633;--background-marked-0: #EEEEEE;--color-marked-1: #dee5f2;--background-marked-1: #5A6986;--background-marked-2: #206CFF;--color-marked-2: #E0ECFF;--background-marked-3: #0000CC;--color-marked-3: #DFE2FF;--background-marked-4: #5229A3;--color-marked-4: #E0D5F9;--background-marked-5: #854F61;--color-marked-5: #FDE9F4;--background-marked-6: #CC0000;--color-marked-6: #FFE3E3;--background-marked-7: #EC7000;--color-marked-7: #FFF0E1;--background-marked-8: #B36D00;--color-marked-8: #FADCB3;--background-marked-9: #AB8B00;--color-marked-9: #F3E7B3;--background-marked-10: #636330;--color-marked-10: #FFFFD4;--background-marked-11: #64992C;--color-marked-11: #F9FFEF;--background-marked-12: #006633;--color-marked-12: #F1F5EC;--background-marked-13: #E5C300;--color-marked-13: #232323;--background-marked-14: #B200A0;--color-marked-14: #F1F5EC;--background-rarity-A: #008F01;--color-rarity-A: #FFF;--background-rarity-B: #A5C700;--color-rarity-B: #FFF;--background-rarity-C: #E5C300;--color-rarity-C: #FFF;--background-rarity-R: #F7A126;--color-rarity-R: #FFF;--background-rarity-RR: #FF5F23;--color-rarity-RR: #FFF;--background-rarity-RRR: #E00102;--color-rarity-RRR: #FFF;--background-rarity-NON: #EFEFEF;--color-rarity-NON: #666 !important}body,select,textarea,input[type=text],input[type=password],input[type=email]{font-family:var(--base-font-family);font-size:var(--base-font-size);font-style:normal;font-optical-sizing:auto;font-variation-settings:"wdth" 100;font-variant-ligatures:common-ligatures discretionary-ligatures historical-ligatures contextual;font-variant-alternates:styleset(ss01);font-feature-settings:"liga" 1,"clig" 1,"dlig" 1}.widget{font-size:inherit}.widget-header{background-color:var(--color-widget-surface);color:var(--color-widget-content);font-weight:300;font-size:inherit}.btn-l{font-family:inherit;font-size:inherit;font-weight:inherit}.btn-l.hide{display:none}.btn-s{font-family:inherit;font-size:inherit;font-weight:inherit}.btn-s.hide{display:none}.btn-red{background-color:var(--color-error-surface);border:1px solid var(--color-error-border)}.btn-red,.btn-red:hover{color:var(--color-error-sufrace-hover)}.clear-right{clear:right}#table a.cell{position:relative}#table a.cell.samekm{z-index:1;background-color:var(--color-ignore-surface);color:var(--color-ignore-content);box-shadow:none;-webkit-box-shadow:none}#table a.cell.samekm:hover{background-color:var(--color-ignore-sufrace-hover);color:var(--color-ignore-content-hover)}.btn-set .btn-marker{border-radius:2px;transition:filter .5s}.btn-set .btn-marker:hover{filter:brightness(1.2)}#buy_reset{font-size:16px;font-weight:700;width:22px;height:22px;display:inline-block}#buy_reset svg{width:14px;height:14px}#buy_year_month{color:var(--color-input-content);background-color:var(--color-input-sufrace);border:1px solid var(--color-input-border);border-radius:2px;transition:all .15s ease-in-out 0s;box-shadow:var(--color-input-shadow);display:inline-block;font-family:var(--base-font-family);padding:2px 8px;height:28px;box-sizing:border-box;width:150px}#my-func-block .btn-narrow{padding-left:14px;padding-right:14px}#my-func-block .btn-i{padding:10px}#my-func-block .btn-i svg{width:15px;height:15px}#my-func-block table span[class^=marked-]{border-radius:4px}.widget .list-link .blue-13,#coin-list table .blue-13{font-size:11px;line-height:19px;letter-spacing:-1px;white-space:nowrap}#coin h1{color:var(--color-content-header)}#coin .price-container{border:none}#coin .price-container span{font-size:15px}#coin .tbl td,#coin .tbl th{border:none}#coin .coin-info th{background-color:var(--color-surface-info)}#coin .coin-info tr+tr td{border-top:1px solid var(--color-surface-info)}#coin .coin-info tr+tr th{border-top:1px solid var(--color-surface)}#coin .coin-info thead+tbody{border-top:1px solid var(--color-surface)}#coin .coin-img td.i{border:none}#coin div.rarity{width:24px;line-height:24px;border-radius:50%}#coin #swap-block .cond,#coin #wish-block .cond{width:24px!important;line-height:24px;margin:0 4px;border-radius:50%}#coin #swap-block .cond.marked-0,#coin #wish-block .cond.marked-0{background:var(--background-marked-0);color:var(--color-marked-0)}#coin #swap-block .cond.marked-1,#coin #wish-block .cond.marked-1{background:var(--background-marked-1);color:var(--color-marked-1)}#coin #swap-block .cond.marked-2,#coin #wish-block .cond.marked-2{background:var(--background-marked-2);color:var(--color-marked-2)}#coin #swap-block .cond.marked-3,#coin #wish-block .cond.marked-3{background:var(--background-marked-3);color:var(--color-marked-3)}#coin #swap-block .cond.marked-4,#coin #wish-block .cond.marked-4{background:var(--background-marked-4);color:var(--color-marked-4)}#coin #swap-block .cond.marked-5,#coin #wish-block .cond.marked-5{background:var(--background-marked-5);color:var(--color-marked-5)}#coin #swap-block .cond.marked-6,#coin #wish-block .cond.marked-6{background:var(--background-marked-6);color:var(--color-marked-6)}#coin #swap-block .cond.marked-7,#coin #wish-block .cond.marked-7{background:var(--background-marked-7);color:var(--color-marked-7)}#coin #swap-block .cond.marked-8,#coin #wish-block .cond.marked-8{background:var(--background-marked-8);color:var(--color-marked-8)}#coin #swap-block .cond.marked-9,#coin #wish-block .cond.marked-9{background:var(--background-marked-9);color:var(--color-marked-9)}#coin #swap-block .cond.marked-10,#coin #wish-block .cond.marked-10{background:var(--background-marked-10);color:var(--color-marked-10)}#coin #swap-block .cond.marked-11,#coin #wish-block .cond.marked-11{background:var(--background-marked-11);color:var(--color-marked-11)}#coin #swap-block .cond.marked-12,#coin #wish-block .cond.marked-12{background:var(--background-marked-12);color:var(--color-marked-12)}#coin #swap-block .cond.marked-13,#coin #wish-block .cond.marked-13{background:var(--background-marked-13);color:var(--color-marked-13)}#coin #swap-block .cond.marked-14,#coin #wish-block .cond.marked-14{background:var(--background-marked-14);color:var(--color-marked-14)}#coin #swap-form .btn-s,#coin #wish-form .btn-s{margin:0 0 0 5px}#coin #swap-form .btn-s.hide,#coin #wish-form .btn-s.hide{display:none}#coin #swap-form .btn-ctrl{float:right;margin:14px 3px 0;height:26px}#coin #swap-form .btn-ctrl+.btn-ctrl{margin-right:0}#coin #swap-form .btn-ctrl.btn-ctrl-price{margin-right:0;margin-top:0}#coin #swap-form #swap-qty{margin-top:1em}#my-swap-block #swap-block a{position:relative}#my-swap-block #swap-block a .comments{position:absolute;width:auto;left:100%;text-align:left}#my-swap-block #swap-block a .comments .ico-16{display:inline-block;vertical-align:middle;background-position:-16px 0}#my-swap-block #swap-block a .comments:active,#my-swap-block #swap-block a .comments:focus,#my-swap-block #swap-block a .comments:hover{max-width:100%;overflow:visible}#my-swap-block #swap-block a:active .comments,#my-swap-block #swap-block a:focus .comments,#my-swap-block #swap-block a:hover .comments{max-width:100%;overflow:visible}#my-swap-block #swap-block center div.btn-set{display:flex;justify-content:center;margin:0 auto}#my-swap-block #swap-block center div.btn-set div{font-size:11px;flex:0 0 20px;height:20px;line-height:20px;cursor:pointer;padding:1px;margin:0 1px}#my-swap-block #swap-block .btn--combine,#my-swap-block #swap-block .btn--expand{margin:8px 2px 0}#my-swap-block #swap-block .btn--combine.hide,#my-swap-block #swap-block .btn--expand.hide{display:none}#my-wish-block #wish-block a{position:relative}#my-wish-block #wish-block a .comments{position:absolute;width:auto;left:100%;text-align:left}#my-wish-block #wish-block a .comments .ico-16{display:inline-block;vertical-align:middle;background-position:-16px 0}#my-wish-block #wish-block a .comments:active,#my-wish-block #wish-block a .comments:focus,#my-wish-block #wish-block a .comments:hover{max-width:100%;overflow:visible}#my-wish-block #wish-block a:active .comments,#my-wish-block #wish-block a:focus .comments,#my-wish-block #wish-block a:hover .comments{max-width:100%;overflow:visible}#my-wish-block #wish-block center div.btn-set{display:flex;justify-content:center;margin:0 auto}#my-wish-block #wish-block center div.btn-set div{font-size:11px;flex:0 0 28px;height:20px;line-height:20px;cursor:pointer;padding:1px;margin:0 1px}#my-wish-block #wish-block .btn--combine,#my-wish-block #wish-block .btn--expand{margin:8px 2px 0}#my-wish-block #wish-block .btn--combine.hide,#my-wish-block #wish-block .btn--expand.hide{display:none}.sticky{display:block;position:sticky;top:10px;z-index:200}.swap-coin tr,.wish-coin tr{position:relative;transition:opacity .25s,background .25s}.swap-coin tr td.thumbnails,.wish-coin tr td.thumbnails,.swap-coin tr th.thumbnails,.wish-coin tr th.thumbnails{white-space:nowrap}.swap-coin tr td.thumbnails img.thumbnail,.wish-coin tr td.thumbnails img.thumbnail,.swap-coin tr th.thumbnails img.thumbnail,.wish-coin tr th.thumbnails img.thumbnail{width:50px}.swap-coin tr td.thumbnails+td span,.wish-coin tr td.thumbnails+td span,.swap-coin tr th.thumbnails+td span,.wish-coin tr th.thumbnails+td span{padding:2px 8px!important;border-radius:16px;white-space:nowrap;font-size:12px!important}.swap-coin tr td.td-cond span,.wish-coin tr td.td-cond span,.swap-coin tr th.td-cond span,.wish-coin tr th.td-cond span,.swap-coin tr td.cond span,.wish-coin tr td.cond span,.swap-coin tr th.cond span,.wish-coin tr th.cond span{padding:2px 8px!important;border-radius:16px;font-size:11px!important}.swap-coin tr td.price,.wish-coin tr td.price,.swap-coin tr th.price,.wish-coin tr th.price{white-space:nowrap}.swap-coin tr:has(th.thumbnails+td a[class^=marked-]),.wish-coin tr:has(th.thumbnails+td a[class^=marked-]){background:var(--color-surface-duplicate)}#swap-list .swap-coin tr:has(th[data-reserve=on]),#swap-mgr .swap-coin tr:has(th[data-reserve=on]){background:var(--color-surface-reserve)}#swap-list .swap-coin tr.conflict,#swap-mgr .swap-coin tr.conflict{background:var(--color-surface-warning)}#swap-list .swap-coin tr.conflict.mark,#swap-mgr .swap-coin tr.conflict.mark{background:var(--color-surface-error)}#swap-list .swap-coin tr.ignored,#swap-mgr .swap-coin tr.ignored{opacity:.25;background:var(--color-surface-info)}#swap-list .swap-coin tr.ignore,#swap-mgr .swap-coin tr.ignore{opacity:.5}#swap-list .swap-coin tr.ignore.conflict,#swap-mgr .swap-coin tr.ignore.conflict,#swap-list .swap-coin tr.ignore.mark,#swap-mgr .swap-coin tr.ignore.mark{opacity:.75}#swap-list .action-board,#swap-mgr .action-board{margin:15px 0 20px;height:30px;width:auto}#swap-list .filter-container.filter-dropdown,#swap-mgr .filter-container.filter-dropdown{margin:3px -12px}#swap-list #take-swap-list .filters,#swap-mgr #take-swap-list .filters{position:sticky;z-index:100;top:0;background:var(--color-surface);padding:15px 0;margin:-15px 0 5px}#swap-list .filters .filter+.filter,#swap-mgr .filters .filter+.filter{margin-left:4px}#swap-list .filters .filter .close,#swap-mgr .filters .filter .close{width:18px;text-align:center;margin-right:-8px}#swap-list .filters .filter .flag,#swap-mgr .filters .filter .flag{margin-right:4px}#swap-list .filters .filter-dialog,#swap-mgr .filters .filter-dialog{max-height:300px;overflow:auto}#swap-list .filters .filter-label,#swap-mgr .filters .filter-label{max-width:140px}#swap-list .filter-dialog .list-link .filter-label,#swap-mgr .filter-dialog .list-link .filter-label{flex:1;text-align:start}#swap-list .filter-dialog .list-link .right,#swap-mgr .filter-dialog .list-link .right{align-items:center}#swap-list [data-filter=country] .filter-label,#swap-mgr [data-filter=country] .filter-label,#swap-list [data-filter-dialog=country] .filter-label,#swap-mgr [data-filter-dialog=country] .filter-label{--flag-width: 22px;position:relative;padding-left:calc(var(--flag-width) + 4px)}#swap-list [data-filter=country] .filter-label img,#swap-mgr [data-filter=country] .filter-label img,#swap-list [data-filter-dialog=country] .filter-label img,#swap-mgr [data-filter-dialog=country] .filter-label img{position:absolute;width:var(--flag-width);left:0;top:1px}.filters .filter-box .left+.right{margin-inline-start:8px}.filters .filter-box.filter-box-disabled{color:var(--color-input-content-disabled)}.filters .filter-box.filter-box-disabled,.filters .filter-box.filter-box-disabled:hover{border-color:var(--color-input-border-disabled)}#sort-filter{border-radius:2px;border-color:var(--color-content-link);width:100px!important;padding:4px 12px;display:flex}#sort-filter .left{max-width:140px!important;flex:1 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#swap-list:not(:has(.right .right #sort-filter)) #sort-filter{margin:-12px -10px 0 0}#swap-mgr #sort-filter{margin:12px 10px 0 0}#table #sort-filter{width:140px!important}#sort-filter-dialog{width:174px;display:none}#swap-list div h2.separate-country,#take-swap-list div h2.separate-country,#swap-list div a.separate-country,#take-swap-list div a.separate-country{font-weight:700;color:var(--color-separate-country)}#swap-list .pages{padding-right:0!important}#swap-list .filter-container.right .filter-dialog{right:0}#swap-list .widerightCol{position:relative}#swap-list .widerightCol h1+br{display:none}#swap-list .widerightCol h1+br+a.btn-gray{margin:0!important;border:0!important;color:var(--color-error-surface)!important;font-size:1rem!important;line-height:2!important}#swap-list .widerightCol h1~div{position:sticky;background:var(--color-surface);margin-top:0!important;padding:1rem 0;z-index:calc(100 - sibling-index())}#swap-list .widerightCol h1~div:nth-of-type(2){top:0}#swap-list .widerightCol h1~div:nth-of-type(2)+div{top:3.6rem;margin-bottom:-1rem!important}#swap-mgr table.offer-list tr.str{cursor:default}#swap-mgr #smart-filter-container{position:sticky;top:0;width:100%;margin:0;padding:15px 0 20px;background:var(--color-surface)}#swap-mgr #smart-filter-container #country-filter{width:129px}#swap-mgr #smart-filter-container #country-filter.selected{border-color:var(--color-content-link)}#swap-mgr #smart-filter-container .swap-coin-filter input.filter{width:100%}#swap-list .price-times,#swap-mgr .price-times{color:#8b0000;font-weight:700}#swap-list .price-over,#swap-mgr .price-over{color:brown}#swap-list .price-under,#swap-mgr .price-under{color:green}#swap-list .price-times.gray-11,#swap-mgr .price-times.gray-11,#swap-list .price-over.gray-11,#swap-mgr .price-over.gray-11,#swap-list .price-under.gray-11,#swap-mgr .price-under.gray-11{padding-left:6px}#swap-list .price-tooltip,#swap-mgr .price-tooltip{display:block}#swap-list .price-cond,#swap-mgr .price-cond{display:block;border-top:3px solid darkred;color:#8b0000;font-weight:700}#swap-list .price-line,#swap-mgr .price-line{display:block;height:1.1em!important;padding:3px 6px}#swap-list .price-line.price-section,#swap-mgr .price-line.price-section{margin-top:20px}#swap-list .price-line u,#swap-mgr .price-line u{padding-right:2px;text-decoration:none}#swap-list .price-line s,#swap-mgr .price-line s{display:inline-block;max-width:65px;overflow:hidden;text-overflow:ellipsis;text-decoration:none;white-space:nowrap;vertical-align:text-bottom}#swap-list .price-double,#swap-mgr .price-double{height:2.4em!important}#swap-list .price-double .lgray-11,#swap-mgr .price-double .lgray-11{clear:both;text-align:end}#swap-list .price-triple,#swap-mgr .price-triple{height:4em!important}#profile .price{display:inline-block}#profile .price .total{float:right;color:var(--color-content-total);font-size:20px;font-family:var(--base-font-family);font-weight:400;margin-top:4px;padding-top:4px;border-top:1px solid var(--color-border-total)}#profile .price .total .cur{font-size:16px;padding-right:6px}#tree .tree-filter{color:var(--color-input-content);background-color:var(--color-input-sufrace);border:1px solid var(--color-input-border);border-radius:2px;transition:all .15s ease-in-out 0s;box-shadow:var(--color-input-shadow);display:inline-block;font-family:var(--base-font-family);padding:2px 8px;height:28px;box-sizing:border-box;width:100%;margin-bottom:3px;font-size:13px}#tree #catalog-tree .country .hide,#tree #catalog-tree .period .hide{display:none}#tree .swap-reserve.some-missing{background:var(--color-surface-warning)!important}#tree .swap-reserve.some-missing div{color:#8b0000!important}#tree .swap-reserve.all-reserved{background:var(--color-surface-reserve)!important;font-weight:500}#tree .swap-reserve.all-reserved div{color:#006400!important}#tree .text{max-height:150px;overflow:auto;margin-block-end:1rem}#coin .rnav{position:relative}#coin-chooser-dialog{--width: 204px;--height: 32px;--gap: 16px;--columns: 3;--rows: 20;display:grid;grid:auto-flow var(--height) / repeat(2,var(--width));gap:calc(var(--gap) / 2) var(--gap);width:max-content;min-width:var(--width);max-width:calc((var(--width) + var(--gap)) * var(--columns) - var(--gap));max-height:calc(var(--height) * var(--rows))!important}#coin-chooser-dialog .list-link{width:calc(var(--width) - 24px);border-bottom:none}body .country-list a,#gallery .country-list a,body .catalog-list a,#gallery .catalog-list a{border:none}ul.regions{margin-block-start:2em;padding-inline-start:.5em}ul.regions li.region{display:block}ul.regions li.region.hide{display:none}ul.regions li.region h2{font-size:1.6em;font-weight:600}ul.regions li.region h2 .lgray-13{padding-inline-start:1em}ul.regions li.region li.region h2{font-size:1.4em;font-weight:500}ul.regions li.region li.region li.region h2{font-size:1.2em;font-weight:400}ul.regions li.region li.region li.region li.region h2{font-size:1.1em;font-weight:300}ul.regions+ul.regions>li.region{margin-block-start:3em}ul.hor-switcher .close{padding:0 4px}.filter-container label{margin-top:3px}@keyframes display_delay{0%{width:0}to{width:100%}}@property --angle{syntax: "<angle>"; initial-value: 0deg; inherits: false;}@property --opacity{syntax: "<percentage>"; initial-value: 0%; inherits: false;}@keyframes loader{0%{--angle: 360deg;--opacity: 0%}25%{--opacity: 50%}75%{--opacity: 50%}to{--angle: 0deg;--opacity: 0%}}#display-delay{position:fixed;inset-block-end:50px;inset-inline-start:30px;width:50px;height:50px}#display-delay>div{position:absolute;inset:0;border-radius:50%;opacity:var(--opacity);background:conic-gradient(var(--color-loader) var(--angle),transparent 0);animation-name:loader;animation-timing-function:linear;animation-fill-mode:both}.list-link{border-bottom:none}.list-link.with-separator{position:relative;margin-block-start:12px}.list-link.with-separator:before{content:"";display:block;position:absolute;inset:-10px 0 auto;border-block-start:2px double var(--color-input-border-disabled)}table.my-func-info tr{border-bottom:none}#act-del-all{float:right;position:relative}#act-del-all span{position:absolute}#act-del-all span:first-child{margin-block-start:0;margin-inline-start:-12px}#act-del-all span:last-child{margin-block-end:-8px;margin-inline-end:-12px}');const n={abkhazia:["az","az-w"],afars_issas:["af","af-e","af-eh"],afghanistan:["az","az-s"],ajman:["az","az-w"],albania:["eu","eu-s","eu-se"],alderney:["eu","eu-w"],algeria:["af","af-nw","af-n"],american_samoa:["oc","oc-pl"],andorra:["eu","eu-s","eu-sw","euro","euro-ah"],angola:["af","af-cs","af-c"],anguilla:["am","am-cr","am-r"],anhalt_bernburg:["eu","eu-c"],antigua_barbuda:["am","am-cr","am-r"],argentina:["am","am-s"],argentine_provinces:["am","am-s"],armavir:["az","az-w"],armenia:["az","az-w"],aruba:["am","am-cr","am-r"],ascension_island:["uk"],ascension_island__:["af","af-nw","af-w"],australia:["oc","oc-az"],austria:["eu","eu-c","euro","euro-ah"],austrian_netherlands:["eu","eu-w"],azerbaijan:["az","az-w"],azerbaijan__:["eu","eu-e"],azores:["eu","eu-s","eu-sw"],baden:["eu","eu-c"],bahamas:["am","am-cr","am-r"],bahawalpur:["az","az-s"],bahrain:["az","az-w"],bangladesh:["az","az-s"],barbados:["am","am-cr","am-r"],baroda:["az","az-s"],bavaria:["eu","eu-c"],belarus:["eu","eu-e"],belgian_congo:["af","af-cs","af-c"],belgium:["eu","eu-w","euro","euro-ah"],belize:["am","am-cr","am-c"],benin:["af","af-nw","af-w"],berg:["eu","eu-c"],bermuda:["am","am-n"],bhopal:["az","az-s"],bhutan:["az","az-s"],biafra:["af","af-nw","af-w"],bikaner:["az","az-s"],biot:["az","az-s"],bohemia:["eu","eu-c"],bohemia_moravia:["eu","eu-c"],bolivia:["am","am-s"],bosnia_herzegovina:["eu","eu-s","eu-se"],botswana:["af","af-cs","af-s"],brandenburg_prussia:["eu","eu-c"],brazil:["am","am-s"],bremen:["eu","eu-c"],british_antarctic_territory:["an"],british_east_africa:["af","af-e","af-ec"],british_east_indies:["az","az-se","az-mr"],british_guiana:["am","am-s"],british_honduras:["am","am-cr","am-c"],british_india:["az","az-s"],british_palestine:["az","az-w"],british_west_africa:["af","af-nw","af-w"],british_west_indies:["am","am-cr","am-r"],brunei:["az","az-se","az-mr"],brunswick:["eu","eu-c"],brunswick_luneburg:["eu","eu-c"],brunswick_wolfenbuttel:["eu","eu-c"],bukhara:["az","az-ce","az-c"],bulgaria:["eu","eu-e","euro","euro-ah"],burgau:["eu","eu-c"],burkina_faso:["af","af-nw","af-w"],burundi:["af","af-e","af-ec"],cambodia:["az","az-se","az-ml"],cameroon:["af","af-cs","af-c"],canada:["am","am-n"],canadian_provinces:["am","am-n"],cape_verde:["af","af-nw","af-w"],caribbean_netherlands:["am","am-cr","am-r"],catalonia:["eu","eu-s","eu-sw"],cayman_islands:["am","am-cr","am-r"],central_africa:["af","af-cs","af-c"],central_african_republic:["af","af-cs","af-c"],central_american_republic:["am","am-cr","am-c"],ceylon:["az","az-s"],chad:["af","af-cs","af-c"],chile:["am","am-s"],china:["az","az-ce","az-e"],china_empire:["az","az-ce","az-e"],china_republic:["az","az-ce","az-e"],colombia:["am","am-s"],comoros:["af","af-e","af-eo"],congo_democratic_republic:["af","af-cs","af-c"],congo_free_state:["af","af-cs","af-c"],cook_islands:["oc","oc-pl"],costa_rica:["am","am-cr","am-c"],cote_d_ivoire:["af","af-nw","af-w"],courland_semigallia:["eu","eu-c"],crete:["eu","eu-s","eu-se"],crimea:["eu","eu-e"],croatia:["eu","eu-s","eu-se","euro","euro-ah"],cuba:["am","am-cr","am-r"],curacao:["am","am-cr","am-r"],cyprus:["eu","eu-e","euro","euro-ah"],czech_republic:["eu","eu-c"],czechoslovakia:["eu","eu-c"],danish_west_indies:["am","am-cr","am-r"],danzig:["eu","pl"],darfur:["af","af-e","af-en"],demerara_essequibo:["am","am-s"],denmark:["eu","eu-n"],djibouti:["af","af-e","af-eh"],dominica:["am","am-cr","am-r"],dominican_republic:["am","am-cr","am-r"],dutch_republic:["eu","eu-w"],east_timor:["az","az-se","az-mr"],eastern_caribbean:["am","am-cr","am-r"],ecuador:["am","am-s"],egypt:["af","af-nw","af-n"],el_salvador:["am","am-cr","am-c"],england:["eu","eu-w"],equatorial_african_states:["af","af-cs","af-c"],equatorial_guinea:["af","af-cs","af-c"],eritrea:["af","af-e","af-eh"],estonia:["eu","eu-n","euro","euro-ah"],ethiopia:["af","af-e","af-eh"],eu:["eu","euro"],falkland_islands:["am","am-s"],faroes:["eu","eu-n"],fiji:["oc","oc-ml"],finland:["eu","eu-n","euro","euro-ah"],france:["eu","eu-w","euro","euro-ah"],frankfurt:["eu","eu-c"],french_cochinchina:["az","az-se","az-ml"],french_colonies:["ww"],french_equatorial_africa:["af","af-cs","af-c"],french_guiana:["am","am-s"],french_indochina:["az","az-se","az-ml"],french_oceania:["oc","oc-pl"],french_pacific_territories:["oc","oc-pl"],french_polinesia:["oc","oc-pl"],french_somaliland:["af","af-e","af-eh"],french_west_africa:["af","af-nw","af-w"],fujairah:["az","az-w"],further_austria:["eu","eu-c"],gabon:["af","af-cs","af-c"],galicia_lodomeria:["eu","eu-e"],gambia:["af","af-nw","af-w"],genoa:["eu","eu-s","eu-sw"],georgia:["az","az-w"],georgia__:["eu","eu-e"],german_democratic_republic:["eu","de"],german_east_africa:["af","af-e","af-ec"],german_empire:["eu","de"],german_new_guinea:["oc","oc-ml"],germany:["eu","de","euro","euro-ah"],ghana:["af","af-nw","af-w"],gibraltar:["eu","uk"],gorizia_gradisca:["eu","eu-s","eu-sw"],greece:["eu","eu-s","eu-se","euro","euro-ah"],greenland:["am","am-n","eu","eu-n"],grenada:["am","am-cr","am-r"],guadeloupe:["am","am-cr","am-r"],guatemala:["am","am-cr","am-c"],gubbio:["eu","eu-s","eu-sw"],guernsey:["eu","uk"],guinea:["af","af-nw","af-w"],guinea_bissau:["af","af-nw","af-w"],guyana:["am","am-s"],gwalior:["az","az-s"],haiti:["am","am-cr","am-r"],hamburg:["eu","eu-c"],hannover:["eu","eu-c"],hawaii:["oc","oc-pl","am","am-n"],hejaz:["az","az-w"],hesse_kassel:["eu","eu-c"],hessen_darmstadt:["eu","eu-c"],hessen_homburg:["eu","eu-c"],honduras:["am","am-cr","am-c"],hong_kong:["az","az-ce","az-e"],hungary:["eu","eu-c"],hutt_river:["oc","oc-az"],hyderabad:["az","az-s"],iceland:["eu","eu-n"],india:["az","az-s"],indonesia:["az","az-se","az-mr"],indore:["az","az-s"],ionian_islands:["eu","eu-s","eu-se"],iran:["az","az-w"],iraq:["az","az-w"],ireland:["eu","eu-w","euro","euro-iz"],isle_of_man:["eu","uk"],israel:["az","az-w"],italian_eritrea:["af","af-e","af-eh"],italian_somaliland:["af","af-e","af-eh"],italy:["eu","eu-s","eu-sc","euro","euro-iz"],jaipur:["az","az-s"],jamaica:["am","am-cr","am-r"],jaora:["az","az-s"],japan:["az","az-ce","az-e"],japanese_china:["az","az-ce","az-e"],jersey:["eu","uk"],jodhpur:["az","az-s"],jordan:["az","az-w"],julich_berg:["eu","eu-c"],junagadh:["az","az-s"],katanga:["af","af-cs","af-c"],kazakhstan:["az","az-ce","az-c"],kenya:["af","af-e","af-ec"],khiva:["az","az-ce","az-c"],khorezm:["az","az-ce","az-c"],kiau_chau:["az","az-ce","az-e"],kiribati:["oc","oc-mr"],korea:["az","az-ce","az-e"],krakow:["eu","eu-c"],kutch:["az","az-s"],kuwait:["az","az-w"],kyrgyzstan:["az","az-ce","az-c"],laos:["az","az-se","az-ml"],latvia:["eu","eu-c","euro","euro-iz"],lebanon:["az","az-w"],lesotho:["af","af-cs","af-s"],liberia:["af","af-nw","af-w"],libya:["af","af-nw","af-n"],liechtenstein:["eu","eu-w"],liege:["eu","eu-c"],lippe:["eu","eu-c"],lithuania:["eu","lt","euro","euro-iz"],livonia:["eu","eu-c"],lombardy_venetia:["eu","eu-s","eu-sw"],lubeck:["eu","eu-c"],lucca:["eu","eu-s","eu-sw"],lundy:["eu","eu-w"],luxembourg:["eu","eu-w","euro","euro-iz"],macau:["az","az-ce","az-e"],macedonia:["eu","eu-s","eu-se"],madagascar:["af","af-e","af-eo"],madeira_islands:["eu","eu-s","eu-sw"],mainz:["eu","eu-c"],majorca:["eu","eu-s","eu-sw"],malawi:["af","af-cs","af-se"],malaya:["az","az-se","az-mr"],malaya_british_borneo:["az","az-se","az-mr"],malaysia:["az","az-se","az-mr"],maldives:["az","az-s"],mali:["af","af-nw","af-w"],malta:["eu","eu-e","euro","euro-iz"],mantua:["eu","eu-s","eu-sw"],marshall_islands:["oc","oc-mr"],martinique:["am","am-cr","am-r"],mauritania:["af","af-nw","af-w"],mauritius:["af","af-e","af-eo"],mecklenburg_schwerin:["eu","eu-c"],mecklenburg_strelitz:["eu","eu-c"],mewar:["az","az-s"],mexico:["am","am-cr","am-c"],milan:["eu","eu-s","eu-sw"],moldavia_and_wallachia:["eu","eu-e"],moldova:["eu","eu-e"],mombasa:["af","af-e","af-ec"],monaco:["eu","eu-w","euro","euro-iz"],mongolia:["az","az-ce","az-e"],montenegro:["eu","eu-s","eu-se"],montserrat:["am","am-cr","am-r"],morocco:["af","af-nw","af-n"],mozambique:["af","af-cs","af-se"],mughal_empire:["az","az-s"],myanmar:["az","az-se","az-ml"],nagorno_karabakh:["az","az-w"],namibia:["af","af-cs","af-s"],naples:["eu","eu-s","eu-sw"],nassau:["eu","eu-c"],nassau_usingen:["eu","eu-c"],nassau_weilburg:["eu","eu-c"],nauru:["oc","oc-mr"],navarra:["eu","eu-s","eu-sw"],nawanagar:["az","az-s"],nepal:["az","az-s"],netherlands:["eu","eu-w","euro","euro-iz"],netherlands_antilles:["am","am-cr","am-r"],netherlands_east_indies:["az","az-se","az-mr"],new_caledonia:["oc","oc-ml"],new_guinea:["oc","oc-ml"],new_hebrides:["oc","oc-ml"],new_zealand:["oc","oc-az"],newfoundland:["am","am-n"],nicaragua:["am","am-cr","am-c"],niger:["af","af-nw","af-w"],nigeria:["af","af-nw","af-w"],niue:["oc","oc-pl"],north_borneo:["az","az-se","az-mr"],north_korea:["az","az-ce","az-e"],norway:["eu","eu-n"],oldenburg:["eu","eu-c"],oman:["az","az-w"],order_of_malta:["eu","eu-s","eu-sw"],ottoman_empire:["az","az-w"],oudh:["az","az-s"],pakistan:["az","az-s"],palatinate:["eu","eu-c"],palatine_zweibrucken:["eu","eu-c"],palau:["oc","oc-mr"],palestine:["az","az-w"],panama:["am","am-cr","am-c"],papal_states:["eu","eu-s","eu-sc"],papua_new_guinea:["oc","oc-ml"],paraguay:["am","am-s"],parma:["eu","eu-s","eu-sw"],peru:["am","am-s"],philippines:["az","az-se","az-mr"],piedmont:["eu","eu-s","eu-sw"],pitcairn_islands:["oc","oc-pl"],poland:["eu","pl"],porbandar:["az","az-s"],portugal:["eu","eu-s","eu-sw","euro","euro-iz"],portuguese_india:["az","az-s"],portuguese_timor:["az","az-se","az-mr"],prussia:["eu","de"],pudukkottai:["az","az-s"],puerto_rico:["am","am-cr","am-r"],qatar:["az","az-w"],qatar_dubai:["az","az-w"],ras_al_khaimah:["az","az-w"],ratlam:["az","az-s"],reunion:["af","af-e","af-eo"],reuss_gera:["eu","eu-c"],reuss_greiz:["eu","eu-c"],rhodesia:["af","af-cs","af-se"],rhodesia_nyasaland:["af","af-cs","af-se"],roman_republic:["eu","eu-s","eu-sw"],romania:["eu","eu-e"],ruanda_burundi:["af","af-e","af-ec"],ruanda_urundi:["af","af-e","af-ec"],russia:["eu","ru","ru-rf"],russia_empire:["eu","ru","ru-sx"],rwanda:["af","af-e","af-ec"],ryukyu:["az","az-ce","az-e"],saar:["eu","de"],saint_helena:["uk"],saint_helena__:["af","af-nw","af-w"],saint_helena_ascension:["uk"],saint_helena_ascension__:["af","af-nw","af-w"],saint_kitts_nevis:["am","am-cr","am-r"],saint_lucia:["am","am-cr","am-r"],saint_pierre_miquelon:["am","am-n"],saint_vincent_grenadines:["am","am-cr","am-r"],salzburg:["eu","eu-c"],samoa:["oc","oc-pl"],san_marino:["eu","eu-s","eu-sc","euro","euro-iz"],sao_tome_principe:["af","af-cs","af-c"],sarawak:["az","az-se","az-mr"],sardinia:["eu","eu-s","eu-sc"],saudi_arabia:["az","az-w"],saxe_altenburg:["eu","eu-c"],saxe_coburg_gotha:["eu","eu-c"],saxe_gotha_altenburg:["eu","eu-c"],saxe_hildburghausen:["eu","eu-c"],saxe_meiningen:["eu","eu-c"],saxe_weimar_eisenach:["eu","eu-c"],saxony:["eu","eu-c"],schaumburg_lippe:["eu","eu-c"],schleswig_holstein:["eu","eu-c"],schwarzburg_rudolstadt:["eu","eu-c"],schwarzburg_sondershausen:["eu","eu-c"],scotland:["eu","eu-w"],sealand:["eu","eu-w"],seborga:["eu","eu-s","eu-sw"],senegal:["af","af-nw","af-w"],serbia:["eu","eu-s","eu-se"],seychelles:["af","af-e","af-eo"],sharjah:["af","af-nw","af-w"],sicily:["eu","eu-s","eu-sc"],sierra_leone:["af","af-nw","af-w"],silesia:["eu","eu-c"],singapore:["az","az-se","az-mr"],slovakia:["eu","eu-c","euro","euro-iz"],slovenia:["eu","eu-s","eu-se","euro","euro-iz"],solomon_islands:["oc","oc-ml"],somalia:["af","af-e","af-eh"],somaliland:["af","af-e","af-eh"],south_africa:["af","af-cs","af-s"],south_arabia:["az","az-w"],south_georgia:["am","am-s"],south_korea:["az","az-ce","az-e"],south_sudan:["af","af-e","af-ec"],south_vietnam:["az","az-se","az-ml"],south_yemen:["az","az-w"],southern_rhodesia:["af","af-cs","af-se"],spain:["eu","eu-s","eu-sw","euro","euro-iz"],spainish_provinces:["eu","eu-s","eu-sw"],span_civil_war:["eu","eu-s","eu-sw"],spanish_netherlands:["eu","eu-w"],spitsbergen:["eu","eu-n"],sri_lanka:["az","az-s"],straits_settlements:["az","az-se","az-mr"],sudan:["af","af-e","af-en"],suriname:["am","am-s"],swaziland:["af","af-cs","af-s"],sweden:["eu","eu-n"],swiss_cantons:["eu","eu-w"],switzerland:["eu","eu-w"],syria:["az","az-w"],taiwan:["az","az-ce","az-e"],tajikistan:["az","az-ce","az-c"],tannu_tuva:["az","az-ce","az-e"],tanzania:["af","af-e","af-ec"],thailand:["az","az-se","az-ml"],third_reich:["eu","de"],tibet:["az","az-ce","az-e"],togo:["af","af-nw","af-w"],tokelau:["oc","oc-pl"],tonga:["oc","oc-pl"],tonk:["az","az-s"],tonkin:["az","az-se","az-ml"],transnistria:["eu","eu-e"],transylvania:["eu","eu-e"],travancore:["az","az-se","az-ml"],trinidad_tobago:["am","am-cr","am-r"],tristan_da_cunha:["uk"],tristan_da_cunha__:["af","af-nw","af-w"],tunisia:["af","af-nw","af-n"],turkey:["az","az-w"],turkmenistan:["az","az-ce","az-c"],turks_caicos_islands:["am","am-cr","am-r"],tuscany:["eu","eu-s","eu-sw"],tuvalu:["oc","oc-pl"],two_sicilies:["eu","eu-s","eu-sw"],uganda:["af","af-e","af-ec"],ukraine:["eu","eu-e"],umm_al_qaiwain:["az","az-w"],united_arab_emirates:["az","az-w"],united_kingdom:["eu","uk"],uruguay:["am","am-s"],usa:["am","am-n"],ussr:["eu","ru","ru-sx"],uzbekistan:["az","az-ce","az-c"],vanuatu:["oc","oc-ml"],vatican_city:["eu","eu-s","eu-sc","euro","euro-iz"],venezuela:["am","am-s"],venice:["eu","eu-s","eu-sw"],vietnam:["az","az-se","az-ml"],virgin_islands_british:["am","am-cr","am-r"],waldeck:["eu","eu-c"],west_congo:["af","af-cs","af-c"],western_africa:["af","af-nw","af-w"],western_sahara:["af","af-nw","af-n"],westphalia:["eu","eu-c"],wurttemberg:["eu","eu-c"],wurzburg:["eu","eu-c"],yemen:["az","az-w"],yugoslavia:["eu","eu-s","eu-se"],zaire:["af","af-cs","af-c"],zambia:["af","af-cs","af-se"],zanzibar:["af","af-e","af-ec"],zar:["af","af-cs","af-s"],zimbabwe:["af","af-cs","af-se"]},r={euro:{en:"Euro",lt:"Eurai"},"euro-ah":{en:"A-H",lt:"A-H"},"euro-iz":{en:"I-Z",lt:"I-Z"},lt:{en:"Lithuania",lt:"Lietuva"},pl:{en:"Poland",lt:"Lenkija"},de:{en:"Germany",lt:"Vokietija"},uk:{en:"United Kingdom",lt:"Jungtinė Karalystė"},ru:{en:"Russia",lt:"Rusija"},"ru-sx":{en:"Russian Empire & USSR",lt:"Rusijos Imperija ir TSRS"},"ru-rf":{en:"Russian Federation",lt:"Rusijos Federacija"},eu:{en:"Europe",lt:"Europa"},"eu-n":{en:"Northern Europe",lt:"Šiaurės Europa"},"eu-e":{en:"Eastern Europe",lt:"Rytų Europa"},"eu-c":{en:"Central Europe",lt:"Vidurio Europa"},"eu-w":{en:"Western Europe",lt:"Vakarų Europa"},"eu-s":{en:"Southern Europe",lt:"Pietų Europa"},"eu-se":{en:"Southeast Europe",lt:"Pietryčių Europa"},"eu-sc":{en:"South-Central Europe",lt:"Pietų Europa"},"eu-sw":{en:"Southwest Europe",lt:"Pietvakarių Europa"},az:{en:"Asia",lt:"Azija"},"az-n":{en:"Northern Asia",lt:"Šiaurės Azija"},"az-ce":{en:"Central and Eastern Asia",lt:"Vidurio ir Rytų Azija"},"az-c":{en:"Central Asia",lt:"Vidurio Azija"},"az-e":{en:"Eastern Asia",lt:"Rytų Azija"},"az-se":{en:"Southeast Asia",lt:"Pietryčių Azija"},"az-ml":{en:"Mainland Southeast Asia",lt:"Žemyninė Pietryčių Azija"},"az-mr":{en:"Maritime Southeast Asia",lt:"Jūrinė Pietryčių Azija"},"az-s":{en:"Southern Asia",lt:"Pietų Azija"},"az-w":{en:"Western Asia",lt:"Vakarų Azija"},af:{en:"Africa",lt:"Afrika"},"af-nw":{en:"Northern and Western Africa",lt:"Šiaurės ir Vakarų Afrika"},"af-n":{en:"Northern Africa",lt:"Šiaurės Afrika"},"af-e":{en:"Eastern Africa",lt:"Rytų Afrika"},"af-ec":{en:"East African Community",lt:"Rytų Afrikos Bendrija"},"af-eh":{en:"Horn of Africa",lt:"Afrikos Kyšulys"},"af-eo":{en:"Indian Ocean Islands",lt:"Indijos Vandenyno Salos"},"af-en":{en:"Nile Valley",lt:"Nilo Slėnis"},"af-cs":{en:"Central and Southern Africa",lt:"Vidurio ir Pietų Afrika"},"af-c":{en:"Central Africa",lt:"Vidurio Afrika"},"af-se":{en:"Southeast Africa",lt:"Pietryčių Afrika"},"af-s":{en:"Southern Africa",lt:"Pietų Afrika"},"af-w":{en:"Western Africa",lt:"Vakarų Afrika"},am:{en:"America",lt:"Amerika"},"am-n":{en:"Northern America",lt:"Šiaurės Amerika"},"am-cr":{en:"Central America and Caribbean",lt:"Vidurio Amerika ir Karibai"},"am-r":{en:"Caribbean",lt:"Karibai"},"am-c":{en:"Central America",lt:"Vidurio Amerika"},"am-s":{en:"Southern America",lt:"Pietų Amerika"},oc:{en:"Australia and Oceania",lt:"Australija ir Okeanija"},"oc-az":{en:"Australia and New Zealand",lt:"Australija ir Naujoji Zelandija"},"oc-ml":{en:"Melanesia",lt:"Melanezija"},"oc-mr":{en:"Micronesia",lt:"Mikronezija"},"oc-pl":{en:"Polynesia",lt:"Polinezija"},an:{en:"Antarctica",lt:"Antarktida"},ww:{en:"Worldwide",lt:"Viso Pasaulio"}},i={euro:["euro-ah","euro-iz"],eu:["lt","pl","ru-sx","ru-rf","de","eu-e","eu-c","eu-n","eu-sw","eu-sc","eu-se","eu-w","uk"],az:["az-ce","az-se","az-s","az-w","az-n"],af:["af-nw","af-e","af-cs"],am:["am-n","am-cr","am-s"],oc:[]};var o=(e=>(e.TAB="t",e.REGION="r",e))(o||{});const s={Shipping:{lt:"Siuntimas",ru:"Почта",de:"Versand"},shipping:{lt:"siuntimas",ru:"почта",de:"versand"},Total:{lt:"Viso",ru:"Всего",de:"Gesamt"},"PayPal charges":{lt:"PayPal mokesčiai",ru:"PayPal сборы",de:"PayPal Gebühren"},Difference:{lt:"Skirtumas",ru:"Разница",de:"Unterschied"},Sorting:{lt:"Rikiuoti",ru:"Сортировка",de:"Sortierung"},Year:{lt:"Metai",ru:"Год",de:"Jahr"},"Facial value":{lt:"Vertė",ru:"Номинал",de:"Wert"},Subject:{lt:"Tema",ru:"Наименование",de:"Thema"},Denomination:{lt:"Nominalioji vertė",ru:"Номинал",de:"Wert"},Private:{lt:"Privatu",ru:"Личный доступ",de:"Privat"},Public:{lt:"Vieša",ru:"Общий доступ",de:"Öffentlich"},Show:{lt:"Rodyti",ru:"Показать",de:"Anzeigen"},Hide:{lt:"Slėpti",ru:"Спрятать",de:"Verstecken"},All:{lt:"Visi",ru:"Все",de:"Ales"}},l=(()=>{const e=document.querySelector(".bottom-lang a.active");if(e){const a=e.href.match(/:\/\/(\w+)\./);if(a)return a[1]}return "en"})();function c(e,a,t){return "string"==typeof a&&([a,t]=[t,a]),(a??s)?.[e]?.[t??l]||e}function u(){return window.location}function d(){return u().href}const m=()=>new URL(d()),f=e=>"string"==typeof e?new URL(e,d()):e,p=(e=m())=>new URLSearchParams(f(e).hash.slice(1));async function h(e,a=m()){if("function"!=typeof e)return e.toString();const t=p(a),n=await e(t);return (null!=n?n:t).toString()}async function g(e,a=m()){const t=await h(e,a);(u().hash||t)&&history.replaceState({},"",new URL(`#${t}`,a));}async function b(e,a=m()){const t=f(a),n=await h(e,t);return (t.hash||n)&&(t.hash=`#${n}`),t.href}const y=e=>p().get(e);function w(e){return !!e?.classList.contains("hide")}function k(...e){for(const a of e)a?.classList.remove("hide");}function v(...e){for(const a of e)a?.classList.add("hide");}function S(e,...a){for(const t of a)t?.classList.toggle("hide",!e);}function z(e){e&&(e.preventDefault(),e.stopPropagation());}function _(){return u().reload(),null}function x(e){const a=document.createElement("template");return a.innerHTML=e,a.content}function A(e){z(e);const a=document.createElement("a");a.href=e.target?.dataset?.href??"",a.dispatchEvent(new MouseEvent(e.type,e));}function j(e){const a=e?.querySelectorAll("[data-href]");if(a?.length)for(const t of a)t.addEventListener("click",A);}function q(e,a,t=j,n=_){if(!a)return;const r=e.getElementById(a.id);if(!r)return n?.(a);a.innerHTML=r.innerHTML,t?.(a);}function E(e,a){e.addEventListener("submit",(e=>async t=>async function(e,a,t){z(e);const n=e.target;if(false!==a?.call(n,e))return t?.(n)}(t,e,a))(e.onsubmit)),e.removeAttribute("onsubmit");}function L(e,a){e.addEventListener("click",(e=>t=>async function(e,a,t){z(e);const n=e.target;if(false!==a?.call(n,e))return t?.(n)}(t,e,a))(e.onclick)),e.removeAttribute("onclick");}function C(){return (new Date).toISOString().split("-",2).join("-")}function B(e){return e.reduce((e,a)=>e.includes(a)?e:[...e,a],[])}function M(e){return e.replace(/\W+/g,"-").replace(/^-+/,"").replace(/-+$/,"").toLowerCase()}function F(e){e?.scrollIntoView?.({behavior:"smooth",block:"nearest",inline:"nearest"});}function N(e){const a={};for(const t of e.querySelectorAll("div.cntry")){const[,e]=t.querySelector("a")?.href.match(/&country=(\w+)/)||[];e&&(a[e]=+(t.querySelector("span.right")?.textContent??0)||0);}return a}const T=(()=>{const e=document.querySelector('.header .partition .menu-l a[href^="/uid"]');if(e){const a=e.href.match(/\/uid(\d+)/);if(a)return a[1]}return null})();function P(e){if(!e.ok)throw new Error(`${e.status}: ${e.statusText}`);return e}function R(e){return function(e){P(e),e.redirected&&location.href!==e.url&&history.pushState({},"",e.url);}(e),e.text()}var H=(e=>(e[e.ANY=1]="ANY",e[e.__UNUSED_BLUE=2]="__UNUSED_BLUE",e[e.PROOF=3]="PROOF",e[e.BU=4]="BU",e[e.COPY=5]="COPY",e[e.UNKNOWN=6]="UNKNOWN",e[e.G=7]="G",e[e.VG=8]="VG",e[e.F=9]="F",e[e.VF=10]="VF",e[e.XF=11]="XF",e[e.UNC=12]="UNC",e[e.__UNUSED_YELLOW=13]="__UNUSED_YELLOW",e[e.__UNUSED_MAGENTA=14]="__UNUSED_MAGENTA",e))(H||{}),I=(e=>(e[e.UNKNOWN=0]="UNKNOWN",e[e.UNC=1]="UNC",e[e.XF=2]="XF",e[e.VF=3]="VF",e[e.F=4]="F",e[e.VG=5]="VG",e[e.G=6]="G",e[e.PROOF=7]="PROOF",e[e.COPY=100]="COPY",e))(I||{}),V=(e=>(e[e.ANY=0]="ANY",e[e.UNC=1]="UNC",e[e.XF=2]="XF",e[e.VF=3]="VF",e))(V||{});const O={G:7,VG:8,F:9,VF:10,"VF+":10,XF:11,"XF+":11,UNC:12,PRF:3,BU:4},G={G:1,VG:2,F:3,VF:4,XF:5,UNC:6,PRF:7,BU:8},K={7:1,8:2,9:3,10:4,11:5,12:6,3:7,4:8,1:9},D={6:7,5:8,4:9,3:10,2:11,1:12,7:3},U={7:6,8:5,9:4,10:3,11:2,12:1,3:7};let W=1e3;const Y=()=>document.querySelector("#my-func-block");async function J(e=Y(),a=(()=>document.querySelector("#ucid-block"))()){k(e),function(e){for(const a of e?.querySelectorAll(".func-button .btn-l")||[])a.classList.add("btn-narrow"),a.matches("a")&&(a.classList.replace("btn-gray","btn-red"),a.setAttribute("type","submit"));}(e),function(e){const a=e?.querySelector(".my-collection-block");if(a){const e=a.cloneNode(true);e.addEventListener("click",ne),e.addEventListener("touchstart",ne),a.replaceWith(e);}}(e);for(const t of e?.querySelectorAll("form")||[])Q(t),X(a),t.parentElement?.matches("#edit-coin-form")&&(ae(a,t),te(a,t));}async function Z(e){return q(e,Y()),function(e,a){if(a){const t=e.getElementById(a.id);t?a.innerHTML=t.innerHTML:(a.remove(),a=null);}}(e,document.querySelector("#coin-chooser-dialog")),J()}function X(e){for(const a of e?.querySelectorAll("a[type=submit]")||[])L(a,async({href:e})=>Z(x(await fetch(e).then(R))));}function Q(e){!function(e){const{buy_month:a,buy_year:t}=e;let{buy_year_month:n}=e;v(t,a),n||(t.insertAdjacentHTML("afterend","<input id='buy_year_month' name='buy_year_month' type='month'/>"),n=e.buy_year_month),n.max=C(),n.addEventListener("change",e=>{z(e);const r=n.value||C();return [t.value,a.value]=r.split("-",2),false});}(e),function(e){const a=e.condition,t=e.color;t.nextElementSibling?.classList.add("btn-set");const n=e.querySelector("#edit-set-color"),r=e.querySelectorAll('table div[class^="marked-"]');for(const i of r)i.matches("#set-color")||(i.classList.add("btn-marker"),i.addEventListener("click",e=>{const t=e.target;let n=null;for(const a of t.classList)a.startsWith("marked-")&&(n=+a.split("-",3)[1]);n&&n in U&&(a.value=`${U[n]}`);}));a.addEventListener("change",e=>{if(!n)return;const a=e.target;n.classList.remove(`marked-${t.value}`);const r=+a.value;r in D&&(t.value=`${D[r]}`),n.classList.add(`marked-${t.value}`);});}(e),E(e,async e=>{e&&await Z(x(await fetch(location.href,{method:"POST",body:new FormData(e)}).then(R)));}),setTimeout(()=>{const e=document.querySelector("#tag"),a=document.querySelector("#tags .textboxlist");if(e&&!a){const e=GM_getResourceText("TextboxListStyle");GM_addStyle(e),(async()=>{const e=new $.TextboxList("#tag",{unique:true,bitsOptions:{editable:{addKeys:188}},plugins:{autocomplete:{placeholder:"Type to receive suggestions"}}});e.getContainer().addClass("textboxlist-loading");try{const a=await fetch("/coin/?action=autocompletetag",{method:"POST",body:new URLSearchParams({action:"autocompletetag"})}).then(P);e.plugins.autocomplete.setValues(await a.json()),e.getContainer().removeClass("textboxlist-loading");}finally{}})();}W=0;},W);}async function ee(e){return !(!e||!(await fetch(location.href,{method:"POST",body:new FormData(e)}).then(R)))||!!_()}function ae(e,a){const t=e?.querySelector(".status-line .left"),n=e?.querySelector(".func-button");if(!t||!n)return;const r="coin-form-visibility";if(n.querySelector(`#${r}`))return;n.insertAdjacentHTML("afterbegin",`<button id='${r}' class='btn-l btn-i btn-narrow'/>`);const i=n.querySelector(`#${r}`);if(!i)return;const o=()=>{const e=a?.public?.checked;i.title=c(e?"Hide":"Show"),i.innerHTML=e?'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"/></svg>':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M288 144a110.94 110.94 0 0 0-31.24 5 55.4 55.4 0 0 1 7.24 27 56 56 0 0 1-56 56 55.4 55.4 0 0 1-27-7.24A111.71 111.71 0 1 0 288 144zm284.52 97.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400c-98.65 0-189.09-55-237.93-144C98.91 167 189.34 112 288 112s189.09 55 237.93 144C477.1 345 386.66 400 288 400z"/></svg>',i.classList.toggle("btn-blue",!e),i.classList.toggle("btn-gray",e),t.innerText=c(e?"Public":"Private"),t.classList.toggle("status0",!e),t.classList.toggle("status1",e);};i.addEventListener("click",async()=>{if(a){if(a.public.checked=!a.public.checked,a.public.checked){const e=[...document.querySelectorAll(".textboxlist-bit-box")].filter(e=>"+"===e.textContent);if(e.length){const a=new URL(location.href);a.pathname="/coin/",a.searchParams.set("action","deltag");for(const t of e)a.searchParams.set("tag","+"),await fetch(a.href),t.remove();}}await ee(a)&&o();}}),o();}function te(e,a){if(!e)return;let t;for(const s of e.querySelectorAll(".status-line + table tr"))s.querySelector("span.status2")&&(t=s);const n=e.querySelector(".func-button");if(!n)return;const r="coin-form-replacement";if(n.querySelector(`#${r}`))return;n.insertAdjacentHTML("afterbegin",`<button id='${r}' class='btn-l btn-i btn-narrow'/>`);const i=n.querySelector(`#${r}`);if(!i)return;const o=()=>{const n=a?.replace?.checked;if(i.title=n?"Don't replace":"Replace",i.innerHTML=n?'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M500.33 0h-47.41a12 12 0 0 0-12 12.57l4 82.76A247.42 247.42 0 0 0 256 8C119.34 8 7.9 119.53 8 256.19 8.1 393.07 119.1 504 256 504a247.1 247.1 0 0 0 166.18-63.91 12 12 0 0 0 .48-17.43l-34-34a12 12 0 0 0-16.38-.55A176 176 0 1 1 402.1 157.8l-101.53-4.87a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12h200.33a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12m-17.99 504.97l22.63-22.63a24 24 0 0 0 0-33.94L63.6 7.03a24 24 0 0 0-33.94 0L7.03 29.66a24 24 0 0 0 0 33.94L448.4 504.97a24 24 0 0 0 33.94 0z"/></svg>':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M500.33 0h-47.41a12 12 0 0 0-12 12.57l4 82.76A247.42 247.42 0 0 0 256 8C119.34 8 7.9 119.53 8 256.19 8.1 393.07 119.1 504 256 504a247.1 247.1 0 0 0 166.18-63.91 12 12 0 0 0 .48-17.43l-34-34a12 12 0 0 0-16.38-.55A176 176 0 1 1 402.1 157.8l-101.53-4.87a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12h200.33a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12z"/></svg>',i.classList.toggle("btn-blue",!n),i.classList.toggle("btn-gray",n),n){if(!t){const a=e?.querySelector(".status-line + table tbody");a&&(a.insertAdjacentHTML("beforeend","<tr><td class='lgray-12' colspan='2'><span class='set status2 wrap' style='max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;'>Need to replace</span></td></tr>"),t=a.querySelector("tr:last-child"));}}else t&&(t.remove(),t=null);};i.addEventListener("click",async()=>{a&&(a.replace.checked=!a.replace.checked,await ee(a)&&o());}),o();}function ne(e){const a=e.target;if(!a)return;const t=a.parentElement?.querySelector("#coin-list");if(!t)return;const n=w(t);S(n,t);const r=a.querySelector(".arrow");r&&(r.classList.toggle("atw",n),r.classList.toggle("abw",!n));}const re=document.location.href;function ie(e){const a=new URL(e.href,re),t=a.searchParams,n=new URL(re);n.pathname=a.pathname;const r=n.searchParams;r.delete("page"),r.delete("view");for(const[i,o]of t.entries())r.set(i,"tag"===i&&e.href.match(/&tag=\+/)?"+":o);if(e.classList.contains("active"))r.delete("view");else if(e.classList.contains("switcher")){const e=t.get("view");e&&r.delete(e);}e.href=n.href;}function oe(e,a){const t=e.getAttribute("onclick")?.match(/location.href='([^']+)';/);if(t){const n=new URL(t[1],re),r=n.searchParams,i=new URL(re);i.pathname=n.pathname;const o=i.searchParams;o.delete("page");for(const[e,a]of r.entries())o.set(e,a);if(document.getElementById("status-filter"))o.delete("status");else {const a=e.querySelector("a.switcher");if(a){o.delete("view");const e=new URL(a.href,re).searchParams.get("view");e&&o.delete(e);}}if(a&&a.length)for(const e of a)o.delete(e);e.setAttribute("onclick",`location.href='${i.href}';`);}}var se=(e=>(e[e.Common=.012]="Common",e[e.Russian=.006]="Russian",e[e.Silver=1.29]="Silver",e[e.Gold=105.79]="Gold",e))(se||{}),le=(e=>(e.Gold="188",e.Silver="189",e))(le||{});function ce(e){const a=e?.replaceAll(/[^\d.]/g,"");if(!a)return;const t=+a;return isNaN(t)?void 0:t}const ue={maximumFractionDigits:2},de=new Intl.NumberFormat("en-US",ue),me=e=>de.format(e),fe={...ue,style:"currency",currency:"EUR"},pe=new Intl.NumberFormat("en-US",fe);async function he(e,a){let t=+(sessionStorage.getItem(e)??0);if(!t||isNaN(t)){const n=x(await fetch("/").then(e=>e.text())).querySelector(`a[href="/catalog/?composition=${e}"] section`);t=ce(n?.textContent)??0,t||(t=a),sessionStorage.setItem(e,t.toString());}return t}const ge=/CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;function*be(e=document){const a=e.querySelector("#swap #swap-block");if(a){const e=a.querySelectorAll("a.list-link");e.length||console.debug("No swap links found.");for(const a of e)yield a;}else console.debug("Swap block not found.");}function*ye(){for(const e of be())if(!e.querySelector("div.ico-16")&&e.hasAttribute("onClick")){const a=e.getAttribute("onClick")?.match(ge);if(a&&a.groups){const{cond:t,info:n,vid:r}=a.groups;yield {a:e,m:{...a.groups,uniq:`${t} ${r} ${n}`}};}}}function we(e){!e.href.endsWith(`?uid=${T}`)&&e.previousElementSibling?.href.endsWith(`?uid=${T}`)&&e.classList.add("with-separator");const a=e.querySelector(".cond");if(a){const e=a.textContent?.trim();a.classList.add(`marked-${O[e]}`);}const t=e.querySelector(".year");if(!t)return;const n=t.textContent,r=n?.split(" "),i=r?.shift();r?.length&&(t.textContent=i||"",t.insertAdjacentHTML("beforeend",` <span class="lgray-11">${r.join(" ")}</span>`));}function ke(e){const a=e.querySelectorAll("a.list-link");a.length||console.debug("No swap links found in the provided list.");for(const t of a)we(t);}function ve(e){if(e.hasAttribute("onClick")){const a=e.getAttribute("onClick")?.match(ge);if(a?.groups){const{info:t}=a.groups;t&&!e.querySelector(".comments")&&e.insertAdjacentHTML("beforeend",`<span class="right dgray-11 wrap comments" title="${t}"><div class="ico-16"></div> ${t}</span>`);}}}class Se{widgetHeaderRedirectHandler;formClickTimeout;constructor(){this.widgetHeaderCloseHandler=this.widgetHeaderCloseHandler.bind(this);}get listSelector(){return `#${this.formType}-block`}get listBlock(){return document.querySelector(this.listSelector)}get funcSelector(){return "#my-coin-func-block"}get mainSelector(){return `#my-${this.formType}-block, #${this.formType}-block`}get main(){return this.mainSelector&&document.querySelector(this.mainSelector)||null}get formSelector(){return `#${this.formType}-form`}get form(){return this.formSelector&&this.main?.querySelector(this.formSelector)||null}get formClose(){return this.formSelector&&this.main?.querySelector(`${this.formSelector}-close`)||null}get formUid(){return `u${this.formUidPrefix}id`}get formVariety(){return `${this.formType}-variety`}get buttonSetId(){return `${this.formType}-button-set`}get formOnFunctionName(){return `Coin${this.formTypeMethod}FormOn`}get formOffFunctionName(){return `Coin${this.formTypeMethod}FormOff`}get widgetHeader(){return this.main?.querySelector(`#widget-${this.formType}-header`)||null}get cancelButton(){return this.form?.querySelector(`#btn-${this.formTypePrefix}cancel`)||null}get addButton(){return this.form?.querySelector(`#btn-${this.formTypePrefix}add`)||null}get editButton(){return this.form?.querySelector(`#btn-${this.formTypePrefix}edit`)||null}get deleteButton(){return this.form?.querySelector(`#btn-${this.formTypePrefix}del`)||null}get deleteConfirmButton(){return document.querySelector(`#btn-${this.formType}del`)||null}get oneButton(){return this.listBlock?.querySelector("center button.btn-s.btn-gray")||null}get buttonSet(){return this.main?.querySelector(`#${this.buttonSetId}`)||null}get func(){return this.funcSelector&&this.main?.querySelector(this.funcSelector)||null}async handle(){if(this.main)return this.updateFormHandlers(),this.update();console.debug(`${this.formType} main block not found.`);}fillForm(e="",a="",t="",n=""){const{form:r,formUid:i,formVariety:o}=this;if(!r)return;const{elements:s}=r;if(s[i]&&(s[i].value=e),s.condition)if(a&&"0"!==a)s.condition.value=a;else {const e=r.querySelector('input[name=condition][value="0"], input[name=condition][value=""]');e&&(e.checked=true);}s.price&&(s.price.value=t),s[o]&&(n?s[o].value=n:s[o]instanceof RadioNodeList&&(s[o][0].checked=true)),s.action&&(s.action.value=e?`edit${this.formType}coin`:`add${this.formType}coin`);}formOnHandler(e,...a){this.formClickTimeout=setTimeout(()=>{this.listBlock&&v(this.listBlock),this.form&&this.formClose&&k(this.form,this.formClose),this.func&&function(...e){for(const a of e)a?.classList.add("disable");}(this.func),this.widgetHeaderRedirectHandler&&this.widgetHeader?.removeEventListener("click",this.widgetHeaderRedirectHandler),this.widgetHeader?.addEventListener("click",this.widgetHeaderCloseHandler),this.fillForm(e,...a),this.cancelButton&&(k(this.cancelButton),this.cancelButton.setAttribute("onclick",`LayerOff('${this.formType}-form');CoinSwapFormOff();CoinWishFormOff();LayerOn('add-button-block');`)),this.addButton&&S(!e,this.addButton),this.deleteButton&&(this.editButton&&S(!!e,this.editButton,this.deleteButton),this.deleteConfirmButton&&(this.deleteConfirmButton.href=`?action=del${this.formType}coin&${this.formUid}=${e}`)),(e?this.editButton:this.addButton)?.focus();},300);}formOnHandlerSubmit(e,...a){clearTimeout(this.formClickTimeout),this.fillForm(e,...a),this.form?.submit();}formOffHandler(){this.form&&this.formClose&&v(this.form,this.formClose),this.listBlock&&k(this.listBlock),this.func&&function(...e){for(const a of e)a?.classList.remove("disable");}(this.func),this.widgetHeader?.removeEventListener("click",this.widgetHeaderCloseHandler),this.widgetHeaderRedirectHandler&&this.widgetHeader?.addEventListener("click",this.widgetHeaderRedirectHandler);}widgetHeaderCloseHandler(e){z(e),this.formOffHandler();}updateList(){this.listBlock?ke(this.listBlock):console.debug("List block not found.");}removeOneButton(){const e=this.main?.previousElementSibling;e?e.matches("center.action-btn")&&e.remove():console.debug("One button block not found.");}updateFormHandlers(){const e=unsafeWindow;e[this.formOnFunctionName]=(...e)=>this.formOnHandler(...e),e[this.formOffFunctionName]=()=>this.formOffHandler();}async update(){this.main&&(k(this.main),this.removeOneButton(),this.updateWidget(),await this.updateForm()),this.updateList();}updateButtonSet(){if(!this.oneButton)return;if(this.oneButton.insertAdjacentHTML("afterend",`<div id='${this.buttonSetId}' class='btn-set'/>`),this.oneButton.remove(),!this.buttonSet)return;const e=(e,a,t)=>{const n=`${this.formType}-marker-${t}`,r=`btn-marker marked-${a}`;this.buttonSet?.insertAdjacentHTML("beforeend",`<div id='${n}' class='${r}'>${e}</div>`);const i=this.buttonSet?.querySelector(`#${n}`);i&&(i.addEventListener("click",()=>this.formOnHandler("",`${t}`)),i.addEventListener("dblclick",()=>this.formOnHandlerSubmit("",`${t}`)));};for(const[a,[t,n]]of this.buttonSetButtons)e(a,t,n);}updateCondition(){const e=this.form?.condition,a="FORM"===e?.parentElement?.tagName,t=a?e:e.parentElement;if(t){t.insertAdjacentHTML(a?"afterend":"beforebegin","<fieldset name='conditionFieldset'><legend class='gray-12' style='padding:5px;'>Condition</legend></fieldset>");const n=this.form?.conditionFieldset;for(const a of e.options){const e=this.getConditionOption(a);if(e){const{text:a,value:t,checked:r,style:i}=e;n.insertAdjacentHTML("beforeend",`<label class='dgray-12' style='margin-top:0;${i}'><input name='condition' value='${t}' ${r} type='radio'/>${a}</label>`);}}e.remove();}}updateFormButtons(){const e=this.deleteButton?.classList;e&&!e.contains("btn-red")&&e.add("btn-red");}updateWidget(){this.widgetHeader?(this.widgetHeaderRedirectHandler=this.widgetHeader.onclick,this.widgetHeader.removeAttribute("onclick")):console.debug("Widget header not found.");}async updateFragment(e){return q(e,this.main),this.update()}async updateForm(){if(this.main)if(this.form){E(this.form,async()=>this.form?this.updateFragment(x(await fetch(location.href,{method:"POST",body:new FormData(this.form)}).then(R))):void 0);for(const e of this.form.querySelectorAll("a[type=submit]"))L(e,async()=>this.updateFragment(x(await fetch(e.href).then(R))));this.updateFormButtons(),this.updateCondition(),this.updateButtonSet();}else console.debug("Form not found.");else console.debug("Main block not found.");}}const ze=(e="a")=>`<div class='right'><span class='arrow ${"a"===e?"at":"ab"}'></span></div>`,_e=(e="d")=>ze(e),xe=e=>`<div class='left gray-13'>${e}</div>`,Ae=(e,a)=>`${xe(e)}${ze(a)}`;function je(e){if(!e)return "";const a=document.createElement("template");a.innerHTML=e;const t=a.content.querySelector("div.left");return t?.classList.add("wrap"),a.innerHTML}function qe(e,a,t){return `\n    <div class='right filter-container filter-dropdown'>\n        <div class='filter-box' id='${e}'>\n            ${je(a)}\n        </div>\n        <div class='drop hide filter-dialog' id='${e}-dialog'>\n            ${t.join("")}\n        </div>\n    </div>\n`}const Ee=e=>e?+e.replace(/[^.\d]/g,""):0,$e=(e,a)=>-(e<a)||+(e>a),Le=e=>`sort${function(e=""){const a=e.match(/\P{Z}/u)?.index??0;return `${e.slice(0,a)}${e.charAt(a).toUpperCase()}${e.slice(a+1)}`}(e)}`,Ce=(e,a,t)=>$e(Ee(e[Le(t)]),Ee(a[Le(t)])),Be=(e,a,t)=>$e(e[Le(t)],a[Le(t)]),Me=(e,a,t=1)=>t*Ce(e,a,"year")||t*Be(e,a,"mm"),Fe=(e,a,t=1)=>t*Be(e,a,"kmc")||t*Ce(e,a,"km")||t*Be(e,a,"kma")||t*Me(e,a),Ne=(e,a,t=1)=>t*Be(e,a,"face")||t*Fe(e,a,-1),Te=(e,a,t=1)=>t*Ce(e,a,"cond")||Ne(e,a);function Pe(e,a,t){const n="a"===t?1:-1;for(const r of e){const e=[...r.querySelectorAll("tr")];e.length>1&&(e.sort(({dataset:e},{dataset:t})=>a(e,t,n)),r.append(...e));}}const Re=()=>{const[e="year",a="d"]=y("o")?.split("_")||[];return [e,a]},He=async(e,a)=>g(t=>{t.set("o",`${e}_${a}`);});function Ie(e){const a="display-delay";let t=document.getElementById(a);t||(document.body.insertAdjacentHTML("beforeend",`<div id='${a}'/>`),t=document.getElementById(a)),t&&(t.innerHTML=`<div style='animation-duration: ${e}ms'/>`);}async function Ve(e=1500,a=1500,t=Ie,n=1e3){return async function(e=1500,a=1500,t,n=1e3){return async function(e,a,t=1e3){return e>t&&a?.(e,t),new Promise(a=>setTimeout(()=>a(),e))}(function(e,a){return Math.round(e+Math.random()*a)}(a,e),t,n)}(e,a,t,n)}const{debug:Oe}=console;class Ge{#e=new Map;#a=false;#t=false;#n;#r;constructor(e){this.#r=e;}get form(){return this.#n?.querySelector(this.#r.formSelector)||document.querySelector(this.#r.formSelector)||null}get buttonSet(){return this.#n?.querySelector("center")||null}update(e){this.#n&&e?this.#n.replaceWith(e):this.#n=e,this.buttonSet&&(this.addButton("expand",0,"&laquo;*&raquo;",e=>this.onExpand(e)),this.addButton("expand",5,"&laquo;5&raquo;",e=>this.onExpand(e)),this.addButton("expand",10,"&laquo;10&raquo;",e=>this.onExpand(e)),this.addButton("combine",0,"&raquo;&middot;&laquo;",()=>this.onCombine()),this.updateButtons());}addButton(e,a,t,n){if(!this.buttonSet)return void console.warn("No button set found");const r=`${e}-qty`,i=this.buttonSet.querySelector(`#${r}`);i?k(i):(this.buttonSet.insertAdjacentHTML("beforeend",`<button id='${r}' type='button' class='btn--${e} btn-s btn-blue'>${t}</button>`),this.buttonSet.querySelector(`#${r}`)?.addEventListener("click",async()=>{this.hideButtons(),await n(a),this.updateButtons();}));}updateVariants(){this.#a=false,this.#t=false,this.#e.clear();for(const{m:e}of ye()){const{uniq:a="",usid:t="",cond:n="",price:r="",info:i="",vid:o="",strqty:s=0}=e,l=+s;let c;l>1&&(this.#a=true),this.#e.has(a)?(c=this.#e.get(a),c&&(c.usids.add(t),c.total+=l),this.#t=true):c={usid:t,usids:new Set([t]),cond:n,price:r,info:i,vid:o,qty:l,total:l},c&&this.#e.set(a,c);}}showButtons(e){this.buttonSet&&k(...this.buttonSet.querySelectorAll("button"+(e?`.btn--${e}`:"")));}hideButtons(e){this.buttonSet&&v(...this.buttonSet.querySelectorAll("button"+(e?`.btn--${e}`:"")));}showExpandButtons(){this.showButtons("expand");}showCombineButtons(){this.showButtons("combine");}hideExpandButtons(){this.hideButtons("expand");}hideCombineButtons(){this.hideButtons("combine");}updateButtons(){this.updateVariants(),this.#a?this.showExpandButtons():this.hideExpandButtons(),this.#t?this.showCombineButtons():this.hideCombineButtons();}async onExpand(e=0){Oe("EXPANDING...");let a=false,t=false,n=true;for await(const{a:r,m:i}of ye()){const{uniq:o="",usid:s="",cond:l="",price:c="",info:u="",vid:d="",strqty:m=0}=i,f=+m,p=e>0?Math.min(f,e):f;if(p<=1)Oe(`IGNORING ${o} ${s}`);else {for(let e=p,i=f,m=Math.floor(i/e);e>1;e--,m=Math.floor(i/e)){i-=m,n||await Ve(),n=false,Oe(`ADDING ${o} ${p-e+1} -> ${m}`);const f=await this.addSwapCoin({cond:l,qty:m,vid:d,info:u,price:c});if(!f){a=true;break}const h=new Set;for(const e of be()){if(!e.hasAttribute("onClick"))continue;const a=e.getAttribute("onClick")?.match(ge);a&&a.groups&&h.add(a.groups.usid);}for(const e of be(f)){if(!e.hasAttribute("onClick"))continue;const a=e.getAttribute("onClick")?.match(ge),t=a&&a.groups&&a.groups.usid;t&&!h.has(t)&&(h.add(t),we(e),r.insertAdjacentElement("afterend",e),ve(e));}if(n||await Ve(),n=false,Oe(`UPDATING ${o} ${s} -> ${i}`),!(await this.updateSwapCoin(s,{cond:l,qty:i,vid:d,info:u,price:c}))){t=true;break}this.updateLinkQty(r,i);}if(a||t)break}}Oe(a?"ADD FAILED :(":t?"UPDATE FAILED :(":"DONE!");}async onCombine(){Oe("COMBINING...");let e=false,a=false;for(const t of [...this.#e.values()]){const{usid:n,usids:r,qty:i=0,total:o}=t;if(Oe(`VARIANT usid=${n} usids=${[...r].join(",")} qty=${i} total=${o}`),o<=i)continue;const s=new Set(r);if(s.delete(n),!s.size)continue;Oe(`REMOVING ${[...s].join(", ")}`);const l=await this.deleteSwapCoin(s);if(!l){e=true;break}{const e=l.querySelector(this.#r.listSelector);if(e&&this.#n){const a=this.#n.querySelector("center");a&&e.querySelector("center")?.replaceWith(a),ke(e),this.update(e);}}Oe(`UPDATING ${n}`);const c=await this.updateSwapCoin(n,{...t,qty:o});if(!c){a=true;break}{const e=c.querySelector(this.#r.listSelector);if(Oe(this.#r.listSelector,this.#n,e),e&&this.#n){const a=this.#n.querySelector("center");a&&e.querySelector("center")?.replaceWith(a),ke(e),this.update(e);}}}Oe(e?"REMOVE FAILED :(":a?"UPDATE FAILED :(":"DONE!");}async updateSwapCoin(e,{cond:a,qty:t,vid:n,info:r,price:i},o="editswapcoin"){if(!this.form)return null;const s=new FormData(this.form);s.set("usid",`${e||""}`),s.set("condition",`${a||""}`),s.set("qty",`${t||""}`),s.set("swap-variety",`${n||""}`),s.set("comment",`${r||""}`),s.set("price",`${i||""}`),s.set("action",`${o||""}`);const l=x(await fetch(location.href,{method:"POST",body:s}).then(R));return Oe("fragment"),Oe(l),Oe("this.listForm.mainSelector"),Oe(this.#r.mainSelector),Oe("fragment.querySelector(this.listForm.mainSelector)"),Oe(l.querySelector(this.#r.mainSelector)),l.querySelector(this.#r.mainSelector)?l:_()}async addSwapCoin(e){return this.updateSwapCoin("",e,"addswapcoin")}async deleteSwapCoin(e){if(!T)return null;e instanceof Set&&(e=[...e].join(","));const a=new URL("/swap-list/",location.href),t=a.searchParams;t.set("f","del"),t.set("usid",e),t.set("uid",T);return x(await fetch(a.href).then(P).then(e=>e.text()))||_()}updateLinkQty(e,a){if(e.hasAttribute("onClick")){const t=e.getAttribute("onClick")?.replace(ge,`CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${a}', '$<replica>'`);t&&e.setAttribute("onClick",t);}for(const t of e.querySelectorAll("span.left.dblue-13"))t.remove();if(a>1)for(const t of e.querySelectorAll("span.left.gray-13.wrap"))t.insertAdjacentHTML("afterend",`<span class='left dblue-13'><span>&times;</span>${a}</span>`);}}class Ke extends Se{formType="swap";formTypeMethod="Swap";formTypePrefix="";formUidPrefix="s";buttonSetButtons=new Map([["?",[H.UNKNOWN,I.UNKNOWN]],["G",[H.G,I.G]],["VG",[H.VG,I.VG]],["F",[H.F,I.F]],["VF",[H.VF,I.VF]],["XF",[H.XF,I.XF]],["UN",[H.UNC,I.UNC]],["PR",[H.PROOF,I.PROOF]],["CP",[H.COPY,I.COPY]]]);swapListManager=new Ge(this);fillForm(e="",a="",t="",n="",r="",i="",o="",s=""){super.fillForm(e,a||s&&"100",t,i||function(){const e=new URL(document.location.href).searchParams.get("vid");if(e)return e;const a=document.querySelector("#edit-coin-form form");if(a){const e=new FormData(a).get("variety");if(e)return e.toString()}}());const{form:l}=this;if(!l)return;const{elements:c}=l;c.comment_private&&(c.comment_private.value=n),c.comment_public&&(c.comment_public.value=r),c.qty&&(c.qty.value=o||"1");}updateList(){this.swapListManager.update(this.listBlock);const e=m().searchParams.get("vid");for(const a of document.querySelectorAll(this.listSelector))ke(a);!function(e,a){const t=Array.from(e?.querySelectorAll("a.list-link")||[]);for(const n of t)n.dataset.vid=n.getAttribute("onClick")?.match(ge)?.groups?.vid||"";t.sort((e,t)=>{const[n,,r]=Array.from(e.querySelectorAll("span")).map(e=>e.textContent),[i,,o]=Array.from(t.querySelectorAll("span")).map(e=>e.textContent);return $e(e.href.endsWith(`=${T}`),t.href.endsWith(`=${T}`))||$e(e.dataset.vid===a,t.dataset.vid===a)||$e(o,r)||$e(G[n],G[i])});for(const n of t)e?.prepend(n);for(const n of Array.from(e?.querySelectorAll("a.list-link")||[]))(n.dataset.vid!==a&&n.previousElementSibling?.dataset.vid===a||!n.href.endsWith(`=${T}`)&&n.previousElementSibling?.href.endsWith(`=${T}`))&&n.classList.add("with-separator");}(this.listBlock,e),function(){for(const e of be())ve(e);}();}getConditionOption(e){const{value:a,textContent:t}=e;return {value:a,text:a&&t?t:"Without condition",checked:"3"===a?"checked":"",style:e.getAttribute("style")||""}}async updateForm(){await super.updateForm(),this.updateQty(),this.updatePrice();}updateQty(){const{form:e}=this;if(!e)return;const{qty:a}=e;if(!a)return;a.inputmode="numeric",a.addEventListener("focus",()=>{a.setSelectionRange(0,a.value.length);});const t=(t,n,r,i)=>{a.insertAdjacentHTML(t,`<button name="${n}" type="button" class="btn-s btn-gray btn-ctrl">${r}</button>`),e[n].addEventListener("click",()=>{a.value=`${i(+a.value)}`;});};t("afterend","plus10","+10",e=>e+10),t("afterend","plus5","+5",e=>e+5),t("afterend","plus","+",e=>e+1),t("beforebegin","minus","&minus;",e=>e-1);}updatePrice(){const{form:e}=this;if(!e)return;const{price:a}=e;a&&(a.inputmode="numeric",a.addEventListener("focus",()=>{a.setSelectionRange(0,a.value.length);}));}}class De extends Se{formType="wish";formTypeMethod="Wish";formTypePrefix="w";formUidPrefix="w";buttonSetButtons=new Map([["*",[H.ANY,V.ANY]],["VF+",[H.VF,V.VF]],["XF+",[H.XF,V.XF]],["UN",[H.UNC,V.UNC]]]);fillForm(e="",a="",t="",n,r=""){super.fillForm(e,a,t,r);const{form:i}=this;if(!i)return;const{elements:o}=i;o.is_type instanceof HTMLInputElement&&(o.is_type.checked=true);}async updateForm(){await super.updateForm(),this.updateVarieties();}updateVarieties(){const e=this.form?.[this.formVariety];if(e){const a=e[0].parentElement,t=a.cloneNode(),n=a.querySelector("input")?.cloneNode();n.value="",t.insertAdjacentElement("beforeend",n),t.insertAdjacentText("beforeend","ANY"),a.insertAdjacentElement("beforebegin",t);}}getConditionOption(e){const{value:a,textContent:t}=e;if(a||t?.includes("ANY"))return {text:t??"",value:a,checked:"3"===a?"checked":"",style:e.getAttribute("style")??""}}}async function Ue(){const e=document.getElementById("tags");if(e){const a=e.querySelectorAll('a[href^="/gallery/"]');for(const e of a)ie(e);}const a=document.getElementById("coin-chooser-dialog");a&&!a.style.display&&(a.style.display="none"),await async function(){const e=document.getElementById(We);if(e){const a=e.querySelector("a");a&&(a.href="#",a.addEventListener("click",e=>{e.preventDefault();const a=document.getElementById("coin-chooser-dialog");a&&(a.style.display="block");}));}}(),await J(),await(new Ke).handle(),await async function(){const e=document.getElementById("coin");if(!e)return;const a=e.querySelector(".right.price-container"),t=e.querySelector("h1"),n=e.querySelectorAll(".coin-info tr");let r,i,o=NaN,s=false,l=false,c=false,u=1;for(const f of n){const e=f.querySelector("th"),a=e&&e.textContent||"",t=f.querySelector("td");if(t){const e=`${t.textContent}`;a.match(/\([gг]/)?o=+e:a.match(/Country|Страна|Valstybė/)?s=!!e.match(/Russia|Россия|Rusija|USSR|СССР|TSRS/):a.match(/Composition|Материал|Sudėtis/)&&(l=!!e.match(/Silver|Серебро|Sidabras/),c=!!e.match(/Gold|Золото|Auksas/),(l||c)&&(u=+(e.split(" ").pop()||0)));}}c?(r=o*(u||1)*await(async()=>he(le.Gold,se.Gold))(),i="au"):l?(r=o*(u||1)*await(async()=>he(le.Silver,se.Silver))(),i="ag"):s?(r=o*se.Russian,i="ru"):(r=o*se.Common,i="--");const d=`<br/><price class="right" title="${i}: ${r.toFixed(5)}">€ ${m=r,pe.format(m)}</price>`;var m;if(a)a.insertAdjacentHTML("beforeend",d);else {let a=false;const n=[],r=e.querySelectorAll("#coin-list td.blue-13");for(const e of r){const t=e.cloneNode(true);for(const e of t.childNodes)e.remove();const{textContent:r}=t;r?n.push(+r):a=true;}if(n.length){const e=Math.min(...n),r=Math.max(...n),i=[e.toFixed(2)];r>e?i.push(r.toFixed(2)):a&&i.unshift(""),t?.insertAdjacentHTML("beforebegin",`<a href='#price' class='gray-12 right price-container'>Value:&nbsp;€ <span>${i.join(a?"~":"-")}</span>${d}</a>`);}}}(),await(new De).handle();}const We="add-button-block",Ye=document.getElementById("gallery");let Je,Ze;function Xe(){Je=Ye?.querySelectorAll(".coin .desc-block span.status0"),Ze=Ye?.querySelectorAll(".coin .desc-block span.status1");}async function Qe(e,a,t){const n=a.querySelector("input[name=public]");return n&&(n.checked=t),fetch(e,{method:"POST",body:new FormData(a)})}function ea(e,a,t,n,r,i){const o=`button-${a.toLowerCase()}`;let s=document.getElementById(o);s||(e.insertAdjacentHTML("beforeend",`<button id="${o}" class="btn-l ${t}" style="padding: 0 14px; height: 26px">${a} <small></small></button>`),s=document.getElementById(o),s.addEventListener("click",()=>confirm(`Are you sure to ${a.toLowerCase()}?`)&&i(e,n)));const l=s.querySelector("small");return l&&(l.textContent=`(${r})`),s.style.display=r?"block":"none",s}function aa(e,a){ea(e,"Show","btn-blue",true,Je?.length||0,a),ea(e,"Hide","btn-gray",false,Ze?.length||0,a);}async function ta(e,a){const t="status"+(a?1:0),n="status"+(a?0:1),r=a?"Public":"Private",i=a?Je:Ze;if(i)for await(const o of i){const i=o.parentElement?.querySelector(".coin-desc div a")?.href;if(!i)continue;const s=x(await fetch(i).then(e=>e.text())).getElementById("edit-coin-form")||document.getElementById("add-coin-form");if(!s)continue;const l=s.querySelector("form");l&&(await Qe(i,l,a),o.classList.replace(n,t),o.textContent=r,Xe(),aa(e,ta),await Ve());}}const na={en:"Sync wish",lt:"Derinami norai",ru:"Сверяются желания"};async function ra(){const e=document.getElementById("gallery"),a=e?.querySelectorAll('a[href^="/gallery/"]');for(const s of a||[])ie(s);const t=e?.querySelectorAll('a[href^="?"]');for(const s of t||[])ie(s);const n=e?.querySelectorAll("a.switcher");for(const s of n||[]){const e=new URL(s.href).searchParams.get("view"),a=s.parentElement?.querySelector("div.close");e&&a&&oe(a,[e]);}const r=e?.querySelectorAll(".coin").length??0,i=+(e?.querySelector(".pages a:last-child")?.textContent??0),o=+(e?.querySelector(".pages a.current")?.textContent??0);if(r){const a=o===i,t=a?12*(i-1)+r:12*(i-1);e?.querySelector("h1")?.insertAdjacentHTML("beforeend",` <small>(${r}${i?` <small>of ${a?t:`${t+1}~${t+12}`}</small>`:""})</small>`);}!function(){Xe();const e="button-container",a=document.getElementById("sort-filter")?.parentElement;a?.insertAdjacentHTML("afterend",`<div id="${e}" class="left filter-container" style="float:right">`);const t=document.getElementById(e);t&&aa(t,ta);}(),await async function(){const e=document.getElementById("button-container");if(!e)return;const a="sync";e.insertAdjacentHTML("afterbegin",`<label class='gray-13' for='${a}'><input type='checkbox' id='${a}'/> ${na[l]}</label>`);const t=document.getElementById(a);async function n(){t.checked=false,location.href=await b(e=>{e.delete(a);});}t.addEventListener("change",async()=>{if(!t.checked)return t.disabled=true,n();await async function(){return g(e=>{e.set(a,"y");})}();const e=document.querySelectorAll(".coin-desc > div > a.blue-15");if(!e)return n();for(const n of e){await Ve(),F(n);const{screenLeft:e,screenTop:r,outerWidth:i,outerHeight:o}=window,s=window.open(n.href,a,["width="+i/1.25,"height="+o/1.5,`left=${e+i/10}`,`top=${r+o/10}`].join(","));if(s&&(await Ve(5e3,5e3),s.close()),!t.checked)return}const r=document.querySelector(".pages");if(!r)return n();const i=+(r.querySelector("a.current")?.textContent||0);if(!i)return n();const o=r.querySelector([`a[href$="page=${i+1}"]`,`a[href*="page=${i+1}&"]`,`a[href*="page=${i+1}#"]`].join(","));if(!o)return n();await Ve(5e3,5e3),location.href=await b(e=>{e.set(a,"y");},o.href);}),y(a)&&t.click();}();}function ia(){const e=Array.from(document.querySelectorAll('h2 input[type="checkbox"]')).every(e=>e.checked),a=document.querySelector("#main-checkbox");a&&(a.checked=e);}function oa(e){const a=e.closest("table.swap-coin");if(a){const e=Array.from(a.querySelectorAll('input[type="checkbox"]')||[]).every(e=>e.checked),t=a.previousElementSibling?.querySelector('input[type="checkbox"]');t&&(t.checked=e);}ia();}function sa(e){return e.querySelector("td.cond, th.cond, .td-cond")}function la(e){const a=sa(e),t=a?.firstElementChild??a;if(!t)return;const n=t.textContent,r=O[n];r&&(t.innerHTML=`<span class="cond marked-${r}">${n}</span>`);}function ca(e="table.swap-coin"){const a=document.querySelectorAll(`${e} tr`);for(const t of a)la(t);}function ua(e="table.swap-coin"){const a=m().hash?.includes("update-prices");if(!a)for(const t of document.querySelectorAll(`${e} tr`)){const{tooltipImgpath:e,tooltipSample:a,tooltipCode:n}=t.dataset,r=t.querySelector("td");r?.insertAdjacentHTML(t.querySelector(".reserve")||document.body.id.endsWith("-list")?"beforebegin":"afterend",`\n        <th style="width: 100px" class="thumbnails">\n            ${e&&a&&n?`\n                <img src="${e}/${a}-1s/${n}.jpg" class="thumbnail" loading="lazy" alt="obverse"/>\n                <img src="${e}/${a}-2s/${n}.jpg" class="thumbnail" loading="lazy" alt="reverse"/>`:""}\n        </th>\n    `);}}const da=Object.fromEntries(Object.entries({abkhazia:{en:"Abkhazia",lt:"Abchazija",ru:"Абхазия"},afars_issas:{en:"French Afars and Issas",lt:"Prancūzijos afarų ir isų teritorija",ru:"Французские афар и исса"},afghanistan:{en:"Afghanistan",lt:"Afganistanas",ru:"Афганистан"},ajman:{en:"Ajman",lt:"Adžmanas",ru:"Аджман"},albania:{en:"Albania",lt:"Albanija",ru:"Албания"},alderney:{en:"Alderney",lt:"Oldernis",ru:"Олдерни"},algeria:{en:"Algeria",lt:"Alžyras",ru:"Алжир"},american_samoa:{en:"American Samoa",lt:"Amerikos Samoa",ru:"Американское Самоа"},andorra:{en:"Andorra",lt:"Andora",ru:"Андорра"},angola:{en:"Angola",lt:"Angola",ru:"Ангола"},anguilla:{en:"Anguilla",lt:"Angilija",ru:"Ангилья"},anhalt_bernburg:{en:"Anhalt-Bernburg",lt:"Anhaltas-Bernburgas",ru:"Ангальт-Бернбург"},antigua_barbuda:{en:"Antigua and Barbuda",lt:"Antigva ir Barbuda",ru:"Антигуа и Барбуда"},argentina:{en:"Argentina",lt:"Argentina",ru:"Аргентина"},argentine_provinces:{en:"Argentine provinces",lt:"Argentinos provincijos",ru:"Аргентинские провинции"},armavir:{en:"Armavir",lt:"Armaviras",ru:"Армавир"},armenia:{en:"Armenia",lt:"Armėnija",ru:"Армения"},aruba:{en:"Aruba",lt:"Aruba",ru:"Аруба"},ascension_island:{en:"Ascension Island",lt:"Dangun Žengimo sala",ru:"Остров Вознесения"},australia:{en:"Australia",lt:"Australija",ru:"Австралия"},austria:{en:"Austria",lt:"Austrija",ru:"Австрия"},austrian_netherlands:{en:"Austrian Netherlands",lt:"Austrijos Nyderlandai",ru:"Австрийские Нидерланды"},azerbaijan:{en:"Azerbaijan",lt:"Azerbaidžanas",ru:"Азербайджан"},azores:{en:"Azores",lt:"Azorai",ru:"Азорские острова"},baden:{en:"Baden",lt:"Badenas",ru:"Баден"},bahamas:{en:"Bahamas",lt:"Bahamos",ru:"Багамы"},bahawalpur:{en:"Bahawalpur",lt:"Bahavalpūras",ru:"Бахавалпур "},bahrain:{en:"Bahrain",lt:"Bahreinas",ru:"Бахрейн"},bangladesh:{en:"Bangladesh",lt:"Bangladešas",ru:"Бангладеш"},barbados:{en:"Barbados",lt:"Barbadosas",ru:"Барбадос"},baroda:{en:"Baroda",lt:"Baroda",ru:"Барода"},bavaria:{en:"Bavaria",lt:"Bavarija",ru:"Бавария"},belarus:{en:"Belarus",lt:"Baltarusija",ru:"Беларусь"},belgian_congo:{en:"Belgian Congo",lt:"Belgijos Kongas",ru:"Бельгийское Конго"},belgium:{en:"Belgium",lt:"Belgija",ru:"Бельгия"},belize:{en:"Belize",lt:"Belizas",ru:"Белиз"},benin:{en:"Benin",lt:"Beninas",ru:"Бенин"},berg:{en:"Berg",lt:"Bergas",ru:"Берг"},bermuda:{en:"Bermuda",lt:"Bermudai",ru:"Бермуды"},bhopal:{en:"Bhopal",lt:"Bhopalas",ru:"Бхопал"},bhutan:{en:"Bhutan",lt:"Butanas",ru:"Бутан"},biafra:{en:"Biafra",lt:"Biafra",ru:"Биафра"},bikaner:{en:"Bikaner",lt:"Bykaneras",ru:"Биканер"},biot:{en:"British Indian Ocean Territory",lt:"Indijos Vandenyno Britų Sritis",ru:"Британская территория Индийского океана"},bohemia:{en:"Bohemia",lt:"Bohemija",ru:"Богемия"},bohemia_moravia:{en:"Bohemia and Moravia",lt:"Bohemija ir Moravija",ru:"Богемия и Моравия"},bolivia:{en:"Bolivia",lt:"Bolivija",ru:"Боливия"},bosnia_herzegovina:{en:"Bosnia and Herzegovina",lt:"Bosnija ir Hercegovina",ru:"Босния и Герцеговина"},botswana:{en:"Botswana",lt:"Botsvana",ru:"Ботсвана"},brandenburg_prussia:{en:"Brandenburg-Prussia",lt:"Brandenburgas-Prūsija",ru:"Бранденбург-Пруссия"},brazil:{en:"Brazil",lt:"Brazilija",ru:"Бразилия"},bremen:{en:"Bremen",lt:"Brėmenas",ru:"Бремен"},british_antarctic_territory:{en:"British Antarctic Territory",lt:"Britų Antarktidos teritorija",ru:"Британская антарктическая территория"},british_east_africa:{en:"British East Africa",lt:"Britų Rytų Afrika",ru:"Британская Восточная Африка"},british_east_indies:{en:"British East Indies",lt:"Britų Rytų Indija",ru:"Британская Ост-Индия"},british_guiana:{en:"British Guiana",lt:"Britų Gviana",ru:"Британская Гвиана"},british_honduras:{en:"British Honduras",lt:"Britų Hondūras",ru:"Британский Гондурас"},british_india:{en:"India - British",lt:"Indija - Britų",ru:"Индия - Британская"},british_west_africa:{en:"British West Africa",lt:"Britų Vakarų Afrika",ru:"Британская Западная Африка"},british_west_indies:{en:"British West Indies",lt:"Britų Vest Indija",ru:"Британская Вест-Индия"},brunei:{en:"Brunei",lt:"Brunėjus",ru:"Бруней"},brunswick:{en:"Brunswick",lt:"Braunšveigas",ru:"Брауншвейг"},brunswick_luneburg:{en:"Brunswick-Lüneburg",lt:"Braunšveigas-Liuneburgas",ru:"Брауншвейг-Люнебург"},brunswick_wolfenbuttel:{en:"Brunswick-Wolfenbüttel",lt:"Braunšveigas-Volfenbiutelis",ru:"Брауншвейг-Вольфенбюттель"},bukhara:{en:"Bukhara",lt:"Buchara",ru:"Бухара"},bulgaria:{en:"Bulgaria",lt:"Bulgarija",ru:"Болгария"},burgau:{en:"Burgau",lt:"Burgau",ru:"Бургау"},burkina_faso:{en:"Burkina Faso",lt:"Burkina Fasas",ru:"Буркина Фасо"},burundi:{en:"Burundi",lt:"Burundis",ru:"Бурунди"},cambodia:{en:"Cambodia",lt:"Kambodža",ru:"Камбоджа"},cameroon:{en:"Cameroon",lt:"Kamerūnas",ru:"Камерун"},canada:{en:"Canada",lt:"Kanada",ru:"Канада"},canadian_provinces:{en:"Canadian provinces",lt:"Kanados provincijos",ru:"Канадские провинции"},cape_verde:{en:"Cape Verde",lt:"Žaliasis Kyšulys",ru:"Кабо-Верде"},caribbean_netherlands:{en:"Caribbean Netherlands",lt:"Karibų Nyderlandai",ru:"Карибские Нидерланды"},catalonia:{en:"Catalonia",lt:"Katalonija",ru:"Каталония"},cayman_islands:{en:"Cayman Islands",lt:"Kaimanų salos",ru:"Каймановы острова"},central_africa:{en:"Central Africa (BEAC)",lt:"Centrinė Afrika (BEAC)",ru:"Центральная Африка (BEAC)"},central_african_republic:{en:"Central African Republic",lt:"Centrinės Afrikos Respublika",ru:"ЦАР"},central_american_republic:{en:"Central American Republic",lt:"Centrinės Amerikos Respublika",ru:"Республика Центральной Америки"},ceylon:{en:"Ceylon",lt:"Ceilonas",ru:"Цейлон"},chad:{en:"Chad",lt:"Čadas",ru:"Чад"},chile:{en:"Chile",lt:"Čilė",ru:"Чили"},china:{en:"China",lt:"Kinija",ru:"Китай"},china_empire:{en:"China - Empire",lt:"Kinija - imperija",ru:"Китай - Империя"},china_republic:{en:"China - Republic",lt:"Kinija - Respublika",ru:"Китай - Республика"},colombia:{en:"Colombia",lt:"Kolumbija",ru:"Колумбия"},comoros:{en:"Comoros",lt:"Komorai",ru:"Коморские острова"},congo_democratic_republic:{en:"Congo - DRC",lt:"Kongas - KDR",ru:"Конго - ДРК"},congo_free_state:{en:"Congo Free State",lt:"Laisvoji Kongo Valstybė",ru:"Свободное государство Конго"},cook_islands:{en:"Cook Islands",lt:"Kuko Salos",ru:"Острова Кука"},costa_rica:{en:"Costa Rica",lt:"Kosta Rika",ru:"Коста-Рика"},cote_d_ivoire:{en:"Côte d'Ivoire",lt:"Dramblio Kaulo Krantas",ru:"Кот-д'Ивуар"},courland_semigallia:{en:"Courland and Semigallia",lt:"Kuršas ir Žiemgala",ru:"Курляндия и Семигалия"},crete:{en:"Crete",lt:"Kreta",ru:"Крит"},crimea:{en:"Crimea",lt:"Krymo chanatas",ru:"Крым"},croatia:{en:"Croatia",lt:"Kroatija",ru:"Хорватия"},cuba:{en:"Cuba",lt:"Kuba",ru:"Куба"},curacao:{en:"Curaçao",lt:"Kiurasao",ru:"Кюрасао"},cyprus:{en:"Cyprus",lt:"Kipras",ru:"Кипр"},czech_republic:{en:"Czech Republic",lt:"Čekija",ru:"Чехия"},czechoslovakia:{en:"Czechoslovakia",lt:"Čekoslovakija",ru:"Чехословакия"},danish_west_indies:{en:"Danish West Indies",lt:"Danijos Vakarų Indijos",ru:"Датская Вест-Индия"},danzig:{en:"Danzig",lt:"Dancigas",ru:"Данциг"},darfur:{en:"Darfur",lt:"Darfūras",ru:"Дарфур"},demerara_essequibo:{en:"Demerara and Essequibo",lt:"Demerara ir Esekvibas",ru:"Демерара и Эссекибо"},denmark:{en:"Denmark",lt:"Danija",ru:"Дания"},djibouti:{en:"Djibouti",lt:"Džibutis",ru:"Джибути"},dominica:{en:"Dominica",lt:"Dominika",ru:"Доминика"},dominican_republic:{en:"Dominican Republic",lt:"Dominikos Respublika",ru:"Доминикана"},dutch_republic:{en:"Dutch Republic",lt:"Septynių Jungtinių Nyderlandų Provincijų Respublika",ru:"Голландская республика"},east_timor:{en:"East Timor",lt:"Rytų Timoras",ru:"Восточный Тимор"},eastern_caribbean:{en:"Eastern Caribbean",lt:"Rytų Karibų valstybės",ru:"Восточные Карибы"},ecuador:{en:"Ecuador",lt:"Ekvadoras",ru:"Эквадор"},egypt:{en:"Egypt",lt:"Egiptas",ru:"Египет"},el_salvador:{en:"El Salvador",lt:"Salvadoras",ru:"Сальвадор"},england:{en:"England",lt:"Anglija",ru:"Англия"},equatorial_african_states:{en:"Equatorial African States",lt:"Pusiaujo Afrikos valstybės",ru:"Экваториальная Африка"},equatorial_guinea:{en:"Equatorial Guinea",lt:"Pusiaujo Gvinėja",ru:"Экваториальная Гвинея"},eritrea:{en:"Eritrea",lt:"Eritrėja",ru:"Эритрея"},estonia:{en:"Estonia",lt:"Estija",ru:"Эстония"},ethiopia:{en:"Ethiopia",lt:"Etiopija",ru:"Эфиопия"},eu:{en:"European Union",lt:"Europos Sąjunga",ru:"Европейский союз"},falkland_islands:{en:"Falkland Islands",lt:"Folklando Salos",ru:"Фолклендские острова"},faroes:{en:"Faroe Islands",lt:"Farerai",ru:"Фарерские острова"},fiji:{en:"Fiji",lt:"Fidžis",ru:"Фиджи"},finland:{en:"Finland",lt:"Suomija",ru:"Финляндия"},france:{en:"France",lt:"Prancūzija",ru:"Франция"},frankfurt:{en:"Frankfurt",lt:"Frankfurtas",ru:"Франкфурт"},french_cochinchina:{en:"French Cochinchina",lt:"Prancūzijos Kochinchina",ru:"Французская Кохинхина"},french_colonies:{en:"French colonies",lt:"Prancūzų kolonijos",ru:"Французские колонии"},french_equatorial_africa:{en:"French Equatorial Africa",lt:"Prancūzijos Pusiaujo Afrika",ru:"Французская Экваториальная Африка"},french_guiana:{en:"French Guiana",lt:"Prancūzijos Gviana",ru:"Французская Гвиана"},french_indochina:{en:"French Indochina",lt:"Prancūzijos Indokinija",ru:"Французский Индокитай"},french_oceania:{en:"French Oceania",lt:"Prancūzijos Okeanija",ru:"Французская Океания"},french_pacific_territories:{en:"French pacific territories",lt:"Prancūzijos Ramiojo vandenyno teritorijos",ru:"Французские тихоокеанские территории"},french_polinesia:{en:"French Polynesia",lt:"Prancūzijos Polinezija",ru:"Французская Полинезия"},french_somaliland:{en:"French Somaliland",lt:"Prancūzijos Somalilandas",ru:"Французское Сомали"},french_west_africa:{en:"French West Africa",lt:"Prancūzijos Vakarų Afrika",ru:"Французская Западная Африка"},fujairah:{en:"Fujairah",lt:"Fudžeira",ru:"Эль-Фуджайра"},further_austria:{en:"Further Austria",lt:"Išorinė Austrija",ru:"Передняя Австрия"},gabon:{en:"Gabon",lt:"Gabonas",ru:"Габон"},galicia_lodomeria:{en:"Galicia and Lodomeria",lt:"Galicija ir Lodomerija",ru:"Галиция и Лодомерия"},gambia:{en:"Gambia",lt:"Gambija",ru:"Гамбия"},genoa:{en:"Genoa",lt:"Genujos respublika",ru:"Генуя"},georgia:{en:"Georgia",lt:"Gruzija",ru:"Грузия"},german_democratic_republic:{en:"Germany - GDR",lt:"Vokietija - VDR",ru:"Германия - ГДР"},german_east_africa:{en:"German East Africa",lt:"Vokietijos Rytų Afrika",ru:"Германская Восточная Африка"},german_empire:{en:"German Empire",lt:"Vokietijos imperija",ru:"Германская империя"},german_new_guinea:{en:"German New Guinea",lt:"Vokietijos Naujoji Gvinėja",ru:"Германская Новая Гвинея"},germany:{en:"Germany",lt:"Vokietija",ru:"Германия"},ghana:{en:"Ghana",lt:"Gana",ru:"Гана"},gibraltar:{en:"Gibraltar",lt:"Gibraltaras",ru:"Гибралтар"},gorizia_gradisca:{en:"Gorizia and Gradisca",lt:"Goricija ir Gradiska",ru:"Горица и Градишка"},greece:{en:"Greece",lt:"Graikija",ru:"Греция"},greenland:{en:"Greenland",lt:"Grenlandija",ru:"Гренландия"},grenada:{en:"Grenada",lt:"Grenada",ru:"Гренада"},guadeloupe:{en:"Guadeloupe",lt:"Gvadelupa",ru:"Гваделупа"},guatemala:{en:"Guatemala",lt:"Gvatemala",ru:"Гватемала"},gubbio:{en:"Gubbio",lt:"Gubijus",ru:"Губбио"},guernsey:{en:"Guernsey",lt:"Gernsis",ru:"Гернси"},guinea:{en:"Guinea",lt:"Gvinėja",ru:"Гвинея"},guinea_bissau:{en:"Guinea-Bissau",lt:"Bisau Gvinėja",ru:"Гвинея-Бисау"},guyana:{en:"Guyana",lt:"Gajana",ru:"Гайана"},gwalior:{en:"Gwalior",lt:"Gvalijaras",ru:"Гвалиор"},haiti:{en:"Haiti",lt:"Haitis",ru:"Гаити"},hamburg:{en:"Hamburg",lt:"Hamburgas",ru:"Гамбург"},hannover:{en:"Hannover",lt:"Hanoveris",ru:"Ганновер"},hawaii:{en:"Hawaii",lt:"Havajai",ru:"Гавайи"},hejaz:{en:"Hejaz",lt:"Hidžazas",ru:"Хиджаз"},hesse_kassel:{en:"Hesse-Kassel",lt:"Hesenas-Kaselis",ru:"Гессен-Кассель"},hessen_darmstadt:{en:"Hessen-Darmstadt",lt:"Hesenas-Darmštatas",ru:"Гессен-Дармштадт"},hessen_homburg:{en:"Hessen-Homburg",lt:"Hesenas-Homburgas",ru:"Гессен-Гомбург"},honduras:{en:"Honduras",lt:"Hondūras",ru:"Гондурас"},hong_kong:{en:"Hong Kong",lt:"Honkongas",ru:"Гонконг"},hungary:{en:"Hungary",lt:"Vengrija",ru:"Венгрия"},hutt_river:{en:"Hutt River",lt:"Hato Upės Kunigaikštystė",ru:"Хатт-Ривер"},hyderabad:{en:"Hyderabad",lt:"Haidarabadas",ru:"Хайдарабад"},iceland:{en:"Iceland",lt:"Islandija",ru:"Исландия"},india:{en:"India",lt:"Indija",ru:"Индия"},indonesia:{en:"Indonesia",lt:"Indonezija",ru:"Индонезия"},indore:{en:"Indore",lt:"Indauras",ru:"Индаур"},ionian_islands:{en:"Ionian Islands",lt:"Jonijos salos",ru:"Ионические острова"},iran:{en:"Iran",lt:"Iranas",ru:"Иран"},iraq:{en:"Iraq",lt:"Irakas",ru:"Ирак"},ireland:{en:"Ireland",lt:"Airija",ru:"Ирландия"},isle_of_man:{en:"Isle of Man",lt:"Meno Sala",ru:"Остров Мэн"},israel:{en:"Israel",lt:"Izraelis",ru:"Израиль"},italian_eritrea:{en:"Italian Eritrea",lt:"Italijos Eritrėja",ru:"Итальянская Эритрея"},italian_somaliland:{en:"Italian Somaliland",lt:"Italijos Somalilandas",ru:"Итальянское Сомали"},italy:{en:"Italy",lt:"Italija",ru:"Италия"},jaipur:{en:"Jaipur",lt:"Džaipuras",ru:"Джайпур"},jamaica:{en:"Jamaica",lt:"Jamaika",ru:"Ямайка"},jaora:{en:"Jaora",lt:"Džaura",ru:"Джаора"},japan:{en:"Japan",lt:"Japonija",ru:"Япония"},japanese_china:{en:"China - Japanese",lt:"Kinija - Japonų",ru:"Китай - Японский"},jersey:{en:"Jersey",lt:"Džersis",ru:"Джерси"},jodhpur:{en:"Jodhpur",lt:"Džodpuras",ru:"Джодхпур"},jordan:{en:"Jordan",lt:"Jordanija",ru:"Иордания"},julich_berg:{en:"Jülich-Berg",lt:"Julichas-Bergas",ru:"Юлих-Берг"},junagadh:{en:"Junagadh",lt:"Džūnagadas",ru:"Джунагадх"},katanga:{en:"Katanga",lt:"Katanga",ru:"Катанга"},kazakhstan:{en:"Kazakhstan",lt:"Kazachstanas",ru:"Казахстан"},kenya:{en:"Kenya",lt:"Kenija",ru:"Кения"},khiva:{en:"Khiva",lt:"Chivos chanatas",ru:"Хива"},khorezm:{en:"Khorezm People's Soviet Republic",lt:"Chorezmo Liaudies Sovietinė Respublika",ru:"Хорезмская НСР"},kiau_chau:{en:"Kiau Chau",lt:"Dziaodžou",ru:"Цзяо-Чжоу"},kiribati:{en:"Kiribati",lt:"Kiribatis",ru:"Кирибати"},kokand:{en:"Kokand",lt:"Kokando chanatas",ru:"Коканд"},korea:{en:"Korea",lt:"Korėja",ru:"Корея"},krakow:{en:"Krakow",lt:"Krokuva",ru:"Краков"},kutch:{en:"Kutch",lt:"Kačas",ru:"Кач"},kuwait:{en:"Kuwait",lt:"Kuveitas",ru:"Кувейт"},kyrgyzstan:{en:"Kyrgyzstan",lt:"Kirgizija",ru:"Киргизия"},laos:{en:"Laos",lt:"Laosas",ru:"Лаос"},latvia:{en:"Latvia",lt:"Latvija",ru:"Латвия"},lebanon:{en:"Lebanon",lt:"Libanas",ru:"Ливан"},lesotho:{en:"Lesotho",lt:"Lesotas",ru:"Лесото"},liberia:{en:"Liberia",lt:"Liberija",ru:"Либерия"},libya:{en:"Libya",lt:"Libija",ru:"Ливия"},liechtenstein:{en:"Liechtenstein",lt:"Lichtenšteinas",ru:"Лихтенштейн"},liege:{en:"Liège",lt:"Lježas",ru:"Льеж"},lippe:{en:"Lippe",lt:"Lipė",ru:"Липпе"},lithuania:{en:"Lithuania",lt:"Lietuva",ru:"Литва"},livonia:{en:"Livonia",lt:"Livonija",ru:"Ливония"},lombardy_venetia:{en:"Lombardy-Venetia",lt:"Lombardija-Venecija",ru:"Ломбардия-Венеция"},lubeck:{en:"Lübeck",lt:"Liubekas",ru:"Любек"},lucca:{en:"Lucca",lt:"Luka",ru:"Лукка"},lundy:{en:"Lundy",lt:"Landis",ru:"Ланди"},luxembourg:{en:"Luxembourg",lt:"Liuksemburgas",ru:"Люксембург"},macau:{en:"Macau",lt:"Makao",ru:"Макао"},macedonia:{en:"North Macedonia",lt:"Šiaurės Makedonija",ru:"Северная Македония"},madagascar:{en:"Madagascar",lt:"Madagaskaras",ru:"Мадагаскар"},madeira_islands:{en:"Madeira Islands",lt:"Madeira",ru:"Мадейра"},mainz:{en:"Mainz",lt:"Maincas",ru:"Майнц"},majorca:{en:"Majorca",lt:"Maljorka",ru:"Мальорка"},malawi:{en:"Malawi",lt:"Malavis",ru:"Малави"},malaya:{en:"Malaya",lt:"Malaja",ru:"Малайя"},malaya_british_borneo:{en:"Malaya and British Borneo",lt:"Malaja ir Britų Borneo",ru:"Малайя и Британское Борнео"},malaysia:{en:"Malaysia",lt:"Malaizija",ru:"Малайзия"},maldives:{en:"Maldives",lt:"Maldyvai",ru:"Мальдивы"},mali:{en:"Mali",lt:"Malis",ru:"Мали"},malta:{en:"Malta",lt:"Malta",ru:"Мальта"},mantua:{en:"Mantua",lt:"Mantuja",ru:"Мантуя"},marshall_islands:{en:"Marshall Islands",lt:"Maršalo salos",ru:"Маршалловы Острова"},martinique:{en:"Martinique",lt:"Martinika",ru:"Мартиника"},mauritania:{en:"Mauritania",lt:"Mauritanija",ru:"Мавритания"},mauritius:{en:"Mauritius",lt:"Mauricijus",ru:"Маврикий"},mecklenburg_schwerin:{en:"Mecklenburg-Schwerin",lt:"Meklenburgas-Šverinas",ru:"Мекленбург-Шверин"},mecklenburg_strelitz:{en:"Mecklenburg-Strelitz",lt:"Meklenburgas-Štrelicas",ru:"Мекленбург-Стрелиц"},mewar:{en:"Mewar",lt:"Mevaras",ru:"Мевар"},mexico:{en:"Mexico",lt:"Meksika",ru:"Мексика"},milan:{en:"Milan",lt:"Milanas",ru:"Милан"},moldavia_and_wallachia:{en:"Moldavia and Wallachia",lt:"Moldova ir Valakija",ru:"Молдавия и Валахия"},moldova:{en:"Moldova",lt:"Moldavija",ru:"Молдавия"},mombasa:{en:"Mombasa",lt:"Mombasa",ru:"Момбаса"},monaco:{en:"Monaco",lt:"Monakas",ru:"Монако"},mongolia:{en:"Mongolia",lt:"Mongolija",ru:"Монголия"},montenegro:{en:"Montenegro",lt:"Juodkalnija",ru:"Черногория"},montserrat:{en:"Montserrat",lt:"Montseratas",ru:"Монтсеррат"},morocco:{en:"Morocco",lt:"Marokas",ru:"Марокко"},mozambique:{en:"Mozambique",lt:"Mozambikas",ru:"Мозамбик"},mughal_empire:{en:"Mughal Empire",lt:"Mogolų imperija",ru:"Империя Великих Моголов"},myanmar:{en:"Myanmar",lt:"Mianmaras",ru:"Мьянма"},nagorno_karabakh:{en:"Nagorno-Karabakh",lt:"Kalnų Karabachas",ru:"Нагорный Карабах"},namibia:{en:"Namibia",lt:"Namibija",ru:"Намибия"},naples:{en:"Naples",lt:"Neapolis",ru:"Неаполь"},nassau:{en:"Nassau",lt:"Nasau",ru:"Нассау"},nassau_usingen:{en:"Nassau-Usingen",lt:"Nasau-Uzingenas",ru:"Нассау-Узинген"},nassau_weilburg:{en:"Nassau-Weilburg",lt:"Nasau-Veilburgas",ru:"Нассау-Вайльбург"},nauru:{en:"Nauru",lt:"Nauru",ru:"Науру"},navarra:{en:"Navarra",lt:"Navara",ru:"Наварра"},nawanagar:{en:"Nawanagar",lt:"Navanagaras",ru:"Наванагар"},nepal:{en:"Nepal",lt:"Nepalas",ru:"Непал"},netherlands:{en:"Netherlands",lt:"Nyderlandai",ru:"Нидерланды"},netherlands_antilles:{en:"Netherlands Antilles",lt:"Nyderlandų Antilai",ru:"Нидерландские Антильские острова"},netherlands_east_indies:{en:"Netherlands East Indies",lt:"Nyderlandų Rytų Indijos",ru:"Голландская Ост-Индия"},new_caledonia:{en:"New Caledonia",lt:"Naujoji Kaledonija",ru:"Новая Каледония"},new_guinea:{en:"New Guinea",lt:"Naujoji Gvinėja",ru:"Новая Гвинея"},new_hebrides:{en:"New Hebrides",lt:"Naujieji Hebridai",ru:"Новые Гебриды"},new_zealand:{en:"New Zealand",lt:"Naujoji Zelandija",ru:"Новая Зеландия"},newfoundland:{en:"Newfoundland",lt:"Niufaundlandas",ru:"Ньюфаундленд"},nicaragua:{en:"Nicaragua",lt:"Nikaragva",ru:"Никарагуа"},niger:{en:"Niger",lt:"Nigeris",ru:"Нигер"},nigeria:{en:"Nigeria",lt:"Nigerija",ru:"Нигерия"},niue:{en:"Niue",lt:"Niujė",ru:"Ниуэ"},north_borneo:{en:"North Borneo",lt:"Šiaurės Borneo",ru:"Северное Борнео"},north_korea:{en:"North Korea",lt:"Šiaurės Korėja",ru:"Северная Корея"},norway:{en:"Norway",lt:"Norvegija",ru:"Норвегия"},oldenburg:{en:"Oldenburg",lt:"Oldenburgas",ru:"Ольденбург"},oman:{en:"Oman",lt:"Omanas",ru:"Оман"},order_of_malta:{en:"Order of Malta",lt:"Maltos ordinas",ru:"Мальтийский орден"},ottoman_empire:{en:"Ottoman Empire",lt:"Osmanų imperija",ru:"Османская империя"},oudh:{en:"Oudh (Awadh)",lt:"Audas (Awadh)",ru:"Ауд (Авадх)"},pakistan:{en:"Pakistan",lt:"Pakistanas",ru:"Пакистан"},palatinate:{en:"Palatinate",lt:"Pfalco kurfiurstystė",ru:"Курпфальц"},palatine_zweibrucken:{en:"Palatine Zweibrücken",lt:"Pfalcas-Cveibriukenas",ru:"Пфальц-Цвейбрюккен"},palau:{en:"Palau",lt:"Palau",ru:"Палау"},palestine:{en:"Palestine",lt:"Palestina",ru:"Палестина"},panama:{en:"Panama",lt:"Panama",ru:"Панама"},papal_states:{en:"Papal States",lt:"Popiežiaus valstybė ",ru:"Папская область"},papua_new_guinea:{en:"Papua New Guinea",lt:"Papua Naujoji Gvinėja",ru:"Папуа - Новая Гвинея"},paraguay:{en:"Paraguay",lt:"Paragvajus",ru:"Парагвай"},parma:{en:"Parma",lt:"Parma",ru:"Парма"},peru:{en:"Peru",lt:"Peru",ru:"Перу"},philippines:{en:"Philippines",lt:"Filipinai",ru:"Филиппины"},piedmont:{en:"Piedmont",lt:"Pjemontas",ru:"Пьемонт"},pitcairn_islands:{en:"Pitcairn Islands",lt:"Pitkerno Salos",ru:"Острова Питкэрн"},poland:{en:"Poland",lt:"Lenkija",ru:"Польша"},porbandar:{en:"Porbandar",lt:"Porbandaras",ru:"Порбандар"},portugal:{en:"Portugal",lt:"Portugalija",ru:"Португалия"},portuguese_india:{en:"India - Portuguese",lt:"Indija - Portugalų",ru:"Индия - Португальская"},portuguese_timor:{en:"Portuguese Timor",lt:"Portugalijos Timoras",ru:"Португальский Тимор"},prussia:{en:"Prussia",lt:"Prūsija",ru:"Пруссия"},pudukkottai:{en:"Pudukkottai",lt:"Pudukotajus",ru:"Пудуккоттай"},puerto_rico:{en:"Puerto Rico",lt:"Puerto Rikas",ru:"Пуэрто-Рико"},qatar:{en:"Qatar",lt:"Kataras",ru:"Катар"},qatar_dubai:{en:"Qatar and Dubai",lt:"Kataras ir Dubajus",ru:"Катар и Дубай"},ras_al_khaimah:{en:"Ras Al Khaimah",lt:"Ras al Chaima",ru:"Рас-эль-Хайма"},ratlam:{en:"Ratlam",lt:"Ratlamas",ru:"Ратлам"},reunion:{en:"Réunion",lt:"Reunjonas",ru:"Реюньон"},reuss_gera:{en:"Reuss-Gera",lt:"Roisas-Gėra",ru:"Рейсс-Гера"},reuss_greiz:{en:"Reuss-Greiz",lt:"Roisas-Greicas",ru:"Рейсс-Грейц"},rhodesia:{en:"Rhodesia",lt:"Rodezija",ru:"Родезия"},rhodesia_nyasaland:{en:"Rhodesia and Nyasaland",lt:"Rodezija ir Njasalendas",ru:"Родезия и Ньясаленд"},roman_republic:{en:"Roman Republic",lt:"Romos respublika",ru:"Римская республика"},romania:{en:"Romania",lt:"Rumunija",ru:"Румыния"},ruanda_burundi:{en:"Ruanda-Burundi",lt:"Ruanda-Burundis",ru:"Руанда-Бурунди"},ruanda_urundi:{en:"Ruanda-Urundi",lt:"Ruanda-Urundis",ru:"Руанда-Урунди"},russia:{en:"Russia",lt:"Rusija",ru:"Россия"},russia_empire:{en:"Russian Empire",lt:"Rusijos Imperija",ru:"Российская Империя"},rwanda:{en:"Rwanda",lt:"Ruanda",ru:"Руанда"},ryukyu:{en:"Ryukyu",lt:"Riūkiū",ru:"Рюкю"},saar:{en:"Saar",lt:"Saras",ru:"Саар"},saint_helena:{en:"Saint Helena",lt:"Šv. Elenos sala",ru:"Остров Святой Елены"},saint_helena_ascension:{en:"Saint Helena and Ascension",lt:"Šv. Elenos ir Dangun Žengimo salos",ru:"Острова Святой Елены и Вознесения"},saint_kitts_nevis:{en:"Saint Kitts and Nevis",lt:"Sent Kitsas ir Nevis",ru:"Сент-Китс и Невис"},saint_lucia:{en:"Saint Lucia",lt:"Sent Lusija",ru:"Сент-Люсия"},saint_pierre_miquelon:{en:"Saint-Pierre and Miquelon",lt:"Sen Pjeras ir Mikelonas",ru:"Сен-Пьер и Микелон"},saint_vincent_grenadines:{en:"Saint Vincent and the Grenadines",lt:"Sent Vinsentas ir Grenadinai",ru:"Сент-Винсент и Гренадины"},salzburg:{en:"Salzburg",lt:"Zalcburgas",ru:"Зальцбург"},samoa:{en:"Samoa",lt:"Samoa",ru:"Самоа"},san_marino:{en:"San Marino",lt:"San Marinas",ru:"Сан-Марино"},sao_tome_principe:{en:"São Tomé and Príncipe",lt:"San Tomė ir Prinsipė",ru:"Сан-Томе и Принсипи"},sarawak:{en:"Sarawak",lt:"Saravakas",ru:"Саравак"},sardinia:{en:"Sardinia",lt:"Sardinija",ru:"Сардиния"},saudi_arabia:{en:"Saudi Arabia",lt:"Saudo Arabija",ru:"Саудовская Аравия"},saxe_altenburg:{en:"Saxe-Altenburg",lt:"Sakse-Altenburgas",ru:"Саксен-Альтенбург"},saxe_coburg_gotha:{en:"Saxe-Coburg and Gotha",lt:"Sakse-Koburgas ir Gota",ru:"Саксен-Кобург-Гота"},saxe_gotha_altenburg:{en:"Saxe-Gotha-Altenburg",lt:"Saksonija-Gota-Altenburgas",ru:"Саксен-Гота-Альтенбург"},saxe_hildburghausen:{en:"Saxe-Hildburghausen",lt:"Sakse-Hildburghauzenas",ru:"Саксен-Гильдбурггаузен"},saxe_meiningen:{en:"Saxe-Meiningen",lt:"Sakse-Meiningenas",ru:"Саксен-Мейнинген"},saxe_weimar_eisenach:{en:"Saxe-Weimar-Eisenach",lt:"Sakse-Veimaras-Eizenachas",ru:"Саксен-Веймар-Эйзенах"},saxony:{en:"Saxony",lt:"Saksonija",ru:"Саксония"},schaumburg_lippe:{en:"Schaumburg-Lippe",lt:"Šaumburgas-Lipė",ru:"Шаумбург-Липпе"},schleswig_holstein:{en:"Schleswig-Holstein",lt:"Šlėzvigas-Holšteinas",ru:"Шлезвиг-Гольштейн"},schwarzburg_rudolstadt:{en:"Schwarzburg-Rudolstadt",lt:"Švarcburgas-Rudolštatas",ru:"Шварцбург-Рудольштадт"},schwarzburg_sondershausen:{en:"Schwarzburg-Sondershausen",lt:"Švarcburgas-Zondershauzenas",ru:"Шварцбург-Зондерсгаузен"},scotland:{en:"Scotland",lt:"Škotija",ru:"Шотландия"},sealand:{en:"Sealand",lt:"Sylandas",ru:"Силенд"},seborga:{en:"Seborga",lt:"Seborga",ru:"Себорга"},senegal:{en:"Senegal",lt:"Senegalas",ru:"Сенегал"},serbia:{en:"Serbia",lt:"Serbija",ru:"Сербия"},seychelles:{en:"Seychelles",lt:"Seišeliai",ru:"Сейшелы"},sharjah:{en:"Sharjah",lt:"Šardža",ru:"Шарджа"},sicily:{en:"Sicily",lt:"Sicilija",ru:"Сицилия"},sierra_leone:{en:"Sierra Leone",lt:"Siera Leonė",ru:"Сьерра-Леоне"},silesia:{en:"Silesia",lt:"Silezija",ru:"Силезия"},singapore:{en:"Singapore",lt:"Singapūras",ru:"Сингапур"},slovakia:{en:"Slovakia",lt:"Slovakija",ru:"Словакия"},slovenia:{en:"Slovenia",lt:"Slovėnija",ru:"Словения"},solomon_islands:{en:"Solomon Islands",lt:"Saliamono Salos",ru:"Соломоновы Острова"},somalia:{en:"Somalia",lt:"Somalis",ru:"Сомали"},somaliland:{en:"Somaliland",lt:"Somalilandas",ru:"Сомалиленд"},south_africa:{en:"South Africa",lt:"Pietų Afrika",ru:"ЮАР"},south_arabia:{en:"South Arabia",lt:"Pietų Arabija",ru:"Южная Аравия"},south_georgia:{en:"South Georgia",lt:"Pietų Džordžija",ru:"Южная Георгия"},south_korea:{en:"South Korea",lt:"Pietų Korėja",ru:"Южная Корея"},south_sudan:{en:"South Sudan",lt:"Pietų Sudanas",ru:"Южный Судан"},south_vietnam:{en:"South Vietnam",lt:"Pietų Vietnamas",ru:"Южный Вьетнам"},south_yemen:{en:"South Yemen",lt:"Pietų Jemenas",ru:"Южный Йемен"},southern_rhodesia:{en:"Southern Rhodesia",lt:"Pietų Rodezija",ru:"Южная Родезия"},spain:{en:"Spain",lt:"Ispanija",ru:"Испания"},spainish_provinces:{en:"Spanish provinces",lt:"Ispanijos provincijos",ru:"Испанские провинции"},span_civil_war:{en:"Spain - Civil war",lt:"Ispanija - pilietinis karas",ru:"Испания - Гражданская война"},spanish_netherlands:{en:"Spanish Netherlands",lt:"Ispanijos Nyderlandai",ru:"Испанские Нидерланды"},spitsbergen:{en:"Spitsbergen",lt:"Špicbergenas",ru:"Шпицберген"},sri_lanka:{en:"Sri Lanka",lt:"Šri Lanka",ru:"Шри-Ланка"},straits_settlements:{en:"Straits Settlements",lt:"Sąsiaurio gyvenvietės",ru:"Стрейтс Сетлментс"},sudan:{en:"Sudan",lt:"Sudanas",ru:"Судан"},suriname:{en:"Suriname",lt:"Surinamas",ru:"Суринам"},swaziland:{en:"Eswatini (Swaziland)",lt:"Esvatinis (Svazilandas)",ru:"Эсватини (Свазиленд)"},sweden:{en:"Sweden",lt:"Švedija",ru:"Швеция"},swiss_cantons:{en:"Swiss Cantons",lt:"Šveicarijos kantonai",ru:"Швейцарские кантоны"},switzerland:{en:"Switzerland",lt:"Šveicarija",ru:"Швейцария"},syria:{en:"Syria",lt:"Sirija",ru:"Сирия"},taiwan:{en:"Taiwan",lt:"Taivanas",ru:"Тайвань"},tajikistan:{en:"Tajikistan",lt:"Tadžikistanas",ru:"Таджикистан"},tannu_tuva:{en:"Tannu Tuva",lt:"Tanu Tuva",ru:"Танну-Тува"},tanzania:{en:"Tanzania",lt:"Tanzanija",ru:"Танзания"},thailand:{en:"Thailand",lt:"Tailandas",ru:"Таиланд"},third_reich:{en:"Germany - Third Reich",lt:"Trečiasis Reichas",ru:"Германия - Третий рейх"},tibet:{en:"Tibet",lt:"Tibetas",ru:"Тибет"},togo:{en:"Togo",lt:"Togas",ru:"Того"},tokelau:{en:"Tokelau",lt:"Tokelau",ru:"Токелау"},tonga:{en:"Tonga",lt:"Tonga",ru:"Тонга"},tonk:{en:"Tonk",lt:"Tonkas",ru:"Тонк"},tonkin:{en:"Tonkin",lt:"Tonkinas",ru:"Тонкин"},transnistria:{en:"Transnistria",lt:"Padniestrė",ru:"Приднестровье"},transylvania:{en:"Transylvania",lt:"Transilvanija",ru:"Трансильвания"},travancore:{en:"Travancore",lt:"Travankoras",ru:"Траванкор"},trinidad_tobago:{en:"Trinidad and Tobago",lt:"Trinidadas ir Tobagas",ru:"Тринидад и Тобаго"},tristan_da_cunha:{en:"Tristan da Cunha",lt:"Tristanas da Kunja",ru:"Тристан-да-Кунья"},tunisia:{en:"Tunisia",lt:"Tunisas",ru:"Тунис"},turkey:{en:"Turkey",lt:"Turkija",ru:"Турция"},turkmenistan:{en:"Turkmenistan",lt:"Turkmėnistanas",ru:"Туркмения"},turks_caicos_islands:{en:"Turks and Caicos Islands",lt:"Terkso ir Kaikoso Salos",ru:"Тёркс и Кайкос"},tuscany:{en:"Tuscany",lt:"Toskana",ru:"Тоскана"},tuvalu:{en:"Tuvalu",lt:"Tuvalu",ru:"Тувалу"},two_sicilies:{en:"Two Sicilies",lt:"Dvi Sicilijos",ru:"Две Сицилии"},uganda:{en:"Uganda",lt:"Uganda",ru:"Уганда"},ukraine:{en:"Ukraine",lt:"Ukraina",ru:"Украина"},umm_al_qaiwain:{en:"Umm Al Qaiwain",lt:"Um al Kuvainas",ru:"Умм-эль-Кайвайн"},united_arab_emirates:{en:"United Arab Emirates",lt:"Jungtiniai Arabų Emyratai",ru:"ОАЭ"},united_kingdom:{en:"United Kingdom",lt:"Jungtinė Karalystė",ru:"Великобритания"},uruguay:{en:"Uruguay",lt:"Urugvajus",ru:"Уругвай"},usa:{en:"USA",lt:"JAV",ru:"США"},ussr:{en:"USSR",lt:"TSRS",ru:"СССР"},uzbekistan:{en:"Uzbekistan",lt:"Uzbekistanas",ru:"Узбекистан"},vanuatu:{en:"Vanuatu",lt:"Vanuatu",ru:"Вануату"},vatican_city:{en:"Vatican City",lt:"Vatikanas",ru:"Ватикан"},venezuela:{en:"Venezuela",lt:"Venesuela",ru:"Венесуэла"},venice:{en:"Venice",lt:"Venecija",ru:"Венеция"},vietnam:{en:"Vietnam",lt:"Vietnamas",ru:"Вьетнам"},virgin_islands_british:{en:"British Virgin Islands",lt:"Britų Mergelės salos",ru:"Британские Виргинские острова"},waldeck:{en:"Waldeck",lt:"Valdekas",ru:"Вальдек"},west_congo:{en:"Congo Republic",lt:"Kongas",ru:"Республика Конго"},western_africa:{en:"Western Africa (BCEAO)",lt:"Vakarų Afrika (BCEAO)",ru:"Западная Африка (BCEAO)"},western_sahara:{en:"Western Sahara",lt:"Vakarų Sachara",ru:"Западная Сахара"},westphalia:{en:"Westphalia",lt:"Vestfalija",ru:"Вестфалия"},wurttemberg:{en:"Württemberg",lt:"Viurtembergas",ru:"Вюртемберг"},wurzburg:{en:"Würzburg",lt:"Viurcburgas",ru:"Вюрцбург"},yemen:{en:"Yemen",lt:"Jemenas",ru:"Йемен"},yugoslavia:{en:"Yugoslavia",lt:"Jugoslavija",ru:"Югославия"},zaire:{en:"Zaire",lt:"Zairas",ru:"Заир"},zambia:{en:"Zambia",lt:"Zambija",ru:"Замбия"},zanzibar:{en:"Zanzibar",lt:"Zanzibaras",ru:"Занзибар"},zar:{en:"South African Republic",lt:"Pietų Afrikos Respublika",ru:"Южно-Африканская Республика"},zimbabwe:{en:"Zimbabwe",lt:"Zimbabvė",ru:"Зимбабве"}}).flatMap(([e,a])=>Object.values(a).map(a=>[a,e])));function ma(e){return e.includes(",")&&(e=e.split(",").pop()?.trim()||""),da[e]}const fa=["lithuania","norway","russia_empire"],pa={austria:"eu",belgium:"eu",bulgaria:"eu",croatia:"eu",cyprus:"eu",czech_republic:"eu",denmark:"eu",estonia:"eu",finland:"eu",france:"eu",germany:"eu",gibraltar:"uk",guernsey:"uk",hungary:"eu",iceland:"eu",ireland:"eu",isle_of_man:"uk",italy:"eu",jersey:"uk",latvia:"eu",liechtenstein:"eu",lithuania:"eu",luxembourg:"eu",malta:"eu",netherlands:"eu",norway:"eu",poland:"eu",portugal:"eu",romania:"eu",slovakia:"eu",slovenia:"eu",spain:"eu",sweden:"eu",switzerland:"eu",united_kingdom:"uk"};function ha(e,a){const t=function(e){switch(pa[e]){case "eu":return 3.4;case "uk":return 4.69;default:return 5.39}}(e),n=a*(t/100)+.35;return {price:a+n,charges:n,percents:t,fixed:.35}}const ga={afghanistan:"af","aland-islands":"ax",albania:"al",algeria:"dz","american-samoa":"as",andorra:"ad",angola:"ao",anguilla:"ai",antarctica:"aq","antigua-and-barbuda":"ag",argentina:"ar",armenia:"am",aruba:"aw","ascension-and-tristan-da-cunha":"sh",ascension:"sh",australia:"au",austria:"at",azerbaijan:"az",bahamas:"bs",bahrain:"bh",bangladesh:"bd",barbados:"bb",belarus:"by",belgium:"be",belize:"bz",benin:"bj",bermuda:"bm",bhutan:"bt",bolivia:"bo",bonaire:"bq","bosnia-and-herzegovina":"ba",botswana:"bw","bouvet-island":"bv",brazil:"br","british-indian-ocean-territory":"io","british-virgin-islands":"vg",brunei:"bn",bulgaria:"bg","burkina-faso":"bf",burundi:"bi","cabo-verde":"cv",caicos:"tc",cambodia:"kh",cameroon:"cm",canada:"ca","cayman-islands":"ky","central-african-republic":"cf",chad:"td",chile:"cl",china:"cn","christmas-island":"cx","cocos-islands":"cc","cocos-keeling-islands":"cc",colombia:"co",comoros:"km","congo-democratic-republic":"cd","congo-dr":"cd",congo:"cg","cook-islands":"ck","costa-rica":"cr","cote-d-ivoire":"ci","cote-divoire":"ci",croatia:"hr",cuba:"cu",curacao:"cw",cyprus:"cy",czechia:"cz",denmark:"dk",djibouti:"dj",dominica:"dm","dominican-republic":"do",ecuador:"ec",egypt:"eg","el-salvador":"sv","equatorial-guinea":"gq",eritrea:"er",estonia:"ee",eswatini:"sz",ethiopia:"et","falkland-islands":"fk","faroe-islands":"fo",fiji:"fj",finland:"fi",france:"fr","french-guiana":"gf","french-polynesia":"pf","french-southern-territories":"tf",gabon:"ga",gambia:"gm",georgia:"ge",germany:"de",ghana:"gh",gibraltar:"gi","great-britain":"gb",greece:"gr",greenland:"gl",grenada:"gd",guadeloupe:"gp",guam:"gu",guatemala:"gt",guernsey:"gg","guinea-bissau":"gw",guinea:"gn",guyana:"gy",haiti:"ht","heard-island-and-mc-donald-islands":"hm","heard-island":"hm","holy-see":"va",honduras:"hn","hong-kong":"hk",hungary:"hu",iceland:"is",india:"in",indonesia:"id",iran:"ir",iraq:"iq",ireland:"ie","isle-of-man":"im",israel:"il",italy:"it",jamaica:"jm","jan-mayen":"sj",japan:"jp",jersey:"je",jordan:"jo",kazakhstan:"kz","keeling-islands":"cc",kenya:"ke",kiribati:"ki","korea-democratic-peoples-republic":"kp","korea-dr":"kp","korea-republic":"kr",kuwait:"kw",kyrgyzstan:"kg","lao-peoples-democratic-republic":"la",laos:"la",latvia:"lv",lebanon:"lb",lesotho:"ls",liberia:"lr",libya:"ly",liechtenstein:"li",lithuania:"lt",luxembourg:"lu",macao:"mo",madagascar:"mg",malawi:"mw",malaysia:"my",maldives:"mv",mali:"ml",malta:"mt",malvinas:"fk","marshall-islands":"mh",martinique:"mq",mauritania:"mr",mauritius:"mu",mayotte:"yt","mc-donald-islands":"hm",mexico:"mx","micronesia-federated-states":"fm",micronesia:"fm",moldova:"md",monaco:"mc",mongolia:"mn",montenegro:"me",montserrat:"ms",morocco:"ma",mozambique:"mz",myanmar:"mm",namibia:"na",nauru:"nr",nepal:"np",netherlands:"nl","new-caledonia":"nc","new-zealand":"nz",nicaragua:"ni",niger:"ne",nigeria:"ng",niue:"nu","norfolk-island":"nf","north-korea":"kp",macedonia:"mk","north-macedonia":"mk","northern-mariana-islands":"mp",norway:"no",oman:"om",pakistan:"pk",palau:"pw",palestine:"ps",panama:"pa","papua-new-guinea":"pg",paraguay:"py",peru:"pe",philippines:"ph",pitcairn:"pn",poland:"pl",portugal:"pt",principe:"st","puerto-rico":"pr",qatar:"qa",reunion:"re",romania:"ro",russia:"ru",rwanda:"rw","saint-barthelemy":"bl","saint-helena, ascension-and-tristan-da-cunha":"sh","saint-helena":"sh","saint-kitts-and-nevis":"kn","saint-lucia":"lc","saint-martin-french-part":"mf","saint-martin":"mf","saint-pierre-and-miquelon":"pm","saint-vincent-and-the-grenadines":"vc",samoa:"ws","san-marino":"sm","sao-tome-and-principe":"st","sao-tome":"st","saudi-arabia":"sa",senegal:"sn",serbia:"rs",seychelles:"sc","sierra-leone":"sl",singapore:"sg","sint-eustatius-and-saba":"bq","sint-maarten-dutch-part":"sx","sint-maarten":"sx",slovakia:"sk",slovenia:"si","solomon-islands":"sb",somalia:"so","south-africa":"za","south-georgia-and-the-south-sandwich-islands":"gs","south-georgia":"gs","south-korea":"kr","south-sandwich":"gs","south-sudan":"ss",spain:"es","sri-lanka":"lk",sudan:"sd",suriname:"sr","svalbard-and-jan-mayen":"sj",svalbard:"sj",sweden:"se",switzerland:"ch","syrian-arab-republic":"sy",taiwanchina:"tw",tajikistan:"tj",tanzania:"tz",thailand:"th","timor-leste":"tl",togo:"tg",tokelau:"tk",tonga:"to","trinidad-and-tobago":"tt","tristan-da-cunha":"sh",tunisia:"tn",turkiye:"tr",turkmenistan:"tm","turks-and-caicos-islands":"tc",turks:"tc",tuvalu:"tv",uganda:"ug",ukraine:"ua","united-arab-emirates":"ae","united-kingdom":"gb","united-states-minor-outlying-islands":"um","united-states-of-america":"us","united-states":"us",uruguay:"uy","us-virgin-islands":"vi",usa:"us",uzbekistan:"uz",vanuatu:"vu",venezuela:"ve","viet-nam":"vn",vietnam:"vn","virgin-islands-british":"vg","virgin-islands-us":"vi","wallis-and-futuna":"wf","western-sahara":"eh",yemen:"ye",zambia:"zm",zimbabwe:"zw"},ba={al:{20:3.9,50:4.2,100:4.8,500:9.5,1e3:15.55,2e3:27.5},dz:{20:3.2,50:3.65,100:4.5,500:11,1e3:19.4,2e3:35.95},as:{20:6.35,50:6.65,100:7.15,500:11.3,1e3:16.65,2e3:27.15},ad:{20:4.35,50:4.65,100:5.2,500:9.45,1e3:15,2e3:25.9},ao:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},ai:{20:3.25,50:3.95,100:5.2,500:15.05,1e3:27.5,2e3:52.3},ag:{20:3.25,50:3.85,100:4.9,500:13.1,1e3:23.6,2e3:44.3},ar:{20:3.2,50:3.7,100:4.6,500:11.6,1e3:20.55,2e3:38.25},am:{20:3.9,50:4.25,100:4.85,500:9.8,1e3:16.15,2e3:28.65},aw:{20:4.6,50:5.15,100:6.15,500:14.05,1e3:24.1,2e3:44.05},au:{20:3.45,50:4.25,100:5.7,250:11.85,500:11.85,1e3:24.1,1500:37.15,2e3:49.15},at:{20:5.81,50:5.87,100:5.93,250:6.29,500:6.29,1e3:7.25,1500:8.71,2e3:8.55},az:{20:3.1,50:3.4,100:3.95,500:8.35,1e3:14.1,2e3:25.35},bs:{20:3.25,50:3.85,100:4.9,500:13.1,1e3:23.6,2e3:44.3},bh:{20:3.1,50:3.45,100:4.05,500:9,1e3:15.35,2e3:27.85},bd:{20:3.2,50:3.7,100:4.55,500:11.45,1e3:20.25,2e3:37.7},bb:{20:3.25,50:3.85,100:4.9,500:13.1,1e3:23.6,2e3:44.3},by:{20:3.05,50:3.3,100:3.8,500:7.75,1e3:12.8,2e3:22.8},be:{20:4.17,50:4.3,100:4.6,250:5.81,500:5.69,1e3:9.5,1500:13.79,2e3:14.9},bz:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},bj:{20:3.25,50:3.8,100:4.75,500:12.45,1e3:22.3,2e3:41.8},bm:{20:3.35,50:4.05,100:5.3,500:15.15,1e3:27.65,2e3:52.45},bo:{20:3.25,50:3.8,100:4.8,500:12.5,1e3:22.4,2e3:41.95},ba:{20:3.1,50:3.45,100:4.05,500:8.9,1e3:15.1,2e3:27.4},bw:{20:3.25,50:3.8,100:4.8,500:12.65,1e3:22.65,2e3:42.5},br:{20:3.15,50:3.6,100:4.4,250:8.4,500:8.4,1e3:18.7,1500:30.85,2e3:34.55},bn:{20:3.2,50:3.65,100:4.45,500:10.8,1e3:18.95,2e3:35.05},bg:{20:1.82,50:2,100:2.3,250:4.17,500:4.17,1e3:10.1,1500:16.88,2e3:18.9},bf:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},bi:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},kh:{20:3.25,50:3.8,100:4.8,500:12.6,1e3:22.55,2e3:42.25},cm:{20:3.25,50:3.75,100:4.7,500:12.1,1e3:21.5,2e3:40.2},ca:{20:3.25,50:3.85,100:4.9,250:9.3,500:9.3,1e3:22.15,1500:36,2e3:44.45},cv:{20:3.25,50:3.85,100:4.85,500:12.95,1e3:23.3,2e3:43.8},cf:{20:3.25,50:3.9,100:4.95,500:13.3,1e3:23.95,2e3:45.05},td:{20:3.25,50:3.9,100:4.95,500:13.3,1e3:23.95,2e3:45.05},cl:{20:3.3,50:3.9,100:4.95,500:13.4,1e3:24.15,2e3:45.5},cn:{20:2.5,50:2.8,100:3.5,250:6.15,500:6.15,1e3:14.9,1500:24.35,2e3:29.8},cx:{20:3.4,50:4.25,100:5.65,500:17,1e3:31.35,2e3:59.85},cc:{20:3.4,50:4.25,100:5.65,500:17,1e3:31.35,2e3:59.85},co:{20:4,50:4.55,100:5.45,500:12.8,1e3:22.15,2e3:40.7},km:{20:3.25,50:3.8,100:4.8,500:12.65},cg:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},cd:{20:3.25,50:3.9,100:4.95,500:13.3,1e3:23.95,2e3:45.05},ck:{20:3.45,50:4.35,100:5.85,500:17.95,1e3:33.25,2e3:63.6},cr:{20:3.15,50:3.6,100:4.35,500:10.3,1e3:18,2e3:33.15},ci:{20:3.2,50:3.75,100:4.7,500:12,1e3:21.4,2e3:40},hr:{20:2.6,50:2.9,100:3.75,250:7.02,500:6.05,1e3:8.3,1500:29.28,2e3:12.65},cu:{20:3.2,50:3.65,100:4.45,500:10.95,1e3:19.25,2e3:35.65},cy:{20:3.85,50:4.15,100:4.7,250:8.05,500:7.87,1e3:14.3,1500:25.77,2e3:24.95},cz:{20:3.75,50:3.87,100:4.11,250:4.96,500:4.9,1e3:7.5,1500:10.95,2e3:11.15},dk:{20:5.81,50:5.87,100:5.99,250:6.59,500:6.53,1e3:8.05,1500:10.47,2e3:10.25},dj:{20:3.25,50:3.9,100:4.95,500:13.3,1e3:23.95,2e3:45.05},dm:{20:3.35,50:4.05,100:5.3,500:15.1,1e3:27.6,2e3:52.35},do:{20:3.5,50:3.95,100:4.95,250:8.65,500:8.65,1e3:20.8,1500:33.9,2e3:40.65},ec:{20:3.3,50:3.95,100:5.1,500:14.05,1e3:25.5,2e3:48.1},eg:{20:3.9,50:4.25,100:4.85,500:9.8,1e3:16.15,2e3:28.65},sv:{20:3.25,50:3.8,100:4.8,500:12.6,1e3:22.6,2e3:42.35},gq:{20:3.25,50:3.85,100:4.9,500:13.1,1e3:23.6,2e3:44.3},er:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},ee:{20:4.05,50:4.17,100:4.36,250:5.14,500:5.14,1e3:7.55,1500:10.59,2e3:11.05},et:{20:3.2,50:3.65,100:4.5,500:11.15,1e3:19.65,2e3:36.5},fk:{20:3.4,50:4.2,100:5.6,500:16.75,1e3:30.8,2e3:58.8},fo:{20:5.4,50:5.85,100:6.65,500:13.05,1e3:21.15,2e3:37.25},fj:{20:3.4,50:4.25,100:5.65,500:16.9,1e3:31.15,2e3:59.5},fi:{20:5.93,50:5.99,100:6.11,500:6.66,1e3:8.29,1500:10.29,2e3:10.7},fr:{20:5.38,50:5.45,100:5.57,500:6.05,1e3:7.5,2e3:9.4},gf:{20:4.5,50:4.85,100:5.55,500:10.95,1e3:17.85,2e3:31.55},pf:{20:3.5,50:4.5,100:6.15,500:19.35,1e3:36.05,2e3:69.25},ga:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},gm:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},ge:{20:3.9,50:4.2,100:4.75,500:9.25,1e3:15.1,2e3:26.55},de:{20:5.08,50:5.14,100:5.26,250:5.75,500:5.69,1e3:7.2,1500:9,2e3:9.4},gh:{20:3.25,50:3.8,100:4.85,500:12.75,1e3:22.85,2e3:42.9},gi:{20:2.55,50:2.95,100:3.85,250:7.15,500:7.15,1e3:18.15,1500:29.9,2e3:36.15},gr:{20:3.99,50:4.11,100:4.36,250:5.45,500:5.38,1e3:8.89,1500:12.89,2e3:15.85},gl:{20:5.55,50:6.25,100:7.45,500:16.85,1e3:28.85,2e3:52.65},gd:{20:3.35,50:4.05,100:5.3,500:15.1,1e3:27.6,2e3:52.35},gp:{20:5.2,50:5.65,100:6.55,500:13.3,1e3:22,2e3:39.2},gu:{20:6.35,50:6.65,100:7.15,500:11.3,1e3:16.65,2e3:27.15},gt:{20:3.25,50:3.9,100:4.95,500:13.3,1e3:23.95,2e3:45.05},gn:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},gw:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},gy:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},ht:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},va:{20:3.2,50:3.7,100:4.6,500:11.5,1e3:20.4,2e3:37.95},hn:{20:4.05,50:4.65,100:5.7,500:13.9,1e3:24.35,2e3:45.1},hk:{20:2.5,50:2.85,100:3.6,250:6.4,500:6.4,1e3:15.75,1500:25.8,2e3:31.3},hu:{20:3.93,50:4.05,100:4.24,250:5.14,500:5.08,1e3:7.55,1500:11.13,2e3:11.1},is:{20:5.95,50:6,100:6.1,250:6.45,500:6.45,1e3:7.6,1500:8.9,2e3:9.75},in:{20:3.1,50:3.4,100:3.95,500:8.3,1e3:14,2e3:25.15},id:{20:3.45,50:3.8,100:4.65,250:7.75,500:7.75,1e3:17.7,1500:29.05,2e3:31.8},ir:{20:3.15,50:3.55,100:4.25,500:9.85,1e3:17.05,2e3:31.25},iq:{20:3.15,50:3.55,100:4.25,500:9.85,1e3:17.05,2e3:31.25},ie:{20:6.65,50:6.7,100:6.9,250:7.99,500:7.93,1e3:9.65,1500:13.07,2e3:12.7},il:{20:3.15,50:3.55,100:4.25,250:7.5,500:7.5,1e3:16.45,1500:26.1,2e3:31.05},it:{20:6.3,50:6.35,100:6.45,250:7.32,500:7.26,1e3:8.85,1500:11.19,2e3:11.5},jm:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},jp:{20:3.9,50:4.35,100:5.3,250:9.1,500:9.1,1e3:20.35,1500:34.85,2e3:37.1},jo:{20:3.9,50:4.25,100:4.85,500:9.7,1e3:15.95,2e3:28.25},kz:{20:3.1,50:3.45,100:4.1,500:9.2,1e3:15.8,2e3:28.75},ke:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},ki:{20:4.2,50:5.05,100:6.45,500:17.75,1e3:32.1,2e3:60.6},kp:{20:5.05,50:5.4,100:6,500:10.9,1e3:17.2,2e3:29.65},kr:{20:2.5,50:2.8,100:3.5,250:6.2,500:6.2,1e3:15,1500:24.55,2e3:29.6},kw:{20:3.1,50:3.5,100:4.15,500:9.35,1e3:16.1,2e3:29.35},kg:{20:3.1,50:3.5,100:4.15,500:9.3,1e3:15.95,2e3:29.1},la:{20:3.25,50:3.85,100:4.9,500:13.1,1e3:23.6,2e3:44.3},lv:{20:3.99,50:4.11,100:4.3,250:5.08,500:5.02,1e3:7.4,1500:10.53,2e3:10.8},lb:{20:3.85,50:4.15,100:5,250:8.05,500:8.05,1e3:18.05,1500:28.9,2e3:33.7},ls:{20:3.25,50:3.8,100:4.75,500:12.5,1e3:22.35,2e3:41.85},lr:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},ly:{20:3.2,50:3.65,100:4.45,500:10.8,1e3:18.95,2e3:35.1},li:{20:3.1,50:3.5,100:4.15,500:9.45,1e3:16.25,2e3:29.7},lt:{50:1.8,500:2.05,2e3:2.35},lu:{20:5.26,50:5.32,100:5.38,250:5.81,500:5.81,1e3:7.02,1500:8.59,2e3:8.75},mo:{20:4.15,50:4.85,100:6.15,500:16.15,1e3:28.85,2e3:54.05},mg:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},mw:{20:3.25,50:3.8,100:4.8,500:12.75,1e3:22.8,2e3:42.8},my:{20:2.5,50:2.85,100:3.6,250:6.55,500:6.55,1e3:16.15,1500:26.5,2e3:30.25},mv:{20:3.25,50:3.9,100:4.95,500:13.3,1e3:23.95,2e3:45.05},ml:{20:3.25,50:3.75,100:4.7,500:12.05,1e3:21.5,2e3:40.15},mt:{20:3.95,50:4.3,100:5.05,250:8.65,500:8.47,1e3:17.8,1500:29.16,2e3:31.95},mh:{20:6.35,50:6.65,100:7.15,500:11.3,1e3:16.65,2e3:27.15},mr:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},mu:{20:3.1,50:3.4,100:4,500:8.75,1e3:14.8,2e3:26.8},yt:{20:5.2,50:5.65,100:6.55,500:13.3,1e3:22,2e3:39.2},mx:{20:3.8,50:4.15,100:4.95,250:8,500:8,1e3:17.95,1500:28.65,2e3:34.5},fm:{20:6.35,50:6.65,100:7.15,500:11.3,1e3:16.65,2e3:27.15},md:{20:3.05,50:3.35,100:3.9,500:8.2,1e3:13.75,2e3:24.7},mc:{20:4.9,50:4.9,100:5,500:5.65,1e3:6.7,2e3:8.6},mn:{20:3.25,50:3.85,100:4.85,500:12.9,1e3:23.15,2e3:43.45},ms:{20:3.4,50:4.15,100:5.5,500:16.15,1e3:29.65,2e3:56.5},ma:{20:3.15,50:3.55,100:4.3,500:10.05,1e3:17.4,2e3:32},mz:{20:3.25,50:3.85,100:4.9,500:13.05,1e3:23.5,2e3:44.15},mm:{20:3.2,50:3.7,100:4.55,500:11.45,1e3:20.25,2e3:37.7},na:{20:3.25,50:3.8,100:4.75,500:12.5,1e3:22.35,2e3:41.85},nr:{20:3.75,50:5.1,100:7.4,500:25.7,1e3:48.75,2e3:94.7},np:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},nl:{20:4.3,50:4.45,100:4.7,250:5.99,500:5.93,1e3:9.5,1500:13.61,2e3:15.05},nc:{20:3.5,50:4.5,100:6.15,500:19.35,1e3:36.05,2e3:69.25},nz:{20:4,50:4.5,100:5.65,250:10.1,500:10.1,1e3:24.7,1500:40.35,2e3:47.8},ni:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},ne:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},ng:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},nu:{20:3.5,50:4.4,100:5.95,500:18.35,1e3:34.1,2e3:65.35},nf:{20:3.4,50:4.25,100:5.65,500:17,1e3:31.35,2e3:59.85},mk:{20:3.1,50:3.4,100:4,500:8.5,1e3:14.4,2e3:25.95},mp:{20:6.35,50:6.65,100:7.15,500:11.3,1e3:16.65,2e3:27.15},no:{20:5.15,50:5.25,100:5.4,250:6,500:6,1e3:8,1500:10.25,2e3:11.5},om:{20:3.15,50:3.55,100:4.3,500:10.05,1e3:17.45,2e3:32.05},pk:{20:3.1,50:3.4,100:4,500:8.75,1e3:14.8,2e3:26.8},pw:{20:6.35,50:6.65,100:7.15,500:11.3,1e3:16.65,2e3:27.15},pa:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},pg:{20:3.45,50:4.35,100:5.95,500:18.25,1e3:33.9,2e3:64.95},py:{20:4,50:4.55,100:5.45,500:12.8,1e3:22.15,2e3:40.65},pe:{20:3.25,50:3.85,100:4.9,500:13.05,1e3:23.45,2e3:44.1},ph:{20:3.1,50:3.45,100:4.15,500:9.25,1e3:15.85,2e3:28.9},pn:{20:3.3,50:3.95,100:5.05,500:13.95,1e3:25.3,2e3:47.8},pl:{20:4.15,50:4.25,100:4.45,250:5.51,500:5.45,1e3:7.9,1500:11.98,2e3:11.75},pt:{20:4.3,50:4.42,100:4.72,250:5.75,500:5.69,1e3:9.08,1500:13.01,2e3:14.95},pr:{20:6.35,50:6.65,100:7.15,500:11.3,1e3:16.65,2e3:27.15},qa:{20:3.15,50:3.6,100:4.35,500:10.4,1e3:18.15,2e3:33.45},re:{20:4.5,50:4.85,100:5.55,500:10.95,1e3:17.85,2e3:31.55},ro:{20:3.45,50:3.57,100:3.69,250:4.6,500:4.6,1e3:7.5,1500:10.77,2e3:12.4},ru:{20:3.8,50:4.05,100:4.7,250:7.25,500:7.25,1e3:14.45,1500:24.6,2e3:25.3},rw:{20:3.2,50:3.65,100:4.45,500:10.9,1e3:19.1,2e3:35.4},kn:{20:3.35,50:4.05,100:5.3,500:15.1,1e3:27.6,2e3:52.35},lc:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},pm:{20:5.2,50:5.65,100:6.55,500:13.3,1e3:22,2e3:39.2},vc:{20:3.25,50:3.85,100:4.9,500:13.05,1e3:23.4,2e3:44},ws:{20:3.4,50:4.25,100:5.65,500:17,1e3:31.3,2e3:59.8},sm:{20:3.2,50:3.65,100:4.5,500:11.2,1e3:19.75,2e3:36.7},st:{20:3.25,50:3.8,100:4.75,500:12.35,1e3:22,2e3:41.2},sa:{20:3.15,50:3.55,100:4.25,250:7.3,500:7.3,1e3:16.6,1500:26.65,2e3:31.2},sn:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},sc:{20:3.2,50:3.65,100:4.5,500:11.25,1e3:19.85,2e3:36.9},sl:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},sg:{20:2.5,50:2.75,100:3.4,250:5.9,500:5.9,1e3:14.15,1500:23,2e3:28},sk:{20:3.93,50:4.05,100:4.3,250:5.38,500:5.32,1e3:8.83,1500:12.89,2e3:14.45},si:{20:4.24,50:4.3,100:4.6,250:5.57,500:5.51,1e3:8.71,1500:12.4,2e3:14.15},sb:{20:3.4,50:4.25,100:5.65,500:17,1e3:31.3,2e3:59.8},za:{20:3.2,50:3.7,100:4.55,250:8.1,500:8.1,1e3:19.15,1500:30.95,2e3:37.1},es:{20:4.11,50:4.24,100:4.54,250:5.57,500:5.51,1e3:8.8,1500:13.01,2e3:13.5},lk:{20:3.15,50:3.55,100:4.3,500:10.2,1e3:17.8,2e3:32.8},sd:{20:3.2,50:3.65,100:4.45,500:10.8,1e3:18.95,2e3:35.1},sr:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},sz:{20:2.6,50:3.1,100:4.15,250:8.1,500:8.1,1e3:21.15,1500:35.1,2e3:43.4},se:{20:5.26,50:5.32,100:5.51,250:6.23,500:6.17,1e3:8.05,1500:11.01,2e3:10.45},ch:{20:7.2,50:7.25,100:7.35,250:7.65,500:7.65,1e3:8.6,1500:9.75,2e3:10.45},tw:{20:3.1,50:3.35,100:3.75,250:5.25,500:5.7,1e3:11.75,1500:18.25,2e3:24.1},tj:{20:3.2,50:3.7,100:4.6,500:11.55,1e3:20.45,2e3:38.05},tz:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},th:{20:2.5,50:2.75,100:3.45,250:5.95,500:5.95,1e3:14.3,1500:23.35,2e3:28.7},tg:{20:3.2,50:3.75,100:4.65,500:12,1e3:21.35,2e3:39.85},tk:{20:3.5,50:4.4,100:5.95,500:18.35,1e3:34.1,2e3:65.35},to:{20:3.4,50:4.25,100:5.65,500:17,1e3:31.3,2e3:59.8},tt:{20:3.25,50:3.85,100:4.9,500:13.1,1e3:23.6,2e3:44.3},tn:{20:3.1,50:3.5,100:4.2,500:9.5,1e3:16.4,2e3:29.95},tr:{20:3.1,50:3.4,100:4,250:6.6,500:6.6,1e3:14.2,1500:22.5,2e3:26.65},tc:{20:3.35,50:4.05,100:5.3,500:15.1,1e3:27.6,2e3:52.35},tv:{20:3.4,50:4.25,100:5.65,500:17,1e3:31.3,2e3:59.8},ug:{20:3.25,50:3.8,100:4.75,500:12.3,1e3:22,2e3:41.2},ua:{20:1.8,50:1.95,100:2.25,500:4.5,1e3:7.55,2e3:13.45},ae:{20:1.75,50:2,100:2.4,250:4.5,500:4.6,1e3:11.35,1500:18.6,2e3:23.9},gb:{20:3.85,50:3.9,100:4.15,250:5,500:4.95,1e3:7.65,1500:10.75,2e3:12.55},us:{20:6.05,50:6.35,100:6.95,250:9.25,500:9.25,1e3:16.85,1500:25,2e3:27.95},uy:{20:3.2,50:3.7,100:4.55,500:11.35,1e3:20.05,2e3:37.3},uz:{20:3.1,50:3.45,100:4.15,500:9.25,1e3:15.85,2e3:28.9},vu:{20:4.2,50:5.05,100:6.45,500:17.75,1e3:32.1,2e3:60.6},ve:{20:3.2,50:3.65,100:4.5,500:11.25,1e3:19.85,2e3:36.9},vn:{20:3.1,50:3.45,100:4.15,500:9.25,1e3:15.9,2e3:28.95},vg:{20:3.35,50:4.05,100:5.3,500:15.1,1e3:27.6,2e3:52.35},vi:{20:6.35,50:6.65,100:7.15,500:11.3,1e3:16.65,2e3:27.15},wf:{20:3.5,50:4.4,100:5.95,500:18.35,1e3:34.1,2e3:65.35},zm:{20:3.25,50:3.8,100:4.75,500:12.5,1e3:22.35,2e3:41.85},zw:{20:3.25,50:3.85,100:4.85,500:12.85,1e3:23,2e3:43.2},ax:{20:5.25,50:5.3,100:5.4,500:6.15,1e3:7.35,2e3:9.45},bq:{20:4.6,50:5.15,100:6.15,500:14.05,1e3:24.1,2e3:44.05},cw:{20:4.6,50:5.15,100:6.15,500:14.05,1e3:24.1,2e3:44.05},gg:{20:3.4,50:4.2,100:5.6,500:16.75,1e3:30.8,2e3:58.8},im:{20:3.4,50:4.2,100:5.6,500:16.75,1e3:30.8,2e3:58.8},je:{20:4.25,50:5.05,100:6.55,500:18.15,1e3:32.85,2e3:62.05},me:{20:3.1,50:3.4,100:3.95,500:8.45,1e3:14.3,2e3:25.75},rs:{20:3.05,50:3.35,100:3.9,250:6.65,500:6.65,1e3:13.45,1500:21.3,2e3:24.1},ss:{20:4.3,50:4.4,100:4.6,500:6,1e3:8,2e3:11.75}};function ya(e,a){const t=ga[e];if(!(t in ba))return  -1;if(a>1900)return +(ya(e,a%1900)+ya(e,1900)*Math.floor(a/1900)).toFixed(2);const n=ba[t];return Object.entries(n).find(([e])=>a<=+e)?.[1]||-1}var wa=(e=>(e.GET="get",e.GIVE="give",e.HISTORY="history",e))(wa||{});async function ka(e){localStorage.setItem(o.TAB,e),await g(a=>a.set(o.TAB,e));}function va(e){return e.classList.contains("lgray-13")?"history":e.textContent.includes("Coins′un′Notes")?"give":"get"}function Sa(e,a){const t=sa(e);if(!t)return;const n=t.nextElementSibling;if(!n)return;n.classList.add("price");const r=n.querySelector("span.blue-13");if(!r)return;const i=+(r?.textContent||0),o=n.querySelector("span.gray-11:first-child")?.textContent,s=n.querySelector("span.gray-11:last-child")?.textContent;let l=e.dataset?.tooltipPrice;if(!l)return;for(const u of n.querySelectorAll("span[data-price-percent], span[data-price-tooltip], span[data-price-cond]"))u.remove();o&&(l=l.replace(o,"")),s&&(l=l.replace(s,""));const c=+l;if(r.style.color=c>i?"green":c<i?"brown":"",r.classList.remove("price-times"),!isNaN(c)&&i!==c){const e=i/c;let a="";if(e>=2)a=`<span class="gray-11 price-times" data-price-percent>&times;${e.toFixed(e>=10?0:1).replace(".0","")}</span>`,r.classList.add("price-times");else {const t=(100*(e-1)).toFixed();+t>=50?a=`<span class="gray-11 price-times" data-price-percent>+${t}%</span>`:+t>0?a=`<span class="gray-11 price-over" data-price-percent>+${t}%</span>`:+t<0&&(a=`<span class="gray-11 price-under" data-price-percent>&minus;${(-t).toFixed()}%</span>`);}n.insertAdjacentHTML("beforeend",`${a}<span class="gray-11 price-tooltip" data-price-tooltip>${o}${me(c)}${s}</span>`);}}function za(){const e=!!document.getElementById("need-swap-list"),a=document.querySelectorAll("#swap-list table.swap-coin");for(const t of a){let a=[...t.querySelectorAll("tr")];const n=a.filter(e=>!!e.querySelector("input.swap-checkbox:checked")||(e.classList.remove("conflict","ignored"),false)),r=t.previousElementSibling;if("h2"===r.tagName.toLowerCase()){const e=r.querySelector("input.swap-country-checkbox, input.edit-country-checkbox");e&&(e.checked=n.length===a.length);}e||(a=n);const i="need-by-year"===m().searchParams.get("v");for(const o of a){const a=o.dataset,{tooltipName:n,tooltipSubject:r,tooltipVariety:s,tooltipKm:l}={...a},c=[];l?(c.push(`[data-tooltip-km=${JSON.stringify(l)}]`),i&&c.push(`tr[data-tooltip-name=${JSON.stringify(n)}]`)):(c.push(`tr[data-tooltip-name=${JSON.stringify(n)}]`),r&&c.push(`[data-tooltip-subject=${JSON.stringify(r)}]`),s&&c.push(`[data-tooltip-variety=${JSON.stringify(s)}]`));const u=[...t.querySelectorAll(c.join(""))],d=e?u:u.filter(e=>!!e.querySelector("input.swap-checkbox:checked")),m=d.length>0;for(const e of u)e.classList.toggle("ignored",m&&!e.querySelector("input.swap-checkbox:checked"));const f=d.length>1;for(const e of d)e.classList.toggle("conflict",f);}}}function _a(e){return e.querySelector("#tree a.region.list-link div.right.blue-13 sup")}function xa(e){return e.querySelectorAll("table.swap-coin tr.del")}function Aa(e){return e.querySelector("a.act")?.href.match(/soid=(\d+)/)?.[1]}function ja(e){return e&&e.__esModule&&Object.prototype.hasOwnProperty.call(e,"default")?e.default:e}var qa,Ea,$a={exports:{}};const La=ja((qa||(qa=1,Ea=$a,function(){var e={}.hasOwnProperty;function a(){for(var e="",a=0;a<arguments.length;a++){var r=arguments[a];r&&(e=n(e,t(r)));}return e}function t(t){if("string"==typeof t||"number"==typeof t)return t;if("object"!=typeof t)return "";if(Array.isArray(t))return a.apply(null,t);if(t.toString!==Object.prototype.toString&&!t.toString.toString().includes("[native code]"))return t.toString();var r="";for(var i in t)e.call(t,i)&&t[i]&&(r=n(r,i));return r}function n(e,a){return a?e?e+" "+a:e+a:e}Ea.exports?(a.default=a,Ea.exports=a):window.classNames=a;}()),$a.exports));var Ca=(e=>(e.RESERVED="resedved",e.COUNTRY="country",e.YEAR="year",e.VALUE="value",e.KM="km",e))(Ca||{});function Ba({name:e,direction:t,value:n,placeholder:r,width:i,options:o}){const s=o.size<=1;let l,c=r||"";if(s){const e=[...o.keys()].filter(e=>""!==e).pop()||"";l=o.get(e);}else n&&(l=o.get(n));return l?.name?c=l.name:n&&(c=n),a.createElement("div",{className:La("filter",t||"left")},a.createElement("div",{"data-filter":e,"data-filter-placeholder":r,"data-filter-disabled":s,className:La("filter-box",{"filter-box-disabled":s,"filter-box-active":!s&&n}),style:{width:i-24}},a.createElement("div",{className:La("left",{"blue-13":n},"filter-label"),dangerouslySetInnerHTML:{__html:c}}),!s&&(n?a.createElement("div",{className:"right close",title:"Clear filter","data-filter-clear":e},"×"):a.createElement("div",{className:"right"},a.createElement("span",{className:"arrow ab"})))||""),a.createElement("div",{className:"drop hide filter-dialog","data-filter-dialog":e,style:{width:i}},[["","All"],...o.entries()].map(([t,n])=>a.createElement(a.Fragment,null,a.createElement("a",{className:"list-link","data-filter-by":e,"data-filter-value":t},a.createElement("span",{className:"left gray-13 wrap filter-label",dangerouslySetInnerHTML:{__html:"string"==typeof n?n:`${n.name}`}}),"string"!=typeof n&&a.createElement("span",{className:"right lgray-11"},"(",n.count,")"))))))}function Ma({filters:e}){return a.createElement("div",{className:"left filter-container filters"},[...e.entries()].map(([e,t])=>a.createElement(Ba,{key:e,...t,name:e})))}const Fa=(e="#DDD")=>`<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 96 960 960" width="20px" style="fill:${e}"><path d="M425 711h110V611h100V501H535V401H425v100H325v110h100v100Zm55 255q-135.091-34.197-223.045-155.842Q169 688.514 169 540V303l311-117 311 117v237q0 148.514-87.955 270.158Q615.091 931.803 480 966Zm0-78.5q102.5-33 169.25-130.603Q716 659.293 716 540V354.387L480 266l-236 88.387V540q0 119.293 66.75 216.897Q377.5 854.5 480 887.5Zm0-311Z"></path></svg>`,Na={year:{index:0,label:"Year",sort:Me},face:{index:1,label:"Facial value",sort:Ne},cond:{index:3,label:"Condition",sort:Te},value:{index:4,label:"Value",sort:(e,a,t=1)=>t*Ce(e,a,"value")||Te(e,a,-1)},km:{index:6,label:"Krause",sort:Fe}};let Ta="year",Pa="d";async function Ra(){!function(){const e=[...document.querySelectorAll("#swap-mgr div.leftCol > div.user-info > .wrap")].map(e=>e.textContent).join(" / ");e&&(document.title=`${e} - ${document.title}`);}(),function(){const e=document.getElementById("swap-info");if(!e)return;const a=document.getElementById("message");if(!a)return;const t=e.querySelector(".text");t&&(t.querySelectorAll(".dgray-13").forEach(e=>{e.classList.remove("dgray-13"),e.classList.add("gray-11");}),a.insertAdjacentElement("beforebegin",t));const n=e.querySelector("a.btn-s.btn-gray");n&&a.replaceWith(n);}(),ua(),function(){for(const e of document.querySelectorAll("#swap-list, #take-swap-list")){for(const a of e.querySelectorAll("h2"))fa.includes(a.id)&&a.classList.add("separate-country");for(const a of e.querySelectorAll("table.swap-coin td a.dgray-13"))a.textContent?.match(/(eur(o|a[is])|евро)/i)&&a.classList.add("separate-country");}}(),function(){const e=document.querySelector("#tree a.list-link:not([href]):first-child .right")?.textContent||"0",[,a]=document.querySelector('#tree .user-info + div span[class^="swap-status"]')?.className.match(/swap-status(\d+)/)||[],t=y(o.TAB)||localStorage.getItem(o.TAB)||("0"===e||"1"===a||"2"===a?wa.GIVE:wa.GET),n=document.querySelectorAll("#swap-mgr div.widerightCol > ul.region-list > li.region");for(const r of n){const e=va(r);r.addEventListener("click",()=>ka(e)),e===t&&r.click();}}(),function(){const e=document.getElementById("take-swap-list");if(!e)return;const a=e.querySelector("div.left.action-board");if(!a)return;const t=e.querySelectorAll("table.swap-coin tbody");if(!t||!t.length)return;a.removeAttribute("style"),a.insertAdjacentHTML("afterend",qe("sort-filter",Ae(c(Na[Ta]?.label),Pa),Object.entries(Na).map(([e,{label:a}])=>`\n                    <a class='list-link' data-option='${e}' data-order='a'>${xe(c(a))}${ze()}</a>\n                    <a class='list-link' data-option='${e}' data-order='d'>${xe(c(a))}${_e()}</a>\n                `)));const n=e.querySelector("#sort-filter");if(!n)return;const r=e.querySelector("#sort-filter-dialog");if(!r)return;n.addEventListener("click",e=>{z(e),r.style.display="block";}),r.addEventListener("click",async e=>{z(e),r.style.display="none";const a=e.target.closest("a");if(!a)return;const{option:i,order:o}=a.dataset;i&&o&&(Ta=i,Pa=o,n.innerHTML=Ae(c(Na[Ta]?.label),Pa),await He(Ta,Pa),Pe(t,Na[Ta]?.sort,Pa));});const i=e.querySelectorAll("table.swap-coin tbody tr");for(const o of i){const e=o.querySelectorAll("td.ico-star").length,a=o.querySelectorAll("td"),t=o.dataset;for(const[n,{index:r}]of Object.entries(Na)){const i=Le(n),o=a[r+e].textContent;if(o)if("year"===n){const[e,...a]=o.split(/(?:\s|&nbsp;)+/);t[i]=e,t.sortMm=a.join(" ");}else if("cond"===n)t[i]=`${G[o]}`;else if("km"===n){const e=o.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i);if(e&&e.groups){const{groups:{cat:a,num:n,prefix:r,suffix:s}}=e;t.sortKmc=a,t[i]=n,t.sortKma=`${r}${s}`,t.sortKmz=o;}else t.sortKmc="",t[i]=o,t.sortKma="",t.sortKmz=o;}else t[i]=o;}}[Ta,Pa]=Re(),Pe(t,Na[Ta]?.sort,Pa);}(),function(){const e=document.getElementById("take-swap-list");if(!e)return;const n=e.lastElementChild;if(!n)return;function r(e,a){return [...e.keys()].sort(a).reduce((a,t)=>{const n=e.get(t);return n&&a.set(t,n),a},new Map)}const i=new Map,o=[Ca.RESERVED,Ca.COUNTRY,Ca.YEAR,Ca.VALUE,Ca.KM],s=new Map,l=e=>"none"!==e.style.display,c=[...e.querySelectorAll('th[data-reserve="on"]')].filter(l).length,u=[...e.querySelectorAll('th[data-reserve=""]')].filter(l).length;i.set(Ca.RESERVED,{placeholder:"Reserved",width:100,options:new Map(c&&u?[["on",{name:`<span class="left filter-label">${Fa("#E4A500")}</span>`,count:c}],["off",{name:`<span class="left filter-label">${Fa("#DDD")}</span>`,count:u}]]:[])});const d=e.querySelectorAll("h2");i.set(Ca.COUNTRY,{placeholder:"Country",width:250,options:r([...d].reduce((e,a)=>{const t=a.cloneNode(true);for(const o of t.querySelectorAll("input, sup"))o.remove();const n=a.nextElementSibling?.querySelectorAll("tr")||[];console.debug(n.length,n);const r=[...n].filter(l);console.debug(r.length,r);const i=r.map(e=>e.style.display);return console.debug(i),e.set(t.id,{name:t.innerHTML,count:[...a.nextElementSibling?.querySelectorAll("tr")||[]].filter(l).length}),e},new Map))}),i.set(Ca.YEAR,{placeholder:"Year",width:90,options:r([...e.querySelectorAll("tr[data-sort-year]")].reduce((a,t)=>{const n=t.dataset.sortYear;return n&&a.set(n,{name:n,count:[...e.querySelectorAll(`tr[data-sort-year="${n}"]`)].filter(l).length}),a},new Map),(e,a)=>$e(Ee(a),Ee(e)))}),i.set(Ca.VALUE,{placeholder:"Face value",width:110,options:r([...e.querySelectorAll("tr[data-sort-face]")].reduce((a,t)=>{const n=t.dataset.sortFace;if(n){const[t]=n.split(" ");a.set(t,{name:t,count:[...e.querySelectorAll(`tr[data-sort-face="${t}"]`),...e.querySelectorAll(`tr[data-sort-face^="${t} "]`)].filter(l).length});}return a},new Map),(e,a)=>$e(Ee(e),Ee(a)))});const m=/([a-z]*)([0-9]*)((?:\.[0-9]+)?[a-z]*)/i;i.set(Ca.KM,{placeholder:"KM#",width:110,options:r([...e.querySelectorAll("tr[data-sort-km]")].reduce((a,t)=>{const{sortKmc:n="",sortKm:r="",sortKma:i=""}=t.dataset,o=`${n.toLowerCase()}${r}${i}`;return o&&a.set(o,{name:`${n}# ${r}${i}`,count:[...e.querySelectorAll(`tr[data-sort-kmc="${n}"][data-sort-km="${r}"][data-sort-kma="${i}"]`)].filter(l).length}),a},new Map),(e,a)=>{const[,t,n,r]=e.match(m)||[],[,i,o,s]=a.match(m)||[];return $e(t,i)||$e(Ee(n),Ee(o))||$e(r,s)})});for(const a of o){const e=y(a);if(e){s.set(a,e);const t=i.get(a);t&&(t.value=e);}}function f(){for(const e of d){const a=e.nextElementSibling,t=a.querySelectorAll("tr");let n=false;e:for(const r of t){const a=r.dataset;for(const[t,i]of s)switch(t){case Ca.RESERVED:const t="on"===i?"on":"";if(i&&!r.querySelector(`[data-reserve="${t}"]`)){r.style.display="none";continue e}break;case Ca.COUNTRY:if(e.id!==i){n=false;break e}break;case Ca.YEAR:if(a.sortYear!==i){r.style.display="none";continue e}break;case Ca.VALUE:if(!a.sortFace?.startsWith(`${i} `)){r.style.display="none";continue e}break;case Ca.KM:{const[,e,t,n]=i.match(m)||[];if(a.sortKmc?.toLowerCase()!==e||a.sortKm!==t||a.sortKma!==n){r.style.display="none";continue e}break}}r.style.display="",n=true;}e.style.display=a.style.display=n?"":"none";}}n.insertAdjacentHTML("beforebegin",server.renderToString(a.createElement(Ma,{filters:i}))),f();for(const a of document.querySelectorAll("[data-filter-by]"))a.addEventListener("click",async()=>{const e=a.dataset,t=e.filterBy,n=e.filterValue;await g(e=>n?e.set(t,n):e.delete(t));const r=document.querySelector(`[data-filter="${t}"]`);var i;r&&(n?(r.innerHTML=`${je(a.querySelector(".left")?.outerHTML)}${i=t,`<div class='right close' title='Clear filter' data-filter-clear='${i}'>×</div>`}`,r.classList.add("filter-box-active")):(r.innerHTML=`${je(r.dataset?.filterPlaceholder)}${_e()}`,r.classList.remove("filter-box-active"))),n?s.set(t,n):s.delete(t),f();});for(const a of document.querySelectorAll("[data-filter]"))a.addEventListener("click",async e=>{z(e);const t=a.dataset;if("true"===t.filterDisabled)return;let n=false;const r=e.target,i=t.filter;if(r.matches("[data-filter-clear]")){n=true;const{filterClear:e}=r.dataset;e&&await g(a=>a.delete(e)),a.innerHTML=`${je(t.filterPlaceholder)}${_e()}`,a.classList.remove("filter-box-active"),s.delete(i),f();}for(const a of document.querySelectorAll("[data-filter-dialog]"))a.style.display=n||a.dataset.filterDialog!==i||"block"===a.style.display?"none":"block";});for(const a of document.querySelectorAll("[data-filter-dialog]"))a.addEventListener("click",e=>{z(e),a.style.display="none";});const p=e.querySelectorAll(".filter");for(const a of p)a.addEventListener("input",a=>{const t=a.target,n=t.id,r=t.value,i=Le(n),o=e.querySelectorAll("tbody > tr");for(const e of o){const a=e.dataset;e.style.display=!r||a[i]?.includes(r)?"":"none";}});const h=e.querySelectorAll("table.swap-coin tbody");h&&h.length;}(),function(){const e=document.getElementById("swap-list");if(!e)return;const a=e.querySelectorAll("div.pages");if(a.length>1)return;const t=a.item(a.length-1);if(!t.children.length)return;const n=e.querySelector("table.swap-coin");if(!n)return;const r=n.previousElementSibling;if(!r||!r.matches("h2"))return;const i=t.parentElement;if(!i)return;const o=i.cloneNode(true);o.style.height="30px",r.insertAdjacentElement("beforebegin",o);}(),function(){const e=document.querySelectorAll("table.swap-coin tr");for(const a of e)Sa(a);}(),ca(),function(){za();const e=document.querySelectorAll("#swap-list table.swap-coin input.swap-checkbox");for(const t of e)t.addEventListener("click",e=>{const a=e.target;if(!a.checked){const e=a.closest("tr");e&&e.classList.remove("conflict");}za();});const a=document.querySelectorAll("#swap-list h2 input.swap-country-checkbox");for(const t of a)t.addEventListener("click",e=>{const a=e.target;if(!a.checked){const e=a.closest("h2");if(e){const a=e.nextElementSibling?.querySelectorAll("tr");if(a)for(const e of a)e.classList.remove("conflict");}}za();});}(),function(){const e=document.getElementById("need-swap-list");if(!e)return;const a=xa(e);if(!a.length)return;const t=e.querySelector(".action-board");if(!t)return;const n="act-del-all",r=t.querySelector("a#act-d")?.innerHTML;t.insertAdjacentHTML("beforeend",`\n            <a class="btn-s btn-gray ico-del" id="${n}">\n                <span>${r}</span>\n                <span>${r}</span>\n            </a>`);const i=document.getElementById(n);if(!i)return void console.error("[DEV] Missing delete button");const o=_a(document);i.addEventListener("click",async()=>{if(!confirm("Are you sure you want to delete these coins?"))return  false;const t=e.dataset.sid;if(!t)return void console.error("[DEV] Missing SID");const n=new Set([...a].map(Aa).filter(Boolean));if(!n.size)return void console.error("[DEV] Missing SOID");const r=new URL("https://en.ucoin.net/swap-mgr/");r.searchParams.set("f","d"),r.searchParams.set("soid",[...n].join(",")),r.searchParams.set("sid",t);const s=x(await fetch(r).then(R));if(!s)return void console.error("[DEV] Missing response");if(o){const e=_a(s);e?o.textContent=e.textContent:o.remove();}const l=s.getElementById("need-swap-list"),c=l?function(e){return new Set([...e].map(Aa).filter(Boolean))}(xa(l)):new Set;for(const e of a){const a=Aa(e);a&&!c.has(a)&&(c.delete(a),e.remove());}c.size?_():i.remove();});}(),function(){if(document.getElementById("need-swap-list"))return;const e=document.querySelectorAll("table.swap-coin");for(const a of e){const e=a.querySelectorAll("tr");for(const a of e){const e=a.querySelector('td span[class^="marked-"]'),t=e&&e.classList.item(0),n=t&&K[+(t.split("marked-").pop()||0)]||0,r=sa(a),i=r&&G[r.textContent]||0;n&&(!i||i<=n)&&a.classList.add("ignore");}}}(),function(){const e=document.getElementById("swap-mgr");if(e)for(const a of e.querySelectorAll("table.offer-list tr[data-href]"))a.removeAttribute("data-href");}(),function(){const e=document.getElementById("swap-mgr");if(e){const a=e.querySelectorAll("div.left.lgray-11");for(const e of a){if(!e.textContent?.includes("Track"))continue;const a=e.nextElementSibling,t=a?.textContent;t&&(a.innerHTML=`<a href="https://www.17track.net/en/track?nums=${t}" target="_blank">${t}</a>`);}}}(),function(){const e=document.getElementById("reserve-cnt");if(!e)return;const a=e.parentElement;if(!a)return;const t=a.previousElementSibling;if(!t)return;const n=+(t.querySelector(".right")?.textContent||0),r=()=>{const t=+e.textContent||0,r=t<n,i=t===n;a.classList.toggle("some-missing",r),a.classList.toggle("all-reserved",i);};r(),new MutationObserver(r).observe(e,{childList:true,characterData:true,subtree:true});}(),function(){const e=document.querySelector("#swap-mgr #tree");if(!e)return;const a=[...document.querySelectorAll(".region-list .region")];if(!a.length)return void console.error("[DEV] Missing swap tabs");const t=a.map(e=>e.textContent.replaceAll(/\(.*?\)/g,"")?.trim()||""),n=document.querySelectorAll(".swap-list");if(!n.length)return void console.error("[DEV] Missing swap lists");const r=e.querySelectorAll(".region.list-link");if(!r.length)return void console.error("[DEV] Missing price sections");const i=r.length>1;let o=0,s=0;for(const l of r){const r=l.querySelector(".left")?.textContent;if(!r){console.error("[DEV] Missing title",{section:l});continue}const u=(l.nextElementSibling?.matches(".swap-reserve")?l.nextElementSibling.nextElementSibling:l.nextElementSibling)?.querySelector(".right");if(!u){console.error("[DEV] Missing price line",{section:l});continue}const[d,m,f]=u.querySelectorAll("span");if(!m){console.error(`[DEV] Missing price for title "${r}"`,{priceRow:u});continue}const p=t.findIndex(e=>e===r);if(p<0){console.error(`[DEV] Missing index for title "${r}"`,{titles:t});continue}const h=va(a[p]);const g=h===wa.GIVE,b=n[p]?.querySelectorAll("tr:not(.del) .price");if(!b?.length){console.error(`[DEV] Missing price cells for title "${r}"`,{titleIndex:p,lists:n});continue}let y=0;for(const e of b){let a=e.querySelector(".gray-11.price-tooltip");a||(a=e.querySelector(".blue-13"),a)?y+=ce(a.textContent)??0:console.error("[DEV] Missing price in cell",{cell:e});}s+=g?-y:y,m.style="",m.classList.add("blue-13");const w=ce(m.textContent)??0;o+=g?-w:w;const k=w-y,v=e=>`<div class="right lgray-11 clear-right">${"number"==typeof e?me(e):e}</div>`,S=e=>`<span class="price-tooltip ${(g?e<0:e>0)?"price-over":"price-under"}">${`${e>0?"+":"&minus;"} ${d?.textContent} ${me(Math.abs(e))} ${f?.textContent}`.trim()}</span>`;if(k&&u.insertAdjacentHTML("afterend",v(S(k))),u.insertAdjacentHTML("afterend",v(y)),u.parentElement?.classList.add(k?"price-triple":"price-double"),!g)continue;const z=m.closest("a.region")?.nextElementSibling,_=ce(z?.querySelector(".right")?.textContent)??0,x=ma(e.previousElementSibling?.querySelector(".gray-11")?.textContent??"")??"",A=ya(x,_);if(A>0){y=w+A;const e=`${me(w)} + ${me(A)} <s>${c("shipping")}</s>`,{price:a,charges:t}=ha(x,y),n=`${me(y)} + ${me(t)} <s>${c("PayPal charges")}</s>`;z?.insertAdjacentHTML("afterend",`\n                <a class="region price-section price-line">\n                    <div class="left dgray-13">${c("Shipping")}</div>\n                    <div class="right blue-13"><u>€</u>${me(A)}</div>\n                </a>\n                <a class="region price-line price-double">\n                    <div class="left lgray-11">${c("Total")}</div>\n                    <div class="right gray-12"><u>€</u>${me(y)}</div>\n                    <div class="right lgray-11">&hairsp;<small>(</small>${e}<small>)</small></div>\n                </a>\n                <a class="region price-line price-double">\n                    <div class="left lgray-11">PayPal</div>\n                    <div class="right gray-12"><u>€</u>${me(a)}</div>\n                    <div class="right lgray-11">&hairsp;<small>(</small>${n}<small>)</small></div>\n                </a>\n                `);}i&&(o||s)&&z?.insertAdjacentHTML("afterend",`\n            <a class="region price-section price-line price-double">\n                <div class="left dgray-13">${c("Difference")}</div>\n                <div class="right blue-13">${S(o)}</div>\n                <div class="right lgray-11">${S(s)}</div>\n            </a>\n            `);}}(),function(e="",a){const t=Array.from(document.querySelectorAll(`input[type="checkbox"]${e}`)||[]);let n=t[0];const r=e=>{const r=e.currentTarget;if(r)if(e.shiftKey&&n){const e=t.indexOf(n),i=t.indexOf(r),[o,s]=e<i?[e,i]:[i,e],{checked:l}=r;for(let n=o;n<=s;n++)t[n].checked!==l&&t[n].click(),a?.(t[n]);}else n=r,a?.(r);};for(const i of t)i.addEventListener("click",r);}(".edit-checkbox",oa),function(){const e=Array.from(document.querySelectorAll('h2 input[type="checkbox"]')||[]);for(const a of e)a.addEventListener("click",ia);}(),function(){const e=document.querySelector("#swap-list div.action-board a.ico-del");if(!e)return;const a=new Function(e.getAttribute("onclick")??"return;");e.removeAttribute("onclick"),e.addEventListener("click",async e=>{if(z(e),false===a())return  false;const{href:t}=e.currentTarget,n=fetch(t),r=new URL(t),i=r.searchParams.get("usid")??r.searchParams.get("amp;usid");for(const a of i?.split(",")??[]){const e=document.querySelector(`tr#usid${a}`),t=e?.closest("table");if(e?.querySelector('input[type="checkbox"]:checked')?.click(),e?.remove(),t&&!t.querySelectorAll("tr")?.length){const e=t.previousElementSibling;e?.matches("h2")&&(e?.querySelector('input[type="checkbox"]:checked')?.click(),e.remove()),t.remove();}}const o=await n;return o.ok?void 0:(console.error(o),_())});}(),function(){const e=document.getElementById("tree");if(e){for(const a of e.querySelectorAll(".filter-container .list-link"))ie(a);for(const a of e.querySelectorAll(".filter-container .filter-box-active")){const e=a.getAttribute("id")?.replace(/-filter/,""),t=a.querySelector(".close");e&&t&&oe(t,["condition"===e?"cond":e]);}}}();}const Ha={year:{index:0,label:"Year",sort:Me},face:{index:1,label:"Facial value",sort:Ne},subject:{index:2,label:"Subject",sort:(e,a,t=1)=>t*Be(e,a,"subject")||Ne(e,a)},km:{index:3,label:"Krause",sort:Fe}};let Ia="year",Va="d";!async function(){const e=[],{pathname:a,searchParams:t}=m();a.includes(`/uid${T}`)&&e.push(async function(){const e=document.getElementById("profile");if(!e)return void console.error("Profile element not found");const a=e.querySelector("div.worth-cur-value span");if(!a)return void console.error("Current price element not found");const t=ce(a.textContent)??0,n=e.querySelector(`a[href="/swap-list/?uid=${T}"] span.right`);if(!n)return void console.error("Swap price element not found");const r=ce(n.textContent)??0,i=me(t+r);a.classList.add("price"),a.insertAdjacentHTML("beforeend",`<br/><small class="total"><abbr class="cur">€</abbr> ${i}</small>`);}()),a.includes("/coin")&&e.push(Ue()),a.includes("/gallery")&&t.get("uid")===T&&(e.push(ra()),"country"===t.get("view")&&e.push(async function(){const e=document.querySelector("ul.hor-switcher ~ div.country-list");if(!e)return;const a={};for(const n of e.querySelectorAll("div.cntry")){const[,e]=n.querySelector("a")?.href.match(/&country=(\w+)/)||[];e&&(a[e]=+(n.querySelector("span.right")?.textContent??0)||0);}let t=document.querySelector("ul.hor-switcher ~ ul.region-list");t||(e.insertAdjacentHTML("beforebegin",'<ul class="region-list"/>'),t=document.querySelector("ul.hor-switcher ~ ul.region-list"));const s=t?.querySelector('li.region[value="0"]')?.textContent,l=y(o.REGION),u=Object.keys(i);e.insertAdjacentHTML("beforebegin",'<ul class="regions"></ul>'),function e(a,t){const n=Array.isArray(t)?t.map(e=>[e,[]]):Object.entries(t);for(const[i,o]of n){const t=M(i),n=l&&t===l?" active":"",s=l&&t!==l&&u.includes(i)?" hide":"";a.insertAdjacentHTML("beforeend",`<li class="region${s}${n}" id="${t}"><h2>${c(i,r)}</h2><ul class="regions"></ul><div class="country-list catalog-list"></div></li>`);const d=a.querySelector(`#${t} .regions`);d&&e(d,o);}}(e.previousElementSibling,i);for(const r of e.querySelectorAll("div.cntry")){const[,e]=r.querySelector("a")?.href.match(/&country=(\w+)/)||[],a=n[e];if(a){for(const t of B(a)){const a=M(t),n=document.querySelector(`.region#${a} > .country-list`);if(n&&!n.querySelector(`#${e}`)){const a=r.cloneNode(true);a.id=e,n.append(a);for(let t,r=n.closest(".region")?.parentElement;t=r?.closest(".region");r=t.parentElement){const a=t.id;t.parentElement?.querySelector(`#${a} > .country-list > #${e}`)?.remove();}}}r.remove();}}if(!m().searchParams.has("currency")){const e={},t=new URL(m().href);t.searchParams.set("currency","1");let n=false;try{const a=await fetch(t,{credentials:"same-origin"});if(a.ok){const t=(new DOMParser).parseFromString(await a.text(),"text/html"),r=t.querySelector("ul.hor-switcher ~ div.country-list");r?Object.assign(e,N(r)):Object.assign(e,N(t)),n=!0;}}catch{}if(n){const t=function(){const e=i.euro,a=[M("euro")];if(Array.isArray(e))for(const t of e)"string"==typeof t&&a.push(M(t));return new Set(a)}(),n=document.querySelectorAll("ul.hor-switcher ~ ul.regions div.cntry");for(const r of n){const n=r.id||r.querySelector("a")?.href.match(/&country=(\w+)/)?.[1];if(!n)continue;const i=void 0!==a[n]?a[n]:+(r.querySelector("span.right")?.textContent??0)||0,o=e[n]??0,s=r.closest(".region"),l=s&&t.has(s.id)?o:Math.max(0,i-o),c=r.querySelector("span.right");c&&(c.textContent=String(l)),l<=0&&r.remove();}}}for(const n of document.querySelectorAll(".regions .country-list:empty"))n.remove();for(;document.querySelectorAll(".regions .regions:empty").length;){for(const e of document.querySelectorAll(".regions .regions:empty"))e.remove();for(const e of document.querySelectorAll(".regions .region h2:only-child"))e.remove();for(const e of document.querySelectorAll(".regions .region:empty"))e.remove();}if(function(){for(const e of document.querySelectorAll(".regions .region")){e.querySelector("h2 .lgray-13")?.remove();const a=e.querySelector(":scope > .country-list");let t=0,n=0;if(a)for(const e of a.querySelectorAll(":scope > div.cntry"))t+=1,n+=+(e.querySelector("span.right")?.textContent??0)||0;t&&n&&e.querySelector("h2")?.insertAdjacentHTML("beforeend",`<span class="lgray-13">( ${t} / ${n} )</span>`);}}(),console.debug(t),t){t.innerHTML="",t.insertAdjacentHTML("beforeend",`<li class="region${l?"":" active"}">${s??c("All")}</li>`);for(const e of u){const a=M(e);document.querySelector(`.region#${a}`)&&t.insertAdjacentHTML("beforeend",`<li class="region${l===a?" active":""}" data-id="${a}">${c(e,r)}</li>`);}t.addEventListener("click",async({target:e})=>{if(!e)return;const a=e;t.querySelector("li.active")?.classList.remove("active"),a.classList.add("active");const n=a.dataset.id;if(n){await g(e=>e.set(o.REGION,n));const e=document.querySelectorAll(`.region-list ~ .regions > li.region:not(#${n})`);for(const a of e)a.classList.remove("active"),a.classList.add("hide");document.getElementById(n)?.classList.remove("hide"),document.getElementById(n)?.classList.add("active");}else {await g(e=>e.delete(o.REGION));for(const e of document.querySelectorAll(".region-list ~ .regions > li.region"))e.classList.remove("active"),e.classList.remove("hide");}});}}())),a.includes("/swap-")&&e.push(Ra()),a.includes("/wish-")&&e.push(async function(){const e="table.wish-coin";ua(e),ca(e);}()),a.includes("/table/")&&e.push(async function(){const e=m().searchParams.get("type");e&&"1"!==e&&function(){const e=document.querySelector("#table table.table");if(!e)return;const a=e.querySelectorAll("tbody");if(!a)return;const t=e.parentElement?.querySelector("div.filters");if(!t)return;let n=t.querySelector("#sort-filter");n&&n.remove();let r=t.querySelector("#sort-filter-dialog");if(r&&r.remove(),t.insertAdjacentHTML("beforeend",`<div class="right filter-container" style="margin-right:0;">${qe("sort-filter",Ae(`${c("Sorting")}: ${c(Ha[Ia]?.label)}`,Va),Object.entries(Ha).map(([e,{label:a}])=>`\n                    <a class="list-link" data-option="${e}" data-order="a">${xe(c(a))}${ze()}</a>\n                    <a class="list-link" data-option="${e}" data-order="d">${xe(c(a))}${_e()}</a>\n                `))}</div>`),n=t.querySelector("#sort-filter"),!n)return;if(r=t.querySelector("#sort-filter-dialog"),!r)return;n.addEventListener("click",e=>{z(e),r.style.display="block";}),r.addEventListener("click",async e=>{z(e),r.style.display="none";const t=e.target.closest("a");if(!t)return;const{option:i,order:o}=t.dataset;i&&o&&(Ia=i,Va=o,n.innerHTML=Ae(`${c("Sorting")}: ${c(Ha[Ia]?.label)}`,Va),await He(Ia,Va),Pe(a,Ha[Ia]?.sort,Va));});const i=e.querySelectorAll("tbody tr");for(const o of i){const e=o.children,a=o.dataset;for(const[t,{index:n}]of Object.entries(Ha)){const r=Le(t),i=e[n].textContent;if(i)if("year"===t){const[e,...t]=i.split(/(?:\s|&nbsp;)+/);a[r]=e,a.sortMm=t.join(" ");}else if("km"===t){const e=i.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i);if(e&&e.groups){const{groups:{cat:t,num:n,prefix:o,suffix:s}}=e;a.sortKmc=t,a[r]=n,a.sortKma=`${o}${s}`,a.sortKmz=i;}else a.sortKmc="",a[r]=i,a.sortKma="",a.sortKmz=i;}else a[r]=i;}}[Ia,Va]=Re(),Pe(a,Ha[Ia]?.sort,Va);}(),setTimeout(()=>{document.querySelector("a.period.selected")?.scrollIntoView({behavior:"auto",block:"center",inline:"nearest"});},100);}()),a.includes("/messages/")&&e.push(async function(){const e=document.getElementById("user-list"),a=e?.querySelectorAll("table.user tr[onclick]");for(const t of a||[]){const e=t.querySelector("td.user-container a"),a=t.attributes.getNamedItem("onclick")?.value.match(/href\s*=\s*'(.*?)'/);e&&a&&(e.href=a[1],e.onclick=e=>e.stopPropagation());}}()),e.push(async function(){const e=document.getElementById("catalog-tree");if(!e)return;document.getElementById("tree-search")?.closest("div")?.remove();const a="search-input-id";e.insertAdjacentHTML("beforebegin",`<input id="${a}" class="tree-filter" placeholder="Search"/>`),document.getElementById(a)?.addEventListener("input",e=>function(e){const a=document.querySelector("#catalog-tree");if(!a)return;const t=new RegExp(e?.replace(/\W+/g,".*?"),"i"),n=a.querySelectorAll("a.country-name");for(const o of n){const e=o.closest("div.country");if(e){const a=t.test(o.textContent??"");let n=0;const r=e.querySelectorAll("a.period");for(const e of r)if(a)k(e);else {const a=t.test(e.textContent??"");S(a,e),a&&(n+=1);}S(a||!!n,e);const i=n>0&&n<6,s=e.querySelector(".periods");s&&(s.style.display=i?"block":"none");const l=e.querySelector("img");l&&(l.src=i?"/i/bg/minus.gif":"/i/bg/plus.gif");}}for(const o of a.querySelectorAll("div.country"))if(!w(o)){const e=[...a.querySelectorAll("div.country:not(.hide)")].filter(e=>e!==o&&e.textContent===o.textContent);for(const a of e)v(a);}const r=a.querySelectorAll("div.country:not(.hide)");if(1===r.length){const e=r[0],a=e.querySelector(".periods");a&&(a.style.display="block");const t=e.querySelector("img");t&&(t.src="/i/bg/minus.gif");}const i=a.querySelectorAll("div.reg");for(const o of i){const{length:e}=o.querySelectorAll("div.country:not(.hide)");S(!!e,o);const a=o.querySelector(".region");if(a){const t=e>0&&e<=5||a.matches(".open");o.classList.toggle("open",!t);const n=o.querySelector(".countries");n&&(n.style.display="",S(t,n));}}}(e.target.value));}()),e.push(async function(){let e=document.querySelector('ul.bottom-lang a[href*="://lt."]');if(e)return void console.error("handleLanguages: lt language already exists");const a=document.querySelector('ul.bottom-lang a[href*="://it."]');if(!a)return void console.error("handleLanguages: it language not found");const t=a.closest("li"),n=t?.nextElementSibling,r=t?.cloneNode(true);e=r?.querySelector("a"),e&&(e.href=a.href.replace("/it.","/lt."),e.textContent="Lietuvių",n?.insertAdjacentElement("afterend",r),r?.insertAdjacentElement("afterend",n?.cloneNode(true)));}()),await Promise.all(e);}();
-
+(function(react, react_dom_server) {
+	//#region \0rolldown/runtime.js
+	var __create = Object.create;
+	var __defProp = Object.defineProperty;
+	var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+	var __getOwnPropNames = Object.getOwnPropertyNames;
+	var __getProtoOf = Object.getPrototypeOf;
+	var __hasOwnProp = Object.prototype.hasOwnProperty;
+	var __copyProps = (to, from, except, desc) => {
+		if (from && typeof from === "object" || typeof from === "function") for (var keys = __getOwnPropNames(from), i = 0, n = keys.length, key; i < n; i++) {
+			key = keys[i];
+			if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+				get: ((k) => from[k]).bind(null, key),
+				enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+			});
+		}
+		return to;
+	};
+	var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+		value: mod,
+		enumerable: true
+	}) : target, mod));
+	//#endregion
+	react = __toESM(react);
+	//#region \0virtual:monkey-css-side-effects
+	var d$1 = /* @__PURE__ */ new Set();
+	var _virtual_monkey_css_side_effects_default = async (e) => {
+		d$1.has(e) || (d$1.add(e), ((t) => {
+			typeof GM_addStyle == "function" ? GM_addStyle(t) : (document.head || document.documentElement).appendChild(document.createElement("style")).append(t);
+		})(e));
+	};
+	//#endregion
+	//#region \0./ucoin-FQYBO01o.js
+	var n = Object.create, r = Object.defineProperty, i = Object.getOwnPropertyDescriptor, o = Object.getOwnPropertyNames, s = Object.getPrototypeOf, l = Object.prototype.hasOwnProperty, c = (e, a) => () => (a || e((a = { exports: {} }).exports, a), a.exports), u = (e, a, t) => (t = null != e ? n(s(e)) : {}, ((e, a, t, n) => {
+		if (a && "object" == typeof a || "function" == typeof a) for (var s, c = o(a), u = 0, d = c.length; u < d; u++) s = c[u], l.call(e, s) || void 0 === s || r(e, s, {
+			get: ((e) => a[e]).bind(null, s),
+			enumerable: !(n = i(a, s)) || n.enumerable
+		});
+		return e;
+	})(!a && e && e.__esModule ? t : r(t, "default", {
+		value: e,
+		enumerable: !0
+	}), e));
+	_virtual_monkey_css_side_effects_default("@import \"https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&family=Noto+Sans+Display:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&family=Noto+Sans+Mono:wdth,wght@62.5..100,100..900&family=Noto+Color+Emoji&display=swap\";:root{--base-font-family:\"Noto Sans Display\", \"Noto Sans\", \"Noto Sans Emoji\", sans-serif;--base-font-size:14px;--color-surface:#fff;--color-surface-warning:#fdd;--color-surface-error:#fed;--color-surface-info:#eee;--color-surface-reserve:honeydew;--color-surface-reserve-marked:palegoldenrod;--color-surface-duplicate:mistyrose;--color-surface-duplicate-marked:peachpuff;--color-content-header:#333;--color-content-total:#666;--color-border-total:#060;--color-content-link:#37e;--color-input-sufrace:var(--color-surface);--color-input-content:#222;--color-input-content-disabled:#444;--color-input-border:#aaa;--color-input-border-disabled:#eee;--color-input-shadow:0 2px 1px #0001 inset;--color-ignore-content:#ccc;--color-ignore-surface:#333a;--color-ignore-content-hover:#fff;--color-ignore-sufrace-hover:#000a;--color-error-surface:#c00;--color-error-border:#0002;--color-error-sufrace-hover:#eee;--color-widget-content:#333;--color-widget-surface:#ccc;--color-separate-country:#000;--color-loader:#3c961e;--color-marked-0:#242633;--background-marked-0:#eee;--color-marked-1:#dee5f2;--background-marked-1:#5a6986;--background-marked-2:#206cff;--color-marked-2:#e0ecff;--background-marked-3:#00c;--color-marked-3:#dfe2ff;--background-marked-4:#5229a3;--color-marked-4:#e0d5f9;--background-marked-5:#854f61;--color-marked-5:#fde9f4;--background-marked-6:#c00;--color-marked-6:#ffe3e3;--background-marked-7:#ec7000;--color-marked-7:#fff0e1;--background-marked-8:#b36d00;--color-marked-8:#fadcb3;--background-marked-9:#ab8b00;--color-marked-9:#f3e7b3;--background-marked-10:#636330;--color-marked-10:#ffffd4;--background-marked-11:#64992c;--color-marked-11:#f9ffef;--background-marked-12:#063;--color-marked-12:#f1f5ec;--background-marked-13:#e5c300;--color-marked-13:#232323;--background-marked-14:#b200a0;--color-marked-14:#f1f5ec;--background-rarity-A:#008f01;--color-rarity-A:#fff;--background-rarity-B:#a5c700;--color-rarity-B:#fff;--background-rarity-C:#e5c300;--color-rarity-C:#fff;--background-rarity-R:#f7a126;--color-rarity-R:#fff;--background-rarity-RR:#ff5f23;--color-rarity-RR:#fff;--background-rarity-RRR:#e00102;--color-rarity-RRR:#fff;--background-rarity-NON:#efefef;--color-rarity-NON:#666!important}body,select,textarea,input[type=text],input[type=password],input[type=email]{font-family:var(--base-font-family);font-size:var(--base-font-size);font-optical-sizing:auto;font-variation-settings:\"wdth\" 100;font-variant-ligatures:common-ligatures discretionary-ligatures historical-ligatures contextual;font-variant-alternates:styleset(ss01);font-feature-settings:\"liga\" 1, \"clig\" 1, \"dlig\" 1;font-style:normal}.widget{font-size:inherit}.widget-header{background-color:var(--color-widget-surface);color:var(--color-widget-content);font-weight:300;font-size:inherit}.btn-l{font-family:inherit;font-size:inherit;font-weight:inherit}.btn-l.hide{display:none}.btn-s{font-family:inherit;font-size:inherit;font-weight:inherit}.btn-s.hide{display:none}.btn-red{background-color:var(--color-error-surface);border:1px solid var(--color-error-border)}.btn-red,.btn-red:hover{color:var(--color-error-sufrace-hover)}.clear-right{clear:right}#table a.cell{position:relative}#table a.cell.samekm{z-index:1;background-color:var(--color-ignore-surface);color:var(--color-ignore-content);box-shadow:none;-webkit-box-shadow:none}#table a.cell.samekm:hover{background-color:var(--color-ignore-sufrace-hover);color:var(--color-ignore-content-hover)}.btn-set .btn-marker{border-radius:2px;transition:filter .5s}.btn-set .btn-marker:hover{filter:brightness(1.2)}#buy_reset{width:22px;height:22px;font-size:16px;font-weight:700;display:inline-block}#buy_reset svg{width:14px;height:14px}#buy_year_month{color:var(--color-input-content);background-color:var(--color-input-sufrace);border:1px solid var(--color-input-border);box-shadow:var(--color-input-shadow);font-family:var(--base-font-family);box-sizing:border-box;border-radius:2px;width:150px;height:28px;padding:2px 8px;transition:all .15s ease-in-out;display:inline-block}#my-func-block .btn-narrow{padding-left:14px;padding-right:14px}#my-func-block .btn-i{padding:10px}#my-func-block .btn-i svg{width:15px;height:15px}#my-func-block table span[class^=marked-]{border-radius:4px}.widget .list-link .blue-13,#coin-list table .blue-13{letter-spacing:-1px;white-space:nowrap;font-size:11px;line-height:19px}#coin h1{color:var(--color-content-header)}#coin .price-container{border:none}#coin .price-container span{font-size:15px}#coin .tbl td,#coin .tbl th{border:none}#coin .coin-info th{background-color:var(--color-surface-info)}#coin .coin-info tr+tr td{border-top:1px solid var(--color-surface-info)}#coin .coin-info tr+tr th,#coin .coin-info thead+tbody{border-top:1px solid var(--color-surface)}#coin .coin-img td.i{border:none}#coin div.rarity{border-radius:50%;width:24px;line-height:24px}#coin #swap-block .cond,#coin #wish-block .cond{border-radius:50%;margin:0 4px;line-height:24px;width:24px!important}#coin #swap-block .cond.marked-0,#coin #wish-block .cond.marked-0{background:var(--background-marked-0);color:var(--color-marked-0)}#coin #swap-block .cond.marked-1,#coin #wish-block .cond.marked-1{background:var(--background-marked-1);color:var(--color-marked-1)}#coin #swap-block .cond.marked-2,#coin #wish-block .cond.marked-2{background:var(--background-marked-2);color:var(--color-marked-2)}#coin #swap-block .cond.marked-3,#coin #wish-block .cond.marked-3{background:var(--background-marked-3);color:var(--color-marked-3)}#coin #swap-block .cond.marked-4,#coin #wish-block .cond.marked-4{background:var(--background-marked-4);color:var(--color-marked-4)}#coin #swap-block .cond.marked-5,#coin #wish-block .cond.marked-5{background:var(--background-marked-5);color:var(--color-marked-5)}#coin #swap-block .cond.marked-6,#coin #wish-block .cond.marked-6{background:var(--background-marked-6);color:var(--color-marked-6)}#coin #swap-block .cond.marked-7,#coin #wish-block .cond.marked-7{background:var(--background-marked-7);color:var(--color-marked-7)}#coin #swap-block .cond.marked-8,#coin #wish-block .cond.marked-8{background:var(--background-marked-8);color:var(--color-marked-8)}#coin #swap-block .cond.marked-9,#coin #wish-block .cond.marked-9{background:var(--background-marked-9);color:var(--color-marked-9)}#coin #swap-block .cond.marked-10,#coin #wish-block .cond.marked-10{background:var(--background-marked-10);color:var(--color-marked-10)}#coin #swap-block .cond.marked-11,#coin #wish-block .cond.marked-11{background:var(--background-marked-11);color:var(--color-marked-11)}#coin #swap-block .cond.marked-12,#coin #wish-block .cond.marked-12{background:var(--background-marked-12);color:var(--color-marked-12)}#coin #swap-block .cond.marked-13,#coin #wish-block .cond.marked-13{background:var(--background-marked-13);color:var(--color-marked-13)}#coin #swap-block .cond.marked-14,#coin #wish-block .cond.marked-14{background:var(--background-marked-14);color:var(--color-marked-14)}#coin #swap-form .btn-s,#coin #wish-form .btn-s{margin:0 0 0 5px}#coin #swap-form .btn-s.hide,#coin #wish-form .btn-s.hide{display:none}#coin #swap-form .btn-ctrl{float:right;height:26px;margin:14px 3px 0}#coin #swap-form .btn-ctrl+.btn-ctrl{margin-right:0}#coin #swap-form .btn-ctrl.btn-ctrl-price{margin-top:0;margin-right:0}#coin #swap-form #swap-qty{margin-top:1em}#my-swap-block #swap-block a{position:relative}#my-swap-block #swap-block a .comments{text-align:left;width:auto;position:absolute;left:100%}#my-swap-block #swap-block a .comments .ico-16{vertical-align:middle;background-position:-16px 0;display:inline-block}#my-swap-block #swap-block a .comments:active,#my-swap-block #swap-block a .comments:focus,#my-swap-block #swap-block a .comments:hover,#my-swap-block #swap-block a:active .comments,#my-swap-block #swap-block a:focus .comments,#my-swap-block #swap-block a:hover .comments{max-width:100%;overflow:visible}#my-swap-block #swap-block center div.btn-set{justify-content:center;margin:0 auto;display:flex}#my-swap-block #swap-block center div.btn-set div{cursor:pointer;flex:0 0 20px;height:20px;margin:0 1px;padding:1px;font-size:11px;line-height:20px}#my-swap-block #swap-block .btn--combine,#my-swap-block #swap-block .btn--expand{margin:8px 2px 0}#my-swap-block #swap-block .btn--combine.hide,#my-swap-block #swap-block .btn--expand.hide{display:none}#my-wish-block #wish-block a{position:relative}#my-wish-block #wish-block a .comments{text-align:left;width:auto;position:absolute;left:100%}#my-wish-block #wish-block a .comments .ico-16{vertical-align:middle;background-position:-16px 0;display:inline-block}#my-wish-block #wish-block a .comments:active,#my-wish-block #wish-block a .comments:focus,#my-wish-block #wish-block a .comments:hover,#my-wish-block #wish-block a:active .comments,#my-wish-block #wish-block a:focus .comments,#my-wish-block #wish-block a:hover .comments{max-width:100%;overflow:visible}#my-wish-block #wish-block center div.btn-set{justify-content:center;margin:0 auto;display:flex}#my-wish-block #wish-block center div.btn-set div{cursor:pointer;flex:0 0 28px;height:20px;margin:0 1px;padding:1px;font-size:11px;line-height:20px}#my-wish-block #wish-block .btn--combine,#my-wish-block #wish-block .btn--expand{margin:8px 2px 0}#my-wish-block #wish-block .btn--combine.hide,#my-wish-block #wish-block .btn--expand.hide{display:none}.sticky{z-index:200;display:block;position:sticky;top:10px}.swap-coin tr,.wish-coin tr{transition:opacity .25s,background .25s;position:relative}.swap-coin tr td.thumbnails,.wish-coin tr td.thumbnails,.swap-coin tr th.thumbnails,.wish-coin tr th.thumbnails{white-space:nowrap}.swap-coin tr td.thumbnails img.thumbnail,.wish-coin tr td.thumbnails img.thumbnail,.swap-coin tr th.thumbnails img.thumbnail,.wish-coin tr th.thumbnails img.thumbnail{width:50px}.swap-coin tr td.thumbnails+td span,.wish-coin tr td.thumbnails+td span,.swap-coin tr th.thumbnails+td span,.wish-coin tr th.thumbnails+td span{white-space:nowrap;border-radius:16px;padding:2px 8px!important;font-size:12px!important}.swap-coin tr td.td-cond span,.wish-coin tr td.td-cond span,.swap-coin tr th.td-cond span,.wish-coin tr th.td-cond span,.swap-coin tr td.cond span,.wish-coin tr td.cond span,.swap-coin tr th.cond span,.wish-coin tr th.cond span{border-radius:16px;padding:2px 8px!important;font-size:11px!important}.swap-coin tr td.price,.wish-coin tr td.price,.swap-coin tr th.price,.wish-coin tr th.price{white-space:nowrap}.swap-coin tr:has(th.thumbnails+td a[class^=marked-]),.wish-coin tr:has(th.thumbnails+td a[class^=marked-]){background:var(--color-surface-duplicate)}.swap-coin tr:has(th.thumbnails+td a[class^=marked-]).mark,.wish-coin tr:has(th.thumbnails+td a[class^=marked-]).mark{background:var(--color-surface-duplicate-marked)}#swap-list .swap-coin tr:has(th[data-reserve=on]),#swap-mgr .swap-coin tr:has(th[data-reserve=on]){background:var(--color-surface-reserve)}#swap-list .swap-coin tr:has(th[data-reserve=on]).mark,#swap-mgr .swap-coin tr:has(th[data-reserve=on]).mark{background:var(--color-surface-reserve-marked)}#swap-list .swap-coin tr.conflict,#swap-mgr .swap-coin tr.conflict{background:var(--color-surface-warning)}#swap-list .swap-coin tr.conflict.mark,#swap-mgr .swap-coin tr.conflict.mark{background:var(--color-surface-error)}#swap-list .swap-coin tr.ignored,#swap-mgr .swap-coin tr.ignored{opacity:.25;background:var(--color-surface-info)}#swap-list .swap-coin tr.ignore,#swap-mgr .swap-coin tr.ignore{opacity:.5}#swap-list .swap-coin tr.ignore.conflict,#swap-mgr .swap-coin tr.ignore.conflict,#swap-list .swap-coin tr.ignore.mark,#swap-mgr .swap-coin tr.ignore.mark{opacity:.75}#swap-list .action-board,#swap-mgr .action-board{width:auto;height:30px;margin:15px 0 20px}#swap-list .filter-container.filter-dropdown,#swap-mgr .filter-container.filter-dropdown{margin:3px -12px}#swap-list #take-swap-list .filters,#swap-mgr #take-swap-list .filters{z-index:100;background:var(--color-surface);margin:-15px 0 5px;padding:15px 0;position:sticky;top:0}#swap-list .filters .filter+.filter,#swap-mgr .filters .filter+.filter{margin-left:4px}#swap-list .filters .filter .close,#swap-mgr .filters .filter .close{text-align:center;width:18px;margin-right:-8px}#swap-list .filters .filter .flag,#swap-mgr .filters .filter .flag{margin-right:4px}#swap-list .filters .filter-dialog,#swap-mgr .filters .filter-dialog{max-height:300px;overflow:auto}#swap-list .filters .filter-label,#swap-mgr .filters .filter-label{max-width:140px}#swap-list .filter-dialog .list-link .filter-label,#swap-mgr .filter-dialog .list-link .filter-label{text-align:start;flex:1}#swap-list .filter-dialog .list-link .right,#swap-mgr .filter-dialog .list-link .right{align-items:center}#swap-list [data-filter=country] .filter-label,#swap-mgr [data-filter=country] .filter-label,#swap-list [data-filter-dialog=country] .filter-label,#swap-mgr [data-filter-dialog=country] .filter-label{--flag-width:22px;padding-left:calc(var(--flag-width) + 4px);position:relative}#swap-list [data-filter=country] .filter-label img,#swap-mgr [data-filter=country] .filter-label img,#swap-list [data-filter-dialog=country] .filter-label img,#swap-mgr [data-filter-dialog=country] .filter-label img{width:var(--flag-width);position:absolute;top:1px;left:0}.filters .filter-box .left+.right{margin-inline-start:8px}.filters .filter-box.filter-box-disabled{color:var(--color-input-content-disabled)}.filters .filter-box.filter-box-disabled,.filters .filter-box.filter-box-disabled:hover{border-color:var(--color-input-border-disabled)}#sort-filter{border-color:var(--color-content-link);border-radius:2px;padding:4px 12px;display:flex;width:100px!important}#sort-filter .left{white-space:nowrap;text-overflow:ellipsis;flex:auto;overflow:hidden;max-width:140px!important}#swap-list:not(:has(.right .right #sort-filter)) #sort-filter{margin:-12px -10px 0 0}#swap-mgr #sort-filter{margin:12px 10px 0 0}#table #sort-filter{width:140px!important}#sort-filter-dialog{width:174px;display:none}#swap-list div h2.separate-country,#take-swap-list div h2.separate-country,#swap-list div a.separate-country,#take-swap-list div a.separate-country{color:var(--color-separate-country);font-weight:700}#swap-list .pages{padding-right:0!important}#swap-list .filter-container.right .filter-dialog{right:0}#swap-list .widerightCol{position:relative}#swap-list .widerightCol h1+br{display:none}#swap-list .widerightCol h1+br+a.btn-gray{color:var(--color-error-surface)!important;border:0!important;margin:0!important;font-size:1rem!important;line-height:2!important}#swap-list .widerightCol h1~div{background:var(--color-surface);z-index:calc(100 - sibling-index());padding:1rem 0;position:sticky;margin-top:0!important}#swap-list .widerightCol h1~div:nth-of-type(2){top:0}#swap-list .widerightCol h1~div:nth-of-type(2)+div{top:3.6rem;margin-bottom:-1rem!important}#swap-mgr table.offer-list tr.str{cursor:default}#swap-mgr #smart-filter-container{background:var(--color-surface);width:100%;margin:0;padding:15px 0 20px;position:sticky;top:0}#swap-mgr #smart-filter-container #country-filter{width:129px}#swap-mgr #smart-filter-container #country-filter.selected{border-color:var(--color-content-link)}#swap-mgr #smart-filter-container .swap-coin-filter input.filter{width:100%}#swap-list .price-times,#swap-mgr .price-times{color:#8b0000;font-weight:700}#swap-list .price-over,#swap-mgr .price-over{color:brown}#swap-list .price-under,#swap-mgr .price-under{color:green}#swap-list .price-times.gray-11,#swap-mgr .price-times.gray-11,#swap-list .price-over.gray-11,#swap-mgr .price-over.gray-11,#swap-list .price-under.gray-11,#swap-mgr .price-under.gray-11{padding-left:6px}#swap-list .price-tooltip,#swap-mgr .price-tooltip{display:block}#swap-list .price-cond,#swap-mgr .price-cond{color:#8b0000;border-top:3px solid #8b0000;font-weight:700;display:block}#swap-list .price-line,#swap-mgr .price-line{padding:3px 6px;display:block;height:1.1em!important}#swap-list .price-line.price-section,#swap-mgr .price-line.price-section{margin-top:20px}#swap-list .price-line u,#swap-mgr .price-line u{padding-right:2px;text-decoration:none}#swap-list .price-line s,#swap-mgr .price-line s{text-overflow:ellipsis;white-space:nowrap;vertical-align:text-bottom;max-width:65px;text-decoration:none;display:inline-block;overflow:hidden}#swap-list .price-double,#swap-mgr .price-double{height:2.4em!important}#swap-list .price-double .lgray-11,#swap-mgr .price-double .lgray-11{clear:both;text-align:end}#swap-list .price-triple,#swap-mgr .price-triple{height:4em!important}#profile .price{display:inline-block}#profile .price .total{float:right;color:var(--color-content-total);font-size:20px;font-family:var(--base-font-family);border-top:1px solid var(--color-border-total);margin-top:4px;padding-top:4px;font-weight:400}#profile .price .total .cur{padding-right:6px;font-size:16px}#tree .tree-filter{color:var(--color-input-content);background-color:var(--color-input-sufrace);border:1px solid var(--color-input-border);box-shadow:var(--color-input-shadow);font-family:var(--base-font-family);box-sizing:border-box;border-radius:2px;width:100%;height:28px;margin-bottom:3px;padding:2px 8px;font-size:13px;transition:all .15s ease-in-out;display:inline-block}#tree #catalog-tree .country .hide,#tree #catalog-tree .period .hide{display:none}#tree .swap-reserve.some-missing{background:var(--color-surface-warning)!important}#tree .swap-reserve.some-missing div{color:#8b0000!important}#tree .swap-reserve.all-reserved{font-weight:500;background:var(--color-surface-reserve)!important}#tree .swap-reserve.all-reserved div{color:#006400!important}#tree .text{max-height:150px;margin-block-end:1rem;overflow:auto}#coin .rnav{position:relative}#coin-chooser-dialog{--width:204px;--height:32px;--gap:16px;--columns:3;--rows:20;grid:auto-flow var(--height) / repeat(2, var(--width));gap:calc(var(--gap) / 2) var(--gap);width:max-content;min-width:var(--width);max-width:calc((var(--width) + var(--gap)) * var(--columns) - var(--gap));display:grid;max-height:calc(var(--height) * var(--rows))!important}#coin-chooser-dialog .list-link{width:calc(var(--width) - 24px);border-bottom:none}body .country-list a,#gallery .country-list a,body .catalog-list a,#gallery .catalog-list a{border:none}ul.regions{margin-block-start:2em;padding-inline-start:.5em}ul.regions li.region{display:block}ul.regions li.region.hide{display:none}ul.regions li.region h2{font-size:1.6em;font-weight:600}ul.regions li.region h2 .lgray-13{padding-inline-start:1em}ul.regions li.region li.region h2{font-size:1.4em;font-weight:500}ul.regions li.region li.region li.region h2{font-size:1.2em;font-weight:400}ul.regions li.region li.region li.region li.region h2{font-size:1.1em;font-weight:300}ul.regions+ul.regions>li.region{margin-block-start:3em}ul.hor-switcher .close{padding:0 4px}.filter-container label{margin-top:3px}@keyframes display_delay{0%{width:0}to{width:100%}}@property --angle{syntax:\"<angle>\";inherits:false;initial-value:0deg}@property --opacity{syntax:\"<percentage>\";inherits:false;initial-value:0%}@keyframes loader{0%{--angle:360deg;--opacity:0%}25%{--opacity:50%}75%{--opacity:50%}to{--angle:0deg;--opacity:0%}}#display-delay{width:50px;height:50px;position:fixed;inset-block-end:50px;inset-inline-start:30px}#display-delay>div{opacity:var(--opacity);background:conic-gradient(var(--color-loader) var(--angle), transparent 0);border-radius:50%;animation-name:loader;animation-timing-function:linear;animation-fill-mode:both;position:absolute;inset:0}.list-link{border-bottom:none}.list-link.with-separator{margin-block-start:12px;position:relative}.list-link.with-separator:before,.list-link.with-separator:before{content:\"\";border-block-start:2px double var(--color-input-border-disabled);display:block;position:absolute;inset:-10px 0 auto}table.my-func-info tr{border-bottom:none}#act-del-all{float:right;position:relative}#act-del-all span{position:absolute}#act-del-all span:first-child{margin-block-start:0;margin-inline-start:-12px}#act-del-all span:last-child{margin-block-end:-8px;margin-inline-end:-12px}");
+	var d = {
+		abkhazia: ["az", "az-w"],
+		afars_issas: [
+			"af",
+			"af-e",
+			"af-eh"
+		],
+		afghanistan: ["az", "az-s"],
+		ajman: ["az", "az-w"],
+		albania: [
+			"eu",
+			"eu-s",
+			"eu-se"
+		],
+		alderney: ["eu", "eu-w"],
+		algeria: [
+			"af",
+			"af-nw",
+			"af-n"
+		],
+		american_samoa: ["oc", "oc-pl"],
+		andorra: [
+			"eu",
+			"eu-s",
+			"eu-sw",
+			"euro",
+			"euro-ah"
+		],
+		angola: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		anguilla: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		anhalt_bernburg: ["eu", "eu-c"],
+		antigua_barbuda: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		argentina: ["am", "am-s"],
+		argentine_provinces: ["am", "am-s"],
+		armavir: ["az", "az-w"],
+		armenia: ["az", "az-w"],
+		aruba: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		ascension_island: ["uk"],
+		ascension_island__: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		australia: ["oc", "oc-az"],
+		austria: [
+			"eu",
+			"eu-c",
+			"euro",
+			"euro-ah"
+		],
+		austrian_netherlands: ["eu", "eu-w"],
+		azerbaijan: ["az", "az-w"],
+		azerbaijan__: ["eu", "eu-e"],
+		azores: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		baden: ["eu", "eu-c"],
+		bahamas: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		bahawalpur: ["az", "az-s"],
+		bahrain: ["az", "az-w"],
+		bangladesh: ["az", "az-s"],
+		barbados: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		baroda: ["az", "az-s"],
+		bavaria: ["eu", "eu-c"],
+		belarus: ["eu", "eu-e"],
+		belgian_congo: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		belgium: [
+			"eu",
+			"eu-w",
+			"euro",
+			"euro-ah"
+		],
+		belize: [
+			"am",
+			"am-cr",
+			"am-c"
+		],
+		benin: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		berg: ["eu", "eu-c"],
+		bermuda: ["am", "am-n"],
+		bhopal: ["az", "az-s"],
+		bhutan: ["az", "az-s"],
+		biafra: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		bikaner: ["az", "az-s"],
+		biot: ["az", "az-s"],
+		bohemia: ["eu", "eu-c"],
+		bohemia_moravia: ["eu", "eu-c"],
+		bolivia: ["am", "am-s"],
+		bosnia_herzegovina: [
+			"eu",
+			"eu-s",
+			"eu-se"
+		],
+		botswana: [
+			"af",
+			"af-cs",
+			"af-s"
+		],
+		brandenburg_prussia: ["eu", "eu-c"],
+		brazil: ["am", "am-s"],
+		bremen: ["eu", "eu-c"],
+		british_antarctic_territory: ["an"],
+		british_east_africa: [
+			"af",
+			"af-e",
+			"af-ec"
+		],
+		british_east_indies: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		british_guiana: ["am", "am-s"],
+		british_honduras: [
+			"am",
+			"am-cr",
+			"am-c"
+		],
+		british_india: ["az", "az-s"],
+		british_palestine: ["az", "az-w"],
+		british_west_africa: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		british_west_indies: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		brunei: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		brunswick: ["eu", "eu-c"],
+		brunswick_luneburg: ["eu", "eu-c"],
+		brunswick_wolfenbuttel: ["eu", "eu-c"],
+		bukhara: [
+			"az",
+			"az-ce",
+			"az-c"
+		],
+		bulgaria: [
+			"eu",
+			"eu-e",
+			"euro",
+			"euro-ah"
+		],
+		burgau: ["eu", "eu-c"],
+		burkina_faso: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		burundi: [
+			"af",
+			"af-e",
+			"af-ec"
+		],
+		cambodia: [
+			"az",
+			"az-se",
+			"az-ml"
+		],
+		cameroon: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		canada: ["am", "am-n"],
+		canadian_provinces: ["am", "am-n"],
+		cape_verde: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		caribbean_netherlands: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		catalonia: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		cayman_islands: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		central_africa: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		central_african_republic: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		central_american_republic: [
+			"am",
+			"am-cr",
+			"am-c"
+		],
+		ceylon: ["az", "az-s"],
+		chad: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		chile: ["am", "am-s"],
+		china: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		china_empire: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		china_republic: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		colombia: ["am", "am-s"],
+		comoros: [
+			"af",
+			"af-e",
+			"af-eo"
+		],
+		congo_democratic_republic: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		congo_free_state: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		cook_islands: ["oc", "oc-pl"],
+		costa_rica: [
+			"am",
+			"am-cr",
+			"am-c"
+		],
+		cote_d_ivoire: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		courland_semigallia: ["eu", "eu-c"],
+		crete: [
+			"eu",
+			"eu-s",
+			"eu-se"
+		],
+		crimea: ["eu", "eu-e"],
+		croatia: [
+			"eu",
+			"eu-s",
+			"eu-se",
+			"euro",
+			"euro-ah"
+		],
+		cuba: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		curacao: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		cyprus: [
+			"eu",
+			"eu-e",
+			"euro",
+			"euro-ah"
+		],
+		czech_republic: ["eu", "eu-c"],
+		czechoslovakia: ["eu", "eu-c"],
+		danish_west_indies: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		danzig: ["eu", "pl"],
+		darfur: [
+			"af",
+			"af-e",
+			"af-en"
+		],
+		demerara_essequibo: ["am", "am-s"],
+		denmark: ["eu", "eu-n"],
+		djibouti: [
+			"af",
+			"af-e",
+			"af-eh"
+		],
+		dominica: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		dominican_republic: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		dutch_republic: ["eu", "eu-w"],
+		east_timor: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		eastern_caribbean: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		ecuador: ["am", "am-s"],
+		egypt: [
+			"af",
+			"af-nw",
+			"af-n"
+		],
+		el_salvador: [
+			"am",
+			"am-cr",
+			"am-c"
+		],
+		england: ["eu", "eu-w"],
+		equatorial_african_states: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		equatorial_guinea: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		eritrea: [
+			"af",
+			"af-e",
+			"af-eh"
+		],
+		estonia: [
+			"eu",
+			"eu-n",
+			"euro",
+			"euro-ah"
+		],
+		ethiopia: [
+			"af",
+			"af-e",
+			"af-eh"
+		],
+		eu: ["eu", "euro"],
+		falkland_islands: ["am", "am-s"],
+		faroes: ["eu", "eu-n"],
+		fiji: ["oc", "oc-ml"],
+		finland: [
+			"eu",
+			"eu-n",
+			"euro",
+			"euro-ah"
+		],
+		france: [
+			"eu",
+			"eu-w",
+			"euro",
+			"euro-ah"
+		],
+		frankfurt: ["eu", "eu-c"],
+		french_cochinchina: [
+			"az",
+			"az-se",
+			"az-ml"
+		],
+		french_colonies: ["ww"],
+		french_equatorial_africa: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		french_guiana: ["am", "am-s"],
+		french_indochina: [
+			"az",
+			"az-se",
+			"az-ml"
+		],
+		french_oceania: ["oc", "oc-pl"],
+		french_pacific_territories: ["oc", "oc-pl"],
+		french_polinesia: ["oc", "oc-pl"],
+		french_somaliland: [
+			"af",
+			"af-e",
+			"af-eh"
+		],
+		french_west_africa: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		fujairah: ["az", "az-w"],
+		further_austria: ["eu", "eu-c"],
+		gabon: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		galicia_lodomeria: ["eu", "eu-e"],
+		gambia: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		genoa: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		georgia: ["az", "az-w"],
+		georgia__: ["eu", "eu-e"],
+		german_democratic_republic: ["eu", "de"],
+		german_east_africa: [
+			"af",
+			"af-e",
+			"af-ec"
+		],
+		german_empire: ["eu", "de"],
+		german_new_guinea: ["oc", "oc-ml"],
+		germany: [
+			"eu",
+			"de",
+			"euro",
+			"euro-ah"
+		],
+		ghana: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		gibraltar: ["eu", "uk"],
+		gorizia_gradisca: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		greece: [
+			"eu",
+			"eu-s",
+			"eu-se",
+			"euro",
+			"euro-ah"
+		],
+		greenland: [
+			"am",
+			"am-n",
+			"eu",
+			"eu-n"
+		],
+		grenada: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		guadeloupe: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		guatemala: [
+			"am",
+			"am-cr",
+			"am-c"
+		],
+		gubbio: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		guernsey: ["eu", "uk"],
+		guinea: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		guinea_bissau: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		guyana: ["am", "am-s"],
+		gwalior: ["az", "az-s"],
+		haiti: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		hamburg: ["eu", "eu-c"],
+		hannover: ["eu", "eu-c"],
+		hawaii: [
+			"oc",
+			"oc-pl",
+			"am",
+			"am-n"
+		],
+		hejaz: ["az", "az-w"],
+		hesse_kassel: ["eu", "eu-c"],
+		hessen_darmstadt: ["eu", "eu-c"],
+		hessen_homburg: ["eu", "eu-c"],
+		honduras: [
+			"am",
+			"am-cr",
+			"am-c"
+		],
+		hong_kong: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		hungary: ["eu", "eu-c"],
+		hutt_river: ["oc", "oc-az"],
+		hyderabad: ["az", "az-s"],
+		iceland: ["eu", "eu-n"],
+		india: ["az", "az-s"],
+		indonesia: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		indore: ["az", "az-s"],
+		ionian_islands: [
+			"eu",
+			"eu-s",
+			"eu-se"
+		],
+		iran: ["az", "az-w"],
+		iraq: ["az", "az-w"],
+		ireland: [
+			"eu",
+			"eu-w",
+			"euro",
+			"euro-iz"
+		],
+		isle_of_man: ["eu", "uk"],
+		israel: ["az", "az-w"],
+		italian_eritrea: [
+			"af",
+			"af-e",
+			"af-eh"
+		],
+		italian_somaliland: [
+			"af",
+			"af-e",
+			"af-eh"
+		],
+		italy: [
+			"eu",
+			"eu-s",
+			"eu-sc",
+			"euro",
+			"euro-iz"
+		],
+		jaipur: ["az", "az-s"],
+		jamaica: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		jaora: ["az", "az-s"],
+		japan: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		japanese_china: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		jersey: ["eu", "uk"],
+		jodhpur: ["az", "az-s"],
+		jordan: ["az", "az-w"],
+		julich_berg: ["eu", "eu-c"],
+		junagadh: ["az", "az-s"],
+		katanga: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		kazakhstan: [
+			"az",
+			"az-ce",
+			"az-c"
+		],
+		kenya: [
+			"af",
+			"af-e",
+			"af-ec"
+		],
+		khiva: [
+			"az",
+			"az-ce",
+			"az-c"
+		],
+		khorezm: [
+			"az",
+			"az-ce",
+			"az-c"
+		],
+		kiau_chau: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		kiribati: ["oc", "oc-mr"],
+		korea: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		krakow: ["eu", "eu-c"],
+		kutch: ["az", "az-s"],
+		kuwait: ["az", "az-w"],
+		kyrgyzstan: [
+			"az",
+			"az-ce",
+			"az-c"
+		],
+		laos: [
+			"az",
+			"az-se",
+			"az-ml"
+		],
+		latvia: [
+			"eu",
+			"eu-c",
+			"euro",
+			"euro-iz"
+		],
+		lebanon: ["az", "az-w"],
+		lesotho: [
+			"af",
+			"af-cs",
+			"af-s"
+		],
+		liberia: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		libya: [
+			"af",
+			"af-nw",
+			"af-n"
+		],
+		liechtenstein: ["eu", "eu-w"],
+		liege: ["eu", "eu-c"],
+		lippe: ["eu", "eu-c"],
+		lithuania: [
+			"eu",
+			"lt",
+			"euro",
+			"euro-iz"
+		],
+		livonia: ["eu", "eu-c"],
+		lombardy_venetia: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		lubeck: ["eu", "eu-c"],
+		lucca: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		lundy: ["eu", "eu-w"],
+		luxembourg: [
+			"eu",
+			"eu-w",
+			"euro",
+			"euro-iz"
+		],
+		macau: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		macedonia: [
+			"eu",
+			"eu-s",
+			"eu-se"
+		],
+		madagascar: [
+			"af",
+			"af-e",
+			"af-eo"
+		],
+		madeira_islands: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		mainz: ["eu", "eu-c"],
+		majorca: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		malawi: [
+			"af",
+			"af-cs",
+			"af-se"
+		],
+		malaya: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		malaya_british_borneo: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		malaysia: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		maldives: ["az", "az-s"],
+		mali: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		malta: [
+			"eu",
+			"eu-e",
+			"euro",
+			"euro-iz"
+		],
+		mantua: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		marshall_islands: ["oc", "oc-mr"],
+		martinique: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		mauritania: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		mauritius: [
+			"af",
+			"af-e",
+			"af-eo"
+		],
+		mecklenburg_schwerin: ["eu", "eu-c"],
+		mecklenburg_strelitz: ["eu", "eu-c"],
+		mewar: ["az", "az-s"],
+		mexico: [
+			"am",
+			"am-cr",
+			"am-c"
+		],
+		milan: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		moldavia_and_wallachia: ["eu", "eu-e"],
+		moldova: ["eu", "eu-e"],
+		mombasa: [
+			"af",
+			"af-e",
+			"af-ec"
+		],
+		monaco: [
+			"eu",
+			"eu-w",
+			"euro",
+			"euro-iz"
+		],
+		mongolia: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		montenegro: [
+			"eu",
+			"eu-s",
+			"eu-se"
+		],
+		montserrat: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		morocco: [
+			"af",
+			"af-nw",
+			"af-n"
+		],
+		mozambique: [
+			"af",
+			"af-cs",
+			"af-se"
+		],
+		mughal_empire: ["az", "az-s"],
+		myanmar: [
+			"az",
+			"az-se",
+			"az-ml"
+		],
+		nagorno_karabakh: ["az", "az-w"],
+		namibia: [
+			"af",
+			"af-cs",
+			"af-s"
+		],
+		naples: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		nassau: ["eu", "eu-c"],
+		nassau_usingen: ["eu", "eu-c"],
+		nassau_weilburg: ["eu", "eu-c"],
+		nauru: ["oc", "oc-mr"],
+		navarra: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		nawanagar: ["az", "az-s"],
+		nepal: ["az", "az-s"],
+		netherlands: [
+			"eu",
+			"eu-w",
+			"euro",
+			"euro-iz"
+		],
+		netherlands_antilles: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		netherlands_east_indies: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		new_caledonia: ["oc", "oc-ml"],
+		new_guinea: ["oc", "oc-ml"],
+		new_hebrides: ["oc", "oc-ml"],
+		new_zealand: ["oc", "oc-az"],
+		newfoundland: ["am", "am-n"],
+		nicaragua: [
+			"am",
+			"am-cr",
+			"am-c"
+		],
+		niger: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		nigeria: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		niue: ["oc", "oc-pl"],
+		north_borneo: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		north_korea: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		norway: ["eu", "eu-n"],
+		oldenburg: ["eu", "eu-c"],
+		oman: ["az", "az-w"],
+		order_of_malta: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		ottoman_empire: ["az", "az-w"],
+		oudh: ["az", "az-s"],
+		pakistan: ["az", "az-s"],
+		palatinate: ["eu", "eu-c"],
+		palatine_zweibrucken: ["eu", "eu-c"],
+		palau: ["oc", "oc-mr"],
+		palestine: ["az", "az-w"],
+		panama: [
+			"am",
+			"am-cr",
+			"am-c"
+		],
+		papal_states: [
+			"eu",
+			"eu-s",
+			"eu-sc"
+		],
+		papua_new_guinea: ["oc", "oc-ml"],
+		paraguay: ["am", "am-s"],
+		parma: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		peru: ["am", "am-s"],
+		philippines: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		piedmont: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		pitcairn_islands: ["oc", "oc-pl"],
+		poland: ["eu", "pl"],
+		porbandar: ["az", "az-s"],
+		portugal: [
+			"eu",
+			"eu-s",
+			"eu-sw",
+			"euro",
+			"euro-iz"
+		],
+		portuguese_india: ["az", "az-s"],
+		portuguese_timor: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		prussia: ["eu", "de"],
+		pudukkottai: ["az", "az-s"],
+		puerto_rico: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		qatar: ["az", "az-w"],
+		qatar_dubai: ["az", "az-w"],
+		ras_al_khaimah: ["az", "az-w"],
+		ratlam: ["az", "az-s"],
+		reunion: [
+			"af",
+			"af-e",
+			"af-eo"
+		],
+		reuss_gera: ["eu", "eu-c"],
+		reuss_greiz: ["eu", "eu-c"],
+		rhodesia: [
+			"af",
+			"af-cs",
+			"af-se"
+		],
+		rhodesia_nyasaland: [
+			"af",
+			"af-cs",
+			"af-se"
+		],
+		roman_republic: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		romania: ["eu", "eu-e"],
+		ruanda_burundi: [
+			"af",
+			"af-e",
+			"af-ec"
+		],
+		ruanda_urundi: [
+			"af",
+			"af-e",
+			"af-ec"
+		],
+		russia: [
+			"eu",
+			"ru",
+			"ru-rf"
+		],
+		russia_empire: [
+			"eu",
+			"ru",
+			"ru-sx"
+		],
+		rwanda: [
+			"af",
+			"af-e",
+			"af-ec"
+		],
+		ryukyu: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		saar: ["eu", "de"],
+		saint_helena: ["uk"],
+		saint_helena__: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		saint_helena_ascension: ["uk"],
+		saint_helena_ascension__: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		saint_kitts_nevis: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		saint_lucia: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		saint_pierre_miquelon: ["am", "am-n"],
+		saint_vincent_grenadines: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		salzburg: ["eu", "eu-c"],
+		samoa: ["oc", "oc-pl"],
+		san_marino: [
+			"eu",
+			"eu-s",
+			"eu-sc",
+			"euro",
+			"euro-iz"
+		],
+		sao_tome_principe: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		sarawak: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		sardinia: [
+			"eu",
+			"eu-s",
+			"eu-sc"
+		],
+		saudi_arabia: ["az", "az-w"],
+		saxe_altenburg: ["eu", "eu-c"],
+		saxe_coburg_gotha: ["eu", "eu-c"],
+		saxe_gotha_altenburg: ["eu", "eu-c"],
+		saxe_hildburghausen: ["eu", "eu-c"],
+		saxe_meiningen: ["eu", "eu-c"],
+		saxe_weimar_eisenach: ["eu", "eu-c"],
+		saxony: ["eu", "eu-c"],
+		schaumburg_lippe: ["eu", "eu-c"],
+		schleswig_holstein: ["eu", "eu-c"],
+		schwarzburg_rudolstadt: ["eu", "eu-c"],
+		schwarzburg_sondershausen: ["eu", "eu-c"],
+		scotland: ["eu", "eu-w"],
+		sealand: ["eu", "eu-w"],
+		seborga: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		senegal: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		serbia: [
+			"eu",
+			"eu-s",
+			"eu-se"
+		],
+		seychelles: [
+			"af",
+			"af-e",
+			"af-eo"
+		],
+		sharjah: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		sicily: [
+			"eu",
+			"eu-s",
+			"eu-sc"
+		],
+		sierra_leone: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		silesia: ["eu", "eu-c"],
+		singapore: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		slovakia: [
+			"eu",
+			"eu-c",
+			"euro",
+			"euro-iz"
+		],
+		slovenia: [
+			"eu",
+			"eu-s",
+			"eu-se",
+			"euro",
+			"euro-iz"
+		],
+		solomon_islands: ["oc", "oc-ml"],
+		somalia: [
+			"af",
+			"af-e",
+			"af-eh"
+		],
+		somaliland: [
+			"af",
+			"af-e",
+			"af-eh"
+		],
+		south_africa: [
+			"af",
+			"af-cs",
+			"af-s"
+		],
+		south_arabia: ["az", "az-w"],
+		south_georgia: ["am", "am-s"],
+		south_korea: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		south_sudan: [
+			"af",
+			"af-e",
+			"af-ec"
+		],
+		south_vietnam: [
+			"az",
+			"az-se",
+			"az-ml"
+		],
+		south_yemen: ["az", "az-w"],
+		southern_rhodesia: [
+			"af",
+			"af-cs",
+			"af-se"
+		],
+		spain: [
+			"eu",
+			"eu-s",
+			"eu-sw",
+			"euro",
+			"euro-iz"
+		],
+		spainish_provinces: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		span_civil_war: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		spanish_netherlands: ["eu", "eu-w"],
+		spitsbergen: ["eu", "eu-n"],
+		sri_lanka: ["az", "az-s"],
+		straits_settlements: [
+			"az",
+			"az-se",
+			"az-mr"
+		],
+		sudan: [
+			"af",
+			"af-e",
+			"af-en"
+		],
+		suriname: ["am", "am-s"],
+		swaziland: [
+			"af",
+			"af-cs",
+			"af-s"
+		],
+		sweden: ["eu", "eu-n"],
+		swiss_cantons: ["eu", "eu-w"],
+		switzerland: ["eu", "eu-w"],
+		syria: ["az", "az-w"],
+		taiwan: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		tajikistan: [
+			"az",
+			"az-ce",
+			"az-c"
+		],
+		tannu_tuva: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		tanzania: [
+			"af",
+			"af-e",
+			"af-ec"
+		],
+		thailand: [
+			"az",
+			"az-se",
+			"az-ml"
+		],
+		third_reich: ["eu", "de"],
+		tibet: [
+			"az",
+			"az-ce",
+			"az-e"
+		],
+		togo: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		tokelau: ["oc", "oc-pl"],
+		tonga: ["oc", "oc-pl"],
+		tonk: ["az", "az-s"],
+		tonkin: [
+			"az",
+			"az-se",
+			"az-ml"
+		],
+		transnistria: ["eu", "eu-e"],
+		transylvania: ["eu", "eu-e"],
+		travancore: [
+			"az",
+			"az-se",
+			"az-ml"
+		],
+		trinidad_tobago: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		tristan_da_cunha: ["uk"],
+		tristan_da_cunha__: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		tunisia: [
+			"af",
+			"af-nw",
+			"af-n"
+		],
+		turkey: ["az", "az-w"],
+		turkmenistan: [
+			"az",
+			"az-ce",
+			"az-c"
+		],
+		turks_caicos_islands: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		tuscany: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		tuvalu: ["oc", "oc-pl"],
+		two_sicilies: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		uganda: [
+			"af",
+			"af-e",
+			"af-ec"
+		],
+		ukraine: ["eu", "eu-e"],
+		umm_al_qaiwain: ["az", "az-w"],
+		united_arab_emirates: ["az", "az-w"],
+		united_kingdom: ["eu", "uk"],
+		uruguay: ["am", "am-s"],
+		usa: ["am", "am-n"],
+		ussr: [
+			"eu",
+			"ru",
+			"ru-sx"
+		],
+		uzbekistan: [
+			"az",
+			"az-ce",
+			"az-c"
+		],
+		vanuatu: ["oc", "oc-ml"],
+		vatican_city: [
+			"eu",
+			"eu-s",
+			"eu-sc",
+			"euro",
+			"euro-iz"
+		],
+		venezuela: ["am", "am-s"],
+		venice: [
+			"eu",
+			"eu-s",
+			"eu-sw"
+		],
+		vietnam: [
+			"az",
+			"az-se",
+			"az-ml"
+		],
+		virgin_islands_british: [
+			"am",
+			"am-cr",
+			"am-r"
+		],
+		waldeck: ["eu", "eu-c"],
+		west_congo: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		western_africa: [
+			"af",
+			"af-nw",
+			"af-w"
+		],
+		western_sahara: [
+			"af",
+			"af-nw",
+			"af-n"
+		],
+		westphalia: ["eu", "eu-c"],
+		wurttemberg: ["eu", "eu-c"],
+		wurzburg: ["eu", "eu-c"],
+		yemen: ["az", "az-w"],
+		yugoslavia: [
+			"eu",
+			"eu-s",
+			"eu-se"
+		],
+		zaire: [
+			"af",
+			"af-cs",
+			"af-c"
+		],
+		zambia: [
+			"af",
+			"af-cs",
+			"af-se"
+		],
+		zanzibar: [
+			"af",
+			"af-e",
+			"af-ec"
+		],
+		zar: [
+			"af",
+			"af-cs",
+			"af-s"
+		],
+		zimbabwe: [
+			"af",
+			"af-cs",
+			"af-se"
+		]
+	}, m = {
+		euro: {
+			en: "Euro",
+			lt: "Eurai"
+		},
+		"euro-ah": {
+			en: "A-H",
+			lt: "A-H"
+		},
+		"euro-iz": {
+			en: "I-Z",
+			lt: "I-Z"
+		},
+		lt: {
+			en: "Lithuania",
+			lt: "Lietuva"
+		},
+		pl: {
+			en: "Poland",
+			lt: "Lenkija"
+		},
+		de: {
+			en: "Germany",
+			lt: "Vokietija"
+		},
+		uk: {
+			en: "United Kingdom",
+			lt: "Jungtinė Karalystė"
+		},
+		ru: {
+			en: "Russia",
+			lt: "Rusija"
+		},
+		"ru-sx": {
+			en: "Russian Empire & USSR",
+			lt: "Rusijos Imperija ir TSRS"
+		},
+		"ru-rf": {
+			en: "Russian Federation",
+			lt: "Rusijos Federacija"
+		},
+		eu: {
+			en: "Europe",
+			lt: "Europa"
+		},
+		"eu-n": {
+			en: "Northern Europe",
+			lt: "Šiaurės Europa"
+		},
+		"eu-e": {
+			en: "Eastern Europe",
+			lt: "Rytų Europa"
+		},
+		"eu-c": {
+			en: "Central Europe",
+			lt: "Vidurio Europa"
+		},
+		"eu-w": {
+			en: "Western Europe",
+			lt: "Vakarų Europa"
+		},
+		"eu-s": {
+			en: "Southern Europe",
+			lt: "Pietų Europa"
+		},
+		"eu-se": {
+			en: "Southeast Europe",
+			lt: "Pietryčių Europa"
+		},
+		"eu-sc": {
+			en: "South-Central Europe",
+			lt: "Pietų Europa"
+		},
+		"eu-sw": {
+			en: "Southwest Europe",
+			lt: "Pietvakarių Europa"
+		},
+		az: {
+			en: "Asia",
+			lt: "Azija"
+		},
+		"az-n": {
+			en: "Northern Asia",
+			lt: "Šiaurės Azija"
+		},
+		"az-ce": {
+			en: "Central and Eastern Asia",
+			lt: "Vidurio ir Rytų Azija"
+		},
+		"az-c": {
+			en: "Central Asia",
+			lt: "Vidurio Azija"
+		},
+		"az-e": {
+			en: "Eastern Asia",
+			lt: "Rytų Azija"
+		},
+		"az-se": {
+			en: "Southeast Asia",
+			lt: "Pietryčių Azija"
+		},
+		"az-ml": {
+			en: "Mainland Southeast Asia",
+			lt: "Žemyninė Pietryčių Azija"
+		},
+		"az-mr": {
+			en: "Maritime Southeast Asia",
+			lt: "Jūrinė Pietryčių Azija"
+		},
+		"az-s": {
+			en: "Southern Asia",
+			lt: "Pietų Azija"
+		},
+		"az-w": {
+			en: "Western Asia",
+			lt: "Vakarų Azija"
+		},
+		af: {
+			en: "Africa",
+			lt: "Afrika"
+		},
+		"af-nw": {
+			en: "Northern and Western Africa",
+			lt: "Šiaurės ir Vakarų Afrika"
+		},
+		"af-n": {
+			en: "Northern Africa",
+			lt: "Šiaurės Afrika"
+		},
+		"af-e": {
+			en: "Eastern Africa",
+			lt: "Rytų Afrika"
+		},
+		"af-ec": {
+			en: "East African Community",
+			lt: "Rytų Afrikos Bendrija"
+		},
+		"af-eh": {
+			en: "Horn of Africa",
+			lt: "Afrikos Kyšulys"
+		},
+		"af-eo": {
+			en: "Indian Ocean Islands",
+			lt: "Indijos Vandenyno Salos"
+		},
+		"af-en": {
+			en: "Nile Valley",
+			lt: "Nilo Slėnis"
+		},
+		"af-cs": {
+			en: "Central and Southern Africa",
+			lt: "Vidurio ir Pietų Afrika"
+		},
+		"af-c": {
+			en: "Central Africa",
+			lt: "Vidurio Afrika"
+		},
+		"af-se": {
+			en: "Southeast Africa",
+			lt: "Pietryčių Afrika"
+		},
+		"af-s": {
+			en: "Southern Africa",
+			lt: "Pietų Afrika"
+		},
+		"af-w": {
+			en: "Western Africa",
+			lt: "Vakarų Afrika"
+		},
+		am: {
+			en: "America",
+			lt: "Amerika"
+		},
+		"am-n": {
+			en: "Northern America",
+			lt: "Šiaurės Amerika"
+		},
+		"am-cr": {
+			en: "Central America and Caribbean",
+			lt: "Vidurio Amerika ir Karibai"
+		},
+		"am-r": {
+			en: "Caribbean",
+			lt: "Karibai"
+		},
+		"am-c": {
+			en: "Central America",
+			lt: "Vidurio Amerika"
+		},
+		"am-s": {
+			en: "Southern America",
+			lt: "Pietų Amerika"
+		},
+		oc: {
+			en: "Australia and Oceania",
+			lt: "Australija ir Okeanija"
+		},
+		"oc-az": {
+			en: "Australia and New Zealand",
+			lt: "Australija ir Naujoji Zelandija"
+		},
+		"oc-ml": {
+			en: "Melanesia",
+			lt: "Melanezija"
+		},
+		"oc-mr": {
+			en: "Micronesia",
+			lt: "Mikronezija"
+		},
+		"oc-pl": {
+			en: "Polynesia",
+			lt: "Polinezija"
+		},
+		an: {
+			en: "Antarctica",
+			lt: "Antarktida"
+		},
+		ww: {
+			en: "Worldwide",
+			lt: "Viso Pasaulio"
+		}
+	}, f = {
+		euro: ["euro-ah", "euro-iz"],
+		eu: [
+			"lt",
+			"pl",
+			"ru-sx",
+			"ru-rf",
+			"de",
+			"eu-e",
+			"eu-c",
+			"eu-n",
+			"eu-sw",
+			"eu-sc",
+			"eu-se",
+			"eu-w",
+			"uk"
+		],
+		az: [
+			"az-ce",
+			"az-se",
+			"az-s",
+			"az-w",
+			"az-n"
+		],
+		af: [
+			"af-nw",
+			"af-e",
+			"af-cs"
+		],
+		am: [
+			"am-n",
+			"am-cr",
+			"am-s"
+		],
+		oc: []
+	}, p = function(e) {
+		return e.TAB = "t", e.REGION = "r", e;
+	}({}), h = {
+		Shipping: {
+			lt: "Siuntimas",
+			ru: "Почта",
+			de: "Versand"
+		},
+		shipping: {
+			lt: "siuntimas",
+			ru: "почта",
+			de: "versand"
+		},
+		Total: {
+			lt: "Viso",
+			ru: "Всего",
+			de: "Gesamt"
+		},
+		"PayPal charges": {
+			lt: "PayPal mokesčiai",
+			ru: "PayPal сборы",
+			de: "PayPal Gebühren"
+		},
+		Difference: {
+			lt: "Skirtumas",
+			ru: "Разница",
+			de: "Unterschied"
+		},
+		Sorting: {
+			lt: "Rikiuoti",
+			ru: "Сортировка",
+			de: "Sortierung"
+		},
+		Year: {
+			lt: "Metai",
+			ru: "Год",
+			de: "Jahr"
+		},
+		"Facial value": {
+			lt: "Vertė",
+			ru: "Номинал",
+			de: "Wert"
+		},
+		Subject: {
+			lt: "Tema",
+			ru: "Наименование",
+			de: "Thema"
+		},
+		Denomination: {
+			lt: "Nominalioji vertė",
+			ru: "Номинал",
+			de: "Wert"
+		},
+		Private: {
+			lt: "Privatu",
+			ru: "Личный доступ",
+			de: "Privat"
+		},
+		Public: {
+			lt: "Vieša",
+			ru: "Общий доступ",
+			de: "Öffentlich"
+		},
+		Show: {
+			lt: "Rodyti",
+			ru: "Показать",
+			de: "Anzeigen"
+		},
+		Hide: {
+			lt: "Slėpti",
+			ru: "Спрятать",
+			de: "Verstecken"
+		},
+		All: {
+			lt: "Visi",
+			ru: "Все",
+			de: "Ales"
+		}
+	}, g = (() => {
+		const e = document.querySelector(".bottom-lang a.active");
+		if (e) {
+			const a = e.href.match(/:\/\/(\w+)\./);
+			if (a) return a[1];
+		}
+		return "en";
+	})();
+	function b(e, a, t) {
+		return "string" == typeof a && ([a, t] = [t, a]), (a ?? h)?.[e]?.[t ?? g] || e;
+	}
+	function y() {
+		return window.location;
+	}
+	function w() {
+		return y().href;
+	}
+	var k = () => new URL(w()), v = (e) => "string" == typeof e ? new URL(e, w()) : e, S = (e = k()) => new URLSearchParams(v(e).hash.slice(1));
+	async function z(e, a = k()) {
+		if ("function" != typeof e) return e.toString();
+		const t = S(a), n = await e(t);
+		return (null != n ? n : t).toString();
+	}
+	async function _(e, a = k()) {
+		const t = await z(e, a);
+		(y().hash || t) && history.replaceState({}, "", new URL(`#${t}`, a));
+	}
+	async function A(e, a = k()) {
+		const t = v(a), n = await z(e, t);
+		return (t.hash || n) && (t.hash = `#${n}`), t.href;
+	}
+	var x = (e) => S().get(e);
+	function j(e) {
+		return !!e?.classList.contains("hide");
+	}
+	function q(...e) {
+		for (const a of e) a?.classList.remove("hide");
+	}
+	function E(...e) {
+		for (const a of e) a?.classList.add("hide");
+	}
+	function L(e, ...a) {
+		for (const t of a) t?.classList.toggle("hide", !e);
+	}
+	function C(e) {
+		e && (e.preventDefault(), e.stopPropagation());
+	}
+	function N() {
+		return y().reload(), null;
+	}
+	function B(e) {
+		const a = document.createElement("template");
+		return a.innerHTML = e, a.content;
+	}
+	function F(e) {
+		C(e);
+		const a = document.createElement("a");
+		a.href = e.target?.dataset?.href ?? "", a.dispatchEvent(new MouseEvent(e.type, e));
+	}
+	function M(e) {
+		const a = e?.querySelectorAll("[data-href]");
+		if (a?.length) for (const t of a) t.addEventListener("click", F);
+	}
+	function P(e, a, t = M, n = N) {
+		if (!a) return;
+		const r = e.getElementById(a.id);
+		if (!r) return n?.(a);
+		a.innerHTML = r.innerHTML, t?.(a);
+	}
+	function R(e, a) {
+		var t;
+		e.addEventListener("submit", (t = e.onsubmit, async (e) => async function(e, a, t) {
+			C(e);
+			const n = e.target;
+			if (!1 !== a?.call(n, e)) return t?.(n);
+		}(e, t, a))), e.removeAttribute("onsubmit");
+	}
+	function T(e, a) {
+		var t;
+		e.addEventListener("click", (t = e.onclick, (e) => async function(e, a, t) {
+			C(e);
+			const n = e.target;
+			if (!1 !== a?.call(n, e)) return t?.(n);
+		}(e, t, a))), e.removeAttribute("onclick");
+	}
+	function V() {
+		return (/* @__PURE__ */ new Date()).toISOString().split("-", 2).join("-");
+	}
+	function O(e) {
+		return e.reduce((e, a) => e.includes(a) ? e : [...e, a], []);
+	}
+	function G(e) {
+		return e.replace(/\W+/g, "-").replace(/^-+/, "").replace(/-+$/, "").toLowerCase();
+	}
+	function H(e) {
+		e?.scrollIntoView?.({
+			behavior: "smooth",
+			block: "nearest",
+			inline: "nearest"
+		});
+	}
+	function I(e) {
+		const a = {};
+		for (const t of e.querySelectorAll("div.cntry")) {
+			const [, e] = t.querySelector("a")?.href.match(/&country=(\w+)/) || [];
+			e && (a[e] = +(t.querySelector("span.right")?.textContent ?? 0) || 0);
+		}
+		return a;
+	}
+	var U = (() => {
+		const e = document.querySelector(".header .partition .menu-l a[href^=\"/uid\"]");
+		if (e) {
+			const a = e.href.match(/\/uid(\d+)/);
+			if (a) return a[1];
+		}
+		return null;
+	})();
+	function K(e) {
+		if (!e.ok) throw new Error(`${e.status}: ${e.statusText}`);
+		return e;
+	}
+	function D(e) {
+		return function(e) {
+			K(e), e.redirected && location.href !== e.url && history.pushState({}, "", e.url);
+		}(e), e.text();
+	}
+	var W = function(e) {
+		return e.G = "G", e.VG = "VG", e.F = "F", e.VF = "VF", e.VXF = "VF+", e.XF = "XF", e.XXF = "XF+", e.AU = "AU", e.UNC = "UNC", e.PROOF = "PRF", e.BU = "BU", e;
+	}({}), X = function(e) {
+		return e[e.ANY = 1] = "ANY", e[e.__UNUSED_BLUE = 2] = "__UNUSED_BLUE", e[e.PROOF = 3] = "PROOF", e[e.BU = 4] = "BU", e[e.COPY = 5] = "COPY", e[e.UNKNOWN = 6] = "UNKNOWN", e[e.G = 7] = "G", e[e.VG = 8] = "VG", e[e.F = 9] = "F", e[e.VF = 10] = "VF", e[e.XF = 11] = "XF", e[e.UNC = 12] = "UNC", e[e.__UNUSED_YELLOW = 13] = "__UNUSED_YELLOW", e[e.__UNUSED_MAGENTA = 14] = "__UNUSED_MAGENTA", e;
+	}({}), Y = function(e) {
+		return e[e.UNKNOWN = 0] = "UNKNOWN", e[e.G = 1] = "G", e[e.VG = 2] = "VG", e[e.F = 3] = "F", e[e.VF = 4] = "VF", e[e.XF = 5] = "XF", e[e.UNC = 6] = "UNC", e[e.PROOF = 7] = "PROOF", e[e.BU = 8] = "BU", e[e.ANY = 9] = "ANY", e;
+	}({}), J = function(e) {
+		return e[e.UNKNOWN = 0] = "UNKNOWN", e[e.UNC = 1] = "UNC", e[e.XF = 2] = "XF", e[e.VF = 3] = "VF", e[e.F = 4] = "F", e[e.VG = 5] = "VG", e[e.G = 6] = "G", e[e.PROOF = 7] = "PROOF", e;
+	}({}), Z = function(e) {
+		return e[e.UNKNOWN = 0] = "UNKNOWN", e[e.UNC = 1] = "UNC", e[e.XF = 2] = "XF", e[e.VF = 3] = "VF", e[e.F = 4] = "F", e[e.VG = 5] = "VG", e[e.G = 6] = "G", e[e.PROOF = 7] = "PROOF", e[e.COPY = 100] = "COPY", e;
+	}({}), Q = function(e) {
+		return e[e.ANY = 0] = "ANY", e[e.UNC = 1] = "UNC", e[e.XF = 2] = "XF", e[e.VF = 3] = "VF", e;
+	}({}), ee = {
+		[W.G]: X.G,
+		[W.VG]: X.VG,
+		[W.F]: X.F,
+		[W.VF]: X.VF,
+		[W.VXF]: X.VF,
+		[W.XF]: X.XF,
+		[W.XXF]: X.XF,
+		[W.UNC]: X.UNC,
+		[W.PROOF]: X.PROOF,
+		[W.BU]: X.BU
+	}, ae = {
+		[W.G]: Y.G,
+		[W.VG]: Y.VG,
+		[W.F]: Y.F,
+		[W.VF]: Y.VF,
+		[W.XF]: Y.XF,
+		[W.UNC]: Y.UNC,
+		[W.PROOF]: Y.PROOF,
+		[W.BU]: Y.BU
+	}, te = {
+		[X.G]: Y.G,
+		[X.VG]: Y.VG,
+		[X.F]: Y.F,
+		[X.VF]: Y.VF,
+		[X.XF]: Y.XF,
+		[X.UNC]: Y.UNC,
+		[X.PROOF]: Y.PROOF,
+		[X.BU]: Y.BU,
+		[X.ANY]: Y.ANY
+	}, ne = (W.G, J.G, W.VG, J.VG, W.F, J.F, W.VF, J.VF, W.XF, J.XF, W.UNC, J.UNC, W.PROOF, J.PROOF, J.G, W.G, J.VG, W.VG, J.F, W.F, J.VF, W.VF, J.XF, W.XF, J.UNC, W.UNC, J.PROOF, W.PROOF, {
+		[J.G]: X.G,
+		[J.VG]: X.VG,
+		[J.F]: X.F,
+		[J.VF]: X.VF,
+		[J.XF]: X.XF,
+		[J.UNC]: X.UNC,
+		[J.PROOF]: X.PROOF
+	}), re = {
+		[X.G]: J.G,
+		[X.VG]: J.VG,
+		[X.F]: J.F,
+		[X.VF]: J.VF,
+		[X.XF]: J.XF,
+		[X.UNC]: J.UNC,
+		[X.PROOF]: J.PROOF
+	}, ie = (X.G, X.VG, X.F, X.VF, X.XF, X.UNC, X.PROOF, X.BU, X.ANY, X.COPY, X.UNKNOWN, 1e3), oe = () => document.querySelector("#my-func-block");
+	async function se(e = oe(), a = document.querySelector("#ucid-block")) {
+		q(e), function(e) {
+			for (const a of e?.querySelectorAll(".func-button .btn-l") || []) a.classList.add("btn-narrow"), a.matches("a") && (a.classList.replace("btn-gray", "btn-red"), a.setAttribute("type", "submit"));
+		}(e), function(e) {
+			const a = e?.querySelector(".my-collection-block");
+			if (a) {
+				const e = a.cloneNode(!0);
+				e.addEventListener("click", pe), e.addEventListener("touchstart", pe), a.replaceWith(e);
+			}
+		}(e);
+		for (const t of e?.querySelectorAll("form") || []) ue(t), ce(a), t.parentElement?.matches("#edit-coin-form") && (me(a, t), fe(a, t));
+	}
+	async function le(e) {
+		return P(e, oe()), function(e, a) {
+			if (a) {
+				const t = e.getElementById(a.id);
+				t ? a.innerHTML = t.innerHTML : (a.remove(), a = null);
+			}
+		}(e, document.querySelector("#coin-chooser-dialog")), se();
+	}
+	function ce(e) {
+		for (const a of e?.querySelectorAll("a[type=submit]") || []) T(a, async ({ href: e }) => le(B(await fetch(e).then(D))));
+	}
+	function ue(e) {
+		(function(e) {
+			const { buy_month: a, buy_year: t } = e;
+			let { buy_year_month: n } = e;
+			E(t, a), n || (t.insertAdjacentHTML("afterend", "<input id='buy_year_month' name='buy_year_month' type='month'/>"), n = e.buy_year_month), n.max = V(), n.addEventListener("change", (e) => {
+				C(e);
+				const r = n.value || V();
+				return [t.value, a.value] = r.split("-", 2), !1;
+			});
+		})(e), function(e) {
+			const a = e.condition, t = e.color;
+			t.nextElementSibling?.classList.add("btn-set");
+			const n = e.querySelector("#edit-set-color"), r = e.querySelectorAll("table div[class^=\"marked-\"]");
+			for (const i of r) i.matches("#set-color") || (i.classList.add("btn-marker"), i.addEventListener("click", (e) => {
+				const t = e.target;
+				let n = null;
+				for (const a of t.classList) a.startsWith("marked-") && (n = +a.split("-", 3)[1]);
+				n && n in re && (a.value = `${re[n]}`);
+			}));
+			a.addEventListener("change", (e) => {
+				if (!n) return;
+				const a = e.target;
+				n.classList.remove(`marked-${t.value}`);
+				const r = +a.value;
+				r in ne && (t.value = `${ne[r]}`), n.classList.add(`marked-${t.value}`);
+			});
+		}(e), R(e, async (e) => {
+			e && await le(B(await fetch(location.href, {
+				method: "POST",
+				body: new FormData(e)
+			}).then(D)));
+		}), setTimeout(() => {
+			const e = document.querySelector("#tag"), a = document.querySelector("#tags .textboxlist");
+			if (e && !a) {
+				const e = GM_getResourceText("TextboxListStyle");
+				GM_addStyle(e), (async () => {
+					const e = new $.TextboxList("#tag", {
+						unique: !0,
+						bitsOptions: { editable: { addKeys: 188 } },
+						plugins: { autocomplete: { placeholder: "Type to receive suggestions" } }
+					});
+					e.getContainer().addClass("textboxlist-loading");
+					try {
+						const a = await fetch("/coin/?action=autocompletetag", {
+							method: "POST",
+							body: new URLSearchParams({ action: "autocompletetag" })
+						}).then(K);
+						e.plugins.autocomplete.setValues(await a.json()), e.getContainer().removeClass("textboxlist-loading");
+					} finally {}
+				})();
+			}
+			ie = 0;
+		}, ie);
+	}
+	async function de(e) {
+		return !(!e || !await fetch(location.href, {
+			method: "POST",
+			body: new FormData(e)
+		}).then(D)) || !!N();
+	}
+	function me(e, a) {
+		const t = e?.querySelector(".status-line .left"), n = e?.querySelector(".func-button");
+		if (!t || !n) return;
+		const r = "coin-form-visibility";
+		if (n.querySelector(`#${r}`)) return;
+		n.insertAdjacentHTML("afterbegin", `<button id='${r}' class='btn-l btn-i btn-narrow'/>`);
+		const i = n.querySelector(`#${r}`);
+		if (!i) return;
+		const o = () => {
+			const e = a?.public?.checked;
+			i.title = b(e ? "Hide" : "Show"), i.innerHTML = e ? "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 512\"><path fill=\"currentColor\" d=\"M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z\"/></svg>" : "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 576 512\"><path fill=\"currentColor\" d=\"M288 144a110.94 110.94 0 0 0-31.24 5 55.4 55.4 0 0 1 7.24 27 56 56 0 0 1-56 56 55.4 55.4 0 0 1-27-7.24A111.71 111.71 0 1 0 288 144zm284.52 97.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400c-98.65 0-189.09-55-237.93-144C98.91 167 189.34 112 288 112s189.09 55 237.93 144C477.1 345 386.66 400 288 400z\"/></svg>", i.classList.toggle("btn-blue", !e), i.classList.toggle("btn-gray", e), t.innerText = b(e ? "Public" : "Private"), t.classList.toggle("status0", !e), t.classList.toggle("status1", e);
+		};
+		i.addEventListener("click", async () => {
+			if (a) {
+				if (a.public.checked = !a.public.checked, a.public.checked) {
+					const e = [...document.querySelectorAll(".textboxlist-bit-box")].filter((e) => "+" === e.textContent);
+					if (e.length) {
+						const a = new URL(location.href);
+						a.pathname = "/coin/", a.searchParams.set("action", "deltag");
+						for (const t of e) a.searchParams.set("tag", "+"), await fetch(a.href), t.remove();
+					}
+				}
+				await de(a) && o();
+			}
+		}), o();
+	}
+	function fe(e, a) {
+		if (!e) return;
+		let t;
+		for (const s of e.querySelectorAll(".status-line + table tr")) s.querySelector("span.status2") && (t = s);
+		const n = e.querySelector(".func-button");
+		if (!n) return;
+		const r = "coin-form-replacement";
+		if (n.querySelector(`#${r}`)) return;
+		n.insertAdjacentHTML("afterbegin", `<button id='${r}' class='btn-l btn-i btn-narrow'/>`);
+		const i = n.querySelector(`#${r}`);
+		if (!i) return;
+		const o = () => {
+			const n = a?.replace?.checked;
+			if (i.title = n ? "Don't replace" : "Replace", i.innerHTML = n ? "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><path fill=\"currentColor\" d=\"M500.33 0h-47.41a12 12 0 0 0-12 12.57l4 82.76A247.42 247.42 0 0 0 256 8C119.34 8 7.9 119.53 8 256.19 8.1 393.07 119.1 504 256 504a247.1 247.1 0 0 0 166.18-63.91 12 12 0 0 0 .48-17.43l-34-34a12 12 0 0 0-16.38-.55A176 176 0 1 1 402.1 157.8l-101.53-4.87a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12h200.33a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12m-17.99 504.97l22.63-22.63a24 24 0 0 0 0-33.94L63.6 7.03a24 24 0 0 0-33.94 0L7.03 29.66a24 24 0 0 0 0 33.94L448.4 504.97a24 24 0 0 0 33.94 0z\"/></svg>" : "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><path fill=\"currentColor\" d=\"M500.33 0h-47.41a12 12 0 0 0-12 12.57l4 82.76A247.42 247.42 0 0 0 256 8C119.34 8 7.9 119.53 8 256.19 8.1 393.07 119.1 504 256 504a247.1 247.1 0 0 0 166.18-63.91 12 12 0 0 0 .48-17.43l-34-34a12 12 0 0 0-16.38-.55A176 176 0 1 1 402.1 157.8l-101.53-4.87a12 12 0 0 0-12.57 12v47.41a12 12 0 0 0 12 12h200.33a12 12 0 0 0 12-12V12a12 12 0 0 0-12-12z\"/></svg>", i.classList.toggle("btn-blue", !n), i.classList.toggle("btn-gray", n), n) {
+				if (!t) {
+					const a = e?.querySelector(".status-line + table tbody");
+					a && (a.insertAdjacentHTML("beforeend", "<tr><td class='lgray-12' colspan='2'><span class='set status2 wrap' style='max-width: 232px;width: 232px;padding: 0;display: block;margin-top: 6px;'>Need to replace</span></td></tr>"), t = a.querySelector("tr:last-child"));
+				}
+			} else t && (t.remove(), t = null);
+		};
+		i.addEventListener("click", async () => {
+			a && (a.replace.checked = !a.replace.checked, await de(a) && o());
+		}), o();
+	}
+	function pe(e) {
+		const a = e.target;
+		if (!a) return;
+		const t = a.parentElement?.querySelector("#coin-list");
+		if (!t) return;
+		const n = j(t);
+		L(n, t);
+		const r = a.querySelector(".arrow");
+		r && (r.classList.toggle("atw", n), r.classList.toggle("abw", !n));
+	}
+	var he = document.location.href;
+	function ge(e) {
+		const a = new URL(e.href, he), t = a.searchParams, n = new URL(he);
+		n.pathname = a.pathname;
+		const r = n.searchParams;
+		r.delete("page"), r.delete("view");
+		for (const [i, o] of t.entries()) r.set(i, "tag" === i && e.href.match(/&tag=\+/) ? "+" : o);
+		if (e.classList.contains("active")) r.delete("view");
+		else if (e.classList.contains("switcher")) {
+			const e = t.get("view");
+			e && r.delete(e);
+		}
+		e.href = n.href;
+	}
+	function be(e, a) {
+		const t = e.getAttribute("onclick")?.match(/location.href='([^']+)';/);
+		if (t) {
+			const n = new URL(t[1], he), r = n.searchParams, i = new URL(he);
+			i.pathname = n.pathname;
+			const o = i.searchParams;
+			o.delete("page");
+			for (const [e, a] of r.entries()) o.set(e, a);
+			if (document.getElementById("status-filter")) o.delete("status");
+			else {
+				const a = e.querySelector("a.switcher");
+				if (a) {
+					o.delete("view");
+					const e = new URL(a.href, he).searchParams.get("view");
+					e && o.delete(e);
+				}
+			}
+			if (a && a.length) for (const e of a) o.delete(e);
+			e.setAttribute("onclick", `location.href='${i.href}';`);
+		}
+	}
+	var ye = function(e) {
+		return e[e.Common = .012] = "Common", e[e.Russian = .006] = "Russian", e[e.Silver = 1.29] = "Silver", e[e.Gold = 105.79] = "Gold", e;
+	}({}), we = function(e) {
+		return e.Gold = "188", e.Silver = "189", e;
+	}({});
+	function ke(e) {
+		const a = e?.replaceAll(/[^\d.]/g, "");
+		if (!a) return;
+		const t = +a;
+		return isNaN(t) ? void 0 : t;
+	}
+	var ve = { maximumFractionDigits: 2 }, Se = new Intl.NumberFormat("en-US", ve), ze = (e) => Se.format(e), _e = {
+		...ve,
+		style: "currency",
+		currency: "EUR"
+	}, Ae = new Intl.NumberFormat("en-US", _e);
+	async function xe(e, a) {
+		let t = +(sessionStorage.getItem(e) ?? 0);
+		return t && !isNaN(t) || (t = ke(B(await fetch("/").then((e) => e.text())).querySelector(`a[href="/catalog/?composition=${e}"] section`)?.textContent) ?? 0, t || (t = a), sessionStorage.setItem(e, t.toString())), t;
+	}
+	var je = /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
+	function* qe(e = document) {
+		const a = e.querySelector("#swap #swap-block");
+		if (a) {
+			const e = a.querySelectorAll("a.list-link");
+			e.length || console.debug("No swap links found.");
+			for (const a of e) yield a;
+		} else console.debug("Swap block not found.");
+	}
+	function* Ee() {
+		for (const e of qe()) if (!e.querySelector("div.ico-16") && e.hasAttribute("onClick")) {
+			const a = e.getAttribute("onClick")?.match(je);
+			if (a && a.groups) {
+				const { cond: t, info: n, vid: r } = a.groups;
+				yield {
+					a: e,
+					m: {
+						...a.groups,
+						uniq: `${t} ${r} ${n}`
+					}
+				};
+			}
+		}
+	}
+	function Le(e) {
+		!e.href.endsWith(`?uid=${U}`) && e.previousElementSibling?.href.endsWith(`?uid=${U}`) && e.classList.add("with-separator");
+		const a = e.querySelector(".cond");
+		if (a) {
+			const e = a.textContent?.trim();
+			a.classList.add(`marked-${ee[e]}`);
+		}
+		const t = e.querySelector(".year");
+		if (!t) return;
+		const n = t.textContent?.split(" "), r = n?.shift();
+		n?.length && (t.textContent = r || "", t.insertAdjacentHTML("beforeend", ` <span class="lgray-11">${n.join(" ")}</span>`));
+	}
+	function Ce(e) {
+		const a = e.querySelectorAll("a.list-link");
+		a.length || console.debug("No swap links found in the provided list.");
+		for (const t of a) Le(t);
+	}
+	function Ne(e) {
+		if (e.hasAttribute("onClick")) {
+			const a = e.getAttribute("onClick")?.match(je);
+			if (a?.groups) {
+				const { info: t } = a.groups;
+				t && !e.querySelector(".comments") && e.insertAdjacentHTML("beforeend", `<span class="right dgray-11 wrap comments" title="${t}"><div class="ico-16"></div> ${t}</span>`);
+			}
+		}
+	}
+	var $e = class {
+		widgetHeaderRedirectHandler;
+		formClickTimeout;
+		constructor() {
+			this.widgetHeaderCloseHandler = this.widgetHeaderCloseHandler.bind(this);
+		}
+		get listSelector() {
+			return `#${this.formType}-block`;
+		}
+		get listBlock() {
+			return document.querySelector(this.listSelector);
+		}
+		get funcSelector() {
+			return "#my-coin-func-block";
+		}
+		get mainSelector() {
+			return `#my-${this.formType}-block, #${this.formType}-block`;
+		}
+		get main() {
+			return this.mainSelector && document.querySelector(this.mainSelector) || null;
+		}
+		get formSelector() {
+			return `#${this.formType}-form`;
+		}
+		get form() {
+			return this.formSelector && this.main?.querySelector(this.formSelector) || null;
+		}
+		get formClose() {
+			return this.formSelector && this.main?.querySelector(`${this.formSelector}-close`) || null;
+		}
+		get formUid() {
+			return `u${this.formUidPrefix}id`;
+		}
+		get formVariety() {
+			return `${this.formType}-variety`;
+		}
+		get buttonSetId() {
+			return `${this.formType}-button-set`;
+		}
+		get formOnFunctionName() {
+			return `Coin${this.formTypeMethod}FormOn`;
+		}
+		get formOffFunctionName() {
+			return `Coin${this.formTypeMethod}FormOff`;
+		}
+		get widgetHeader() {
+			return this.main?.querySelector(`#widget-${this.formType}-header`) || null;
+		}
+		get cancelButton() {
+			return this.form?.querySelector(`#btn-${this.formTypePrefix}cancel`) || null;
+		}
+		get addButton() {
+			return this.form?.querySelector(`#btn-${this.formTypePrefix}add`) || null;
+		}
+		get editButton() {
+			return this.form?.querySelector(`#btn-${this.formTypePrefix}edit`) || null;
+		}
+		get deleteButton() {
+			return this.form?.querySelector(`#btn-${this.formTypePrefix}del`) || null;
+		}
+		get deleteConfirmButton() {
+			return document.querySelector(`#btn-${this.formType}del`) || null;
+		}
+		get oneButton() {
+			return this.listBlock?.querySelector("center button.btn-s.btn-gray") || null;
+		}
+		get buttonSet() {
+			return this.main?.querySelector(`#${this.buttonSetId}`) || null;
+		}
+		get func() {
+			return this.funcSelector && this.main?.querySelector(this.funcSelector) || null;
+		}
+		async handle() {
+			if (this.main) return this.updateFormHandlers(), this.update();
+			console.debug(`${this.formType} main block not found.`);
+		}
+		fillForm(e = "", a = "", t = "", n = "") {
+			const { form: r, formUid: i, formVariety: o } = this;
+			if (!r) return;
+			const { elements: s } = r;
+			if (s[i] && (s[i].value = e), s.condition) if (a && "0" !== a) s.condition.value = a;
+			else {
+				const e = r.querySelector("input[name=condition][value=\"0\"], input[name=condition][value=\"\"]");
+				e && (e.checked = !0);
+			}
+			s.price && (s.price.value = t), s[o] && (n ? s[o].value = n : s[o] instanceof RadioNodeList && (s[o][0].checked = !0)), s.action && (s.action.value = e ? `edit${this.formType}coin` : `add${this.formType}coin`);
+		}
+		formOnHandler(e, ...a) {
+			this.formClickTimeout = setTimeout(() => {
+				this.listBlock && E(this.listBlock), this.form && this.formClose && q(this.form, this.formClose), this.func && function(...e) {
+					for (const a of e) a?.classList.add("disable");
+				}(this.func), this.widgetHeaderRedirectHandler && this.widgetHeader?.removeEventListener("click", this.widgetHeaderRedirectHandler), this.widgetHeader?.addEventListener("click", this.widgetHeaderCloseHandler), this.fillForm(e, ...a), this.cancelButton && (q(this.cancelButton), this.cancelButton.setAttribute("onclick", `LayerOff('${this.formType}-form');CoinSwapFormOff();CoinWishFormOff();LayerOn('add-button-block');`)), this.addButton && L(!e, this.addButton), this.deleteButton && (this.editButton && L(!!e, this.editButton, this.deleteButton), this.deleteConfirmButton && (this.deleteConfirmButton.href = `?action=del${this.formType}coin&${this.formUid}=${e}`)), (e ? this.editButton : this.addButton)?.focus();
+			}, 300);
+		}
+		formOnHandlerSubmit(e, ...a) {
+			clearTimeout(this.formClickTimeout), this.fillForm(e, ...a), this.form?.submit();
+		}
+		formOffHandler() {
+			this.form && this.formClose && E(this.form, this.formClose), this.listBlock && q(this.listBlock), this.func && function(...e) {
+				for (const a of e) a?.classList.remove("disable");
+			}(this.func), this.widgetHeader?.removeEventListener("click", this.widgetHeaderCloseHandler), this.widgetHeaderRedirectHandler && this.widgetHeader?.addEventListener("click", this.widgetHeaderRedirectHandler);
+		}
+		widgetHeaderCloseHandler(e) {
+			C(e), this.formOffHandler();
+		}
+		updateList() {
+			this.listBlock ? Ce(this.listBlock) : console.debug("List block not found.");
+		}
+		removeOneButton() {
+			const e = this.main?.previousElementSibling;
+			e ? e.matches("center.action-btn") && e.remove() : console.debug("One button block not found.");
+		}
+		updateFormHandlers() {
+			const e = unsafeWindow;
+			e[this.formOnFunctionName] = (...e) => this.formOnHandler(...e), e[this.formOffFunctionName] = () => this.formOffHandler();
+		}
+		async update() {
+			this.main && (q(this.main), this.removeOneButton(), this.updateWidget(), await this.updateForm()), this.updateList();
+		}
+		updateButtonSet() {
+			if (!this.oneButton) return;
+			if (this.oneButton.insertAdjacentHTML("afterend", `<div id='${this.buttonSetId}' class='btn-set'/>`), this.oneButton.remove(), !this.buttonSet) return;
+			const e = (e, a, t) => {
+				const n = `${this.formType}-marker-${t}`, r = `btn-marker marked-${a}`;
+				this.buttonSet?.insertAdjacentHTML("beforeend", `<div id='${n}' class='${r}'>${e}</div>`);
+				const i = this.buttonSet?.querySelector(`#${n}`);
+				i && (i.addEventListener("click", () => this.formOnHandler("", `${t}`)), i.addEventListener("dblclick", () => this.formOnHandlerSubmit("", `${t}`)));
+			};
+			for (const [a, [t, n]] of this.buttonSetButtons) e(a, t, n);
+		}
+		updateCondition() {
+			const e = this.form?.condition, a = "FORM" === e?.parentElement?.tagName, t = a ? e : e.parentElement;
+			if (t) {
+				t.insertAdjacentHTML(a ? "afterend" : "beforebegin", "<fieldset name='conditionFieldset'><legend class='gray-12' style='padding:5px;'>Condition</legend></fieldset>");
+				const n = this.form?.conditionFieldset;
+				for (const a of e.options) {
+					const e = this.getConditionOption(a);
+					if (e) {
+						const { text: a, value: t, checked: r, style: i } = e;
+						n.insertAdjacentHTML("beforeend", `<label class='dgray-12' style='margin-top:0;${i}'><input name='condition' value='${t}' ${r} type='radio'/>${a}</label>`);
+					}
+				}
+				e.remove();
+			}
+		}
+		updateFormButtons() {
+			const e = this.deleteButton?.classList;
+			e && !e.contains("btn-red") && e.add("btn-red");
+		}
+		updateWidget() {
+			this.widgetHeader ? (this.widgetHeaderRedirectHandler = this.widgetHeader.onclick, this.widgetHeader.removeAttribute("onclick")) : console.debug("Widget header not found.");
+		}
+		async updateFragment(e) {
+			return P(e, this.main), this.update();
+		}
+		async updateForm() {
+			if (this.main) if (this.form) {
+				R(this.form, async () => this.form ? this.updateFragment(B(await fetch(location.href, {
+					method: "POST",
+					body: new FormData(this.form)
+				}).then(D))) : void 0);
+				for (const e of this.form.querySelectorAll("a[type=submit]")) T(e, async () => this.updateFragment(B(await fetch(e.href).then(D))));
+				this.updateFormButtons(), this.updateCondition(), this.updateButtonSet();
+			} else console.debug("Form not found.");
+			else console.debug("Main block not found.");
+		}
+	}, Be = (e = "a") => `<div class='right'><span class='arrow ${"a" === e ? "at" : "ab"}'></span></div>`, Fe = (e = "d") => Be(e), Me = (e) => `<div class='left gray-13'>${e}</div>`, Pe = (e, a) => `${Me(e)}${Be(a)}`;
+	function Re(e) {
+		if (!e) return "";
+		const a = document.createElement("template");
+		return a.innerHTML = e, a.content.querySelector("div.left")?.classList.add("wrap"), a.innerHTML;
+	}
+	function Te(e, a, t) {
+		return `\n    <div class='right filter-container filter-dropdown'>\n        <div class='filter-box' id='${e}'>\n            ${Re(a)}\n        </div>\n        <div class='drop hide filter-dialog' id='${e}-dialog'>\n            ${t.join("")}\n        </div>\n    </div>\n`;
+	}
+	var Ve = (e) => e ? +e.replace(/[^.\d]/g, "") : 0, Oe = (e, a) => -(e < a) || +(e > a), Ge = (e) => `sort${function(e = "") {
+		const a = e.match(/\P{Z}/u)?.index ?? 0;
+		return `${e.slice(0, a)}${e.charAt(a).toUpperCase()}${e.slice(a + 1)}`;
+	}(e)}`, He = (e, a, t) => Oe(Ve(e[Ge(t)]), Ve(a[Ge(t)])), Ie = (e, a, t) => Oe(e[Ge(t)], a[Ge(t)]), Ue = (e, a, t = 1) => t * He(e, a, "year") || t * Ie(e, a, "mm"), Ke = (e, a, t = 1) => t * Ie(e, a, "kmc") || t * He(e, a, "km") || t * Ie(e, a, "kma") || t * Ue(e, a), De = (e, a, t = 1) => t * Ie(e, a, "face") || t * Ke(e, a, -1), We = (e, a, t = 1) => t * He(e, a, "cond") || De(e, a);
+	function Xe(e, a, t) {
+		const n = "a" === t ? 1 : -1;
+		for (const r of e) {
+			const e = [...r.querySelectorAll("tr")];
+			e.length > 1 && (e.sort(({ dataset: e }, { dataset: t }) => a(e, t, n)), r.append(...e));
+		}
+	}
+	var Ye = () => {
+		const [e = "year", a = "d"] = x("o")?.split("_") || [];
+		return [e, a];
+	}, Je = async (e, a) => _((t) => {
+		t.set("o", `${e}_${a}`);
+	});
+	function Ze(e) {
+		const a = "display-delay";
+		let t = document.getElementById(a);
+		t || (document.body.insertAdjacentHTML("beforeend", `<div id='${a}'/>`), t = document.getElementById(a)), t && (t.innerHTML = `<div style='animation-duration: ${e}ms'/>`);
+	}
+	async function Qe(e = 1500, a = 1500, t = Ze, n = 1e3) {
+		return async function(e = 1500, a = 1500, t, n = 1e3) {
+			return async function(e, a, t = 1e3) {
+				return e > t && a?.(e, t), new Promise((a) => setTimeout(() => a(), e));
+			}(function(e, a) {
+				return Math.round(e + Math.random() * a);
+			}(a, e), t, n);
+		}(e, a, t, n);
+	}
+	var { debug: ea } = console, aa = class {
+		#e = /* @__PURE__ */ new Map();
+		#a = !1;
+		#t = !1;
+		#n;
+		#r;
+		constructor(e) {
+			this.#r = e;
+		}
+		get form() {
+			return this.#n?.querySelector(this.#r.formSelector) || document.querySelector(this.#r.formSelector) || null;
+		}
+		get buttonSet() {
+			return this.#n?.querySelector("center") || null;
+		}
+		update(e) {
+			this.#n && e ? this.#n.replaceWith(e) : this.#n = e, this.buttonSet && (this.addButton("expand", 0, "&laquo;*&raquo;", (e) => this.onExpand(e)), this.addButton("expand", 5, "&laquo;5&raquo;", (e) => this.onExpand(e)), this.addButton("expand", 10, "&laquo;10&raquo;", (e) => this.onExpand(e)), this.addButton("combine", 0, "&raquo;&middot;&laquo;", () => this.onCombine()), this.updateButtons());
+		}
+		addButton(e, a, t, n) {
+			if (!this.buttonSet) return void console.warn("No button set found");
+			const r = `${e}-qty`, i = this.buttonSet.querySelector(`#${r}`);
+			i ? q(i) : (this.buttonSet.insertAdjacentHTML("beforeend", `<button id='${r}' type='button' class='btn--${e} btn-s btn-blue'>${t}</button>`), this.buttonSet.querySelector(`#${r}`)?.addEventListener("click", async () => {
+				this.hideButtons(), await n(a), this.updateButtons();
+			}));
+		}
+		updateVariants() {
+			this.#a = !1, this.#t = !1, this.#e.clear();
+			for (const { m: e } of Ee()) {
+				const { uniq: a = "", usid: t = "", cond: n = "", price: r = "", info: i = "", vid: o = "", strqty: s = 0 } = e, l = +s;
+				let c;
+				l > 1 && (this.#a = !0), this.#e.has(a) ? (c = this.#e.get(a), c && (c.usids.add(t), c.total += l), this.#t = !0) : c = {
+					usid: t,
+					usids: new Set([t]),
+					cond: n,
+					price: r,
+					info: i,
+					vid: o,
+					qty: l,
+					total: l
+				}, c && this.#e.set(a, c);
+			}
+		}
+		showButtons(e) {
+			this.buttonSet && q(...this.buttonSet.querySelectorAll("button" + (e ? `.btn--${e}` : "")));
+		}
+		hideButtons(e) {
+			this.buttonSet && E(...this.buttonSet.querySelectorAll("button" + (e ? `.btn--${e}` : "")));
+		}
+		showExpandButtons() {
+			this.showButtons("expand");
+		}
+		showCombineButtons() {
+			this.showButtons("combine");
+		}
+		hideExpandButtons() {
+			this.hideButtons("expand");
+		}
+		hideCombineButtons() {
+			this.hideButtons("combine");
+		}
+		updateButtons() {
+			this.updateVariants(), this.#a ? this.showExpandButtons() : this.hideExpandButtons(), this.#t ? this.showCombineButtons() : this.hideCombineButtons();
+		}
+		async onExpand(e = 0) {
+			ea("EXPANDING...");
+			let a = !1, t = !1, n = !0;
+			for await (const { a: r, m: i } of Ee()) {
+				const { uniq: o = "", usid: s = "", cond: l = "", price: c = "", info: u = "", vid: d = "", strqty: m = 0 } = i, f = +m, p = e > 0 ? Math.min(f, e) : f;
+				if (p <= 1) ea(`IGNORING ${o} ${s}`);
+				else {
+					for (let e = p, i = f, m = Math.floor(i / e); e > 1; e--, m = Math.floor(i / e)) {
+						i -= m, n || await Qe(), n = !1, ea(`ADDING ${o} ${p - e + 1} -> ${m}`);
+						const f = await this.addSwapCoin({
+							cond: l,
+							qty: m,
+							vid: d,
+							info: u,
+							price: c
+						});
+						if (!f) {
+							a = !0;
+							break;
+						}
+						const h = /* @__PURE__ */ new Set();
+						for (const e of qe()) {
+							if (!e.hasAttribute("onClick")) continue;
+							const a = e.getAttribute("onClick")?.match(je);
+							a && a.groups && h.add(a.groups.usid);
+						}
+						for (const e of qe(f)) {
+							if (!e.hasAttribute("onClick")) continue;
+							const a = e.getAttribute("onClick")?.match(je), t = a && a.groups && a.groups.usid;
+							t && !h.has(t) && (h.add(t), Le(e), r.insertAdjacentElement("afterend", e), Ne(e));
+						}
+						if (n || await Qe(), n = !1, ea(`UPDATING ${o} ${s} -> ${i}`), !await this.updateSwapCoin(s, {
+							cond: l,
+							qty: i,
+							vid: d,
+							info: u,
+							price: c
+						})) {
+							t = !0;
+							break;
+						}
+						this.updateLinkQty(r, i);
+					}
+					if (a || t) break;
+				}
+			}
+			ea(a ? "ADD FAILED :(" : t ? "UPDATE FAILED :(" : "DONE!");
+		}
+		async onCombine() {
+			ea("COMBINING...");
+			let e = !1, a = !1;
+			for (const t of [...this.#e.values()]) {
+				const { usid: n, usids: r, qty: i = 0, total: o } = t;
+				if (ea(`VARIANT usid=${n} usids=${[...r].join(",")} qty=${i} total=${o}`), o <= i) continue;
+				const s = new Set(r);
+				if (s.delete(n), !s.size) continue;
+				ea(`REMOVING ${[...s].join(", ")}`);
+				const l = await this.deleteSwapCoin(s);
+				if (!l) {
+					e = !0;
+					break;
+				}
+				{
+					const e = l.querySelector(this.#r.listSelector);
+					if (e && this.#n) {
+						const a = this.#n.querySelector("center");
+						a && e.querySelector("center")?.replaceWith(a), Ce(e), this.update(e);
+					}
+				}
+				ea(`UPDATING ${n}`);
+				const c = await this.updateSwapCoin(n, {
+					...t,
+					qty: o
+				});
+				if (!c) {
+					a = !0;
+					break;
+				}
+				{
+					const e = c.querySelector(this.#r.listSelector);
+					if (ea(this.#r.listSelector, this.#n, e), e && this.#n) {
+						const a = this.#n.querySelector("center");
+						a && e.querySelector("center")?.replaceWith(a), Ce(e), this.update(e);
+					}
+				}
+			}
+			ea(e ? "REMOVE FAILED :(" : a ? "UPDATE FAILED :(" : "DONE!");
+		}
+		async updateSwapCoin(e, { cond: a, qty: t, vid: n, info: r, price: i }, o = "editswapcoin") {
+			if (!this.form) return null;
+			const s = new FormData(this.form);
+			s.set("usid", `${e || ""}`), s.set("condition", `${a || ""}`), s.set("qty", `${t || ""}`), s.set("swap-variety", `${n || ""}`), s.set("comment", `${r || ""}`), s.set("price", `${i || ""}`), s.set("action", `${o || ""}`);
+			const l = B(await fetch(location.href, {
+				method: "POST",
+				body: s
+			}).then(D));
+			return ea("fragment"), ea(l), ea("this.listForm.mainSelector"), ea(this.#r.mainSelector), ea("fragment.querySelector(this.listForm.mainSelector)"), ea(l.querySelector(this.#r.mainSelector)), l.querySelector(this.#r.mainSelector) ? l : N();
+		}
+		async addSwapCoin(e) {
+			return this.updateSwapCoin("", e, "addswapcoin");
+		}
+		async deleteSwapCoin(e) {
+			if (!U) return null;
+			e instanceof Set && (e = [...e].join(","));
+			const a = new URL("/swap-list/", location.href), t = a.searchParams;
+			t.set("f", "del"), t.set("usid", e), t.set("uid", U);
+			return B(await fetch(a.href).then(K).then((e) => e.text())) || N();
+		}
+		updateLinkQty(e, a) {
+			if (e.hasAttribute("onClick")) {
+				const t = e.getAttribute("onClick")?.replace(je, `CoinSwapFormOn('$<usid>', '$<cond>', '$<price>', '$<info>', '$<vid>', '${a}', '$<replica>'`);
+				t && e.setAttribute("onClick", t);
+			}
+			for (const t of e.querySelectorAll("span.left.dblue-13")) t.remove();
+			if (a > 1) for (const t of e.querySelectorAll("span.left.gray-13.wrap")) t.insertAdjacentHTML("afterend", `<span class='left dblue-13'><span>&times;</span>${a}</span>`);
+		}
+	}, ta = class extends $e {
+		formType = "swap";
+		formTypeMethod = "Swap";
+		formTypePrefix = "";
+		formUidPrefix = "s";
+		buttonSetButtons = new Map([
+			["?", [X.UNKNOWN, Z.UNKNOWN]],
+			["G", [X.G, Z.G]],
+			["VG", [X.VG, Z.VG]],
+			["F", [X.F, Z.F]],
+			["VF", [X.VF, Z.VF]],
+			["XF", [X.XF, Z.XF]],
+			["UN", [X.UNC, Z.UNC]],
+			["PR", [X.PROOF, Z.PROOF]],
+			["CP", [X.COPY, Z.COPY]]
+		]);
+		swapListManager = new aa(this);
+		fillForm(e = "", a = "", t = "", n = "", r = "", i = "", o = "", s = "") {
+			super.fillForm(e, a || s && "100", t, i || function() {
+				const e = new URL(document.location.href).searchParams.get("vid");
+				if (e) return e;
+				const a = document.querySelector("#edit-coin-form form");
+				if (a) {
+					const e = new FormData(a).get("variety");
+					if (e) return e.toString();
+				}
+			}());
+			const { form: l } = this;
+			if (!l) return;
+			const { elements: c } = l;
+			c.comment_private && (c.comment_private.value = n), c.comment_public && (c.comment_public.value = r), c.qty && (c.qty.value = o || "1");
+		}
+		updateList() {
+			this.swapListManager.update(this.listBlock);
+			const e = k().searchParams.get("vid");
+			for (const a of document.querySelectorAll(this.listSelector)) Ce(a);
+			(function(e, a) {
+				const t = Array.from(e?.querySelectorAll("a.list-link") || []);
+				for (const n of t) n.dataset.vid = (n.getAttribute("onClick")?.match(je))?.groups?.vid || "";
+				t.sort((e, t) => {
+					const [n, , r] = Array.from(e.querySelectorAll("span")).map((e) => e.textContent), [i, , o] = Array.from(t.querySelectorAll("span")).map((e) => e.textContent);
+					return Oe(e.href.endsWith(`=${U}`), t.href.endsWith(`=${U}`)) || Oe(e.dataset.vid === a, t.dataset.vid === a) || Oe(o, r) || Oe(ae[n], ae[i]);
+				});
+				for (const n of t) e?.prepend(n);
+				for (const n of Array.from(e?.querySelectorAll("a.list-link") || [])) (n.dataset.vid !== a && n.previousElementSibling?.dataset.vid === a || !n.href.endsWith(`=${U}`) && n.previousElementSibling?.href.endsWith(`=${U}`)) && n.classList.add("with-separator");
+			})(this.listBlock, e), function() {
+				for (const e of qe()) Ne(e);
+			}();
+		}
+		getConditionOption(e) {
+			const { value: a, textContent: t } = e;
+			return {
+				value: a,
+				text: a && t ? t : "Without condition",
+				checked: "3" === a ? "checked" : "",
+				style: e.getAttribute("style") || ""
+			};
+		}
+		async updateForm() {
+			await super.updateForm(), this.updateQty(), this.updatePrice();
+		}
+		updateQty() {
+			const { form: e } = this;
+			if (!e) return;
+			const { qty: a } = e;
+			if (!a) return;
+			a.inputmode = "numeric", a.addEventListener("focus", () => {
+				a.setSelectionRange(0, a.value.length);
+			});
+			const t = (t, n, r, i) => {
+				a.insertAdjacentHTML(t, `<button name="${n}" type="button" class="btn-s btn-gray btn-ctrl">${r}</button>`), e[n].addEventListener("click", () => {
+					a.value = `${i(+a.value)}`;
+				});
+			};
+			t("afterend", "plus10", "+10", (e) => e + 10), t("afterend", "plus5", "+5", (e) => e + 5), t("afterend", "plus", "+", (e) => e + 1), t("beforebegin", "minus", "&minus;", (e) => e - 1);
+		}
+		updatePrice() {
+			const { form: e } = this;
+			if (!e) return;
+			const { price: a } = e;
+			a && (a.inputmode = "numeric", a.addEventListener("focus", () => {
+				a.setSelectionRange(0, a.value.length);
+			}));
+		}
+	}, na = class extends $e {
+		formType = "wish";
+		formTypeMethod = "Wish";
+		formTypePrefix = "w";
+		formUidPrefix = "w";
+		buttonSetButtons = new Map([
+			["*", [X.ANY, Q.ANY]],
+			["VF+", [X.VF, Q.VF]],
+			["XF+", [X.XF, Q.XF]],
+			["UN", [X.UNC, Q.UNC]]
+		]);
+		fillForm(e = "", a = "", t = "", n, r = "") {
+			super.fillForm(e, a, t, r);
+			const { form: i } = this;
+			if (!i) return;
+			const { elements: o } = i;
+			o.is_type instanceof HTMLInputElement && (o.is_type.checked = !0);
+		}
+		async updateForm() {
+			await super.updateForm(), this.updateVarieties();
+		}
+		updateVarieties() {
+			const e = this.form?.[this.formVariety];
+			if (e) {
+				const a = e[0].parentElement, t = a.cloneNode(), n = a.querySelector("input")?.cloneNode();
+				n.value = "", t.insertAdjacentElement("beforeend", n), t.insertAdjacentText("beforeend", "ANY"), a.insertAdjacentElement("beforebegin", t);
+			}
+		}
+		getConditionOption(e) {
+			const { value: a, textContent: t } = e;
+			if (a || t?.includes("ANY")) return {
+				text: t ?? "",
+				value: a,
+				checked: "3" === a ? "checked" : "",
+				style: e.getAttribute("style") ?? ""
+			};
+		}
+	};
+	async function ra() {
+		const e = document.getElementById("tags");
+		if (e) {
+			const a = e.querySelectorAll("a[href^=\"/gallery/\"]");
+			for (const e of a) ge(e);
+		}
+		const a = document.getElementById("coin-chooser-dialog");
+		a && !a.style.display && (a.style.display = "none"), await async function() {
+			const e = document.getElementById(sa);
+			if (e) {
+				const a = e.querySelector("a");
+				a && (a.href = "#", a.addEventListener("click", (e) => {
+					e.preventDefault();
+					const a = document.getElementById("coin-chooser-dialog");
+					a && (a.style.display = "block");
+				}));
+			}
+		}(), await se(), await new ta().handle(), await async function() {
+			const e = document.getElementById("coin");
+			if (!e) return;
+			const a = e.querySelector(".right.price-container"), t = e.querySelector("h1"), n = e.querySelectorAll(".coin-info tr");
+			let r, i, o = NaN, s = !1, l = !1, c = !1, u = 1;
+			for (const f of n) {
+				const e = f.querySelector("th"), a = e && e.textContent || "", t = f.querySelector("td");
+				if (t) {
+					const e = `${t.textContent}`;
+					a.match(/\([gг]/) ? o = +e : a.match(/Country|Страна|Valstybė/) ? s = !!e.match(/Russia|Россия|Rusija|USSR|СССР|TSRS/) : a.match(/Composition|Материал|Sudėtis/) && (l = !!e.match(/Silver|Серебро|Sidabras/), c = !!e.match(/Gold|Золото|Auksas/), (l || c) && (u = +(e.split(" ").pop() || 0)));
+				}
+			}
+			c ? (r = o * (u || 1) * await (async () => xe(we.Gold, ye.Gold))(), i = "au") : l ? (r = o * (u || 1) * await (async () => xe(we.Silver, ye.Silver))(), i = "ag") : s ? (r = o * ye.Russian, i = "ru") : (r = o * ye.Common, i = "--");
+			const d = `<br/><price class="right" title="${i}: ${r.toFixed(5)}">€ ${m = r, Ae.format(m)}</price>`;
+			var m;
+			if (a) a.insertAdjacentHTML("beforeend", d);
+			else {
+				let a = !1;
+				const n = [], r = e.querySelectorAll("#coin-list td.blue-13");
+				for (const e of r) {
+					const t = e.cloneNode(!0);
+					for (const e of t.childNodes) e.remove();
+					const { textContent: r } = t;
+					r ? n.push(+r) : a = !0;
+				}
+				if (n.length) {
+					const e = Math.min(...n), r = Math.max(...n), i = [e.toFixed(2)];
+					r > e ? i.push(r.toFixed(2)) : a && i.unshift(""), t?.insertAdjacentHTML("beforebegin", `<a href='#price' class='gray-12 right price-container'>Value:&nbsp;€ <span>${i.join(a ? "~" : "-")}</span>${d}</a>`);
+				}
+			}
+		}(), await new na().handle();
+	}
+	var ia, oa, sa = "add-button-block", la = document.getElementById("gallery");
+	function ca() {
+		ia = la?.querySelectorAll(".coin .desc-block span.status0"), oa = la?.querySelectorAll(".coin .desc-block span.status1");
+	}
+	async function ua(e, a, t) {
+		const n = a.querySelector("input[name=public]");
+		return n && (n.checked = t), fetch(e, {
+			method: "POST",
+			body: new FormData(a)
+		});
+	}
+	function da(e, a, t, n, r, i) {
+		const o = `button-${a.toLowerCase()}`;
+		let s = document.getElementById(o);
+		s || (e.insertAdjacentHTML("beforeend", `<button id="${o}" class="btn-l ${t}" style="padding: 0 14px; height: 26px">${a} <small></small></button>`), s = document.getElementById(o), s.addEventListener("click", () => confirm(`Are you sure to ${a.toLowerCase()}?`) && i(e, n)));
+		const l = s.querySelector("small");
+		return l && (l.textContent = `(${r})`), s.style.display = r ? "block" : "none", s;
+	}
+	function ma(e, a) {
+		da(e, "Show", "btn-blue", !0, ia?.length || 0, a), da(e, "Hide", "btn-gray", !1, oa?.length || 0, a);
+	}
+	async function fa(e, a) {
+		const t = "status" + (a ? 1 : 0), n = "status" + (a ? 0 : 1), r = a ? "Public" : "Private", i = a ? ia : oa;
+		if (i) for await (const o of i) {
+			const i = o.parentElement?.querySelector(".coin-desc div a")?.href;
+			if (!i) continue;
+			const s = B(await fetch(i).then((e) => e.text())).getElementById("edit-coin-form") || document.getElementById("add-coin-form");
+			if (!s) continue;
+			const l = s.querySelector("form");
+			l && (await ua(i, l, a), o.classList.replace(n, t), o.textContent = r, ca(), ma(e, fa), await Qe());
+		}
+	}
+	var pa = {
+		en: "Sync wish",
+		lt: "Derinami norai",
+		ru: "Сверяются желания"
+	};
+	async function ha() {
+		const e = document.getElementById("gallery"), a = e?.querySelectorAll("a[href^=\"/gallery/\"]");
+		for (const s of a || []) ge(s);
+		const t = e?.querySelectorAll("a[href^=\"?\"]");
+		for (const s of t || []) ge(s);
+		const n = e?.querySelectorAll("a.switcher");
+		for (const s of n || []) {
+			const e = new URL(s.href).searchParams.get("view"), a = s.parentElement?.querySelector("div.close");
+			e && a && be(a, [e]);
+		}
+		const r = e?.querySelectorAll(".coin").length ?? 0, i = +(e?.querySelector(".pages a:last-child")?.textContent ?? 0), o = +(e?.querySelector(".pages a.current")?.textContent ?? 0);
+		if (r) {
+			const a = o === i, t = a ? 12 * (i - 1) + r : 12 * (i - 1);
+			e?.querySelector("h1")?.insertAdjacentHTML("beforeend", ` <small>(${r}${i ? ` <small>of ${a ? t : `${t + 1}~${t + 12}`}</small>` : ""})</small>`);
+		}
+		(function() {
+			ca();
+			const e = "button-container";
+			(document.getElementById("sort-filter")?.parentElement)?.insertAdjacentHTML("afterend", `<div id="${e}" class="left filter-container" style="float:right">`);
+			const a = document.getElementById(e);
+			a && ma(a, fa);
+		})(), await async function() {
+			const e = document.getElementById("button-container");
+			if (!e) return;
+			const a = "sync";
+			e.insertAdjacentHTML("afterbegin", `<label class='gray-13' for='${a}'><input type='checkbox' id='${a}'/> ${pa[g]}</label>`);
+			const t = document.getElementById(a);
+			async function n() {
+				t.checked = !1, location.href = await A((e) => {
+					e.delete(a);
+				});
+			}
+			t.addEventListener("change", async () => {
+				if (!t.checked) return t.disabled = !0, n();
+				await async function() {
+					return _((e) => {
+						e.set(a, "y");
+					});
+				}();
+				const e = document.querySelectorAll(".coin-desc > div > a.blue-15");
+				if (!e) return n();
+				for (const n of e) {
+					await Qe(), H(n);
+					const { screenLeft: e, screenTop: r, outerWidth: i, outerHeight: o } = window, s = window.open(n.href, a, [
+						"width=" + i / 1.25,
+						"height=" + o / 1.5,
+						`left=${e + i / 10}`,
+						`top=${r + o / 10}`
+					].join(","));
+					if (s && (await Qe(5e3, 5e3), s.close()), !t.checked) return;
+				}
+				const r = document.querySelector(".pages");
+				if (!r) return n();
+				const i = +(r.querySelector("a.current")?.textContent || 0);
+				if (!i) return n();
+				const o = r.querySelector([
+					`a[href$="page=${i + 1}"]`,
+					`a[href*="page=${i + 1}&"]`,
+					`a[href*="page=${i + 1}#"]`
+				].join(","));
+				if (!o) return n();
+				await Qe(5e3, 5e3), location.href = await A((e) => {
+					e.set(a, "y");
+				}, o.href);
+			}), x(a) && t.click();
+		}();
+	}
+	function ga() {
+		const e = Array.from(document.querySelectorAll("h2 input[type=\"checkbox\"]")).every((e) => e.checked), a = document.querySelector("#main-checkbox");
+		a && (a.checked = e);
+	}
+	function ba(e) {
+		const a = e.closest("table.swap-coin");
+		if (a) {
+			const e = Array.from(a.querySelectorAll("input[type=\"checkbox\"]") || []).every((e) => e.checked), t = a.previousElementSibling?.querySelector("input[type=\"checkbox\"]");
+			t && (t.checked = e);
+		}
+		ga();
+	}
+	function ya(e) {
+		return e.querySelector("td.cond, th.cond, .td-cond");
+	}
+	function wa(e) {
+		const a = ya(e), t = a?.firstElementChild ?? a;
+		if (!t) return;
+		const n = t.textContent, r = ee[n];
+		r && (t.innerHTML = `<span class="cond marked-${r}">${n}</span>`);
+	}
+	function ka(e = "table.swap-coin") {
+		const a = document.querySelectorAll(`${e} tr`);
+		for (const t of a) wa(t);
+	}
+	function va(e = "table.swap-coin") {
+		if (!k().hash?.includes("update-prices")) for (const a of document.querySelectorAll(`${e} tr`)) {
+			const { tooltipImgpath: e, tooltipSample: t, tooltipCode: n } = a.dataset;
+			a.querySelector("td")?.insertAdjacentHTML(a.querySelector(".reserve") || document.body.id.endsWith("-list") ? "beforebegin" : "afterend", `\n        <th style="width: 100px" class="thumbnails">\n            ${e && t && n ? `\n                <img src="${e}/${t}-1s/${n}.jpg" class="thumbnail" loading="lazy" alt="obverse"/>\n                <img src="${e}/${t}-2s/${n}.jpg" class="thumbnail" loading="lazy" alt="reverse"/>` : ""}\n        </th>\n    `);
+		}
+	}
+	var Sa = Object.fromEntries(Object.entries({
+		abkhazia: {
+			en: "Abkhazia",
+			lt: "Abchazija",
+			ru: "Абхазия"
+		},
+		afars_issas: {
+			en: "French Afars and Issas",
+			lt: "Prancūzijos afarų ir isų teritorija",
+			ru: "Французские афар и исса"
+		},
+		afghanistan: {
+			en: "Afghanistan",
+			lt: "Afganistanas",
+			ru: "Афганистан"
+		},
+		ajman: {
+			en: "Ajman",
+			lt: "Adžmanas",
+			ru: "Аджман"
+		},
+		albania: {
+			en: "Albania",
+			lt: "Albanija",
+			ru: "Албания"
+		},
+		alderney: {
+			en: "Alderney",
+			lt: "Oldernis",
+			ru: "Олдерни"
+		},
+		algeria: {
+			en: "Algeria",
+			lt: "Alžyras",
+			ru: "Алжир"
+		},
+		american_samoa: {
+			en: "American Samoa",
+			lt: "Amerikos Samoa",
+			ru: "Американское Самоа"
+		},
+		andorra: {
+			en: "Andorra",
+			lt: "Andora",
+			ru: "Андорра"
+		},
+		angola: {
+			en: "Angola",
+			lt: "Angola",
+			ru: "Ангола"
+		},
+		anguilla: {
+			en: "Anguilla",
+			lt: "Angilija",
+			ru: "Ангилья"
+		},
+		anhalt_bernburg: {
+			en: "Anhalt-Bernburg",
+			lt: "Anhaltas-Bernburgas",
+			ru: "Ангальт-Бернбург"
+		},
+		antigua_barbuda: {
+			en: "Antigua and Barbuda",
+			lt: "Antigva ir Barbuda",
+			ru: "Антигуа и Барбуда"
+		},
+		argentina: {
+			en: "Argentina",
+			lt: "Argentina",
+			ru: "Аргентина"
+		},
+		argentine_provinces: {
+			en: "Argentine provinces",
+			lt: "Argentinos provincijos",
+			ru: "Аргентинские провинции"
+		},
+		armavir: {
+			en: "Armavir",
+			lt: "Armaviras",
+			ru: "Армавир"
+		},
+		armenia: {
+			en: "Armenia",
+			lt: "Armėnija",
+			ru: "Армения"
+		},
+		aruba: {
+			en: "Aruba",
+			lt: "Aruba",
+			ru: "Аруба"
+		},
+		ascension_island: {
+			en: "Ascension Island",
+			lt: "Dangun Žengimo sala",
+			ru: "Остров Вознесения"
+		},
+		australia: {
+			en: "Australia",
+			lt: "Australija",
+			ru: "Австралия"
+		},
+		austria: {
+			en: "Austria",
+			lt: "Austrija",
+			ru: "Австрия"
+		},
+		austrian_netherlands: {
+			en: "Austrian Netherlands",
+			lt: "Austrijos Nyderlandai",
+			ru: "Австрийские Нидерланды"
+		},
+		azerbaijan: {
+			en: "Azerbaijan",
+			lt: "Azerbaidžanas",
+			ru: "Азербайджан"
+		},
+		azores: {
+			en: "Azores",
+			lt: "Azorai",
+			ru: "Азорские острова"
+		},
+		baden: {
+			en: "Baden",
+			lt: "Badenas",
+			ru: "Баден"
+		},
+		bahamas: {
+			en: "Bahamas",
+			lt: "Bahamos",
+			ru: "Багамы"
+		},
+		bahawalpur: {
+			en: "Bahawalpur",
+			lt: "Bahavalpūras",
+			ru: "Бахавалпур "
+		},
+		bahrain: {
+			en: "Bahrain",
+			lt: "Bahreinas",
+			ru: "Бахрейн"
+		},
+		bangladesh: {
+			en: "Bangladesh",
+			lt: "Bangladešas",
+			ru: "Бангладеш"
+		},
+		barbados: {
+			en: "Barbados",
+			lt: "Barbadosas",
+			ru: "Барбадос"
+		},
+		baroda: {
+			en: "Baroda",
+			lt: "Baroda",
+			ru: "Барода"
+		},
+		bavaria: {
+			en: "Bavaria",
+			lt: "Bavarija",
+			ru: "Бавария"
+		},
+		belarus: {
+			en: "Belarus",
+			lt: "Baltarusija",
+			ru: "Беларусь"
+		},
+		belgian_congo: {
+			en: "Belgian Congo",
+			lt: "Belgijos Kongas",
+			ru: "Бельгийское Конго"
+		},
+		belgium: {
+			en: "Belgium",
+			lt: "Belgija",
+			ru: "Бельгия"
+		},
+		belize: {
+			en: "Belize",
+			lt: "Belizas",
+			ru: "Белиз"
+		},
+		benin: {
+			en: "Benin",
+			lt: "Beninas",
+			ru: "Бенин"
+		},
+		berg: {
+			en: "Berg",
+			lt: "Bergas",
+			ru: "Берг"
+		},
+		bermuda: {
+			en: "Bermuda",
+			lt: "Bermudai",
+			ru: "Бермуды"
+		},
+		bhopal: {
+			en: "Bhopal",
+			lt: "Bhopalas",
+			ru: "Бхопал"
+		},
+		bhutan: {
+			en: "Bhutan",
+			lt: "Butanas",
+			ru: "Бутан"
+		},
+		biafra: {
+			en: "Biafra",
+			lt: "Biafra",
+			ru: "Биафра"
+		},
+		bikaner: {
+			en: "Bikaner",
+			lt: "Bykaneras",
+			ru: "Биканер"
+		},
+		biot: {
+			en: "British Indian Ocean Territory",
+			lt: "Indijos Vandenyno Britų Sritis",
+			ru: "Британская территория Индийского океана"
+		},
+		bohemia: {
+			en: "Bohemia",
+			lt: "Bohemija",
+			ru: "Богемия"
+		},
+		bohemia_moravia: {
+			en: "Bohemia and Moravia",
+			lt: "Bohemija ir Moravija",
+			ru: "Богемия и Моравия"
+		},
+		bolivia: {
+			en: "Bolivia",
+			lt: "Bolivija",
+			ru: "Боливия"
+		},
+		bosnia_herzegovina: {
+			en: "Bosnia and Herzegovina",
+			lt: "Bosnija ir Hercegovina",
+			ru: "Босния и Герцеговина"
+		},
+		botswana: {
+			en: "Botswana",
+			lt: "Botsvana",
+			ru: "Ботсвана"
+		},
+		brandenburg_prussia: {
+			en: "Brandenburg-Prussia",
+			lt: "Brandenburgas-Prūsija",
+			ru: "Бранденбург-Пруссия"
+		},
+		brazil: {
+			en: "Brazil",
+			lt: "Brazilija",
+			ru: "Бразилия"
+		},
+		bremen: {
+			en: "Bremen",
+			lt: "Brėmenas",
+			ru: "Бремен"
+		},
+		british_antarctic_territory: {
+			en: "British Antarctic Territory",
+			lt: "Britų Antarktidos teritorija",
+			ru: "Британская антарктическая территория"
+		},
+		british_east_africa: {
+			en: "British East Africa",
+			lt: "Britų Rytų Afrika",
+			ru: "Британская Восточная Африка"
+		},
+		british_east_indies: {
+			en: "British East Indies",
+			lt: "Britų Rytų Indija",
+			ru: "Британская Ост-Индия"
+		},
+		british_guiana: {
+			en: "British Guiana",
+			lt: "Britų Gviana",
+			ru: "Британская Гвиана"
+		},
+		british_honduras: {
+			en: "British Honduras",
+			lt: "Britų Hondūras",
+			ru: "Британский Гондурас"
+		},
+		british_india: {
+			en: "India - British",
+			lt: "Indija - Britų",
+			ru: "Индия - Британская"
+		},
+		british_west_africa: {
+			en: "British West Africa",
+			lt: "Britų Vakarų Afrika",
+			ru: "Британская Западная Африка"
+		},
+		british_west_indies: {
+			en: "British West Indies",
+			lt: "Britų Vest Indija",
+			ru: "Британская Вест-Индия"
+		},
+		brunei: {
+			en: "Brunei",
+			lt: "Brunėjus",
+			ru: "Бруней"
+		},
+		brunswick: {
+			en: "Brunswick",
+			lt: "Braunšveigas",
+			ru: "Брауншвейг"
+		},
+		brunswick_luneburg: {
+			en: "Brunswick-Lüneburg",
+			lt: "Braunšveigas-Liuneburgas",
+			ru: "Брауншвейг-Люнебург"
+		},
+		brunswick_wolfenbuttel: {
+			en: "Brunswick-Wolfenbüttel",
+			lt: "Braunšveigas-Volfenbiutelis",
+			ru: "Брауншвейг-Вольфенбюттель"
+		},
+		bukhara: {
+			en: "Bukhara",
+			lt: "Buchara",
+			ru: "Бухара"
+		},
+		bulgaria: {
+			en: "Bulgaria",
+			lt: "Bulgarija",
+			ru: "Болгария"
+		},
+		burgau: {
+			en: "Burgau",
+			lt: "Burgau",
+			ru: "Бургау"
+		},
+		burkina_faso: {
+			en: "Burkina Faso",
+			lt: "Burkina Fasas",
+			ru: "Буркина Фасо"
+		},
+		burundi: {
+			en: "Burundi",
+			lt: "Burundis",
+			ru: "Бурунди"
+		},
+		cambodia: {
+			en: "Cambodia",
+			lt: "Kambodža",
+			ru: "Камбоджа"
+		},
+		cameroon: {
+			en: "Cameroon",
+			lt: "Kamerūnas",
+			ru: "Камерун"
+		},
+		canada: {
+			en: "Canada",
+			lt: "Kanada",
+			ru: "Канада"
+		},
+		canadian_provinces: {
+			en: "Canadian provinces",
+			lt: "Kanados provincijos",
+			ru: "Канадские провинции"
+		},
+		cape_verde: {
+			en: "Cape Verde",
+			lt: "Žaliasis Kyšulys",
+			ru: "Кабо-Верде"
+		},
+		caribbean_netherlands: {
+			en: "Caribbean Netherlands",
+			lt: "Karibų Nyderlandai",
+			ru: "Карибские Нидерланды"
+		},
+		catalonia: {
+			en: "Catalonia",
+			lt: "Katalonija",
+			ru: "Каталония"
+		},
+		cayman_islands: {
+			en: "Cayman Islands",
+			lt: "Kaimanų salos",
+			ru: "Каймановы острова"
+		},
+		central_africa: {
+			en: "Central Africa (BEAC)",
+			lt: "Centrinė Afrika (BEAC)",
+			ru: "Центральная Африка (BEAC)"
+		},
+		central_african_republic: {
+			en: "Central African Republic",
+			lt: "Centrinės Afrikos Respublika",
+			ru: "ЦАР"
+		},
+		central_american_republic: {
+			en: "Central American Republic",
+			lt: "Centrinės Amerikos Respublika",
+			ru: "Республика Центральной Америки"
+		},
+		ceylon: {
+			en: "Ceylon",
+			lt: "Ceilonas",
+			ru: "Цейлон"
+		},
+		chad: {
+			en: "Chad",
+			lt: "Čadas",
+			ru: "Чад"
+		},
+		chile: {
+			en: "Chile",
+			lt: "Čilė",
+			ru: "Чили"
+		},
+		china: {
+			en: "China",
+			lt: "Kinija",
+			ru: "Китай"
+		},
+		china_empire: {
+			en: "China - Empire",
+			lt: "Kinija - imperija",
+			ru: "Китай - Империя"
+		},
+		china_republic: {
+			en: "China - Republic",
+			lt: "Kinija - Respublika",
+			ru: "Китай - Республика"
+		},
+		colombia: {
+			en: "Colombia",
+			lt: "Kolumbija",
+			ru: "Колумбия"
+		},
+		comoros: {
+			en: "Comoros",
+			lt: "Komorai",
+			ru: "Коморские острова"
+		},
+		congo_democratic_republic: {
+			en: "Congo - DRC",
+			lt: "Kongas - KDR",
+			ru: "Конго - ДРК"
+		},
+		congo_free_state: {
+			en: "Congo Free State",
+			lt: "Laisvoji Kongo Valstybė",
+			ru: "Свободное государство Конго"
+		},
+		cook_islands: {
+			en: "Cook Islands",
+			lt: "Kuko Salos",
+			ru: "Острова Кука"
+		},
+		costa_rica: {
+			en: "Costa Rica",
+			lt: "Kosta Rika",
+			ru: "Коста-Рика"
+		},
+		cote_d_ivoire: {
+			en: "Côte d'Ivoire",
+			lt: "Dramblio Kaulo Krantas",
+			ru: "Кот-д'Ивуар"
+		},
+		courland_semigallia: {
+			en: "Courland and Semigallia",
+			lt: "Kuršas ir Žiemgala",
+			ru: "Курляндия и Семигалия"
+		},
+		crete: {
+			en: "Crete",
+			lt: "Kreta",
+			ru: "Крит"
+		},
+		crimea: {
+			en: "Crimea",
+			lt: "Krymo chanatas",
+			ru: "Крым"
+		},
+		croatia: {
+			en: "Croatia",
+			lt: "Kroatija",
+			ru: "Хорватия"
+		},
+		cuba: {
+			en: "Cuba",
+			lt: "Kuba",
+			ru: "Куба"
+		},
+		curacao: {
+			en: "Curaçao",
+			lt: "Kiurasao",
+			ru: "Кюрасао"
+		},
+		cyprus: {
+			en: "Cyprus",
+			lt: "Kipras",
+			ru: "Кипр"
+		},
+		czech_republic: {
+			en: "Czech Republic",
+			lt: "Čekija",
+			ru: "Чехия"
+		},
+		czechoslovakia: {
+			en: "Czechoslovakia",
+			lt: "Čekoslovakija",
+			ru: "Чехословакия"
+		},
+		danish_west_indies: {
+			en: "Danish West Indies",
+			lt: "Danijos Vakarų Indijos",
+			ru: "Датская Вест-Индия"
+		},
+		danzig: {
+			en: "Danzig",
+			lt: "Dancigas",
+			ru: "Данциг"
+		},
+		darfur: {
+			en: "Darfur",
+			lt: "Darfūras",
+			ru: "Дарфур"
+		},
+		demerara_essequibo: {
+			en: "Demerara and Essequibo",
+			lt: "Demerara ir Esekvibas",
+			ru: "Демерара и Эссекибо"
+		},
+		denmark: {
+			en: "Denmark",
+			lt: "Danija",
+			ru: "Дания"
+		},
+		djibouti: {
+			en: "Djibouti",
+			lt: "Džibutis",
+			ru: "Джибути"
+		},
+		dominica: {
+			en: "Dominica",
+			lt: "Dominika",
+			ru: "Доминика"
+		},
+		dominican_republic: {
+			en: "Dominican Republic",
+			lt: "Dominikos Respublika",
+			ru: "Доминикана"
+		},
+		dutch_republic: {
+			en: "Dutch Republic",
+			lt: "Septynių Jungtinių Nyderlandų Provincijų Respublika",
+			ru: "Голландская республика"
+		},
+		east_timor: {
+			en: "East Timor",
+			lt: "Rytų Timoras",
+			ru: "Восточный Тимор"
+		},
+		eastern_caribbean: {
+			en: "Eastern Caribbean",
+			lt: "Rytų Karibų valstybės",
+			ru: "Восточные Карибы"
+		},
+		ecuador: {
+			en: "Ecuador",
+			lt: "Ekvadoras",
+			ru: "Эквадор"
+		},
+		egypt: {
+			en: "Egypt",
+			lt: "Egiptas",
+			ru: "Египет"
+		},
+		el_salvador: {
+			en: "El Salvador",
+			lt: "Salvadoras",
+			ru: "Сальвадор"
+		},
+		england: {
+			en: "England",
+			lt: "Anglija",
+			ru: "Англия"
+		},
+		equatorial_african_states: {
+			en: "Equatorial African States",
+			lt: "Pusiaujo Afrikos valstybės",
+			ru: "Экваториальная Африка"
+		},
+		equatorial_guinea: {
+			en: "Equatorial Guinea",
+			lt: "Pusiaujo Gvinėja",
+			ru: "Экваториальная Гвинея"
+		},
+		eritrea: {
+			en: "Eritrea",
+			lt: "Eritrėja",
+			ru: "Эритрея"
+		},
+		estonia: {
+			en: "Estonia",
+			lt: "Estija",
+			ru: "Эстония"
+		},
+		ethiopia: {
+			en: "Ethiopia",
+			lt: "Etiopija",
+			ru: "Эфиопия"
+		},
+		eu: {
+			en: "European Union",
+			lt: "Europos Sąjunga",
+			ru: "Европейский союз"
+		},
+		falkland_islands: {
+			en: "Falkland Islands",
+			lt: "Folklando Salos",
+			ru: "Фолклендские острова"
+		},
+		faroes: {
+			en: "Faroe Islands",
+			lt: "Farerai",
+			ru: "Фарерские острова"
+		},
+		fiji: {
+			en: "Fiji",
+			lt: "Fidžis",
+			ru: "Фиджи"
+		},
+		finland: {
+			en: "Finland",
+			lt: "Suomija",
+			ru: "Финляндия"
+		},
+		france: {
+			en: "France",
+			lt: "Prancūzija",
+			ru: "Франция"
+		},
+		frankfurt: {
+			en: "Frankfurt",
+			lt: "Frankfurtas",
+			ru: "Франкфурт"
+		},
+		french_cochinchina: {
+			en: "French Cochinchina",
+			lt: "Prancūzijos Kochinchina",
+			ru: "Французская Кохинхина"
+		},
+		french_colonies: {
+			en: "French colonies",
+			lt: "Prancūzų kolonijos",
+			ru: "Французские колонии"
+		},
+		french_equatorial_africa: {
+			en: "French Equatorial Africa",
+			lt: "Prancūzijos Pusiaujo Afrika",
+			ru: "Французская Экваториальная Африка"
+		},
+		french_guiana: {
+			en: "French Guiana",
+			lt: "Prancūzijos Gviana",
+			ru: "Французская Гвиана"
+		},
+		french_indochina: {
+			en: "French Indochina",
+			lt: "Prancūzijos Indokinija",
+			ru: "Французский Индокитай"
+		},
+		french_oceania: {
+			en: "French Oceania",
+			lt: "Prancūzijos Okeanija",
+			ru: "Французская Океания"
+		},
+		french_pacific_territories: {
+			en: "French pacific territories",
+			lt: "Prancūzijos Ramiojo vandenyno teritorijos",
+			ru: "Французские тихоокеанские территории"
+		},
+		french_polinesia: {
+			en: "French Polynesia",
+			lt: "Prancūzijos Polinezija",
+			ru: "Французская Полинезия"
+		},
+		french_somaliland: {
+			en: "French Somaliland",
+			lt: "Prancūzijos Somalilandas",
+			ru: "Французское Сомали"
+		},
+		french_west_africa: {
+			en: "French West Africa",
+			lt: "Prancūzijos Vakarų Afrika",
+			ru: "Французская Западная Африка"
+		},
+		fujairah: {
+			en: "Fujairah",
+			lt: "Fudžeira",
+			ru: "Эль-Фуджайра"
+		},
+		further_austria: {
+			en: "Further Austria",
+			lt: "Išorinė Austrija",
+			ru: "Передняя Австрия"
+		},
+		gabon: {
+			en: "Gabon",
+			lt: "Gabonas",
+			ru: "Габон"
+		},
+		galicia_lodomeria: {
+			en: "Galicia and Lodomeria",
+			lt: "Galicija ir Lodomerija",
+			ru: "Галиция и Лодомерия"
+		},
+		gambia: {
+			en: "Gambia",
+			lt: "Gambija",
+			ru: "Гамбия"
+		},
+		genoa: {
+			en: "Genoa",
+			lt: "Genujos respublika",
+			ru: "Генуя"
+		},
+		georgia: {
+			en: "Georgia",
+			lt: "Gruzija",
+			ru: "Грузия"
+		},
+		german_democratic_republic: {
+			en: "Germany - GDR",
+			lt: "Vokietija - VDR",
+			ru: "Германия - ГДР"
+		},
+		german_east_africa: {
+			en: "German East Africa",
+			lt: "Vokietijos Rytų Afrika",
+			ru: "Германская Восточная Африка"
+		},
+		german_empire: {
+			en: "German Empire",
+			lt: "Vokietijos imperija",
+			ru: "Германская империя"
+		},
+		german_new_guinea: {
+			en: "German New Guinea",
+			lt: "Vokietijos Naujoji Gvinėja",
+			ru: "Германская Новая Гвинея"
+		},
+		germany: {
+			en: "Germany",
+			lt: "Vokietija",
+			ru: "Германия"
+		},
+		ghana: {
+			en: "Ghana",
+			lt: "Gana",
+			ru: "Гана"
+		},
+		gibraltar: {
+			en: "Gibraltar",
+			lt: "Gibraltaras",
+			ru: "Гибралтар"
+		},
+		gorizia_gradisca: {
+			en: "Gorizia and Gradisca",
+			lt: "Goricija ir Gradiska",
+			ru: "Горица и Градишка"
+		},
+		greece: {
+			en: "Greece",
+			lt: "Graikija",
+			ru: "Греция"
+		},
+		greenland: {
+			en: "Greenland",
+			lt: "Grenlandija",
+			ru: "Гренландия"
+		},
+		grenada: {
+			en: "Grenada",
+			lt: "Grenada",
+			ru: "Гренада"
+		},
+		guadeloupe: {
+			en: "Guadeloupe",
+			lt: "Gvadelupa",
+			ru: "Гваделупа"
+		},
+		guatemala: {
+			en: "Guatemala",
+			lt: "Gvatemala",
+			ru: "Гватемала"
+		},
+		gubbio: {
+			en: "Gubbio",
+			lt: "Gubijus",
+			ru: "Губбио"
+		},
+		guernsey: {
+			en: "Guernsey",
+			lt: "Gernsis",
+			ru: "Гернси"
+		},
+		guinea: {
+			en: "Guinea",
+			lt: "Gvinėja",
+			ru: "Гвинея"
+		},
+		guinea_bissau: {
+			en: "Guinea-Bissau",
+			lt: "Bisau Gvinėja",
+			ru: "Гвинея-Бисау"
+		},
+		guyana: {
+			en: "Guyana",
+			lt: "Gajana",
+			ru: "Гайана"
+		},
+		gwalior: {
+			en: "Gwalior",
+			lt: "Gvalijaras",
+			ru: "Гвалиор"
+		},
+		haiti: {
+			en: "Haiti",
+			lt: "Haitis",
+			ru: "Гаити"
+		},
+		hamburg: {
+			en: "Hamburg",
+			lt: "Hamburgas",
+			ru: "Гамбург"
+		},
+		hannover: {
+			en: "Hannover",
+			lt: "Hanoveris",
+			ru: "Ганновер"
+		},
+		hawaii: {
+			en: "Hawaii",
+			lt: "Havajai",
+			ru: "Гавайи"
+		},
+		hejaz: {
+			en: "Hejaz",
+			lt: "Hidžazas",
+			ru: "Хиджаз"
+		},
+		hesse_kassel: {
+			en: "Hesse-Kassel",
+			lt: "Hesenas-Kaselis",
+			ru: "Гессен-Кассель"
+		},
+		hessen_darmstadt: {
+			en: "Hessen-Darmstadt",
+			lt: "Hesenas-Darmštatas",
+			ru: "Гессен-Дармштадт"
+		},
+		hessen_homburg: {
+			en: "Hessen-Homburg",
+			lt: "Hesenas-Homburgas",
+			ru: "Гессен-Гомбург"
+		},
+		honduras: {
+			en: "Honduras",
+			lt: "Hondūras",
+			ru: "Гондурас"
+		},
+		hong_kong: {
+			en: "Hong Kong",
+			lt: "Honkongas",
+			ru: "Гонконг"
+		},
+		hungary: {
+			en: "Hungary",
+			lt: "Vengrija",
+			ru: "Венгрия"
+		},
+		hutt_river: {
+			en: "Hutt River",
+			lt: "Hato Upės Kunigaikštystė",
+			ru: "Хатт-Ривер"
+		},
+		hyderabad: {
+			en: "Hyderabad",
+			lt: "Haidarabadas",
+			ru: "Хайдарабад"
+		},
+		iceland: {
+			en: "Iceland",
+			lt: "Islandija",
+			ru: "Исландия"
+		},
+		india: {
+			en: "India",
+			lt: "Indija",
+			ru: "Индия"
+		},
+		indonesia: {
+			en: "Indonesia",
+			lt: "Indonezija",
+			ru: "Индонезия"
+		},
+		indore: {
+			en: "Indore",
+			lt: "Indauras",
+			ru: "Индаур"
+		},
+		ionian_islands: {
+			en: "Ionian Islands",
+			lt: "Jonijos salos",
+			ru: "Ионические острова"
+		},
+		iran: {
+			en: "Iran",
+			lt: "Iranas",
+			ru: "Иран"
+		},
+		iraq: {
+			en: "Iraq",
+			lt: "Irakas",
+			ru: "Ирак"
+		},
+		ireland: {
+			en: "Ireland",
+			lt: "Airija",
+			ru: "Ирландия"
+		},
+		isle_of_man: {
+			en: "Isle of Man",
+			lt: "Meno Sala",
+			ru: "Остров Мэн"
+		},
+		israel: {
+			en: "Israel",
+			lt: "Izraelis",
+			ru: "Израиль"
+		},
+		italian_eritrea: {
+			en: "Italian Eritrea",
+			lt: "Italijos Eritrėja",
+			ru: "Итальянская Эритрея"
+		},
+		italian_somaliland: {
+			en: "Italian Somaliland",
+			lt: "Italijos Somalilandas",
+			ru: "Итальянское Сомали"
+		},
+		italy: {
+			en: "Italy",
+			lt: "Italija",
+			ru: "Италия"
+		},
+		jaipur: {
+			en: "Jaipur",
+			lt: "Džaipuras",
+			ru: "Джайпур"
+		},
+		jamaica: {
+			en: "Jamaica",
+			lt: "Jamaika",
+			ru: "Ямайка"
+		},
+		jaora: {
+			en: "Jaora",
+			lt: "Džaura",
+			ru: "Джаора"
+		},
+		japan: {
+			en: "Japan",
+			lt: "Japonija",
+			ru: "Япония"
+		},
+		japanese_china: {
+			en: "China - Japanese",
+			lt: "Kinija - Japonų",
+			ru: "Китай - Японский"
+		},
+		jersey: {
+			en: "Jersey",
+			lt: "Džersis",
+			ru: "Джерси"
+		},
+		jodhpur: {
+			en: "Jodhpur",
+			lt: "Džodpuras",
+			ru: "Джодхпур"
+		},
+		jordan: {
+			en: "Jordan",
+			lt: "Jordanija",
+			ru: "Иордания"
+		},
+		julich_berg: {
+			en: "Jülich-Berg",
+			lt: "Julichas-Bergas",
+			ru: "Юлих-Берг"
+		},
+		junagadh: {
+			en: "Junagadh",
+			lt: "Džūnagadas",
+			ru: "Джунагадх"
+		},
+		katanga: {
+			en: "Katanga",
+			lt: "Katanga",
+			ru: "Катанга"
+		},
+		kazakhstan: {
+			en: "Kazakhstan",
+			lt: "Kazachstanas",
+			ru: "Казахстан"
+		},
+		kenya: {
+			en: "Kenya",
+			lt: "Kenija",
+			ru: "Кения"
+		},
+		khiva: {
+			en: "Khiva",
+			lt: "Chivos chanatas",
+			ru: "Хива"
+		},
+		khorezm: {
+			en: "Khorezm People's Soviet Republic",
+			lt: "Chorezmo Liaudies Sovietinė Respublika",
+			ru: "Хорезмская НСР"
+		},
+		kiau_chau: {
+			en: "Kiau Chau",
+			lt: "Dziaodžou",
+			ru: "Цзяо-Чжоу"
+		},
+		kiribati: {
+			en: "Kiribati",
+			lt: "Kiribatis",
+			ru: "Кирибати"
+		},
+		kokand: {
+			en: "Kokand",
+			lt: "Kokando chanatas",
+			ru: "Коканд"
+		},
+		korea: {
+			en: "Korea",
+			lt: "Korėja",
+			ru: "Корея"
+		},
+		krakow: {
+			en: "Krakow",
+			lt: "Krokuva",
+			ru: "Краков"
+		},
+		kutch: {
+			en: "Kutch",
+			lt: "Kačas",
+			ru: "Кач"
+		},
+		kuwait: {
+			en: "Kuwait",
+			lt: "Kuveitas",
+			ru: "Кувейт"
+		},
+		kyrgyzstan: {
+			en: "Kyrgyzstan",
+			lt: "Kirgizija",
+			ru: "Киргизия"
+		},
+		laos: {
+			en: "Laos",
+			lt: "Laosas",
+			ru: "Лаос"
+		},
+		latvia: {
+			en: "Latvia",
+			lt: "Latvija",
+			ru: "Латвия"
+		},
+		lebanon: {
+			en: "Lebanon",
+			lt: "Libanas",
+			ru: "Ливан"
+		},
+		lesotho: {
+			en: "Lesotho",
+			lt: "Lesotas",
+			ru: "Лесото"
+		},
+		liberia: {
+			en: "Liberia",
+			lt: "Liberija",
+			ru: "Либерия"
+		},
+		libya: {
+			en: "Libya",
+			lt: "Libija",
+			ru: "Ливия"
+		},
+		liechtenstein: {
+			en: "Liechtenstein",
+			lt: "Lichtenšteinas",
+			ru: "Лихтенштейн"
+		},
+		liege: {
+			en: "Liège",
+			lt: "Lježas",
+			ru: "Льеж"
+		},
+		lippe: {
+			en: "Lippe",
+			lt: "Lipė",
+			ru: "Липпе"
+		},
+		lithuania: {
+			en: "Lithuania",
+			lt: "Lietuva",
+			ru: "Литва"
+		},
+		livonia: {
+			en: "Livonia",
+			lt: "Livonija",
+			ru: "Ливония"
+		},
+		lombardy_venetia: {
+			en: "Lombardy-Venetia",
+			lt: "Lombardija-Venecija",
+			ru: "Ломбардия-Венеция"
+		},
+		lubeck: {
+			en: "Lübeck",
+			lt: "Liubekas",
+			ru: "Любек"
+		},
+		lucca: {
+			en: "Lucca",
+			lt: "Luka",
+			ru: "Лукка"
+		},
+		lundy: {
+			en: "Lundy",
+			lt: "Landis",
+			ru: "Ланди"
+		},
+		luxembourg: {
+			en: "Luxembourg",
+			lt: "Liuksemburgas",
+			ru: "Люксембург"
+		},
+		macau: {
+			en: "Macau",
+			lt: "Makao",
+			ru: "Макао"
+		},
+		macedonia: {
+			en: "North Macedonia",
+			lt: "Šiaurės Makedonija",
+			ru: "Северная Македония"
+		},
+		madagascar: {
+			en: "Madagascar",
+			lt: "Madagaskaras",
+			ru: "Мадагаскар"
+		},
+		madeira_islands: {
+			en: "Madeira Islands",
+			lt: "Madeira",
+			ru: "Мадейра"
+		},
+		mainz: {
+			en: "Mainz",
+			lt: "Maincas",
+			ru: "Майнц"
+		},
+		majorca: {
+			en: "Majorca",
+			lt: "Maljorka",
+			ru: "Мальорка"
+		},
+		malawi: {
+			en: "Malawi",
+			lt: "Malavis",
+			ru: "Малави"
+		},
+		malaya: {
+			en: "Malaya",
+			lt: "Malaja",
+			ru: "Малайя"
+		},
+		malaya_british_borneo: {
+			en: "Malaya and British Borneo",
+			lt: "Malaja ir Britų Borneo",
+			ru: "Малайя и Британское Борнео"
+		},
+		malaysia: {
+			en: "Malaysia",
+			lt: "Malaizija",
+			ru: "Малайзия"
+		},
+		maldives: {
+			en: "Maldives",
+			lt: "Maldyvai",
+			ru: "Мальдивы"
+		},
+		mali: {
+			en: "Mali",
+			lt: "Malis",
+			ru: "Мали"
+		},
+		malta: {
+			en: "Malta",
+			lt: "Malta",
+			ru: "Мальта"
+		},
+		mantua: {
+			en: "Mantua",
+			lt: "Mantuja",
+			ru: "Мантуя"
+		},
+		marshall_islands: {
+			en: "Marshall Islands",
+			lt: "Maršalo salos",
+			ru: "Маршалловы Острова"
+		},
+		martinique: {
+			en: "Martinique",
+			lt: "Martinika",
+			ru: "Мартиника"
+		},
+		mauritania: {
+			en: "Mauritania",
+			lt: "Mauritanija",
+			ru: "Мавритания"
+		},
+		mauritius: {
+			en: "Mauritius",
+			lt: "Mauricijus",
+			ru: "Маврикий"
+		},
+		mecklenburg_schwerin: {
+			en: "Mecklenburg-Schwerin",
+			lt: "Meklenburgas-Šverinas",
+			ru: "Мекленбург-Шверин"
+		},
+		mecklenburg_strelitz: {
+			en: "Mecklenburg-Strelitz",
+			lt: "Meklenburgas-Štrelicas",
+			ru: "Мекленбург-Стрелиц"
+		},
+		mewar: {
+			en: "Mewar",
+			lt: "Mevaras",
+			ru: "Мевар"
+		},
+		mexico: {
+			en: "Mexico",
+			lt: "Meksika",
+			ru: "Мексика"
+		},
+		milan: {
+			en: "Milan",
+			lt: "Milanas",
+			ru: "Милан"
+		},
+		moldavia_and_wallachia: {
+			en: "Moldavia and Wallachia",
+			lt: "Moldova ir Valakija",
+			ru: "Молдавия и Валахия"
+		},
+		moldova: {
+			en: "Moldova",
+			lt: "Moldavija",
+			ru: "Молдавия"
+		},
+		mombasa: {
+			en: "Mombasa",
+			lt: "Mombasa",
+			ru: "Момбаса"
+		},
+		monaco: {
+			en: "Monaco",
+			lt: "Monakas",
+			ru: "Монако"
+		},
+		mongolia: {
+			en: "Mongolia",
+			lt: "Mongolija",
+			ru: "Монголия"
+		},
+		montenegro: {
+			en: "Montenegro",
+			lt: "Juodkalnija",
+			ru: "Черногория"
+		},
+		montserrat: {
+			en: "Montserrat",
+			lt: "Montseratas",
+			ru: "Монтсеррат"
+		},
+		morocco: {
+			en: "Morocco",
+			lt: "Marokas",
+			ru: "Марокко"
+		},
+		mozambique: {
+			en: "Mozambique",
+			lt: "Mozambikas",
+			ru: "Мозамбик"
+		},
+		mughal_empire: {
+			en: "Mughal Empire",
+			lt: "Mogolų imperija",
+			ru: "Империя Великих Моголов"
+		},
+		myanmar: {
+			en: "Myanmar",
+			lt: "Mianmaras",
+			ru: "Мьянма"
+		},
+		nagorno_karabakh: {
+			en: "Nagorno-Karabakh",
+			lt: "Kalnų Karabachas",
+			ru: "Нагорный Карабах"
+		},
+		namibia: {
+			en: "Namibia",
+			lt: "Namibija",
+			ru: "Намибия"
+		},
+		naples: {
+			en: "Naples",
+			lt: "Neapolis",
+			ru: "Неаполь"
+		},
+		nassau: {
+			en: "Nassau",
+			lt: "Nasau",
+			ru: "Нассау"
+		},
+		nassau_usingen: {
+			en: "Nassau-Usingen",
+			lt: "Nasau-Uzingenas",
+			ru: "Нассау-Узинген"
+		},
+		nassau_weilburg: {
+			en: "Nassau-Weilburg",
+			lt: "Nasau-Veilburgas",
+			ru: "Нассау-Вайльбург"
+		},
+		nauru: {
+			en: "Nauru",
+			lt: "Nauru",
+			ru: "Науру"
+		},
+		navarra: {
+			en: "Navarra",
+			lt: "Navara",
+			ru: "Наварра"
+		},
+		nawanagar: {
+			en: "Nawanagar",
+			lt: "Navanagaras",
+			ru: "Наванагар"
+		},
+		nepal: {
+			en: "Nepal",
+			lt: "Nepalas",
+			ru: "Непал"
+		},
+		netherlands: {
+			en: "Netherlands",
+			lt: "Nyderlandai",
+			ru: "Нидерланды"
+		},
+		netherlands_antilles: {
+			en: "Netherlands Antilles",
+			lt: "Nyderlandų Antilai",
+			ru: "Нидерландские Антильские острова"
+		},
+		netherlands_east_indies: {
+			en: "Netherlands East Indies",
+			lt: "Nyderlandų Rytų Indijos",
+			ru: "Голландская Ост-Индия"
+		},
+		new_caledonia: {
+			en: "New Caledonia",
+			lt: "Naujoji Kaledonija",
+			ru: "Новая Каледония"
+		},
+		new_guinea: {
+			en: "New Guinea",
+			lt: "Naujoji Gvinėja",
+			ru: "Новая Гвинея"
+		},
+		new_hebrides: {
+			en: "New Hebrides",
+			lt: "Naujieji Hebridai",
+			ru: "Новые Гебриды"
+		},
+		new_zealand: {
+			en: "New Zealand",
+			lt: "Naujoji Zelandija",
+			ru: "Новая Зеландия"
+		},
+		newfoundland: {
+			en: "Newfoundland",
+			lt: "Niufaundlandas",
+			ru: "Ньюфаундленд"
+		},
+		nicaragua: {
+			en: "Nicaragua",
+			lt: "Nikaragva",
+			ru: "Никарагуа"
+		},
+		niger: {
+			en: "Niger",
+			lt: "Nigeris",
+			ru: "Нигер"
+		},
+		nigeria: {
+			en: "Nigeria",
+			lt: "Nigerija",
+			ru: "Нигерия"
+		},
+		niue: {
+			en: "Niue",
+			lt: "Niujė",
+			ru: "Ниуэ"
+		},
+		north_borneo: {
+			en: "North Borneo",
+			lt: "Šiaurės Borneo",
+			ru: "Северное Борнео"
+		},
+		north_korea: {
+			en: "North Korea",
+			lt: "Šiaurės Korėja",
+			ru: "Северная Корея"
+		},
+		norway: {
+			en: "Norway",
+			lt: "Norvegija",
+			ru: "Норвегия"
+		},
+		oldenburg: {
+			en: "Oldenburg",
+			lt: "Oldenburgas",
+			ru: "Ольденбург"
+		},
+		oman: {
+			en: "Oman",
+			lt: "Omanas",
+			ru: "Оман"
+		},
+		order_of_malta: {
+			en: "Order of Malta",
+			lt: "Maltos ordinas",
+			ru: "Мальтийский орден"
+		},
+		ottoman_empire: {
+			en: "Ottoman Empire",
+			lt: "Osmanų imperija",
+			ru: "Османская империя"
+		},
+		oudh: {
+			en: "Oudh (Awadh)",
+			lt: "Audas (Awadh)",
+			ru: "Ауд (Авадх)"
+		},
+		pakistan: {
+			en: "Pakistan",
+			lt: "Pakistanas",
+			ru: "Пакистан"
+		},
+		palatinate: {
+			en: "Palatinate",
+			lt: "Pfalco kurfiurstystė",
+			ru: "Курпфальц"
+		},
+		palatine_zweibrucken: {
+			en: "Palatine Zweibrücken",
+			lt: "Pfalcas-Cveibriukenas",
+			ru: "Пфальц-Цвейбрюккен"
+		},
+		palau: {
+			en: "Palau",
+			lt: "Palau",
+			ru: "Палау"
+		},
+		palestine: {
+			en: "Palestine",
+			lt: "Palestina",
+			ru: "Палестина"
+		},
+		panama: {
+			en: "Panama",
+			lt: "Panama",
+			ru: "Панама"
+		},
+		papal_states: {
+			en: "Papal States",
+			lt: "Popiežiaus valstybė ",
+			ru: "Папская область"
+		},
+		papua_new_guinea: {
+			en: "Papua New Guinea",
+			lt: "Papua Naujoji Gvinėja",
+			ru: "Папуа - Новая Гвинея"
+		},
+		paraguay: {
+			en: "Paraguay",
+			lt: "Paragvajus",
+			ru: "Парагвай"
+		},
+		parma: {
+			en: "Parma",
+			lt: "Parma",
+			ru: "Парма"
+		},
+		peru: {
+			en: "Peru",
+			lt: "Peru",
+			ru: "Перу"
+		},
+		philippines: {
+			en: "Philippines",
+			lt: "Filipinai",
+			ru: "Филиппины"
+		},
+		piedmont: {
+			en: "Piedmont",
+			lt: "Pjemontas",
+			ru: "Пьемонт"
+		},
+		pitcairn_islands: {
+			en: "Pitcairn Islands",
+			lt: "Pitkerno Salos",
+			ru: "Острова Питкэрн"
+		},
+		poland: {
+			en: "Poland",
+			lt: "Lenkija",
+			ru: "Польша"
+		},
+		porbandar: {
+			en: "Porbandar",
+			lt: "Porbandaras",
+			ru: "Порбандар"
+		},
+		portugal: {
+			en: "Portugal",
+			lt: "Portugalija",
+			ru: "Португалия"
+		},
+		portuguese_india: {
+			en: "India - Portuguese",
+			lt: "Indija - Portugalų",
+			ru: "Индия - Португальская"
+		},
+		portuguese_timor: {
+			en: "Portuguese Timor",
+			lt: "Portugalijos Timoras",
+			ru: "Португальский Тимор"
+		},
+		prussia: {
+			en: "Prussia",
+			lt: "Prūsija",
+			ru: "Пруссия"
+		},
+		pudukkottai: {
+			en: "Pudukkottai",
+			lt: "Pudukotajus",
+			ru: "Пудуккоттай"
+		},
+		puerto_rico: {
+			en: "Puerto Rico",
+			lt: "Puerto Rikas",
+			ru: "Пуэрто-Рико"
+		},
+		qatar: {
+			en: "Qatar",
+			lt: "Kataras",
+			ru: "Катар"
+		},
+		qatar_dubai: {
+			en: "Qatar and Dubai",
+			lt: "Kataras ir Dubajus",
+			ru: "Катар и Дубай"
+		},
+		ras_al_khaimah: {
+			en: "Ras Al Khaimah",
+			lt: "Ras al Chaima",
+			ru: "Рас-эль-Хайма"
+		},
+		ratlam: {
+			en: "Ratlam",
+			lt: "Ratlamas",
+			ru: "Ратлам"
+		},
+		reunion: {
+			en: "Réunion",
+			lt: "Reunjonas",
+			ru: "Реюньон"
+		},
+		reuss_gera: {
+			en: "Reuss-Gera",
+			lt: "Roisas-Gėra",
+			ru: "Рейсс-Гера"
+		},
+		reuss_greiz: {
+			en: "Reuss-Greiz",
+			lt: "Roisas-Greicas",
+			ru: "Рейсс-Грейц"
+		},
+		rhodesia: {
+			en: "Rhodesia",
+			lt: "Rodezija",
+			ru: "Родезия"
+		},
+		rhodesia_nyasaland: {
+			en: "Rhodesia and Nyasaland",
+			lt: "Rodezija ir Njasalendas",
+			ru: "Родезия и Ньясаленд"
+		},
+		roman_republic: {
+			en: "Roman Republic",
+			lt: "Romos respublika",
+			ru: "Римская республика"
+		},
+		romania: {
+			en: "Romania",
+			lt: "Rumunija",
+			ru: "Румыния"
+		},
+		ruanda_burundi: {
+			en: "Ruanda-Burundi",
+			lt: "Ruanda-Burundis",
+			ru: "Руанда-Бурунди"
+		},
+		ruanda_urundi: {
+			en: "Ruanda-Urundi",
+			lt: "Ruanda-Urundis",
+			ru: "Руанда-Урунди"
+		},
+		russia: {
+			en: "Russia",
+			lt: "Rusija",
+			ru: "Россия"
+		},
+		russia_empire: {
+			en: "Russian Empire",
+			lt: "Rusijos Imperija",
+			ru: "Российская Империя"
+		},
+		rwanda: {
+			en: "Rwanda",
+			lt: "Ruanda",
+			ru: "Руанда"
+		},
+		ryukyu: {
+			en: "Ryukyu",
+			lt: "Riūkiū",
+			ru: "Рюкю"
+		},
+		saar: {
+			en: "Saar",
+			lt: "Saras",
+			ru: "Саар"
+		},
+		saint_helena: {
+			en: "Saint Helena",
+			lt: "Šv. Elenos sala",
+			ru: "Остров Святой Елены"
+		},
+		saint_helena_ascension: {
+			en: "Saint Helena and Ascension",
+			lt: "Šv. Elenos ir Dangun Žengimo salos",
+			ru: "Острова Святой Елены и Вознесения"
+		},
+		saint_kitts_nevis: {
+			en: "Saint Kitts and Nevis",
+			lt: "Sent Kitsas ir Nevis",
+			ru: "Сент-Китс и Невис"
+		},
+		saint_lucia: {
+			en: "Saint Lucia",
+			lt: "Sent Lusija",
+			ru: "Сент-Люсия"
+		},
+		saint_pierre_miquelon: {
+			en: "Saint-Pierre and Miquelon",
+			lt: "Sen Pjeras ir Mikelonas",
+			ru: "Сен-Пьер и Микелон"
+		},
+		saint_vincent_grenadines: {
+			en: "Saint Vincent and the Grenadines",
+			lt: "Sent Vinsentas ir Grenadinai",
+			ru: "Сент-Винсент и Гренадины"
+		},
+		salzburg: {
+			en: "Salzburg",
+			lt: "Zalcburgas",
+			ru: "Зальцбург"
+		},
+		samoa: {
+			en: "Samoa",
+			lt: "Samoa",
+			ru: "Самоа"
+		},
+		san_marino: {
+			en: "San Marino",
+			lt: "San Marinas",
+			ru: "Сан-Марино"
+		},
+		sao_tome_principe: {
+			en: "São Tomé and Príncipe",
+			lt: "San Tomė ir Prinsipė",
+			ru: "Сан-Томе и Принсипи"
+		},
+		sarawak: {
+			en: "Sarawak",
+			lt: "Saravakas",
+			ru: "Саравак"
+		},
+		sardinia: {
+			en: "Sardinia",
+			lt: "Sardinija",
+			ru: "Сардиния"
+		},
+		saudi_arabia: {
+			en: "Saudi Arabia",
+			lt: "Saudo Arabija",
+			ru: "Саудовская Аравия"
+		},
+		saxe_altenburg: {
+			en: "Saxe-Altenburg",
+			lt: "Sakse-Altenburgas",
+			ru: "Саксен-Альтенбург"
+		},
+		saxe_coburg_gotha: {
+			en: "Saxe-Coburg and Gotha",
+			lt: "Sakse-Koburgas ir Gota",
+			ru: "Саксен-Кобург-Гота"
+		},
+		saxe_gotha_altenburg: {
+			en: "Saxe-Gotha-Altenburg",
+			lt: "Saksonija-Gota-Altenburgas",
+			ru: "Саксен-Гота-Альтенбург"
+		},
+		saxe_hildburghausen: {
+			en: "Saxe-Hildburghausen",
+			lt: "Sakse-Hildburghauzenas",
+			ru: "Саксен-Гильдбурггаузен"
+		},
+		saxe_meiningen: {
+			en: "Saxe-Meiningen",
+			lt: "Sakse-Meiningenas",
+			ru: "Саксен-Мейнинген"
+		},
+		saxe_weimar_eisenach: {
+			en: "Saxe-Weimar-Eisenach",
+			lt: "Sakse-Veimaras-Eizenachas",
+			ru: "Саксен-Веймар-Эйзенах"
+		},
+		saxony: {
+			en: "Saxony",
+			lt: "Saksonija",
+			ru: "Саксония"
+		},
+		schaumburg_lippe: {
+			en: "Schaumburg-Lippe",
+			lt: "Šaumburgas-Lipė",
+			ru: "Шаумбург-Липпе"
+		},
+		schleswig_holstein: {
+			en: "Schleswig-Holstein",
+			lt: "Šlėzvigas-Holšteinas",
+			ru: "Шлезвиг-Гольштейн"
+		},
+		schwarzburg_rudolstadt: {
+			en: "Schwarzburg-Rudolstadt",
+			lt: "Švarcburgas-Rudolštatas",
+			ru: "Шварцбург-Рудольштадт"
+		},
+		schwarzburg_sondershausen: {
+			en: "Schwarzburg-Sondershausen",
+			lt: "Švarcburgas-Zondershauzenas",
+			ru: "Шварцбург-Зондерсгаузен"
+		},
+		scotland: {
+			en: "Scotland",
+			lt: "Škotija",
+			ru: "Шотландия"
+		},
+		sealand: {
+			en: "Sealand",
+			lt: "Sylandas",
+			ru: "Силенд"
+		},
+		seborga: {
+			en: "Seborga",
+			lt: "Seborga",
+			ru: "Себорга"
+		},
+		senegal: {
+			en: "Senegal",
+			lt: "Senegalas",
+			ru: "Сенегал"
+		},
+		serbia: {
+			en: "Serbia",
+			lt: "Serbija",
+			ru: "Сербия"
+		},
+		seychelles: {
+			en: "Seychelles",
+			lt: "Seišeliai",
+			ru: "Сейшелы"
+		},
+		sharjah: {
+			en: "Sharjah",
+			lt: "Šardža",
+			ru: "Шарджа"
+		},
+		sicily: {
+			en: "Sicily",
+			lt: "Sicilija",
+			ru: "Сицилия"
+		},
+		sierra_leone: {
+			en: "Sierra Leone",
+			lt: "Siera Leonė",
+			ru: "Сьерра-Леоне"
+		},
+		silesia: {
+			en: "Silesia",
+			lt: "Silezija",
+			ru: "Силезия"
+		},
+		singapore: {
+			en: "Singapore",
+			lt: "Singapūras",
+			ru: "Сингапур"
+		},
+		slovakia: {
+			en: "Slovakia",
+			lt: "Slovakija",
+			ru: "Словакия"
+		},
+		slovenia: {
+			en: "Slovenia",
+			lt: "Slovėnija",
+			ru: "Словения"
+		},
+		solomon_islands: {
+			en: "Solomon Islands",
+			lt: "Saliamono Salos",
+			ru: "Соломоновы Острова"
+		},
+		somalia: {
+			en: "Somalia",
+			lt: "Somalis",
+			ru: "Сомали"
+		},
+		somaliland: {
+			en: "Somaliland",
+			lt: "Somalilandas",
+			ru: "Сомалиленд"
+		},
+		south_africa: {
+			en: "South Africa",
+			lt: "Pietų Afrika",
+			ru: "ЮАР"
+		},
+		south_arabia: {
+			en: "South Arabia",
+			lt: "Pietų Arabija",
+			ru: "Южная Аравия"
+		},
+		south_georgia: {
+			en: "South Georgia",
+			lt: "Pietų Džordžija",
+			ru: "Южная Георгия"
+		},
+		south_korea: {
+			en: "South Korea",
+			lt: "Pietų Korėja",
+			ru: "Южная Корея"
+		},
+		south_sudan: {
+			en: "South Sudan",
+			lt: "Pietų Sudanas",
+			ru: "Южный Судан"
+		},
+		south_vietnam: {
+			en: "South Vietnam",
+			lt: "Pietų Vietnamas",
+			ru: "Южный Вьетнам"
+		},
+		south_yemen: {
+			en: "South Yemen",
+			lt: "Pietų Jemenas",
+			ru: "Южный Йемен"
+		},
+		southern_rhodesia: {
+			en: "Southern Rhodesia",
+			lt: "Pietų Rodezija",
+			ru: "Южная Родезия"
+		},
+		spain: {
+			en: "Spain",
+			lt: "Ispanija",
+			ru: "Испания"
+		},
+		spainish_provinces: {
+			en: "Spanish provinces",
+			lt: "Ispanijos provincijos",
+			ru: "Испанские провинции"
+		},
+		span_civil_war: {
+			en: "Spain - Civil war",
+			lt: "Ispanija - pilietinis karas",
+			ru: "Испания - Гражданская война"
+		},
+		spanish_netherlands: {
+			en: "Spanish Netherlands",
+			lt: "Ispanijos Nyderlandai",
+			ru: "Испанские Нидерланды"
+		},
+		spitsbergen: {
+			en: "Spitsbergen",
+			lt: "Špicbergenas",
+			ru: "Шпицберген"
+		},
+		sri_lanka: {
+			en: "Sri Lanka",
+			lt: "Šri Lanka",
+			ru: "Шри-Ланка"
+		},
+		straits_settlements: {
+			en: "Straits Settlements",
+			lt: "Sąsiaurio gyvenvietės",
+			ru: "Стрейтс Сетлментс"
+		},
+		sudan: {
+			en: "Sudan",
+			lt: "Sudanas",
+			ru: "Судан"
+		},
+		suriname: {
+			en: "Suriname",
+			lt: "Surinamas",
+			ru: "Суринам"
+		},
+		swaziland: {
+			en: "Eswatini (Swaziland)",
+			lt: "Esvatinis (Svazilandas)",
+			ru: "Эсватини (Свазиленд)"
+		},
+		sweden: {
+			en: "Sweden",
+			lt: "Švedija",
+			ru: "Швеция"
+		},
+		swiss_cantons: {
+			en: "Swiss Cantons",
+			lt: "Šveicarijos kantonai",
+			ru: "Швейцарские кантоны"
+		},
+		switzerland: {
+			en: "Switzerland",
+			lt: "Šveicarija",
+			ru: "Швейцария"
+		},
+		syria: {
+			en: "Syria",
+			lt: "Sirija",
+			ru: "Сирия"
+		},
+		taiwan: {
+			en: "Taiwan",
+			lt: "Taivanas",
+			ru: "Тайвань"
+		},
+		tajikistan: {
+			en: "Tajikistan",
+			lt: "Tadžikistanas",
+			ru: "Таджикистан"
+		},
+		tannu_tuva: {
+			en: "Tannu Tuva",
+			lt: "Tanu Tuva",
+			ru: "Танну-Тува"
+		},
+		tanzania: {
+			en: "Tanzania",
+			lt: "Tanzanija",
+			ru: "Танзания"
+		},
+		thailand: {
+			en: "Thailand",
+			lt: "Tailandas",
+			ru: "Таиланд"
+		},
+		third_reich: {
+			en: "Germany - Third Reich",
+			lt: "Trečiasis Reichas",
+			ru: "Германия - Третий рейх"
+		},
+		tibet: {
+			en: "Tibet",
+			lt: "Tibetas",
+			ru: "Тибет"
+		},
+		togo: {
+			en: "Togo",
+			lt: "Togas",
+			ru: "Того"
+		},
+		tokelau: {
+			en: "Tokelau",
+			lt: "Tokelau",
+			ru: "Токелау"
+		},
+		tonga: {
+			en: "Tonga",
+			lt: "Tonga",
+			ru: "Тонга"
+		},
+		tonk: {
+			en: "Tonk",
+			lt: "Tonkas",
+			ru: "Тонк"
+		},
+		tonkin: {
+			en: "Tonkin",
+			lt: "Tonkinas",
+			ru: "Тонкин"
+		},
+		transnistria: {
+			en: "Transnistria",
+			lt: "Padniestrė",
+			ru: "Приднестровье"
+		},
+		transylvania: {
+			en: "Transylvania",
+			lt: "Transilvanija",
+			ru: "Трансильвания"
+		},
+		travancore: {
+			en: "Travancore",
+			lt: "Travankoras",
+			ru: "Траванкор"
+		},
+		trinidad_tobago: {
+			en: "Trinidad and Tobago",
+			lt: "Trinidadas ir Tobagas",
+			ru: "Тринидад и Тобаго"
+		},
+		tristan_da_cunha: {
+			en: "Tristan da Cunha",
+			lt: "Tristanas da Kunja",
+			ru: "Тристан-да-Кунья"
+		},
+		tunisia: {
+			en: "Tunisia",
+			lt: "Tunisas",
+			ru: "Тунис"
+		},
+		turkey: {
+			en: "Turkey",
+			lt: "Turkija",
+			ru: "Турция"
+		},
+		turkmenistan: {
+			en: "Turkmenistan",
+			lt: "Turkmėnistanas",
+			ru: "Туркмения"
+		},
+		turks_caicos_islands: {
+			en: "Turks and Caicos Islands",
+			lt: "Terkso ir Kaikoso Salos",
+			ru: "Тёркс и Кайкос"
+		},
+		tuscany: {
+			en: "Tuscany",
+			lt: "Toskana",
+			ru: "Тоскана"
+		},
+		tuvalu: {
+			en: "Tuvalu",
+			lt: "Tuvalu",
+			ru: "Тувалу"
+		},
+		two_sicilies: {
+			en: "Two Sicilies",
+			lt: "Dvi Sicilijos",
+			ru: "Две Сицилии"
+		},
+		uganda: {
+			en: "Uganda",
+			lt: "Uganda",
+			ru: "Уганда"
+		},
+		ukraine: {
+			en: "Ukraine",
+			lt: "Ukraina",
+			ru: "Украина"
+		},
+		umm_al_qaiwain: {
+			en: "Umm Al Qaiwain",
+			lt: "Um al Kuvainas",
+			ru: "Умм-эль-Кайвайн"
+		},
+		united_arab_emirates: {
+			en: "United Arab Emirates",
+			lt: "Jungtiniai Arabų Emyratai",
+			ru: "ОАЭ"
+		},
+		united_kingdom: {
+			en: "United Kingdom",
+			lt: "Jungtinė Karalystė",
+			ru: "Великобритания"
+		},
+		uruguay: {
+			en: "Uruguay",
+			lt: "Urugvajus",
+			ru: "Уругвай"
+		},
+		usa: {
+			en: "USA",
+			lt: "JAV",
+			ru: "США"
+		},
+		ussr: {
+			en: "USSR",
+			lt: "TSRS",
+			ru: "СССР"
+		},
+		uzbekistan: {
+			en: "Uzbekistan",
+			lt: "Uzbekistanas",
+			ru: "Узбекистан"
+		},
+		vanuatu: {
+			en: "Vanuatu",
+			lt: "Vanuatu",
+			ru: "Вануату"
+		},
+		vatican_city: {
+			en: "Vatican City",
+			lt: "Vatikanas",
+			ru: "Ватикан"
+		},
+		venezuela: {
+			en: "Venezuela",
+			lt: "Venesuela",
+			ru: "Венесуэла"
+		},
+		venice: {
+			en: "Venice",
+			lt: "Venecija",
+			ru: "Венеция"
+		},
+		vietnam: {
+			en: "Vietnam",
+			lt: "Vietnamas",
+			ru: "Вьетнам"
+		},
+		virgin_islands_british: {
+			en: "British Virgin Islands",
+			lt: "Britų Mergelės salos",
+			ru: "Британские Виргинские острова"
+		},
+		waldeck: {
+			en: "Waldeck",
+			lt: "Valdekas",
+			ru: "Вальдек"
+		},
+		west_congo: {
+			en: "Congo Republic",
+			lt: "Kongas",
+			ru: "Республика Конго"
+		},
+		western_africa: {
+			en: "Western Africa (BCEAO)",
+			lt: "Vakarų Afrika (BCEAO)",
+			ru: "Западная Африка (BCEAO)"
+		},
+		western_sahara: {
+			en: "Western Sahara",
+			lt: "Vakarų Sachara",
+			ru: "Западная Сахара"
+		},
+		westphalia: {
+			en: "Westphalia",
+			lt: "Vestfalija",
+			ru: "Вестфалия"
+		},
+		wurttemberg: {
+			en: "Württemberg",
+			lt: "Viurtembergas",
+			ru: "Вюртемберг"
+		},
+		wurzburg: {
+			en: "Würzburg",
+			lt: "Viurcburgas",
+			ru: "Вюрцбург"
+		},
+		yemen: {
+			en: "Yemen",
+			lt: "Jemenas",
+			ru: "Йемен"
+		},
+		yugoslavia: {
+			en: "Yugoslavia",
+			lt: "Jugoslavija",
+			ru: "Югославия"
+		},
+		zaire: {
+			en: "Zaire",
+			lt: "Zairas",
+			ru: "Заир"
+		},
+		zambia: {
+			en: "Zambia",
+			lt: "Zambija",
+			ru: "Замбия"
+		},
+		zanzibar: {
+			en: "Zanzibar",
+			lt: "Zanzibaras",
+			ru: "Занзибар"
+		},
+		zar: {
+			en: "South African Republic",
+			lt: "Pietų Afrikos Respublika",
+			ru: "Южно-Африканская Республика"
+		},
+		zimbabwe: {
+			en: "Zimbabwe",
+			lt: "Zimbabvė",
+			ru: "Зимбабве"
+		}
+	}).flatMap(([e, a]) => Object.values(a).map((a) => [a, e])));
+	function za(e) {
+		return e.includes(",") && (e = e.split(",").pop()?.trim() || ""), Sa[e];
+	}
+	var _a = [
+		"lithuania",
+		"norway",
+		"russia_empire"
+	], Aa = {
+		austria: "eu",
+		belgium: "eu",
+		bulgaria: "eu",
+		croatia: "eu",
+		cyprus: "eu",
+		czech_republic: "eu",
+		denmark: "eu",
+		estonia: "eu",
+		finland: "eu",
+		france: "eu",
+		germany: "eu",
+		gibraltar: "uk",
+		guernsey: "uk",
+		hungary: "eu",
+		iceland: "eu",
+		ireland: "eu",
+		isle_of_man: "uk",
+		italy: "eu",
+		jersey: "uk",
+		latvia: "eu",
+		liechtenstein: "eu",
+		lithuania: "eu",
+		luxembourg: "eu",
+		malta: "eu",
+		netherlands: "eu",
+		norway: "eu",
+		poland: "eu",
+		portugal: "eu",
+		romania: "eu",
+		slovakia: "eu",
+		slovenia: "eu",
+		spain: "eu",
+		sweden: "eu",
+		switzerland: "eu",
+		united_kingdom: "uk"
+	};
+	function xa(e, a) {
+		const t = function(e) {
+			switch (Aa[e]) {
+				case "eu": return 3.4;
+				case "uk": return 4.69;
+				default: return 5.39;
+			}
+		}(e), n = a * (t / 100) + .35;
+		return {
+			price: a + n,
+			charges: n,
+			percents: t,
+			fixed: .35
+		};
+	}
+	var ja = {
+		afghanistan: "af",
+		"aland-islands": "ax",
+		albania: "al",
+		algeria: "dz",
+		"american-samoa": "as",
+		andorra: "ad",
+		angola: "ao",
+		anguilla: "ai",
+		antarctica: "aq",
+		"antigua-and-barbuda": "ag",
+		argentina: "ar",
+		armenia: "am",
+		aruba: "aw",
+		"ascension-and-tristan-da-cunha": "sh",
+		ascension: "sh",
+		australia: "au",
+		austria: "at",
+		azerbaijan: "az",
+		bahamas: "bs",
+		bahrain: "bh",
+		bangladesh: "bd",
+		barbados: "bb",
+		belarus: "by",
+		belgium: "be",
+		belize: "bz",
+		benin: "bj",
+		bermuda: "bm",
+		bhutan: "bt",
+		bolivia: "bo",
+		bonaire: "bq",
+		"bosnia-and-herzegovina": "ba",
+		botswana: "bw",
+		"bouvet-island": "bv",
+		brazil: "br",
+		"british-indian-ocean-territory": "io",
+		"british-virgin-islands": "vg",
+		brunei: "bn",
+		bulgaria: "bg",
+		"burkina-faso": "bf",
+		burundi: "bi",
+		"cabo-verde": "cv",
+		caicos: "tc",
+		cambodia: "kh",
+		cameroon: "cm",
+		canada: "ca",
+		"cayman-islands": "ky",
+		"central-african-republic": "cf",
+		chad: "td",
+		chile: "cl",
+		china: "cn",
+		"christmas-island": "cx",
+		"cocos-islands": "cc",
+		"cocos-keeling-islands": "cc",
+		colombia: "co",
+		comoros: "km",
+		"congo-democratic-republic": "cd",
+		"congo-dr": "cd",
+		congo: "cg",
+		"cook-islands": "ck",
+		"costa-rica": "cr",
+		"cote-d-ivoire": "ci",
+		"cote-divoire": "ci",
+		croatia: "hr",
+		cuba: "cu",
+		curacao: "cw",
+		cyprus: "cy",
+		czechia: "cz",
+		denmark: "dk",
+		djibouti: "dj",
+		dominica: "dm",
+		"dominican-republic": "do",
+		ecuador: "ec",
+		egypt: "eg",
+		"el-salvador": "sv",
+		"equatorial-guinea": "gq",
+		eritrea: "er",
+		estonia: "ee",
+		eswatini: "sz",
+		ethiopia: "et",
+		"falkland-islands": "fk",
+		"faroe-islands": "fo",
+		fiji: "fj",
+		finland: "fi",
+		france: "fr",
+		"french-guiana": "gf",
+		"french-polynesia": "pf",
+		"french-southern-territories": "tf",
+		gabon: "ga",
+		gambia: "gm",
+		georgia: "ge",
+		germany: "de",
+		ghana: "gh",
+		gibraltar: "gi",
+		"great-britain": "gb",
+		greece: "gr",
+		greenland: "gl",
+		grenada: "gd",
+		guadeloupe: "gp",
+		guam: "gu",
+		guatemala: "gt",
+		guernsey: "gg",
+		"guinea-bissau": "gw",
+		guinea: "gn",
+		guyana: "gy",
+		haiti: "ht",
+		"heard-island-and-mc-donald-islands": "hm",
+		"heard-island": "hm",
+		"holy-see": "va",
+		honduras: "hn",
+		"hong-kong": "hk",
+		hungary: "hu",
+		iceland: "is",
+		india: "in",
+		indonesia: "id",
+		iran: "ir",
+		iraq: "iq",
+		ireland: "ie",
+		"isle-of-man": "im",
+		israel: "il",
+		italy: "it",
+		jamaica: "jm",
+		"jan-mayen": "sj",
+		japan: "jp",
+		jersey: "je",
+		jordan: "jo",
+		kazakhstan: "kz",
+		"keeling-islands": "cc",
+		kenya: "ke",
+		kiribati: "ki",
+		"korea-democratic-peoples-republic": "kp",
+		"korea-dr": "kp",
+		"korea-republic": "kr",
+		kuwait: "kw",
+		kyrgyzstan: "kg",
+		"lao-peoples-democratic-republic": "la",
+		laos: "la",
+		latvia: "lv",
+		lebanon: "lb",
+		lesotho: "ls",
+		liberia: "lr",
+		libya: "ly",
+		liechtenstein: "li",
+		lithuania: "lt",
+		luxembourg: "lu",
+		macao: "mo",
+		madagascar: "mg",
+		malawi: "mw",
+		malaysia: "my",
+		maldives: "mv",
+		mali: "ml",
+		malta: "mt",
+		malvinas: "fk",
+		"marshall-islands": "mh",
+		martinique: "mq",
+		mauritania: "mr",
+		mauritius: "mu",
+		mayotte: "yt",
+		"mc-donald-islands": "hm",
+		mexico: "mx",
+		"micronesia-federated-states": "fm",
+		micronesia: "fm",
+		moldova: "md",
+		monaco: "mc",
+		mongolia: "mn",
+		montenegro: "me",
+		montserrat: "ms",
+		morocco: "ma",
+		mozambique: "mz",
+		myanmar: "mm",
+		namibia: "na",
+		nauru: "nr",
+		nepal: "np",
+		netherlands: "nl",
+		"new-caledonia": "nc",
+		"new-zealand": "nz",
+		nicaragua: "ni",
+		niger: "ne",
+		nigeria: "ng",
+		niue: "nu",
+		"norfolk-island": "nf",
+		"north-korea": "kp",
+		macedonia: "mk",
+		"north-macedonia": "mk",
+		"northern-mariana-islands": "mp",
+		norway: "no",
+		oman: "om",
+		pakistan: "pk",
+		palau: "pw",
+		palestine: "ps",
+		panama: "pa",
+		"papua-new-guinea": "pg",
+		paraguay: "py",
+		peru: "pe",
+		philippines: "ph",
+		pitcairn: "pn",
+		poland: "pl",
+		portugal: "pt",
+		principe: "st",
+		"puerto-rico": "pr",
+		qatar: "qa",
+		reunion: "re",
+		romania: "ro",
+		russia: "ru",
+		rwanda: "rw",
+		"saint-barthelemy": "bl",
+		"saint-helena, ascension-and-tristan-da-cunha": "sh",
+		"saint-helena": "sh",
+		"saint-kitts-and-nevis": "kn",
+		"saint-lucia": "lc",
+		"saint-martin-french-part": "mf",
+		"saint-martin": "mf",
+		"saint-pierre-and-miquelon": "pm",
+		"saint-vincent-and-the-grenadines": "vc",
+		samoa: "ws",
+		"san-marino": "sm",
+		"sao-tome-and-principe": "st",
+		"sao-tome": "st",
+		"saudi-arabia": "sa",
+		senegal: "sn",
+		serbia: "rs",
+		seychelles: "sc",
+		"sierra-leone": "sl",
+		singapore: "sg",
+		"sint-eustatius-and-saba": "bq",
+		"sint-maarten-dutch-part": "sx",
+		"sint-maarten": "sx",
+		slovakia: "sk",
+		slovenia: "si",
+		"solomon-islands": "sb",
+		somalia: "so",
+		"south-africa": "za",
+		"south-georgia-and-the-south-sandwich-islands": "gs",
+		"south-georgia": "gs",
+		"south-korea": "kr",
+		"south-sandwich": "gs",
+		"south-sudan": "ss",
+		spain: "es",
+		"sri-lanka": "lk",
+		sudan: "sd",
+		suriname: "sr",
+		"svalbard-and-jan-mayen": "sj",
+		svalbard: "sj",
+		sweden: "se",
+		switzerland: "ch",
+		"syrian-arab-republic": "sy",
+		taiwanchina: "tw",
+		tajikistan: "tj",
+		tanzania: "tz",
+		thailand: "th",
+		"timor-leste": "tl",
+		togo: "tg",
+		tokelau: "tk",
+		tonga: "to",
+		"trinidad-and-tobago": "tt",
+		"tristan-da-cunha": "sh",
+		tunisia: "tn",
+		turkiye: "tr",
+		turkmenistan: "tm",
+		"turks-and-caicos-islands": "tc",
+		turks: "tc",
+		tuvalu: "tv",
+		uganda: "ug",
+		ukraine: "ua",
+		"united-arab-emirates": "ae",
+		"united-kingdom": "gb",
+		"united-states-minor-outlying-islands": "um",
+		"united-states-of-america": "us",
+		"united-states": "us",
+		uruguay: "uy",
+		"us-virgin-islands": "vi",
+		usa: "us",
+		uzbekistan: "uz",
+		vanuatu: "vu",
+		venezuela: "ve",
+		"viet-nam": "vn",
+		vietnam: "vn",
+		"virgin-islands-british": "vg",
+		"virgin-islands-us": "vi",
+		"wallis-and-futuna": "wf",
+		"western-sahara": "eh",
+		yemen: "ye",
+		zambia: "zm",
+		zimbabwe: "zw"
+	}, qa = {
+		al: {
+			20: 3.9,
+			50: 4.2,
+			100: 4.8,
+			500: 9.5,
+			1e3: 15.55,
+			2e3: 27.5
+		},
+		dz: {
+			20: 3.2,
+			50: 3.65,
+			100: 4.5,
+			500: 11,
+			1e3: 19.4,
+			2e3: 35.95
+		},
+		as: {
+			20: 6.35,
+			50: 6.65,
+			100: 7.15,
+			500: 11.3,
+			1e3: 16.65,
+			2e3: 27.15
+		},
+		ad: {
+			20: 4.35,
+			50: 4.65,
+			100: 5.2,
+			500: 9.45,
+			1e3: 15,
+			2e3: 25.9
+		},
+		ao: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		ai: {
+			20: 3.25,
+			50: 3.95,
+			100: 5.2,
+			500: 15.05,
+			1e3: 27.5,
+			2e3: 52.3
+		},
+		ag: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.9,
+			500: 13.1,
+			1e3: 23.6,
+			2e3: 44.3
+		},
+		ar: {
+			20: 3.2,
+			50: 3.7,
+			100: 4.6,
+			500: 11.6,
+			1e3: 20.55,
+			2e3: 38.25
+		},
+		am: {
+			20: 3.9,
+			50: 4.25,
+			100: 4.85,
+			500: 9.8,
+			1e3: 16.15,
+			2e3: 28.65
+		},
+		aw: {
+			20: 4.6,
+			50: 5.15,
+			100: 6.15,
+			500: 14.05,
+			1e3: 24.1,
+			2e3: 44.05
+		},
+		au: {
+			20: 3.45,
+			50: 4.25,
+			100: 5.7,
+			250: 11.85,
+			500: 11.85,
+			1e3: 24.1,
+			1500: 37.15,
+			2e3: 49.15
+		},
+		at: {
+			20: 5.81,
+			50: 5.87,
+			100: 5.93,
+			250: 6.29,
+			500: 6.29,
+			1e3: 7.25,
+			1500: 8.71,
+			2e3: 8.55
+		},
+		az: {
+			20: 3.1,
+			50: 3.4,
+			100: 3.95,
+			500: 8.35,
+			1e3: 14.1,
+			2e3: 25.35
+		},
+		bs: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.9,
+			500: 13.1,
+			1e3: 23.6,
+			2e3: 44.3
+		},
+		bh: {
+			20: 3.1,
+			50: 3.45,
+			100: 4.05,
+			500: 9,
+			1e3: 15.35,
+			2e3: 27.85
+		},
+		bd: {
+			20: 3.2,
+			50: 3.7,
+			100: 4.55,
+			500: 11.45,
+			1e3: 20.25,
+			2e3: 37.7
+		},
+		bb: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.9,
+			500: 13.1,
+			1e3: 23.6,
+			2e3: 44.3
+		},
+		by: {
+			20: 3.05,
+			50: 3.3,
+			100: 3.8,
+			500: 7.75,
+			1e3: 12.8,
+			2e3: 22.8
+		},
+		be: {
+			20: 4.17,
+			50: 4.3,
+			100: 4.6,
+			250: 5.81,
+			500: 5.69,
+			1e3: 9.5,
+			1500: 13.79,
+			2e3: 14.9
+		},
+		bz: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		bj: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.75,
+			500: 12.45,
+			1e3: 22.3,
+			2e3: 41.8
+		},
+		bm: {
+			20: 3.35,
+			50: 4.05,
+			100: 5.3,
+			500: 15.15,
+			1e3: 27.65,
+			2e3: 52.45
+		},
+		bo: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.8,
+			500: 12.5,
+			1e3: 22.4,
+			2e3: 41.95
+		},
+		ba: {
+			20: 3.1,
+			50: 3.45,
+			100: 4.05,
+			500: 8.9,
+			1e3: 15.1,
+			2e3: 27.4
+		},
+		bw: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.8,
+			500: 12.65,
+			1e3: 22.65,
+			2e3: 42.5
+		},
+		br: {
+			20: 3.15,
+			50: 3.6,
+			100: 4.4,
+			250: 8.4,
+			500: 8.4,
+			1e3: 18.7,
+			1500: 30.85,
+			2e3: 34.55
+		},
+		bn: {
+			20: 3.2,
+			50: 3.65,
+			100: 4.45,
+			500: 10.8,
+			1e3: 18.95,
+			2e3: 35.05
+		},
+		bg: {
+			20: 1.82,
+			50: 2,
+			100: 2.3,
+			250: 4.17,
+			500: 4.17,
+			1e3: 10.1,
+			1500: 16.88,
+			2e3: 18.9
+		},
+		bf: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		bi: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		kh: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.8,
+			500: 12.6,
+			1e3: 22.55,
+			2e3: 42.25
+		},
+		cm: {
+			20: 3.25,
+			50: 3.75,
+			100: 4.7,
+			500: 12.1,
+			1e3: 21.5,
+			2e3: 40.2
+		},
+		ca: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.9,
+			250: 9.3,
+			500: 9.3,
+			1e3: 22.15,
+			1500: 36,
+			2e3: 44.45
+		},
+		cv: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.85,
+			500: 12.95,
+			1e3: 23.3,
+			2e3: 43.8
+		},
+		cf: {
+			20: 3.25,
+			50: 3.9,
+			100: 4.95,
+			500: 13.3,
+			1e3: 23.95,
+			2e3: 45.05
+		},
+		td: {
+			20: 3.25,
+			50: 3.9,
+			100: 4.95,
+			500: 13.3,
+			1e3: 23.95,
+			2e3: 45.05
+		},
+		cl: {
+			20: 3.3,
+			50: 3.9,
+			100: 4.95,
+			500: 13.4,
+			1e3: 24.15,
+			2e3: 45.5
+		},
+		cn: {
+			20: 2.5,
+			50: 2.8,
+			100: 3.5,
+			250: 6.15,
+			500: 6.15,
+			1e3: 14.9,
+			1500: 24.35,
+			2e3: 29.8
+		},
+		cx: {
+			20: 3.4,
+			50: 4.25,
+			100: 5.65,
+			500: 17,
+			1e3: 31.35,
+			2e3: 59.85
+		},
+		cc: {
+			20: 3.4,
+			50: 4.25,
+			100: 5.65,
+			500: 17,
+			1e3: 31.35,
+			2e3: 59.85
+		},
+		co: {
+			20: 4,
+			50: 4.55,
+			100: 5.45,
+			500: 12.8,
+			1e3: 22.15,
+			2e3: 40.7
+		},
+		km: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.8,
+			500: 12.65
+		},
+		cg: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		cd: {
+			20: 3.25,
+			50: 3.9,
+			100: 4.95,
+			500: 13.3,
+			1e3: 23.95,
+			2e3: 45.05
+		},
+		ck: {
+			20: 3.45,
+			50: 4.35,
+			100: 5.85,
+			500: 17.95,
+			1e3: 33.25,
+			2e3: 63.6
+		},
+		cr: {
+			20: 3.15,
+			50: 3.6,
+			100: 4.35,
+			500: 10.3,
+			1e3: 18,
+			2e3: 33.15
+		},
+		ci: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.7,
+			500: 12,
+			1e3: 21.4,
+			2e3: 40
+		},
+		hr: {
+			20: 2.6,
+			50: 2.9,
+			100: 3.75,
+			250: 7.02,
+			500: 6.05,
+			1e3: 8.3,
+			1500: 29.28,
+			2e3: 12.65
+		},
+		cu: {
+			20: 3.2,
+			50: 3.65,
+			100: 4.45,
+			500: 10.95,
+			1e3: 19.25,
+			2e3: 35.65
+		},
+		cy: {
+			20: 3.85,
+			50: 4.15,
+			100: 4.7,
+			250: 8.05,
+			500: 7.87,
+			1e3: 14.3,
+			1500: 25.77,
+			2e3: 24.95
+		},
+		cz: {
+			20: 3.75,
+			50: 3.87,
+			100: 4.11,
+			250: 4.96,
+			500: 4.9,
+			1e3: 7.5,
+			1500: 10.95,
+			2e3: 11.15
+		},
+		dk: {
+			20: 5.81,
+			50: 5.87,
+			100: 5.99,
+			250: 6.59,
+			500: 6.53,
+			1e3: 8.05,
+			1500: 10.47,
+			2e3: 10.25
+		},
+		dj: {
+			20: 3.25,
+			50: 3.9,
+			100: 4.95,
+			500: 13.3,
+			1e3: 23.95,
+			2e3: 45.05
+		},
+		dm: {
+			20: 3.35,
+			50: 4.05,
+			100: 5.3,
+			500: 15.1,
+			1e3: 27.6,
+			2e3: 52.35
+		},
+		do: {
+			20: 3.5,
+			50: 3.95,
+			100: 4.95,
+			250: 8.65,
+			500: 8.65,
+			1e3: 20.8,
+			1500: 33.9,
+			2e3: 40.65
+		},
+		ec: {
+			20: 3.3,
+			50: 3.95,
+			100: 5.1,
+			500: 14.05,
+			1e3: 25.5,
+			2e3: 48.1
+		},
+		eg: {
+			20: 3.9,
+			50: 4.25,
+			100: 4.85,
+			500: 9.8,
+			1e3: 16.15,
+			2e3: 28.65
+		},
+		sv: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.8,
+			500: 12.6,
+			1e3: 22.6,
+			2e3: 42.35
+		},
+		gq: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.9,
+			500: 13.1,
+			1e3: 23.6,
+			2e3: 44.3
+		},
+		er: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		ee: {
+			20: 4.05,
+			50: 4.17,
+			100: 4.36,
+			250: 5.14,
+			500: 5.14,
+			1e3: 7.55,
+			1500: 10.59,
+			2e3: 11.05
+		},
+		et: {
+			20: 3.2,
+			50: 3.65,
+			100: 4.5,
+			500: 11.15,
+			1e3: 19.65,
+			2e3: 36.5
+		},
+		fk: {
+			20: 3.4,
+			50: 4.2,
+			100: 5.6,
+			500: 16.75,
+			1e3: 30.8,
+			2e3: 58.8
+		},
+		fo: {
+			20: 5.4,
+			50: 5.85,
+			100: 6.65,
+			500: 13.05,
+			1e3: 21.15,
+			2e3: 37.25
+		},
+		fj: {
+			20: 3.4,
+			50: 4.25,
+			100: 5.65,
+			500: 16.9,
+			1e3: 31.15,
+			2e3: 59.5
+		},
+		fi: {
+			20: 5.93,
+			50: 5.99,
+			100: 6.11,
+			500: 6.66,
+			1e3: 8.29,
+			1500: 10.29,
+			2e3: 10.7
+		},
+		fr: {
+			20: 5.38,
+			50: 5.45,
+			100: 5.57,
+			500: 6.05,
+			1e3: 7.5,
+			2e3: 9.4
+		},
+		gf: {
+			20: 4.5,
+			50: 4.85,
+			100: 5.55,
+			500: 10.95,
+			1e3: 17.85,
+			2e3: 31.55
+		},
+		pf: {
+			20: 3.5,
+			50: 4.5,
+			100: 6.15,
+			500: 19.35,
+			1e3: 36.05,
+			2e3: 69.25
+		},
+		ga: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		gm: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		ge: {
+			20: 3.9,
+			50: 4.2,
+			100: 4.75,
+			500: 9.25,
+			1e3: 15.1,
+			2e3: 26.55
+		},
+		de: {
+			20: 5.08,
+			50: 5.14,
+			100: 5.26,
+			250: 5.75,
+			500: 5.69,
+			1e3: 7.2,
+			1500: 9,
+			2e3: 9.4
+		},
+		gh: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.85,
+			500: 12.75,
+			1e3: 22.85,
+			2e3: 42.9
+		},
+		gi: {
+			20: 2.55,
+			50: 2.95,
+			100: 3.85,
+			250: 7.15,
+			500: 7.15,
+			1e3: 18.15,
+			1500: 29.9,
+			2e3: 36.15
+		},
+		gr: {
+			20: 3.99,
+			50: 4.11,
+			100: 4.36,
+			250: 5.45,
+			500: 5.38,
+			1e3: 8.89,
+			1500: 12.89,
+			2e3: 15.85
+		},
+		gl: {
+			20: 5.55,
+			50: 6.25,
+			100: 7.45,
+			500: 16.85,
+			1e3: 28.85,
+			2e3: 52.65
+		},
+		gd: {
+			20: 3.35,
+			50: 4.05,
+			100: 5.3,
+			500: 15.1,
+			1e3: 27.6,
+			2e3: 52.35
+		},
+		gp: {
+			20: 5.2,
+			50: 5.65,
+			100: 6.55,
+			500: 13.3,
+			1e3: 22,
+			2e3: 39.2
+		},
+		gu: {
+			20: 6.35,
+			50: 6.65,
+			100: 7.15,
+			500: 11.3,
+			1e3: 16.65,
+			2e3: 27.15
+		},
+		gt: {
+			20: 3.25,
+			50: 3.9,
+			100: 4.95,
+			500: 13.3,
+			1e3: 23.95,
+			2e3: 45.05
+		},
+		gn: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		gw: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		gy: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		ht: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		va: {
+			20: 3.2,
+			50: 3.7,
+			100: 4.6,
+			500: 11.5,
+			1e3: 20.4,
+			2e3: 37.95
+		},
+		hn: {
+			20: 4.05,
+			50: 4.65,
+			100: 5.7,
+			500: 13.9,
+			1e3: 24.35,
+			2e3: 45.1
+		},
+		hk: {
+			20: 2.5,
+			50: 2.85,
+			100: 3.6,
+			250: 6.4,
+			500: 6.4,
+			1e3: 15.75,
+			1500: 25.8,
+			2e3: 31.3
+		},
+		hu: {
+			20: 3.93,
+			50: 4.05,
+			100: 4.24,
+			250: 5.14,
+			500: 5.08,
+			1e3: 7.55,
+			1500: 11.13,
+			2e3: 11.1
+		},
+		is: {
+			20: 5.95,
+			50: 6,
+			100: 6.1,
+			250: 6.45,
+			500: 6.45,
+			1e3: 7.6,
+			1500: 8.9,
+			2e3: 9.75
+		},
+		in: {
+			20: 3.1,
+			50: 3.4,
+			100: 3.95,
+			500: 8.3,
+			1e3: 14,
+			2e3: 25.15
+		},
+		id: {
+			20: 3.45,
+			50: 3.8,
+			100: 4.65,
+			250: 7.75,
+			500: 7.75,
+			1e3: 17.7,
+			1500: 29.05,
+			2e3: 31.8
+		},
+		ir: {
+			20: 3.15,
+			50: 3.55,
+			100: 4.25,
+			500: 9.85,
+			1e3: 17.05,
+			2e3: 31.25
+		},
+		iq: {
+			20: 3.15,
+			50: 3.55,
+			100: 4.25,
+			500: 9.85,
+			1e3: 17.05,
+			2e3: 31.25
+		},
+		ie: {
+			20: 6.65,
+			50: 6.7,
+			100: 6.9,
+			250: 7.99,
+			500: 7.93,
+			1e3: 9.65,
+			1500: 13.07,
+			2e3: 12.7
+		},
+		il: {
+			20: 3.15,
+			50: 3.55,
+			100: 4.25,
+			250: 7.5,
+			500: 7.5,
+			1e3: 16.45,
+			1500: 26.1,
+			2e3: 31.05
+		},
+		it: {
+			20: 6.3,
+			50: 6.35,
+			100: 6.45,
+			250: 7.32,
+			500: 7.26,
+			1e3: 8.85,
+			1500: 11.19,
+			2e3: 11.5
+		},
+		jm: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		jp: {
+			20: 3.9,
+			50: 4.35,
+			100: 5.3,
+			250: 9.1,
+			500: 9.1,
+			1e3: 20.35,
+			1500: 34.85,
+			2e3: 37.1
+		},
+		jo: {
+			20: 3.9,
+			50: 4.25,
+			100: 4.85,
+			500: 9.7,
+			1e3: 15.95,
+			2e3: 28.25
+		},
+		kz: {
+			20: 3.1,
+			50: 3.45,
+			100: 4.1,
+			500: 9.2,
+			1e3: 15.8,
+			2e3: 28.75
+		},
+		ke: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		ki: {
+			20: 4.2,
+			50: 5.05,
+			100: 6.45,
+			500: 17.75,
+			1e3: 32.1,
+			2e3: 60.6
+		},
+		kp: {
+			20: 5.05,
+			50: 5.4,
+			100: 6,
+			500: 10.9,
+			1e3: 17.2,
+			2e3: 29.65
+		},
+		kr: {
+			20: 2.5,
+			50: 2.8,
+			100: 3.5,
+			250: 6.2,
+			500: 6.2,
+			1e3: 15,
+			1500: 24.55,
+			2e3: 29.6
+		},
+		kw: {
+			20: 3.1,
+			50: 3.5,
+			100: 4.15,
+			500: 9.35,
+			1e3: 16.1,
+			2e3: 29.35
+		},
+		kg: {
+			20: 3.1,
+			50: 3.5,
+			100: 4.15,
+			500: 9.3,
+			1e3: 15.95,
+			2e3: 29.1
+		},
+		la: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.9,
+			500: 13.1,
+			1e3: 23.6,
+			2e3: 44.3
+		},
+		lv: {
+			20: 3.99,
+			50: 4.11,
+			100: 4.3,
+			250: 5.08,
+			500: 5.02,
+			1e3: 7.4,
+			1500: 10.53,
+			2e3: 10.8
+		},
+		lb: {
+			20: 3.85,
+			50: 4.15,
+			100: 5,
+			250: 8.05,
+			500: 8.05,
+			1e3: 18.05,
+			1500: 28.9,
+			2e3: 33.7
+		},
+		ls: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.75,
+			500: 12.5,
+			1e3: 22.35,
+			2e3: 41.85
+		},
+		lr: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		ly: {
+			20: 3.2,
+			50: 3.65,
+			100: 4.45,
+			500: 10.8,
+			1e3: 18.95,
+			2e3: 35.1
+		},
+		li: {
+			20: 3.1,
+			50: 3.5,
+			100: 4.15,
+			500: 9.45,
+			1e3: 16.25,
+			2e3: 29.7
+		},
+		lt: {
+			50: 1.8,
+			500: 2.05,
+			2e3: 2.35
+		},
+		lu: {
+			20: 5.26,
+			50: 5.32,
+			100: 5.38,
+			250: 5.81,
+			500: 5.81,
+			1e3: 7.02,
+			1500: 8.59,
+			2e3: 8.75
+		},
+		mo: {
+			20: 4.15,
+			50: 4.85,
+			100: 6.15,
+			500: 16.15,
+			1e3: 28.85,
+			2e3: 54.05
+		},
+		mg: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		mw: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.8,
+			500: 12.75,
+			1e3: 22.8,
+			2e3: 42.8
+		},
+		my: {
+			20: 2.5,
+			50: 2.85,
+			100: 3.6,
+			250: 6.55,
+			500: 6.55,
+			1e3: 16.15,
+			1500: 26.5,
+			2e3: 30.25
+		},
+		mv: {
+			20: 3.25,
+			50: 3.9,
+			100: 4.95,
+			500: 13.3,
+			1e3: 23.95,
+			2e3: 45.05
+		},
+		ml: {
+			20: 3.25,
+			50: 3.75,
+			100: 4.7,
+			500: 12.05,
+			1e3: 21.5,
+			2e3: 40.15
+		},
+		mt: {
+			20: 3.95,
+			50: 4.3,
+			100: 5.05,
+			250: 8.65,
+			500: 8.47,
+			1e3: 17.8,
+			1500: 29.16,
+			2e3: 31.95
+		},
+		mh: {
+			20: 6.35,
+			50: 6.65,
+			100: 7.15,
+			500: 11.3,
+			1e3: 16.65,
+			2e3: 27.15
+		},
+		mr: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		mu: {
+			20: 3.1,
+			50: 3.4,
+			100: 4,
+			500: 8.75,
+			1e3: 14.8,
+			2e3: 26.8
+		},
+		yt: {
+			20: 5.2,
+			50: 5.65,
+			100: 6.55,
+			500: 13.3,
+			1e3: 22,
+			2e3: 39.2
+		},
+		mx: {
+			20: 3.8,
+			50: 4.15,
+			100: 4.95,
+			250: 8,
+			500: 8,
+			1e3: 17.95,
+			1500: 28.65,
+			2e3: 34.5
+		},
+		fm: {
+			20: 6.35,
+			50: 6.65,
+			100: 7.15,
+			500: 11.3,
+			1e3: 16.65,
+			2e3: 27.15
+		},
+		md: {
+			20: 3.05,
+			50: 3.35,
+			100: 3.9,
+			500: 8.2,
+			1e3: 13.75,
+			2e3: 24.7
+		},
+		mc: {
+			20: 4.9,
+			50: 4.9,
+			100: 5,
+			500: 5.65,
+			1e3: 6.7,
+			2e3: 8.6
+		},
+		mn: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.85,
+			500: 12.9,
+			1e3: 23.15,
+			2e3: 43.45
+		},
+		ms: {
+			20: 3.4,
+			50: 4.15,
+			100: 5.5,
+			500: 16.15,
+			1e3: 29.65,
+			2e3: 56.5
+		},
+		ma: {
+			20: 3.15,
+			50: 3.55,
+			100: 4.3,
+			500: 10.05,
+			1e3: 17.4,
+			2e3: 32
+		},
+		mz: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.9,
+			500: 13.05,
+			1e3: 23.5,
+			2e3: 44.15
+		},
+		mm: {
+			20: 3.2,
+			50: 3.7,
+			100: 4.55,
+			500: 11.45,
+			1e3: 20.25,
+			2e3: 37.7
+		},
+		na: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.75,
+			500: 12.5,
+			1e3: 22.35,
+			2e3: 41.85
+		},
+		nr: {
+			20: 3.75,
+			50: 5.1,
+			100: 7.4,
+			500: 25.7,
+			1e3: 48.75,
+			2e3: 94.7
+		},
+		np: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		nl: {
+			20: 4.3,
+			50: 4.45,
+			100: 4.7,
+			250: 5.99,
+			500: 5.93,
+			1e3: 9.5,
+			1500: 13.61,
+			2e3: 15.05
+		},
+		nc: {
+			20: 3.5,
+			50: 4.5,
+			100: 6.15,
+			500: 19.35,
+			1e3: 36.05,
+			2e3: 69.25
+		},
+		nz: {
+			20: 4,
+			50: 4.5,
+			100: 5.65,
+			250: 10.1,
+			500: 10.1,
+			1e3: 24.7,
+			1500: 40.35,
+			2e3: 47.8
+		},
+		ni: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		ne: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		ng: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		nu: {
+			20: 3.5,
+			50: 4.4,
+			100: 5.95,
+			500: 18.35,
+			1e3: 34.1,
+			2e3: 65.35
+		},
+		nf: {
+			20: 3.4,
+			50: 4.25,
+			100: 5.65,
+			500: 17,
+			1e3: 31.35,
+			2e3: 59.85
+		},
+		mk: {
+			20: 3.1,
+			50: 3.4,
+			100: 4,
+			500: 8.5,
+			1e3: 14.4,
+			2e3: 25.95
+		},
+		mp: {
+			20: 6.35,
+			50: 6.65,
+			100: 7.15,
+			500: 11.3,
+			1e3: 16.65,
+			2e3: 27.15
+		},
+		no: {
+			20: 5.15,
+			50: 5.25,
+			100: 5.4,
+			250: 6,
+			500: 6,
+			1e3: 8,
+			1500: 10.25,
+			2e3: 11.5
+		},
+		om: {
+			20: 3.15,
+			50: 3.55,
+			100: 4.3,
+			500: 10.05,
+			1e3: 17.45,
+			2e3: 32.05
+		},
+		pk: {
+			20: 3.1,
+			50: 3.4,
+			100: 4,
+			500: 8.75,
+			1e3: 14.8,
+			2e3: 26.8
+		},
+		pw: {
+			20: 6.35,
+			50: 6.65,
+			100: 7.15,
+			500: 11.3,
+			1e3: 16.65,
+			2e3: 27.15
+		},
+		pa: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		pg: {
+			20: 3.45,
+			50: 4.35,
+			100: 5.95,
+			500: 18.25,
+			1e3: 33.9,
+			2e3: 64.95
+		},
+		py: {
+			20: 4,
+			50: 4.55,
+			100: 5.45,
+			500: 12.8,
+			1e3: 22.15,
+			2e3: 40.65
+		},
+		pe: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.9,
+			500: 13.05,
+			1e3: 23.45,
+			2e3: 44.1
+		},
+		ph: {
+			20: 3.1,
+			50: 3.45,
+			100: 4.15,
+			500: 9.25,
+			1e3: 15.85,
+			2e3: 28.9
+		},
+		pn: {
+			20: 3.3,
+			50: 3.95,
+			100: 5.05,
+			500: 13.95,
+			1e3: 25.3,
+			2e3: 47.8
+		},
+		pl: {
+			20: 4.15,
+			50: 4.25,
+			100: 4.45,
+			250: 5.51,
+			500: 5.45,
+			1e3: 7.9,
+			1500: 11.98,
+			2e3: 11.75
+		},
+		pt: {
+			20: 4.3,
+			50: 4.42,
+			100: 4.72,
+			250: 5.75,
+			500: 5.69,
+			1e3: 9.08,
+			1500: 13.01,
+			2e3: 14.95
+		},
+		pr: {
+			20: 6.35,
+			50: 6.65,
+			100: 7.15,
+			500: 11.3,
+			1e3: 16.65,
+			2e3: 27.15
+		},
+		qa: {
+			20: 3.15,
+			50: 3.6,
+			100: 4.35,
+			500: 10.4,
+			1e3: 18.15,
+			2e3: 33.45
+		},
+		re: {
+			20: 4.5,
+			50: 4.85,
+			100: 5.55,
+			500: 10.95,
+			1e3: 17.85,
+			2e3: 31.55
+		},
+		ro: {
+			20: 3.45,
+			50: 3.57,
+			100: 3.69,
+			250: 4.6,
+			500: 4.6,
+			1e3: 7.5,
+			1500: 10.77,
+			2e3: 12.4
+		},
+		ru: {
+			20: 3.8,
+			50: 4.05,
+			100: 4.7,
+			250: 7.25,
+			500: 7.25,
+			1e3: 14.45,
+			1500: 24.6,
+			2e3: 25.3
+		},
+		rw: {
+			20: 3.2,
+			50: 3.65,
+			100: 4.45,
+			500: 10.9,
+			1e3: 19.1,
+			2e3: 35.4
+		},
+		kn: {
+			20: 3.35,
+			50: 4.05,
+			100: 5.3,
+			500: 15.1,
+			1e3: 27.6,
+			2e3: 52.35
+		},
+		lc: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		pm: {
+			20: 5.2,
+			50: 5.65,
+			100: 6.55,
+			500: 13.3,
+			1e3: 22,
+			2e3: 39.2
+		},
+		vc: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.9,
+			500: 13.05,
+			1e3: 23.4,
+			2e3: 44
+		},
+		ws: {
+			20: 3.4,
+			50: 4.25,
+			100: 5.65,
+			500: 17,
+			1e3: 31.3,
+			2e3: 59.8
+		},
+		sm: {
+			20: 3.2,
+			50: 3.65,
+			100: 4.5,
+			500: 11.2,
+			1e3: 19.75,
+			2e3: 36.7
+		},
+		st: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.75,
+			500: 12.35,
+			1e3: 22,
+			2e3: 41.2
+		},
+		sa: {
+			20: 3.15,
+			50: 3.55,
+			100: 4.25,
+			250: 7.3,
+			500: 7.3,
+			1e3: 16.6,
+			1500: 26.65,
+			2e3: 31.2
+		},
+		sn: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		sc: {
+			20: 3.2,
+			50: 3.65,
+			100: 4.5,
+			500: 11.25,
+			1e3: 19.85,
+			2e3: 36.9
+		},
+		sl: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		sg: {
+			20: 2.5,
+			50: 2.75,
+			100: 3.4,
+			250: 5.9,
+			500: 5.9,
+			1e3: 14.15,
+			1500: 23,
+			2e3: 28
+		},
+		sk: {
+			20: 3.93,
+			50: 4.05,
+			100: 4.3,
+			250: 5.38,
+			500: 5.32,
+			1e3: 8.83,
+			1500: 12.89,
+			2e3: 14.45
+		},
+		si: {
+			20: 4.24,
+			50: 4.3,
+			100: 4.6,
+			250: 5.57,
+			500: 5.51,
+			1e3: 8.71,
+			1500: 12.4,
+			2e3: 14.15
+		},
+		sb: {
+			20: 3.4,
+			50: 4.25,
+			100: 5.65,
+			500: 17,
+			1e3: 31.3,
+			2e3: 59.8
+		},
+		za: {
+			20: 3.2,
+			50: 3.7,
+			100: 4.55,
+			250: 8.1,
+			500: 8.1,
+			1e3: 19.15,
+			1500: 30.95,
+			2e3: 37.1
+		},
+		es: {
+			20: 4.11,
+			50: 4.24,
+			100: 4.54,
+			250: 5.57,
+			500: 5.51,
+			1e3: 8.8,
+			1500: 13.01,
+			2e3: 13.5
+		},
+		lk: {
+			20: 3.15,
+			50: 3.55,
+			100: 4.3,
+			500: 10.2,
+			1e3: 17.8,
+			2e3: 32.8
+		},
+		sd: {
+			20: 3.2,
+			50: 3.65,
+			100: 4.45,
+			500: 10.8,
+			1e3: 18.95,
+			2e3: 35.1
+		},
+		sr: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		sz: {
+			20: 2.6,
+			50: 3.1,
+			100: 4.15,
+			250: 8.1,
+			500: 8.1,
+			1e3: 21.15,
+			1500: 35.1,
+			2e3: 43.4
+		},
+		se: {
+			20: 5.26,
+			50: 5.32,
+			100: 5.51,
+			250: 6.23,
+			500: 6.17,
+			1e3: 8.05,
+			1500: 11.01,
+			2e3: 10.45
+		},
+		ch: {
+			20: 7.2,
+			50: 7.25,
+			100: 7.35,
+			250: 7.65,
+			500: 7.65,
+			1e3: 8.6,
+			1500: 9.75,
+			2e3: 10.45
+		},
+		tw: {
+			20: 3.1,
+			50: 3.35,
+			100: 3.75,
+			250: 5.25,
+			500: 5.7,
+			1e3: 11.75,
+			1500: 18.25,
+			2e3: 24.1
+		},
+		tj: {
+			20: 3.2,
+			50: 3.7,
+			100: 4.6,
+			500: 11.55,
+			1e3: 20.45,
+			2e3: 38.05
+		},
+		tz: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		th: {
+			20: 2.5,
+			50: 2.75,
+			100: 3.45,
+			250: 5.95,
+			500: 5.95,
+			1e3: 14.3,
+			1500: 23.35,
+			2e3: 28.7
+		},
+		tg: {
+			20: 3.2,
+			50: 3.75,
+			100: 4.65,
+			500: 12,
+			1e3: 21.35,
+			2e3: 39.85
+		},
+		tk: {
+			20: 3.5,
+			50: 4.4,
+			100: 5.95,
+			500: 18.35,
+			1e3: 34.1,
+			2e3: 65.35
+		},
+		to: {
+			20: 3.4,
+			50: 4.25,
+			100: 5.65,
+			500: 17,
+			1e3: 31.3,
+			2e3: 59.8
+		},
+		tt: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.9,
+			500: 13.1,
+			1e3: 23.6,
+			2e3: 44.3
+		},
+		tn: {
+			20: 3.1,
+			50: 3.5,
+			100: 4.2,
+			500: 9.5,
+			1e3: 16.4,
+			2e3: 29.95
+		},
+		tr: {
+			20: 3.1,
+			50: 3.4,
+			100: 4,
+			250: 6.6,
+			500: 6.6,
+			1e3: 14.2,
+			1500: 22.5,
+			2e3: 26.65
+		},
+		tc: {
+			20: 3.35,
+			50: 4.05,
+			100: 5.3,
+			500: 15.1,
+			1e3: 27.6,
+			2e3: 52.35
+		},
+		tv: {
+			20: 3.4,
+			50: 4.25,
+			100: 5.65,
+			500: 17,
+			1e3: 31.3,
+			2e3: 59.8
+		},
+		ug: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.75,
+			500: 12.3,
+			1e3: 22,
+			2e3: 41.2
+		},
+		ua: {
+			20: 1.8,
+			50: 1.95,
+			100: 2.25,
+			500: 4.5,
+			1e3: 7.55,
+			2e3: 13.45
+		},
+		ae: {
+			20: 1.75,
+			50: 2,
+			100: 2.4,
+			250: 4.5,
+			500: 4.6,
+			1e3: 11.35,
+			1500: 18.6,
+			2e3: 23.9
+		},
+		gb: {
+			20: 3.85,
+			50: 3.9,
+			100: 4.15,
+			250: 5,
+			500: 4.95,
+			1e3: 7.65,
+			1500: 10.75,
+			2e3: 12.55
+		},
+		us: {
+			20: 6.05,
+			50: 6.35,
+			100: 6.95,
+			250: 9.25,
+			500: 9.25,
+			1e3: 16.85,
+			1500: 25,
+			2e3: 27.95
+		},
+		uy: {
+			20: 3.2,
+			50: 3.7,
+			100: 4.55,
+			500: 11.35,
+			1e3: 20.05,
+			2e3: 37.3
+		},
+		uz: {
+			20: 3.1,
+			50: 3.45,
+			100: 4.15,
+			500: 9.25,
+			1e3: 15.85,
+			2e3: 28.9
+		},
+		vu: {
+			20: 4.2,
+			50: 5.05,
+			100: 6.45,
+			500: 17.75,
+			1e3: 32.1,
+			2e3: 60.6
+		},
+		ve: {
+			20: 3.2,
+			50: 3.65,
+			100: 4.5,
+			500: 11.25,
+			1e3: 19.85,
+			2e3: 36.9
+		},
+		vn: {
+			20: 3.1,
+			50: 3.45,
+			100: 4.15,
+			500: 9.25,
+			1e3: 15.9,
+			2e3: 28.95
+		},
+		vg: {
+			20: 3.35,
+			50: 4.05,
+			100: 5.3,
+			500: 15.1,
+			1e3: 27.6,
+			2e3: 52.35
+		},
+		vi: {
+			20: 6.35,
+			50: 6.65,
+			100: 7.15,
+			500: 11.3,
+			1e3: 16.65,
+			2e3: 27.15
+		},
+		wf: {
+			20: 3.5,
+			50: 4.4,
+			100: 5.95,
+			500: 18.35,
+			1e3: 34.1,
+			2e3: 65.35
+		},
+		zm: {
+			20: 3.25,
+			50: 3.8,
+			100: 4.75,
+			500: 12.5,
+			1e3: 22.35,
+			2e3: 41.85
+		},
+		zw: {
+			20: 3.25,
+			50: 3.85,
+			100: 4.85,
+			500: 12.85,
+			1e3: 23,
+			2e3: 43.2
+		},
+		ax: {
+			20: 5.25,
+			50: 5.3,
+			100: 5.4,
+			500: 6.15,
+			1e3: 7.35,
+			2e3: 9.45
+		},
+		bq: {
+			20: 4.6,
+			50: 5.15,
+			100: 6.15,
+			500: 14.05,
+			1e3: 24.1,
+			2e3: 44.05
+		},
+		cw: {
+			20: 4.6,
+			50: 5.15,
+			100: 6.15,
+			500: 14.05,
+			1e3: 24.1,
+			2e3: 44.05
+		},
+		gg: {
+			20: 3.4,
+			50: 4.2,
+			100: 5.6,
+			500: 16.75,
+			1e3: 30.8,
+			2e3: 58.8
+		},
+		im: {
+			20: 3.4,
+			50: 4.2,
+			100: 5.6,
+			500: 16.75,
+			1e3: 30.8,
+			2e3: 58.8
+		},
+		je: {
+			20: 4.25,
+			50: 5.05,
+			100: 6.55,
+			500: 18.15,
+			1e3: 32.85,
+			2e3: 62.05
+		},
+		me: {
+			20: 3.1,
+			50: 3.4,
+			100: 3.95,
+			500: 8.45,
+			1e3: 14.3,
+			2e3: 25.75
+		},
+		rs: {
+			20: 3.05,
+			50: 3.35,
+			100: 3.9,
+			250: 6.65,
+			500: 6.65,
+			1e3: 13.45,
+			1500: 21.3,
+			2e3: 24.1
+		},
+		ss: {
+			20: 4.3,
+			50: 4.4,
+			100: 4.6,
+			500: 6,
+			1e3: 8,
+			2e3: 11.75
+		}
+	}, Ea = function(e) {
+		return e[e.SMALL_ENVELOPE = 50] = "SMALL_ENVELOPE", e[e.LARGE_ENVELOPE = 450] = "LARGE_ENVELOPE", e[e.SMALL_PACKAGE = 900] = "SMALL_PACKAGE", e[e.MEDIUM_PACKAGE = 1400] = "MEDIUM_PACKAGE", e[e.LARGE_PACKAGE = 1900] = "LARGE_PACKAGE", e;
+	}({});
+	function La(e, a) {
+		const t = ja[e];
+		if (!(t in qa)) return -1;
+		if (a > Ea.LARGE_PACKAGE) return +(La(e, a % Ea.LARGE_PACKAGE) + La(e, Ea.LARGE_PACKAGE) * Math.floor(a / Ea.LARGE_PACKAGE)).toFixed(2);
+		const n = qa[t];
+		return Object.entries(n).find(([e]) => a <= +e)?.[1] || -1;
+	}
+	var Ca = function(e) {
+		return e.GET = "get", e.GIVE = "give", e.HISTORY = "history", e;
+	}({});
+	async function Na(e) {
+		localStorage.setItem(p.TAB, e), await _((a) => a.set(p.TAB, e));
+	}
+	function $a(e) {
+		return e.classList.contains("lgray-13") ? Ca.HISTORY : e.textContent.includes("Coins′un′Notes") ? Ca.GIVE : Ca.GET;
+	}
+	function Ba(e, a) {
+		const t = ya(e);
+		if (!t) return;
+		const n = t.nextElementSibling;
+		if (!n) return;
+		n.classList.add("price");
+		const r = n.querySelector("span.blue-13");
+		if (!r) return;
+		a && (r.textContent = a);
+		const i = +(r?.textContent || 0), o = n.querySelector("span.gray-11:first-child")?.textContent, s = n.querySelector("span.gray-11:last-child")?.textContent;
+		let l = e.dataset?.tooltipPrice;
+		if (!l) return;
+		for (const u of n.querySelectorAll("span[data-price-percent], span[data-price-tooltip], span[data-price-cond]")) u.remove();
+		o && (l = l.replace(o, "")), s && (l = l.replace(s, ""));
+		const c = +l;
+		if (r.style.color = c > i ? "green" : c < i ? "brown" : "", r.classList.remove("price-times"), !isNaN(c) && i !== c) {
+			const e = i / c;
+			let a = "";
+			if (e >= 2) a = `<span class="gray-11 price-times" data-price-percent>&times;${e.toFixed(e >= 10 ? 0 : 1).replace(".0", "")}</span>`, r.classList.add("price-times");
+			else {
+				const t = (100 * (e - 1)).toFixed();
+				+t >= 50 ? a = `<span class="gray-11 price-times" data-price-percent>+${t}%</span>` : +t > 0 ? a = `<span class="gray-11 price-over" data-price-percent>+${t}%</span>` : +t < 0 && (a = `<span class="gray-11 price-under" data-price-percent>&minus;${(-t).toFixed()}%</span>`);
+			}
+			n.insertAdjacentHTML("beforeend", `${a}<span class="gray-11 price-tooltip" data-price-tooltip>${o}${ze(c)}${s}</span>`);
+		}
+	}
+	function Fa() {
+		const e = !!document.getElementById("need-swap-list"), a = document.querySelectorAll("#swap-list table.swap-coin");
+		for (const t of a) {
+			let a = [...t.querySelectorAll("tr")];
+			const n = a.filter((e) => !!e.querySelector("input.swap-checkbox:checked") || (e.classList.remove("conflict", "ignored"), !1)), r = t.previousElementSibling;
+			if ("h2" === r.tagName.toLowerCase()) {
+				const e = r.querySelector("input.swap-country-checkbox, input.edit-country-checkbox");
+				e && (e.checked = n.length === a.length);
+			}
+			e || (a = n);
+			const i = "need-by-year" === k().searchParams.get("v");
+			for (const o of a) {
+				const { tooltipName: a, tooltipSubject: n, tooltipVariety: r, tooltipKm: s } = { ...o.dataset }, l = [];
+				s ? (l.push(`[data-tooltip-km=${JSON.stringify(s)}]`), i && l.push(`tr[data-tooltip-name=${JSON.stringify(a)}]`)) : (l.push(`tr[data-tooltip-name=${JSON.stringify(a)}]`), n && l.push(`[data-tooltip-subject=${JSON.stringify(n)}]`), r && l.push(`[data-tooltip-variety=${JSON.stringify(r)}]`));
+				const c = [...t.querySelectorAll(l.join(""))], u = e ? c : c.filter((e) => !!e.querySelector("input.swap-checkbox:checked")), d = u.length > 0;
+				for (const e of c) e.classList.toggle("ignored", d && !e.querySelector("input.swap-checkbox:checked"));
+				const m = u.length > 1;
+				for (const e of u) e.classList.toggle("conflict", m);
+			}
+		}
+	}
+	function Ma(e) {
+		return e.querySelector("#tree a.region.list-link div.right.blue-13 sup");
+	}
+	function Pa(e) {
+		return e.querySelectorAll("table.swap-coin tr.del");
+	}
+	function Ra(e) {
+		return e.querySelector("a.act")?.href.match(/soid=(\d+)/)?.[1];
+	}
+	var Ta = u(c((e, a) => {
+		(function() {
+			var e = {}.hasOwnProperty;
+			function t() {
+				for (var e = "", a = 0; a < arguments.length; a++) {
+					var t = arguments[a];
+					t && (e = r(e, n(t)));
+				}
+				return e;
+			}
+			function n(a) {
+				if ("string" == typeof a || "number" == typeof a) return a;
+				if ("object" != typeof a) return "";
+				if (Array.isArray(a)) return t.apply(null, a);
+				if (a.toString !== Object.prototype.toString && !a.toString.toString().includes("[native code]")) return a.toString();
+				var n = "";
+				for (var i in a) e.call(a, i) && a[i] && (n = r(n, i));
+				return n;
+			}
+			function r(e, a) {
+				return a ? e ? e + " " + a : e + a : e;
+			}
+			void 0 !== a && a.exports ? (t.default = t, a.exports = t) : "function" == typeof define && "object" == typeof define.amd && define.amd ? define("classnames", [], function() {
+				return t;
+			}) : window.classNames = t;
+		})();
+	})()), Va = "/Users/asteponavicius/dev/ucoin/src/lib/filters.tsx", Oa = function(e) {
+		return e.RESERVED = "resedved", e.COUNTRY = "country", e.YEAR = "year", e.VALUE = "value", e.KM = "km", e;
+	}({});
+	function Ga({ name: e, direction: t, value: n, placeholder: r, width: i, options: o }) {
+		const s = o.size <= 1;
+		let l, c = r || "";
+		if (s) {
+			const e = [...o.keys()].filter((e) => "" !== e).pop() || "";
+			l = o.get(e);
+		} else n && (l = o.get(n));
+		return l?.name ? c = l.name : n && (c = n), react.default.createElement("div", {
+			className: (0, Ta.default)("filter", t || "left"),
+			__self: this,
+			__source: {
+				fileName: Va,
+				lineNumber: 68,
+				columnNumber: 9
+			}
+		}, react.default.createElement("div", {
+			"data-filter": e,
+			"data-filter-placeholder": r,
+			"data-filter-disabled": s,
+			className: (0, Ta.default)("filter-box", {
+				"filter-box-disabled": s,
+				"filter-box-active": !s && n
+			}),
+			style: { width: i - 24 },
+			__self: this,
+			__source: {
+				fileName: Va,
+				lineNumber: 69,
+				columnNumber: 13
+			}
+		}, react.default.createElement("div", {
+			className: (0, Ta.default)("left", { "blue-13": n }, "filter-label"),
+			dangerouslySetInnerHTML: { __html: c },
+			__self: this,
+			__source: {
+				fileName: Va,
+				lineNumber: 79,
+				columnNumber: 17
+			}
+		}), !s && (n ? react.default.createElement("div", {
+			className: "right close",
+			title: "Clear filter",
+			"data-filter-clear": e,
+			__self: this,
+			__source: {
+				fileName: Va,
+				lineNumber: 85,
+				columnNumber: 25
+			}
+		}, "×") : react.default.createElement("div", {
+			className: "right",
+			__self: this,
+			__source: {
+				fileName: Va,
+				lineNumber: 89,
+				columnNumber: 25
+			}
+		}, react.default.createElement("span", {
+			className: "arrow ab",
+			__self: this,
+			__source: {
+				fileName: Va,
+				lineNumber: 90,
+				columnNumber: 29
+			}
+		}))) || ""), react.default.createElement("div", {
+			className: "drop hide filter-dialog",
+			"data-filter-dialog": e,
+			style: { width: i },
+			__self: this,
+			__source: {
+				fileName: Va,
+				lineNumber: 95,
+				columnNumber: 13
+			}
+		}, [["", "All"], ...o.entries()].map(([t, n]) => react.default.createElement(react.default.Fragment, null, react.default.createElement("a", {
+			className: "list-link",
+			"data-filter-by": e,
+			"data-filter-value": t,
+			__self: this,
+			__source: {
+				fileName: Va,
+				lineNumber: 99,
+				columnNumber: 25
+			}
+		}, react.default.createElement("span", {
+			className: "left gray-13 wrap filter-label",
+			dangerouslySetInnerHTML: { __html: "string" == typeof n ? n : `${n.name}` },
+			__self: this,
+			__source: {
+				fileName: Va,
+				lineNumber: 100,
+				columnNumber: 29
+			}
+		}), "string" != typeof n && react.default.createElement("span", {
+			className: "right lgray-11",
+			__self: this,
+			__source: {
+				fileName: Va,
+				lineNumber: 107,
+				columnNumber: 33
+			}
+		}, "(", n.count, ")"))))));
+	}
+	function Ha({ filters: e }) {
+		return react.default.createElement("div", {
+			className: "left filter-container filters",
+			__self: this,
+			__source: {
+				fileName: Va,
+				lineNumber: 119,
+				columnNumber: 9
+			}
+		}, [...e.entries()].map(([e, t]) => react.default.createElement(Ga, {
+			key: e,
+			...t,
+			name: e,
+			__self: this,
+			__source: {
+				fileName: Va,
+				lineNumber: 121,
+				columnNumber: 17
+			}
+		})));
+	}
+	var Ia = function(e) {
+		return e.DEFAULT = "#DDD", e.RESERVED = "#E4A500", e;
+	}(Ia || {}), Ua = (e = Ia.DEFAULT) => `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 96 960 960" width="20px" style="fill:${e}"><path d="M425 711h110V611h100V501H535V401H425v100H325v110h100v100Zm55 255q-135.091-34.197-223.045-155.842Q169 688.514 169 540V303l311-117 311 117v237q0 148.514-87.955 270.158Q615.091 931.803 480 966Zm0-78.5q102.5-33 169.25-130.603Q716 659.293 716 540V354.387L480 266l-236 88.387V540q0 119.293 66.75 216.897Q377.5 854.5 480 887.5Zm0-311Z"></path></svg>`, Ka = {
+		year: {
+			index: 0,
+			label: "Year",
+			sort: Ue
+		},
+		face: {
+			index: 1,
+			label: "Facial value",
+			sort: De
+		},
+		cond: {
+			index: 3,
+			label: "Condition",
+			sort: We
+		},
+		value: {
+			index: 4,
+			label: "Value",
+			sort: (e, a, t = 1) => t * He(e, a, "value") || We(e, a, -1)
+		},
+		km: {
+			index: 6,
+			label: "Krause",
+			sort: Ke
+		}
+	}, Da = "year", Wa = "d";
+	async function Xa() {
+		(function() {
+			const e = [...document.querySelectorAll("#swap-mgr div.leftCol > div.user-info > .wrap")].map((e) => e.textContent).join(" / ");
+			e && (document.title = `${e} - ${document.title}`);
+		})(), function() {
+			const e = document.getElementById("swap-info");
+			if (!e) return;
+			const a = document.getElementById("message");
+			if (!a) return;
+			const t = e.querySelector(".text");
+			t && (t.querySelectorAll(".dgray-13").forEach((e) => {
+				e.classList.remove("dgray-13"), e.classList.add("gray-11");
+			}), a.insertAdjacentElement("beforebegin", t));
+			const n = e.querySelector("a.btn-s.btn-gray");
+			n && a.replaceWith(n);
+		}(), va(), function() {
+			for (const e of document.querySelectorAll("#swap-list, #take-swap-list")) {
+				for (const a of e.querySelectorAll("h2")) _a.includes(a.id) && a.classList.add("separate-country");
+				for (const a of e.querySelectorAll("table.swap-coin td a.dgray-13")) a.textContent?.match(/(eur(o|a[is])|евро)/i) && a.classList.add("separate-country");
+			}
+		}(), function() {
+			const e = document.querySelector("#tree a.list-link:not([href]):first-child .right")?.textContent || "0", [, a] = document.querySelector("#tree .user-info + div span[class^=\"swap-status\"]")?.className.match(/swap-status(\d+)/) || [], t = x(p.TAB) || localStorage.getItem(p.TAB) || ("0" === e || "1" === a || "2" === a ? Ca.GIVE : Ca.GET), n = document.querySelectorAll("#swap-mgr div.widerightCol > ul.region-list > li.region");
+			for (const r of n) {
+				const e = $a(r);
+				r.addEventListener("click", () => Na(e)), e === t && r.click();
+			}
+		}(), function() {
+			const e = document.getElementById("take-swap-list");
+			if (!e) return;
+			const a = e.querySelector("div.left.action-board");
+			if (!a) return;
+			const t = e.querySelectorAll("table.swap-coin tbody");
+			if (!t || !t.length) return;
+			a.removeAttribute("style"), a.insertAdjacentHTML("afterend", Te("sort-filter", Pe(b(Ka[Da]?.label), Wa), Object.entries(Ka).map(([e, { label: a }]) => `\n                    <a class='list-link' data-option='${e}' data-order='a'>${Me(b(a))}${Be()}</a>\n                    <a class='list-link' data-option='${e}' data-order='d'>${Me(b(a))}${Fe()}</a>\n                `)));
+			const n = e.querySelector("#sort-filter");
+			if (!n) return;
+			const r = e.querySelector("#sort-filter-dialog");
+			if (!r) return;
+			n.addEventListener("click", (e) => {
+				C(e), r.style.display = "block";
+			}), r.addEventListener("click", async (e) => {
+				C(e), r.style.display = "none";
+				const a = e.target.closest("a");
+				if (!a) return;
+				const { option: i, order: o } = a.dataset;
+				i && o && (Da = i, Wa = o, n.innerHTML = Pe(b(Ka[Da]?.label), Wa), await Je(Da, Wa), Xe(t, Ka[Da]?.sort, Wa));
+			});
+			const i = e.querySelectorAll("table.swap-coin tbody tr");
+			for (const o of i) {
+				const e = o.querySelectorAll("td.ico-star").length, a = o.querySelectorAll("td"), t = o.dataset;
+				for (const [n, { index: r }] of Object.entries(Ka)) {
+					const i = Ge(n), o = a[r + e].textContent;
+					if (o) if ("year" === n) {
+						const [e, ...a] = o.split(/(?:\s|&nbsp;)+/);
+						t[i] = e, t.sortMm = a.join(" ");
+					} else if ("cond" === n) t[i] = `${ae[o]}`;
+					else if ("km" === n) {
+						const e = o.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i);
+						if (e && e.groups) {
+							const { groups: { cat: a, num: n, prefix: r, suffix: s } } = e;
+							t.sortKmc = a, t[i] = n, t.sortKma = `${r}${s}`, t.sortKmz = o;
+						} else t.sortKmc = "", t[i] = o, t.sortKma = "", t.sortKmz = o;
+					} else t[i] = o;
+				}
+			}
+			[Da, Wa] = Ye(), Xe(t, Ka[Da]?.sort, Wa);
+		}(), function() {
+			const e = document.getElementById("take-swap-list");
+			if (!e) return;
+			const n = e.lastElementChild;
+			if (!n) return;
+			function r(e, a) {
+				return [...e.keys()].sort(a).reduce((a, t) => {
+					const n = e.get(t);
+					return n && a.set(t, n), a;
+				}, /* @__PURE__ */ new Map());
+			}
+			const i = /* @__PURE__ */ new Map(), o = [
+				Oa.RESERVED,
+				Oa.COUNTRY,
+				Oa.YEAR,
+				Oa.VALUE,
+				Oa.KM
+			], s = /* @__PURE__ */ new Map(), l = (e) => "none" !== e.style.display, c = [...e.querySelectorAll("th[data-reserve=\"on\"]")].filter(l).length, u = [...e.querySelectorAll("th[data-reserve=\"\"]")].filter(l).length;
+			i.set(Oa.RESERVED, {
+				placeholder: "Reserved",
+				width: 100,
+				options: new Map(c && u ? [["on", {
+					name: `<span class="left filter-label">${Ua(Ia.RESERVED)}</span>`,
+					count: c
+				}], ["off", {
+					name: `<span class="left filter-label">${Ua(Ia.DEFAULT)}</span>`,
+					count: u
+				}]] : [])
+			});
+			const d = e.querySelectorAll("h2");
+			i.set(Oa.COUNTRY, {
+				placeholder: "Country",
+				width: 250,
+				options: r([...d].reduce((e, a) => {
+					const t = a.cloneNode(!0);
+					for (const o of t.querySelectorAll("input, sup")) o.remove();
+					const n = a.nextElementSibling?.querySelectorAll("tr") || [];
+					console.debug(n.length, n);
+					const r = [...n].filter(l);
+					console.debug(r.length, r);
+					const i = r.map((e) => e.style.display);
+					return console.debug(i), e.set(t.id, {
+						name: t.innerHTML,
+						count: [...a.nextElementSibling?.querySelectorAll("tr") || []].filter(l).length
+					}), e;
+				}, /* @__PURE__ */ new Map()))
+			}), i.set(Oa.YEAR, {
+				placeholder: "Year",
+				width: 90,
+				options: r([...e.querySelectorAll("tr[data-sort-year]")].reduce((a, t) => {
+					const n = t.dataset.sortYear;
+					return n && a.set(n, {
+						name: n,
+						count: [...e.querySelectorAll(`tr[data-sort-year="${n}"]`)].filter(l).length
+					}), a;
+				}, /* @__PURE__ */ new Map()), (e, a) => Oe(Ve(a), Ve(e)))
+			}), i.set(Oa.VALUE, {
+				placeholder: "Face value",
+				width: 110,
+				options: r([...e.querySelectorAll("tr[data-sort-face]")].reduce((a, t) => {
+					const n = t.dataset.sortFace;
+					if (n) {
+						const [t] = n.split(" ");
+						a.set(t, {
+							name: t,
+							count: [...e.querySelectorAll(`tr[data-sort-face="${t}"]`), ...e.querySelectorAll(`tr[data-sort-face^="${t} "]`)].filter(l).length
+						});
+					}
+					return a;
+				}, /* @__PURE__ */ new Map()), (e, a) => Oe(Ve(e), Ve(a)))
+			});
+			const m = /([a-z]*)([0-9]*)((?:\.[0-9]+)?[a-z]*)/i;
+			i.set(Oa.KM, {
+				placeholder: "KM#",
+				width: 110,
+				options: r([...e.querySelectorAll("tr[data-sort-km]")].reduce((a, t) => {
+					const { sortKmc: n = "", sortKm: r = "", sortKma: i = "" } = t.dataset, o = `${n.toLowerCase()}${r}${i}`;
+					return o && a.set(o, {
+						name: `${n}# ${r}${i}`,
+						count: [...e.querySelectorAll(`tr[data-sort-kmc="${n}"][data-sort-km="${r}"][data-sort-kma="${i}"]`)].filter(l).length
+					}), a;
+				}, /* @__PURE__ */ new Map()), (e, a) => {
+					const [, t, n, r] = e.match(m) || [], [, i, o, s] = a.match(m) || [];
+					return Oe(t, i) || Oe(Ve(n), Ve(o)) || Oe(r, s);
+				})
+			});
+			for (const a of o) {
+				const e = x(a);
+				if (e) {
+					s.set(a, e);
+					const t = i.get(a);
+					t && (t.value = e);
+				}
+			}
+			function f() {
+				for (const e of d) {
+					const a = e.nextElementSibling, t = a.querySelectorAll("tr");
+					let n = !1;
+					e: for (const r of t) {
+						const a = r.dataset;
+						for (const [t, i] of s) switch (t) {
+							case Oa.RESERVED:
+								const t = "on" === i ? "on" : "";
+								if (i && !r.querySelector(`[data-reserve="${t}"]`)) {
+									r.style.display = "none";
+									continue e;
+								}
+								break;
+							case Oa.COUNTRY:
+								if (e.id !== i) {
+									n = !1;
+									break e;
+								}
+								break;
+							case Oa.YEAR:
+								if (a.sortYear !== i) {
+									r.style.display = "none";
+									continue e;
+								}
+								break;
+							case Oa.VALUE:
+								if (!a.sortFace?.startsWith(`${i} `)) {
+									r.style.display = "none";
+									continue e;
+								}
+								break;
+							case Oa.KM: {
+								const [, e, t, n] = i.match(m) || [];
+								if (a.sortKmc?.toLowerCase() !== e || a.sortKm !== t || a.sortKma !== n) {
+									r.style.display = "none";
+									continue e;
+								}
+								break;
+							}
+						}
+						r.style.display = "", n = !0;
+					}
+					e.style.display = a.style.display = n ? "" : "none";
+				}
+			}
+			n.insertAdjacentHTML("beforebegin", (0, react_dom_server.renderToString)(react.default.createElement(Ha, {
+				filters: i,
+				__self: this,
+				__source: {
+					fileName: "/Users/asteponavicius/dev/ucoin/src/lib/swap-list-filter.tsx",
+					lineNumber: 203,
+					columnNumber: 63
+				}
+			}))), f();
+			for (const a of document.querySelectorAll("[data-filter-by]")) a.addEventListener("click", async () => {
+				const e = a.dataset, t = e.filterBy, n = e.filterValue;
+				await _((e) => n ? e.set(t, n) : e.delete(t));
+				const r = document.querySelector(`[data-filter="${t}"]`);
+				var i;
+				r && (n ? (r.innerHTML = `${Re(a.querySelector(".left")?.outerHTML)}${i = t, `<div class='right close' title='Clear filter' data-filter-clear='${i}'>×</div>`}`, r.classList.add("filter-box-active")) : (r.innerHTML = `${Re(r.dataset?.filterPlaceholder)}${Fe()}`, r.classList.remove("filter-box-active"))), n ? s.set(t, n) : s.delete(t), f();
+			});
+			for (const a of document.querySelectorAll("[data-filter]")) a.addEventListener("click", async (e) => {
+				C(e);
+				const t = a.dataset;
+				if ("true" === t.filterDisabled) return;
+				let n = !1;
+				const r = e.target, i = t.filter;
+				if (r.matches("[data-filter-clear]")) {
+					n = !0;
+					const { filterClear: e } = r.dataset;
+					e && await _((a) => a.delete(e)), a.innerHTML = `${Re(t.filterPlaceholder)}${Fe()}`, a.classList.remove("filter-box-active"), s.delete(i), f();
+				}
+				for (const a of document.querySelectorAll("[data-filter-dialog]")) a.style.display = n || a.dataset.filterDialog !== i || "block" === a.style.display ? "none" : "block";
+			});
+			for (const a of document.querySelectorAll("[data-filter-dialog]")) a.addEventListener("click", (e) => {
+				C(e), a.style.display = "none";
+			});
+			const p = e.querySelectorAll(".filter");
+			for (const a of p) a.addEventListener("input", (a) => {
+				const t = a.target, n = t.id, r = t.value, i = Ge(n), o = e.querySelectorAll("tbody > tr");
+				for (const e of o) {
+					const a = e.dataset;
+					e.style.display = !r || a[i]?.includes(r) ? "" : "none";
+				}
+			});
+			const h = e.querySelectorAll("table.swap-coin tbody");
+			h && h.length;
+		}(), function() {
+			const e = document.getElementById("swap-list");
+			if (!e) return;
+			const a = e.querySelectorAll("div.pages");
+			if (a.length > 1) return;
+			const t = a.item(a.length - 1);
+			if (!t.children.length) return;
+			const n = e.querySelector("table.swap-coin");
+			if (!n) return;
+			const r = n.previousElementSibling;
+			if (!r || !r.matches("h2")) return;
+			const i = t.parentElement;
+			if (!i) return;
+			const o = i.cloneNode(!0);
+			o.style.height = "30px", r.insertAdjacentElement("beforebegin", o);
+		}(), function() {
+			const e = document.querySelectorAll("table.swap-coin tr");
+			for (const a of e) Ba(a);
+		}(), ka(), function() {
+			Fa();
+			const e = document.querySelectorAll("#swap-list table.swap-coin input.swap-checkbox");
+			for (const t of e) t.addEventListener("click", (e) => {
+				const a = e.target;
+				if (!a.checked) {
+					const e = a.closest("tr");
+					e && e.classList.remove("conflict");
+				}
+				Fa();
+			});
+			const a = document.querySelectorAll("#swap-list h2 input.swap-country-checkbox");
+			for (const t of a) t.addEventListener("click", (e) => {
+				const a = e.target;
+				if (!a.checked) {
+					const e = a.closest("h2");
+					if (e) {
+						const a = e.nextElementSibling?.querySelectorAll("tr");
+						if (a) for (const e of a) e.classList.remove("conflict");
+					}
+				}
+				Fa();
+			});
+		}(), function() {
+			const e = document.getElementById("need-swap-list");
+			if (!e) return;
+			const a = Pa(e);
+			if (!a.length) return;
+			const t = e.querySelector(".action-board");
+			if (!t) return;
+			const n = "act-del-all", r = t.querySelector("a#act-d")?.innerHTML;
+			t.insertAdjacentHTML("beforeend", `\n            <a class="btn-s btn-gray ico-del" id="${n}">\n                <span>${r}</span>\n                <span>${r}</span>\n            </a>`);
+			const i = document.getElementById(n);
+			if (!i) return void console.error("[DEV] Missing delete button");
+			const o = Ma(document);
+			i.addEventListener("click", async () => {
+				if (!confirm("Are you sure you want to delete these coins?")) return !1;
+				const t = e.dataset.sid;
+				if (!t) return void console.error("[DEV] Missing SID");
+				const n = new Set([...a].map(Ra).filter(Boolean));
+				if (!n.size) return void console.error("[DEV] Missing SOID");
+				const r = new URL("https://en.ucoin.net/swap-mgr/");
+				r.searchParams.set("f", "d"), r.searchParams.set("soid", [...n].join(",")), r.searchParams.set("sid", t);
+				const s = B(await fetch(r).then(D));
+				if (!s) return void console.error("[DEV] Missing response");
+				if (o) {
+					const e = Ma(s);
+					e ? o.textContent = e.textContent : o.remove();
+				}
+				const l = s.getElementById("need-swap-list"), c = l ? function(e) {
+					return new Set([...e].map(Ra).filter(Boolean));
+				}(Pa(l)) : /* @__PURE__ */ new Set();
+				for (const e of a) {
+					const a = Ra(e);
+					a && !c.has(a) && (c.delete(a), e.remove());
+				}
+				c.size ? N() : i.remove();
+			});
+		}(), function() {
+			if (document.getElementById("need-swap-list")) return;
+			const e = document.querySelectorAll("table.swap-coin");
+			for (const a of e) {
+				const e = a.querySelectorAll("tr");
+				for (const a of e) {
+					const e = a.querySelector("td span[class^=\"marked-\"]"), t = e && e.classList.item(0), n = t && te[+(t.split("marked-").pop() || 0)] || 0, r = ya(a), i = r && ae[r.textContent] || 0;
+					n && (!i || i <= n) && a.classList.add("ignore");
+				}
+			}
+		}(), function() {
+			const e = document.getElementById("swap-mgr");
+			if (e) for (const a of e.querySelectorAll("table.offer-list tr[data-href]")) a.removeAttribute("data-href");
+		}(), function() {
+			const e = document.getElementById("swap-mgr");
+			if (e) {
+				const a = e.querySelectorAll("div.left.lgray-11");
+				for (const e of a) {
+					if (!e.textContent?.includes("Track")) continue;
+					const a = e.nextElementSibling, t = a?.textContent;
+					t && (a.innerHTML = `<a href="https://www.17track.net/en/track?nums=${t}" target="_blank">${t}</a>`);
+				}
+			}
+		}(), function() {
+			const e = document.getElementById("reserve-cnt");
+			if (!e) return;
+			const a = e.parentElement;
+			if (!a) return;
+			const t = a.previousElementSibling;
+			if (!t) return;
+			const n = +(t.querySelector(".right")?.textContent || 0), r = () => {
+				const t = +e.textContent || 0, r = t < n, i = t === n;
+				a.classList.toggle("some-missing", r), a.classList.toggle("all-reserved", i);
+			};
+			r(), new MutationObserver(r).observe(e, {
+				childList: !0,
+				characterData: !0,
+				subtree: !0
+			});
+		}(), function() {
+			const e = document.querySelector("#swap-mgr #tree");
+			if (!e) return;
+			const a = [...document.querySelectorAll(".region-list .region")];
+			if (!a.length) return void console.error("[DEV] Missing swap tabs");
+			const t = a.map((e) => e.textContent.replaceAll(/\(.*?\)/g, "")?.trim() || ""), n = document.querySelectorAll(".swap-list");
+			if (!n.length) return void console.error("[DEV] Missing swap lists");
+			const r = e.querySelectorAll(".region.list-link");
+			if (!r.length) return void console.error("[DEV] Missing price sections");
+			const i = r.length > 1;
+			let o = 0, s = 0;
+			for (const l of r) {
+				const r = l.querySelector(".left")?.textContent;
+				if (!r) {
+					console.error("[DEV] Missing title", { section: l });
+					continue;
+				}
+				const c = (l.nextElementSibling?.matches(".swap-reserve") ? l.nextElementSibling.nextElementSibling : l.nextElementSibling)?.querySelector(".right");
+				if (!c) {
+					console.error("[DEV] Missing price line", { section: l });
+					continue;
+				}
+				const [u, d, m] = c.querySelectorAll("span");
+				if (!d) {
+					console.error(`[DEV] Missing price for title "${r}"`, { priceRow: c });
+					continue;
+				}
+				const f = t.findIndex((e) => e === r);
+				if (f < 0) {
+					console.error(`[DEV] Missing index for title "${r}"`, { titles: t });
+					continue;
+				}
+				const p = $a(a[f]);
+				if (!p) {
+					console.warn(`[DEV] Missing tab for title "${r}"`);
+					continue;
+				}
+				const h = p === Ca.GIVE, g = n[f]?.querySelectorAll("tr:not(.del) .price");
+				if (!g?.length) {
+					console.error(`[DEV] Missing price cells for title "${r}"`, {
+						titleIndex: f,
+						lists: n
+					});
+					continue;
+				}
+				let y = 0;
+				for (const e of g) {
+					let a = e.querySelector(".gray-11.price-tooltip");
+					a || (a = e.querySelector(".blue-13"), a) ? y += ke(a.textContent) ?? 0 : console.error("[DEV] Missing price in cell", { cell: e });
+				}
+				s += h ? -y : y, d.style = "", d.classList.add("blue-13");
+				const w = ke(d.textContent) ?? 0;
+				o += h ? -w : w;
+				const k = w - y, v = (e) => `<div class="right lgray-11 clear-right">${"number" == typeof e ? ze(e) : e}</div>`, S = (e) => `<span class="price-tooltip ${(h ? e < 0 : e > 0) ? "price-over" : "price-under"}">${`${e > 0 ? "+" : "&minus;"} ${u?.textContent} ${ze(Math.abs(e))} ${m?.textContent}`.trim()}</span>`;
+				if (k && c.insertAdjacentHTML("afterend", v(S(k))), c.insertAdjacentHTML("afterend", v(y)), c.parentElement?.classList.add(k ? "price-triple" : "price-double"), !h) continue;
+				const z = d.closest("a.region")?.nextElementSibling, _ = ke(z?.querySelector(".right")?.textContent) ?? 0, A = za(e.previousElementSibling?.querySelector(".gray-11")?.textContent ?? "") ?? "", x = La(A, _);
+				if (x > 0) {
+					y = w + x;
+					const e = `${ze(w)} + ${ze(x)} <s>${b("shipping")}</s>`, { price: a, charges: t } = xa(A, y), n = `${ze(y)} + ${ze(t)} <s>${b("PayPal charges")}</s>`;
+					z?.insertAdjacentHTML("afterend", `\n                <a class="region price-section price-line">\n                    <div class="left dgray-13">${b("Shipping")}</div>\n                    <div class="right blue-13"><u>€</u>${ze(x)}</div>\n                </a>\n                <a class="region price-line price-double">\n                    <div class="left lgray-11">${b("Total")}</div>\n                    <div class="right gray-12"><u>€</u>${ze(y)}</div>\n                    <div class="right lgray-11">&hairsp;<small>(</small>${e}<small>)</small></div>\n                </a>\n                <a class="region price-line price-double">\n                    <div class="left lgray-11">PayPal</div>\n                    <div class="right gray-12"><u>€</u>${ze(a)}</div>\n                    <div class="right lgray-11">&hairsp;<small>(</small>${n}<small>)</small></div>\n                </a>\n                `);
+				}
+				i && (o || s) && z?.insertAdjacentHTML("afterend", `\n            <a class="region price-section price-line price-double">\n                <div class="left dgray-13">${b("Difference")}</div>\n                <div class="right blue-13">${S(o)}</div>\n                <div class="right lgray-11">${S(s)}</div>\n            </a>\n            `);
+			}
+		}(), function(e = "", a) {
+			const t = Array.from(document.querySelectorAll(`input[type="checkbox"]${e}`) || []);
+			let n = t[0];
+			const r = (e) => {
+				const r = e.currentTarget;
+				if (r) if (e.shiftKey && n) {
+					const e = t.indexOf(n), i = t.indexOf(r), [o, s] = e < i ? [e, i] : [i, e], { checked: l } = r;
+					for (let n = o; n <= s; n++) t[n].checked !== l && t[n].click(), a?.(t[n]);
+				} else n = r, a?.(r);
+			};
+			for (const i of t) i.addEventListener("click", r);
+		}(".edit-checkbox", ba), function() {
+			const e = Array.from(document.querySelectorAll("h2 input[type=\"checkbox\"]") || []);
+			for (const a of e) a.addEventListener("click", ga);
+		}(), function() {
+			const e = document.querySelector("#swap-list div.action-board a.ico-del");
+			if (!e) return;
+			const a = new Function(e.getAttribute("onclick") ?? "return;");
+			e.removeAttribute("onclick"), e.addEventListener("click", async (e) => {
+				if (C(e), !1 === a()) return !1;
+				const { href: t } = e.currentTarget, n = fetch(t), r = new URL(t), i = r.searchParams.get("usid") ?? r.searchParams.get("amp;usid");
+				for (const a of i?.split(",") ?? []) {
+					const e = document.querySelector(`tr#usid${a}`), t = e?.closest("table");
+					if (e?.querySelector("input[type=\"checkbox\"]:checked")?.click(), e?.remove(), t && !t.querySelectorAll("tr")?.length) {
+						const e = t.previousElementSibling;
+						e?.matches("h2") && (e?.querySelector("input[type=\"checkbox\"]:checked")?.click(), e.remove()), t.remove();
+					}
+				}
+				const o = await n;
+				return o.ok ? void 0 : (console.error(o), N());
+			});
+		}(), function() {
+			const e = document.getElementById("tree");
+			if (e) {
+				for (const a of e.querySelectorAll(".filter-container .list-link")) ge(a);
+				for (const a of e.querySelectorAll(".filter-container .filter-box-active")) {
+					const e = a.getAttribute("id")?.replace(/-filter/, ""), t = a.querySelector(".close");
+					e && t && be(t, ["condition" === e ? "cond" : e]);
+				}
+			}
+		}();
+	}
+	var Ya = {
+		year: {
+			index: 0,
+			label: "Year",
+			sort: Ue
+		},
+		face: {
+			index: 1,
+			label: "Facial value",
+			sort: De
+		},
+		subject: {
+			index: 2,
+			label: "Subject",
+			sort: (e, a, t = 1) => t * Ie(e, a, "subject") || De(e, a)
+		},
+		km: {
+			index: 3,
+			label: "Krause",
+			sort: Ke
+		}
+	}, Ja = "year", Za = "d";
+	(async function() {
+		const e = [], { pathname: a, searchParams: t } = k();
+		a.includes(`/uid${U}`) && e.push(async function() {
+			const e = document.getElementById("profile");
+			if (!e) return void console.error("Profile element not found");
+			const a = e.querySelector("div.worth-cur-value span");
+			if (!a) return void console.error("Current price element not found");
+			const t = ke(a.textContent) ?? 0, n = e.querySelector(`a[href="/swap-list/?uid=${U}"] span.right`);
+			if (!n) return void console.error("Swap price element not found");
+			const r = ze(t + (ke(n.textContent) ?? 0));
+			a.classList.add("price"), a.insertAdjacentHTML("beforeend", `<br/><small class="total"><abbr class="cur">€</abbr> ${r}</small>`);
+		}()), a.includes("/coin") && e.push(ra()), a.includes("/gallery") && t.get("uid") === U && (e.push(ha()), "country" === t.get("view") && e.push(async function() {
+			const e = document.querySelector("ul.hor-switcher ~ div.country-list");
+			if (!e) return;
+			const a = {};
+			for (const o of e.querySelectorAll("div.cntry")) {
+				const [, e] = o.querySelector("a")?.href.match(/&country=(\w+)/) || [];
+				e && (a[e] = +(o.querySelector("span.right")?.textContent ?? 0) || 0);
+			}
+			let t = document.querySelector("ul.hor-switcher ~ ul.region-list");
+			t || (e.insertAdjacentHTML("beforebegin", "<ul class=\"region-list\"/>"), t = document.querySelector("ul.hor-switcher ~ ul.region-list"));
+			const n = t?.querySelector("li.region[value=\"0\"]")?.textContent, r = x(p.REGION), i = Object.keys(f);
+			e.insertAdjacentHTML("beforebegin", "<ul class=\"regions\"></ul>"), function e(a, t) {
+				const n = Array.isArray(t) ? t.map((e) => [e, []]) : Object.entries(t);
+				for (const [o, s] of n) {
+					const t = G(o), n = r && t === r ? " active" : "", l = r && t !== r && i.includes(o) ? " hide" : "";
+					a.insertAdjacentHTML("beforeend", `<li class="region${l}${n}" id="${t}"><h2>${b(o, m)}</h2><ul class="regions"></ul><div class="country-list catalog-list"></div></li>`);
+					const c = a.querySelector(`#${t} .regions`);
+					c && e(c, s);
+				}
+			}(e.previousElementSibling, f);
+			for (const o of e.querySelectorAll("div.cntry")) {
+				const [, e] = o.querySelector("a")?.href.match(/&country=(\w+)/) || [], a = d[e];
+				if (a) {
+					for (const t of O(a)) {
+						const a = G(t), n = document.querySelector(`.region#${a} > .country-list`);
+						if (n && !n.querySelector(`#${e}`)) {
+							const a = o.cloneNode(!0);
+							a.id = e, n.append(a);
+							for (let t, r = n.closest(".region")?.parentElement; t = r?.closest(".region"); r = t.parentElement) {
+								const a = t.id;
+								t.parentElement?.querySelector(`#${a} > .country-list > #${e}`)?.remove();
+							}
+						}
+					}
+					o.remove();
+				}
+			}
+			if (!k().searchParams.has("currency")) {
+				const e = {}, t = new URL(k().href);
+				t.searchParams.set("currency", "1");
+				let n = !1;
+				try {
+					const a = await fetch(t, { credentials: "same-origin" });
+					if (a.ok) {
+						const t = new DOMParser().parseFromString(await a.text(), "text/html"), r = t.querySelector("ul.hor-switcher ~ div.country-list");
+						r ? Object.assign(e, I(r)) : Object.assign(e, I(t)), n = !0;
+					}
+				} catch {}
+				if (n) {
+					const t = function() {
+						const e = f.euro, a = [G("euro")];
+						if (Array.isArray(e)) for (const t of e) "string" == typeof t && a.push(G(t));
+						return new Set(a);
+					}(), n = document.querySelectorAll("ul.hor-switcher ~ ul.regions div.cntry");
+					for (const r of n) {
+						const n = r.id || r.querySelector("a")?.href.match(/&country=(\w+)/)?.[1];
+						if (!n) continue;
+						const i = void 0 !== a[n] ? a[n] : +(r.querySelector("span.right")?.textContent ?? 0) || 0, o = e[n] ?? 0, s = r.closest(".region"), l = s && t.has(s.id) ? o : Math.max(0, i - o), c = r.querySelector("span.right");
+						c && (c.textContent = String(l)), l <= 0 && r.remove();
+					}
+				}
+			}
+			for (const o of document.querySelectorAll(".regions .country-list:empty")) o.remove();
+			for (; document.querySelectorAll(".regions .regions:empty").length;) {
+				for (const e of document.querySelectorAll(".regions .regions:empty")) e.remove();
+				for (const e of document.querySelectorAll(".regions .region h2:only-child")) e.remove();
+				for (const e of document.querySelectorAll(".regions .region:empty")) e.remove();
+			}
+			if (function() {
+				for (const e of document.querySelectorAll(".regions .region")) {
+					e.querySelector("h2 .lgray-13")?.remove();
+					const a = e.querySelector(":scope > .country-list");
+					let t = 0, n = 0;
+					if (a) for (const e of a.querySelectorAll(":scope > div.cntry")) t += 1, n += +(e.querySelector("span.right")?.textContent ?? 0) || 0;
+					t && n && e.querySelector("h2")?.insertAdjacentHTML("beforeend", `<span class="lgray-13">( ${t} / ${n} )</span>`);
+				}
+			}(), console.debug(t), t) {
+				t.innerHTML = "", t.insertAdjacentHTML("beforeend", `<li class="region${r ? "" : " active"}">${n ?? b("All")}</li>`);
+				for (const e of i) {
+					const a = G(e);
+					document.querySelector(`.region#${a}`) && t.insertAdjacentHTML("beforeend", `<li class="region${r === a ? " active" : ""}" data-id="${a}">${b(e, m)}</li>`);
+				}
+				t.addEventListener("click", async ({ target: e }) => {
+					if (!e) return;
+					const a = e;
+					t.querySelector("li.active")?.classList.remove("active"), a.classList.add("active");
+					const n = a.dataset.id;
+					if (n) {
+						await _((e) => e.set(p.REGION, n));
+						const e = document.querySelectorAll(`.region-list ~ .regions > li.region:not(#${n})`);
+						for (const a of e) a.classList.remove("active"), a.classList.add("hide");
+						document.getElementById(n)?.classList.remove("hide"), document.getElementById(n)?.classList.add("active");
+					} else {
+						await _((e) => e.delete(p.REGION));
+						for (const e of document.querySelectorAll(".region-list ~ .regions > li.region")) e.classList.remove("active"), e.classList.remove("hide");
+					}
+				});
+			}
+		}())), a.includes("/swap-") && e.push(Xa()), a.includes("/wish-") && e.push(async function() {
+			const e = "table.wish-coin";
+			va(e), ka(e);
+		}()), a.includes("/table/") && e.push(async function() {
+			const e = k().searchParams.get("type");
+			e && "1" !== e && function() {
+				const e = document.querySelector("#table table.table");
+				if (!e) return;
+				const a = e.querySelectorAll("tbody");
+				if (!a) return;
+				const t = e.parentElement?.querySelector("div.filters");
+				if (!t) return;
+				let n = t.querySelector("#sort-filter");
+				n && n.remove();
+				let r = t.querySelector("#sort-filter-dialog");
+				if (r && r.remove(), t.insertAdjacentHTML("beforeend", `<div class="right filter-container" style="margin-right:0;">${Te("sort-filter", Pe(`${b("Sorting")}: ${b(Ya[Ja]?.label)}`, Za), Object.entries(Ya).map(([e, { label: a }]) => `\n                    <a class="list-link" data-option="${e}" data-order="a">${Me(b(a))}${Be()}</a>\n                    <a class="list-link" data-option="${e}" data-order="d">${Me(b(a))}${Fe()}</a>\n                `))}</div>`), n = t.querySelector("#sort-filter"), !n) return;
+				if (r = t.querySelector("#sort-filter-dialog"), !r) return;
+				n.addEventListener("click", (e) => {
+					C(e), r.style.display = "block";
+				}), r.addEventListener("click", async (e) => {
+					C(e), r.style.display = "none";
+					const t = e.target.closest("a");
+					if (!t) return;
+					const { option: i, order: o } = t.dataset;
+					i && o && (Ja = i, Za = o, n.innerHTML = Pe(`${b("Sorting")}: ${b(Ya[Ja]?.label)}`, Za), await Je(Ja, Za), Xe(a, Ya[Ja]?.sort, Za));
+				});
+				const i = e.querySelectorAll("tbody tr");
+				for (const o of i) {
+					const e = o.children, a = o.dataset;
+					for (const [t, { index: n }] of Object.entries(Ya)) {
+						const r = Ge(t), i = e[n].textContent;
+						if (i) if ("year" === t) {
+							const [e, ...t] = i.split(/(?:\s|&nbsp;)+/);
+							a[r] = e, a.sortMm = t.join(" ");
+						} else if ("km" === t) {
+							const e = i.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i);
+							if (e && e.groups) {
+								const { groups: { cat: t, num: n, prefix: o, suffix: s } } = e;
+								a.sortKmc = t, a[r] = n, a.sortKma = `${o}${s}`, a.sortKmz = i;
+							} else a.sortKmc = "", a[r] = i, a.sortKma = "", a.sortKmz = i;
+						} else a[r] = i;
+					}
+				}
+				[Ja, Za] = Ye(), Xe(a, Ya[Ja]?.sort, Za);
+			}(), setTimeout(() => {
+				document.querySelector("a.period.selected")?.scrollIntoView({
+					behavior: "auto",
+					block: "center",
+					inline: "nearest"
+				});
+			}, 100);
+		}()), a.includes("/messages/") && e.push(async function() {
+			const e = document.getElementById("user-list")?.querySelectorAll("table.user tr[onclick]");
+			for (const a of e || []) {
+				const e = a.querySelector("td.user-container a"), t = a.attributes.getNamedItem("onclick")?.value.match(/href\s*=\s*'(.*?)'/);
+				e && t && (e.href = t[1], e.onclick = (e) => e.stopPropagation());
+			}
+		}()), e.push(async function() {
+			const e = document.getElementById("catalog-tree");
+			if (!e) return;
+			document.getElementById("tree-search")?.closest("div")?.remove();
+			const a = "search-input-id";
+			e.insertAdjacentHTML("beforebegin", `<input id="${a}" class="tree-filter" placeholder="Search"/>`), document.getElementById(a)?.addEventListener("input", (e) => function(e) {
+				const a = document.querySelector("#catalog-tree");
+				if (!a) return;
+				const t = new RegExp(e?.replace(/\W+/g, ".*?"), "i"), n = a.querySelectorAll("a.country-name");
+				for (const o of n) {
+					const e = o.closest("div.country");
+					if (e) {
+						const a = t.test(o.textContent ?? "");
+						let n = 0;
+						const r = e.querySelectorAll("a.period");
+						for (const e of r) if (a) q(e);
+						else {
+							const a = t.test(e.textContent ?? "");
+							L(a, e), a && (n += 1);
+						}
+						L(a || !!n, e);
+						const i = n > 0 && n < 6, s = e.querySelector(".periods");
+						s && (s.style.display = i ? "block" : "none");
+						const l = e.querySelector("img");
+						l && (l.src = i ? "/i/bg/minus.gif" : "/i/bg/plus.gif");
+					}
+				}
+				for (const o of a.querySelectorAll("div.country")) if (!j(o)) {
+					const e = [...a.querySelectorAll("div.country:not(.hide)")].filter((e) => e !== o && e.textContent === o.textContent);
+					for (const a of e) E(a);
+				}
+				const r = a.querySelectorAll("div.country:not(.hide)");
+				if (1 === r.length) {
+					const e = r[0], a = e.querySelector(".periods");
+					a && (a.style.display = "block");
+					const t = e.querySelector("img");
+					t && (t.src = "/i/bg/minus.gif");
+				}
+				const i = a.querySelectorAll("div.reg");
+				for (const o of i) {
+					const { length: e } = o.querySelectorAll("div.country:not(.hide)");
+					L(!!e, o);
+					const a = o.querySelector(".region");
+					if (a) {
+						const t = e > 0 && e <= 5 || a.matches(".open");
+						o.classList.toggle("open", !t);
+						const n = o.querySelector(".countries");
+						n && (n.style.display = "", L(t, n));
+					}
+				}
+			}(e.target.value));
+		}()), e.push(async function() {
+			let e = document.querySelector("ul.bottom-lang a[href*=\"://lt.\"]");
+			if (e) return void console.error("handleLanguages: lt language already exists");
+			const a = document.querySelector("ul.bottom-lang a[href*=\"://it.\"]");
+			if (!a) return void console.error("handleLanguages: it language not found");
+			const t = a.closest("li"), n = t?.nextElementSibling, r = t?.cloneNode(!0);
+			e = r?.querySelector("a"), e && (e.href = a.href.replace("/it.", "/lt."), e.textContent = "Lietuvių", n?.insertAdjacentElement("afterend", r), r?.insertAdjacentElement("afterend", n?.cloneNode(!0)));
+		}()), await Promise.all(e);
+	})();
+	//#endregion
 })(React, ReactDOMServer);

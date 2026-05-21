@@ -10,7 +10,9 @@
     --color-surface-error: #fed;
     --color-surface-info: #eee;
     --color-surface-reserve: honeydew;
+    --color-surface-reserve-marked: palegoldenrod;
     --color-surface-duplicate: mistyrose;
+    --color-surface-duplicate-marked: peachpuff;
     --color-content-header: #333;
     --color-content-total: #666;
     --color-border-total: #060;
@@ -526,6 +528,10 @@ body, select, textarea, input[type="text"], input[type="password"], input[type="
 
         &:has(th.thumbnails + td a[class^="marked-"]) {
             background: var(--color-surface-duplicate);
+
+            &.mark {
+                background: var(--color-surface-duplicate-marked);
+            }
         }
     }
 }
@@ -535,6 +541,10 @@ body, select, textarea, input[type="text"], input[type="password"], input[type="
     .swap-coin tr {
         &:has(th[data-reserve="on"]) {
             background: var(--color-surface-reserve);
+
+            &.mark {
+                background: var(--color-surface-reserve-marked);
+            }
         }
 
         &.conflict {
