@@ -203,7 +203,6 @@ export async function handleCountryRegions(): Promise<void> {
     // update region counts
     updateRegionHeadingsByDirectLists();
 
-    console.debug(headingList);
     if (headingList) {
         headingList.innerHTML = '';
         headingList.insertAdjacentHTML(

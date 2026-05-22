@@ -88,16 +88,13 @@ export function addFilteringOptions(): void {
         options: sort(
             [...countryHeadings].reduce((r: FilterOptions, h) => {
                 const hc = h.cloneNode(true) as HTMLHeadingElement;
-                for (const el of hc.querySelectorAll('input, sup')) {
+                for (const el of hc.querySelectorAll('input, sup, span')) {
                     el.remove();
                 }
 
                 const rows = h.nextElementSibling?.querySelectorAll('tr') || [];
-                console.debug(rows.length, rows);
                 const filtered = [...rows].filter(isVisible);
-                console.debug(filtered.length, filtered);
                 const mapped = filtered.map((el) => el.style.display);
-                console.debug(mapped);
 
                 r.set(hc.id, {
                     name: hc.innerHTML,

@@ -31,6 +31,15 @@ const sortOptions: Record<string, SortOption> = {
 let currentOption = 'year';
 let currentOrder: SortOrder = 'd';
 
+function indexOf<T extends Element>(list: HTMLCollectionOf<T>, item: T | null): number {
+    for (let i = 0; i < list.length; i++) {
+        if (list[i] === item) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 export function addSortingOptions(): void {
     const swapList = document.getElementById('take-swap-list') as HTMLDivElement;
     if (!swapList) {
@@ -105,12 +114,19 @@ export function addSortingOptions(): void {
     // add sorting index to all rows
     const rows = swapList.querySelectorAll<HTMLTableRowElement>('table.swap-coin tbody tr');
     for (const row of rows) {
-        const offset = row.querySelectorAll('td.ico-star').length;
-        const c = row.querySelectorAll('td');
+        const cells = row.children;
+        const thumb = indexOf(cells, row.querySelector('th.thumbnails'));
+        const offset = row.querySelectorAll('td.ico-star').length + thumb + 1;
+
+        const c = cells;
         const d = row.dataset;
         for (const [field, { index }] of Object.entries(sortOptions)) {
             const name = sortField(field);
+
             const t = c[index + offset].textContent as Condition;
+
+            console.debug(`[DEV]`, { name, index, offset, thumb, t, c });
+
             if (!t) {
                 continue;
             }
