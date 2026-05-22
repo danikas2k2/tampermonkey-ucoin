@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/
-// @version      1.15.10 (2026.5.21.16.25)
+// @version      1.15.11 (2026.5.22.11.51)
 // @author       danikas2k2
 // @license      ISC
 // @icon         https://i.ibb.co/Tc6q9x3/apple-touch-icon-152.png
@@ -57,7 +57,7 @@
 		})(e));
 	};
 	//#endregion
-	//#region \0./ucoin-FQYBO01o.js
+	//#region \0./ucoin-DYh9D_xg.js
 	var n = Object.create, r = Object.defineProperty, i = Object.getOwnPropertyDescriptor, o = Object.getOwnPropertyNames, s = Object.getPrototypeOf, l = Object.prototype.hasOwnProperty, c = (e, a) => () => (a || e((a = { exports: {} }).exports, a), a.exports), u = (e, a, t) => (t = null != e ? n(s(e)) : {}, ((e, a, t, n) => {
 		if (a && "object" == typeof a || "function" == typeof a) for (var s, c = o(a), u = 0, d = c.length; u < d; u++) s = c[u], l.call(e, s) || void 0 === s || r(e, s, {
 			get: ((e) => a[e]).bind(null, s),
@@ -7732,7 +7732,11 @@
 			sort: Ke
 		}
 	}, Da = "year", Wa = "d";
-	async function Xa() {
+	function Xa(e, a) {
+		for (let t = 0; t < e.length; t++) if (e[t] === a) return t;
+		return -1;
+	}
+	async function Ya() {
 		(function() {
 			const e = [...document.querySelectorAll("#swap-mgr div.leftCol > div.user-info > .wrap")].map((e) => e.textContent).join(" / ");
 			e && (document.title = `${e} - ${document.title}`);
@@ -7781,20 +7785,27 @@
 			});
 			const i = e.querySelectorAll("table.swap-coin tbody tr");
 			for (const o of i) {
-				const e = o.querySelectorAll("td.ico-star").length, a = o.querySelectorAll("td"), t = o.dataset;
-				for (const [n, { index: r }] of Object.entries(Ka)) {
-					const i = Ge(n), o = a[r + e].textContent;
-					if (o) if ("year" === n) {
-						const [e, ...a] = o.split(/(?:\s|&nbsp;)+/);
-						t[i] = e, t.sortMm = a.join(" ");
-					} else if ("cond" === n) t[i] = `${ae[o]}`;
-					else if ("km" === n) {
-						const e = o.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i);
-						if (e && e.groups) {
-							const { groups: { cat: a, num: n, prefix: r, suffix: s } } = e;
-							t.sortKmc = a, t[i] = n, t.sortKma = `${r}${s}`, t.sortKmz = o;
-						} else t.sortKmc = "", t[i] = o, t.sortKma = "", t.sortKmz = o;
-					} else t[i] = o;
+				const e = o.children, a = Xa(e, o.querySelector("th.thumbnails")), t = o.querySelectorAll("td.ico-star").length + a + 1, n = e, r = o.dataset;
+				for (const [i, { index: o }] of Object.entries(Ka)) {
+					const e = Ge(i), s = n[o + t].textContent;
+					if (console.debug("[DEV]", {
+						name: e,
+						index: o,
+						offset: t,
+						thumb: a,
+						t: s,
+						c: n
+					}), s) if ("year" === i) {
+						const [a, ...t] = s.split(/(?:\s|&nbsp;)+/);
+						r[e] = a, r.sortMm = t.join(" ");
+					} else if ("cond" === i) r[e] = `${ae[s]}`;
+					else if ("km" === i) {
+						const a = s.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i);
+						if (a && a.groups) {
+							const { groups: { cat: t, num: n, prefix: i, suffix: o } } = a;
+							r.sortKmc = t, r[e] = n, r.sortKma = `${i}${o}`, r.sortKmz = s;
+						} else r.sortKmc = "", r[e] = s, r.sortKma = "", r.sortKmz = s;
+					} else r[e] = s;
 				}
 			}
 			[Da, Wa] = Ye(), Xe(t, Ka[Da]?.sort, Wa);
@@ -7833,13 +7844,8 @@
 				width: 250,
 				options: r([...d].reduce((e, a) => {
 					const t = a.cloneNode(!0);
-					for (const o of t.querySelectorAll("input, sup")) o.remove();
-					const n = a.nextElementSibling?.querySelectorAll("tr") || [];
-					console.debug(n.length, n);
-					const r = [...n].filter(l);
-					console.debug(r.length, r);
-					const i = r.map((e) => e.style.display);
-					return console.debug(i), e.set(t.id, {
+					for (const n of t.querySelectorAll("input, sup, span")) n.remove();
+					return [...a.nextElementSibling?.querySelectorAll("tr") || []].filter(l).map((e) => e.style.display), e.set(t.id, {
 						name: t.innerHTML,
 						count: [...a.nextElementSibling?.querySelectorAll("tr") || []].filter(l).length
 					}), e;
@@ -7943,7 +7949,7 @@
 				__self: this,
 				__source: {
 					fileName: "/Users/asteponavicius/dev/ucoin/src/lib/swap-list-filter.tsx",
-					lineNumber: 203,
+					lineNumber: 200,
 					columnNumber: 63
 				}
 			}))), f();
@@ -8200,7 +8206,7 @@
 			}
 		}();
 	}
-	var Ya = {
+	var Ja = {
 		year: {
 			index: 0,
 			label: "Year",
@@ -8221,7 +8227,7 @@
 			label: "Krause",
 			sort: Ke
 		}
-	}, Ja = "year", Za = "d";
+	}, Za = "year", Qa = "d";
 	(async function() {
 		const e = [], { pathname: a, searchParams: t } = k();
 		a.includes(`/uid${U}`) && e.push(async function() {
@@ -8309,7 +8315,7 @@
 					if (a) for (const e of a.querySelectorAll(":scope > div.cntry")) t += 1, n += +(e.querySelector("span.right")?.textContent ?? 0) || 0;
 					t && n && e.querySelector("h2")?.insertAdjacentHTML("beforeend", `<span class="lgray-13">( ${t} / ${n} )</span>`);
 				}
-			}(), console.debug(t), t) {
+			}(), t) {
 				t.innerHTML = "", t.insertAdjacentHTML("beforeend", `<li class="region${r ? "" : " active"}">${n ?? b("All")}</li>`);
 				for (const e of i) {
 					const a = G(e);
@@ -8331,7 +8337,7 @@
 					}
 				});
 			}
-		}())), a.includes("/swap-") && e.push(Xa()), a.includes("/wish-") && e.push(async function() {
+		}())), a.includes("/swap-") && e.push(Ya()), a.includes("/wish-") && e.push(async function() {
 			const e = "table.wish-coin";
 			va(e), ka(e);
 		}()), a.includes("/table/") && e.push(async function() {
@@ -8346,7 +8352,7 @@
 				let n = t.querySelector("#sort-filter");
 				n && n.remove();
 				let r = t.querySelector("#sort-filter-dialog");
-				if (r && r.remove(), t.insertAdjacentHTML("beforeend", `<div class="right filter-container" style="margin-right:0;">${Te("sort-filter", Pe(`${b("Sorting")}: ${b(Ya[Ja]?.label)}`, Za), Object.entries(Ya).map(([e, { label: a }]) => `\n                    <a class="list-link" data-option="${e}" data-order="a">${Me(b(a))}${Be()}</a>\n                    <a class="list-link" data-option="${e}" data-order="d">${Me(b(a))}${Fe()}</a>\n                `))}</div>`), n = t.querySelector("#sort-filter"), !n) return;
+				if (r && r.remove(), t.insertAdjacentHTML("beforeend", `<div class="right filter-container" style="margin-right:0;">${Te("sort-filter", Pe(`${b("Sorting")}: ${b(Ja[Za]?.label)}`, Qa), Object.entries(Ja).map(([e, { label: a }]) => `\n                    <a class="list-link" data-option="${e}" data-order="a">${Me(b(a))}${Be()}</a>\n                    <a class="list-link" data-option="${e}" data-order="d">${Me(b(a))}${Fe()}</a>\n                `))}</div>`), n = t.querySelector("#sort-filter"), !n) return;
 				if (r = t.querySelector("#sort-filter-dialog"), !r) return;
 				n.addEventListener("click", (e) => {
 					C(e), r.style.display = "block";
@@ -8355,12 +8361,12 @@
 					const t = e.target.closest("a");
 					if (!t) return;
 					const { option: i, order: o } = t.dataset;
-					i && o && (Ja = i, Za = o, n.innerHTML = Pe(`${b("Sorting")}: ${b(Ya[Ja]?.label)}`, Za), await Je(Ja, Za), Xe(a, Ya[Ja]?.sort, Za));
+					i && o && (Za = i, Qa = o, n.innerHTML = Pe(`${b("Sorting")}: ${b(Ja[Za]?.label)}`, Qa), await Je(Za, Qa), Xe(a, Ja[Za]?.sort, Qa));
 				});
 				const i = e.querySelectorAll("tbody tr");
 				for (const o of i) {
 					const e = o.children, a = o.dataset;
-					for (const [t, { index: n }] of Object.entries(Ya)) {
+					for (const [t, { index: n }] of Object.entries(Ja)) {
 						const r = Ge(t), i = e[n].textContent;
 						if (i) if ("year" === t) {
 							const [e, ...t] = i.split(/(?:\s|&nbsp;)+/);
@@ -8374,7 +8380,7 @@
 						} else a[r] = i;
 					}
 				}
-				[Ja, Za] = Ye(), Xe(a, Ya[Ja]?.sort, Za);
+				[Za, Qa] = Ye(), Xe(a, Ja[Za]?.sort, Qa);
 			}(), setTimeout(() => {
 				document.querySelector("a.period.selected")?.scrollIntoView({
 					behavior: "auto",
