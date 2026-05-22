@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         collector :: ucoin.net
 // @namespace    https://ucoin.net/
-// @version      1.15.11 (2026.5.22.11.51)
+// @version      1.15.11 (2026.5.22.14.4)
 // @author       danikas2k2
 // @license      ISC
 // @icon         https://i.ibb.co/Tc6q9x3/apple-touch-icon-152.png
@@ -57,7 +57,7 @@
 		})(e));
 	};
 	//#endregion
-	//#region \0./ucoin-DYh9D_xg.js
+	//#region \0./ucoin-LyDJNe22.js
 	var n = Object.create, r = Object.defineProperty, i = Object.getOwnPropertyDescriptor, o = Object.getOwnPropertyNames, s = Object.getPrototypeOf, l = Object.prototype.hasOwnProperty, c = (e, a) => () => (a || e((a = { exports: {} }).exports, a), a.exports), u = (e, a, t) => (t = null != e ? n(s(e)) : {}, ((e, a, t, n) => {
 		if (a && "object" == typeof a || "function" == typeof a) for (var s, c = o(a), u = 0, d = c.length; u < d; u++) s = c[u], l.call(e, s) || void 0 === s || r(e, s, {
 			get: ((e) => a[e]).bind(null, s),
@@ -1882,19 +1882,19 @@
 	function j(e) {
 		return !!e?.classList.contains("hide");
 	}
-	function q(...e) {
+	function E(...e) {
 		for (const a of e) a?.classList.remove("hide");
 	}
-	function E(...e) {
+	function q(...e) {
 		for (const a of e) a?.classList.add("hide");
 	}
 	function L(e, ...a) {
 		for (const t of a) t?.classList.toggle("hide", !e);
 	}
-	function C(e) {
+	function N(e) {
 		e && (e.preventDefault(), e.stopPropagation());
 	}
-	function N() {
+	function C() {
 		return y().reload(), null;
 	}
 	function B(e) {
@@ -1902,7 +1902,7 @@
 		return a.innerHTML = e, a.content;
 	}
 	function F(e) {
-		C(e);
+		N(e);
 		const a = document.createElement("a");
 		a.href = e.target?.dataset?.href ?? "", a.dispatchEvent(new MouseEvent(e.type, e));
 	}
@@ -1910,7 +1910,7 @@
 		const a = e?.querySelectorAll("[data-href]");
 		if (a?.length) for (const t of a) t.addEventListener("click", F);
 	}
-	function P(e, a, t = M, n = N) {
+	function P(e, a, t = M, n = C) {
 		if (!a) return;
 		const r = e.getElementById(a.id);
 		if (!r) return n?.(a);
@@ -1919,7 +1919,7 @@
 	function R(e, a) {
 		var t;
 		e.addEventListener("submit", (t = e.onsubmit, async (e) => async function(e, a, t) {
-			C(e);
+			N(e);
 			const n = e.target;
 			if (!1 !== a?.call(n, e)) return t?.(n);
 		}(e, t, a))), e.removeAttribute("onsubmit");
@@ -1927,7 +1927,7 @@
 	function T(e, a) {
 		var t;
 		e.addEventListener("click", (t = e.onclick, (e) => async function(e, a, t) {
-			C(e);
+			N(e);
 			const n = e.target;
 			if (!1 !== a?.call(n, e)) return t?.(n);
 		}(e, t, a))), e.removeAttribute("onclick");
@@ -1941,14 +1941,14 @@
 	function G(e) {
 		return e.replace(/\W+/g, "-").replace(/^-+/, "").replace(/-+$/, "").toLowerCase();
 	}
-	function H(e) {
+	function I(e) {
 		e?.scrollIntoView?.({
 			behavior: "smooth",
 			block: "nearest",
 			inline: "nearest"
 		});
 	}
-	function I(e) {
+	function H(e) {
 		const a = {};
 		for (const t of e.querySelectorAll("div.cntry")) {
 			const [, e] = t.querySelector("a")?.href.match(/&country=(\w+)/) || [];
@@ -2033,7 +2033,7 @@
 		[X.PROOF]: J.PROOF
 	}, ie = (X.G, X.VG, X.F, X.VF, X.XF, X.UNC, X.PROOF, X.BU, X.ANY, X.COPY, X.UNKNOWN, 1e3), oe = () => document.querySelector("#my-func-block");
 	async function se(e = oe(), a = document.querySelector("#ucid-block")) {
-		q(e), function(e) {
+		E(e), function(e) {
 			for (const a of e?.querySelectorAll(".func-button .btn-l") || []) a.classList.add("btn-narrow"), a.matches("a") && (a.classList.replace("btn-gray", "btn-red"), a.setAttribute("type", "submit"));
 		}(e), function(e) {
 			const a = e?.querySelector(".my-collection-block");
@@ -2059,8 +2059,8 @@
 		(function(e) {
 			const { buy_month: a, buy_year: t } = e;
 			let { buy_year_month: n } = e;
-			E(t, a), n || (t.insertAdjacentHTML("afterend", "<input id='buy_year_month' name='buy_year_month' type='month'/>"), n = e.buy_year_month), n.max = V(), n.addEventListener("change", (e) => {
-				C(e);
+			q(t, a), n || (t.insertAdjacentHTML("afterend", "<input id='buy_year_month' name='buy_year_month' type='month'/>"), n = e.buy_year_month), n.max = V(), n.addEventListener("change", (e) => {
+				N(e);
 				const r = n.value || V();
 				return [t.value, a.value] = r.split("-", 2), !1;
 			});
@@ -2113,7 +2113,7 @@
 		return !(!e || !await fetch(location.href, {
 			method: "POST",
 			body: new FormData(e)
-		}).then(D)) || !!N();
+		}).then(D)) || !!C();
 	}
 	function me(e, a) {
 		const t = e?.querySelector(".status-line .left"), n = e?.querySelector(".func-button");
@@ -2231,7 +2231,7 @@
 		return t && !isNaN(t) || (t = ke(B(await fetch("/").then((e) => e.text())).querySelector(`a[href="/catalog/?composition=${e}"] section`)?.textContent) ?? 0, t || (t = a), sessionStorage.setItem(e, t.toString())), t;
 	}
 	var je = /CoinSwapFormOn\('(?<usid>[^']*)', '(?<cond>[^']*)', '(?<price>[^']*)', '(?<info>[^']*)', '(?<vid>[^']*)', '(?<strqty>[^']*)', '(?<replica>[^']*)'/;
-	function* qe(e = document) {
+	function* Ee(e = document) {
 		const a = e.querySelector("#swap #swap-block");
 		if (a) {
 			const e = a.querySelectorAll("a.list-link");
@@ -2239,8 +2239,8 @@
 			for (const a of e) yield a;
 		} else console.debug("Swap block not found.");
 	}
-	function* Ee() {
-		for (const e of qe()) if (!e.querySelector("div.ico-16") && e.hasAttribute("onClick")) {
+	function* qe() {
+		for (const e of Ee()) if (!e.querySelector("div.ico-16") && e.hasAttribute("onClick")) {
 			const a = e.getAttribute("onClick")?.match(je);
 			if (a && a.groups) {
 				const { cond: t, info: n, vid: r } = a.groups;
@@ -2266,12 +2266,12 @@
 		const n = t.textContent?.split(" "), r = n?.shift();
 		n?.length && (t.textContent = r || "", t.insertAdjacentHTML("beforeend", ` <span class="lgray-11">${n.join(" ")}</span>`));
 	}
-	function Ce(e) {
+	function Ne(e) {
 		const a = e.querySelectorAll("a.list-link");
 		a.length || console.debug("No swap links found in the provided list.");
 		for (const t of a) Le(t);
 	}
-	function Ne(e) {
+	function Ce(e) {
 		if (e.hasAttribute("onClick")) {
 			const a = e.getAttribute("onClick")?.match(je);
 			if (a?.groups) {
@@ -2369,24 +2369,24 @@
 		}
 		formOnHandler(e, ...a) {
 			this.formClickTimeout = setTimeout(() => {
-				this.listBlock && E(this.listBlock), this.form && this.formClose && q(this.form, this.formClose), this.func && function(...e) {
+				this.listBlock && q(this.listBlock), this.form && this.formClose && E(this.form, this.formClose), this.func && function(...e) {
 					for (const a of e) a?.classList.add("disable");
-				}(this.func), this.widgetHeaderRedirectHandler && this.widgetHeader?.removeEventListener("click", this.widgetHeaderRedirectHandler), this.widgetHeader?.addEventListener("click", this.widgetHeaderCloseHandler), this.fillForm(e, ...a), this.cancelButton && (q(this.cancelButton), this.cancelButton.setAttribute("onclick", `LayerOff('${this.formType}-form');CoinSwapFormOff();CoinWishFormOff();LayerOn('add-button-block');`)), this.addButton && L(!e, this.addButton), this.deleteButton && (this.editButton && L(!!e, this.editButton, this.deleteButton), this.deleteConfirmButton && (this.deleteConfirmButton.href = `?action=del${this.formType}coin&${this.formUid}=${e}`)), (e ? this.editButton : this.addButton)?.focus();
+				}(this.func), this.widgetHeaderRedirectHandler && this.widgetHeader?.removeEventListener("click", this.widgetHeaderRedirectHandler), this.widgetHeader?.addEventListener("click", this.widgetHeaderCloseHandler), this.fillForm(e, ...a), this.cancelButton && (E(this.cancelButton), this.cancelButton.setAttribute("onclick", `LayerOff('${this.formType}-form');CoinSwapFormOff();CoinWishFormOff();LayerOn('add-button-block');`)), this.addButton && L(!e, this.addButton), this.deleteButton && (this.editButton && L(!!e, this.editButton, this.deleteButton), this.deleteConfirmButton && (this.deleteConfirmButton.href = `?action=del${this.formType}coin&${this.formUid}=${e}`)), (e ? this.editButton : this.addButton)?.focus();
 			}, 300);
 		}
 		formOnHandlerSubmit(e, ...a) {
 			clearTimeout(this.formClickTimeout), this.fillForm(e, ...a), this.form?.submit();
 		}
 		formOffHandler() {
-			this.form && this.formClose && E(this.form, this.formClose), this.listBlock && q(this.listBlock), this.func && function(...e) {
+			this.form && this.formClose && q(this.form, this.formClose), this.listBlock && E(this.listBlock), this.func && function(...e) {
 				for (const a of e) a?.classList.remove("disable");
 			}(this.func), this.widgetHeader?.removeEventListener("click", this.widgetHeaderCloseHandler), this.widgetHeaderRedirectHandler && this.widgetHeader?.addEventListener("click", this.widgetHeaderRedirectHandler);
 		}
 		widgetHeaderCloseHandler(e) {
-			C(e), this.formOffHandler();
+			N(e), this.formOffHandler();
 		}
 		updateList() {
-			this.listBlock ? Ce(this.listBlock) : console.debug("List block not found.");
+			this.listBlock ? Ne(this.listBlock) : console.debug("List block not found.");
 		}
 		removeOneButton() {
 			const e = this.main?.previousElementSibling;
@@ -2397,7 +2397,7 @@
 			e[this.formOnFunctionName] = (...e) => this.formOnHandler(...e), e[this.formOffFunctionName] = () => this.formOffHandler();
 		}
 		async update() {
-			this.main && (q(this.main), this.removeOneButton(), this.updateWidget(), await this.updateForm()), this.updateList();
+			this.main && (E(this.main), this.removeOneButton(), this.updateWidget(), await this.updateForm()), this.updateList();
 		}
 		updateButtonSet() {
 			if (!this.oneButton) return;
@@ -2458,7 +2458,7 @@
 	var Ve = (e) => e ? +e.replace(/[^.\d]/g, "") : 0, Oe = (e, a) => -(e < a) || +(e > a), Ge = (e) => `sort${function(e = "") {
 		const a = e.match(/\P{Z}/u)?.index ?? 0;
 		return `${e.slice(0, a)}${e.charAt(a).toUpperCase()}${e.slice(a + 1)}`;
-	}(e)}`, He = (e, a, t) => Oe(Ve(e[Ge(t)]), Ve(a[Ge(t)])), Ie = (e, a, t) => Oe(e[Ge(t)], a[Ge(t)]), Ue = (e, a, t = 1) => t * He(e, a, "year") || t * Ie(e, a, "mm"), Ke = (e, a, t = 1) => t * Ie(e, a, "kmc") || t * He(e, a, "km") || t * Ie(e, a, "kma") || t * Ue(e, a), De = (e, a, t = 1) => t * Ie(e, a, "face") || t * Ke(e, a, -1), We = (e, a, t = 1) => t * He(e, a, "cond") || De(e, a);
+	}(e)}`, Ie = (e, a, t) => Oe(Ve(e[Ge(t)]), Ve(a[Ge(t)])), He = (e, a, t) => Oe(e[Ge(t)], a[Ge(t)]), Ue = (e, a, t = 1) => t * Ie(e, a, "year") || t * He(e, a, "mm"), Ke = (e, a, t = 1) => t * He(e, a, "kmc") || t * Ie(e, a, "km") || t * He(e, a, "kma") || t * Ue(e, a), De = (e, a, t = 1) => t * He(e, a, "face") || t * Ke(e, a, -1), We = (e, a, t = 1) => t * Ie(e, a, "cond") || De(e, a);
 	function Xe(e, a, t) {
 		const n = "a" === t ? 1 : -1;
 		for (const r of e) {
@@ -2507,13 +2507,13 @@
 		addButton(e, a, t, n) {
 			if (!this.buttonSet) return void console.warn("No button set found");
 			const r = `${e}-qty`, i = this.buttonSet.querySelector(`#${r}`);
-			i ? q(i) : (this.buttonSet.insertAdjacentHTML("beforeend", `<button id='${r}' type='button' class='btn--${e} btn-s btn-blue'>${t}</button>`), this.buttonSet.querySelector(`#${r}`)?.addEventListener("click", async () => {
+			i ? E(i) : (this.buttonSet.insertAdjacentHTML("beforeend", `<button id='${r}' type='button' class='btn--${e} btn-s btn-blue'>${t}</button>`), this.buttonSet.querySelector(`#${r}`)?.addEventListener("click", async () => {
 				this.hideButtons(), await n(a), this.updateButtons();
 			}));
 		}
 		updateVariants() {
 			this.#a = !1, this.#t = !1, this.#e.clear();
-			for (const { m: e } of Ee()) {
+			for (const { m: e } of qe()) {
 				const { uniq: a = "", usid: t = "", cond: n = "", price: r = "", info: i = "", vid: o = "", strqty: s = 0 } = e, l = +s;
 				let c;
 				l > 1 && (this.#a = !0), this.#e.has(a) ? (c = this.#e.get(a), c && (c.usids.add(t), c.total += l), this.#t = !0) : c = {
@@ -2529,10 +2529,10 @@
 			}
 		}
 		showButtons(e) {
-			this.buttonSet && q(...this.buttonSet.querySelectorAll("button" + (e ? `.btn--${e}` : "")));
+			this.buttonSet && E(...this.buttonSet.querySelectorAll("button" + (e ? `.btn--${e}` : "")));
 		}
 		hideButtons(e) {
-			this.buttonSet && E(...this.buttonSet.querySelectorAll("button" + (e ? `.btn--${e}` : "")));
+			this.buttonSet && q(...this.buttonSet.querySelectorAll("button" + (e ? `.btn--${e}` : "")));
 		}
 		showExpandButtons() {
 			this.showButtons("expand");
@@ -2552,7 +2552,7 @@
 		async onExpand(e = 0) {
 			ea("EXPANDING...");
 			let a = !1, t = !1, n = !0;
-			for await (const { a: r, m: i } of Ee()) {
+			for await (const { a: r, m: i } of qe()) {
 				const { uniq: o = "", usid: s = "", cond: l = "", price: c = "", info: u = "", vid: d = "", strqty: m = 0 } = i, f = +m, p = e > 0 ? Math.min(f, e) : f;
 				if (p <= 1) ea(`IGNORING ${o} ${s}`);
 				else {
@@ -2570,15 +2570,15 @@
 							break;
 						}
 						const h = /* @__PURE__ */ new Set();
-						for (const e of qe()) {
+						for (const e of Ee()) {
 							if (!e.hasAttribute("onClick")) continue;
 							const a = e.getAttribute("onClick")?.match(je);
 							a && a.groups && h.add(a.groups.usid);
 						}
-						for (const e of qe(f)) {
+						for (const e of Ee(f)) {
 							if (!e.hasAttribute("onClick")) continue;
 							const a = e.getAttribute("onClick")?.match(je), t = a && a.groups && a.groups.usid;
-							t && !h.has(t) && (h.add(t), Le(e), r.insertAdjacentElement("afterend", e), Ne(e));
+							t && !h.has(t) && (h.add(t), Le(e), r.insertAdjacentElement("afterend", e), Ce(e));
 						}
 						if (n || await Qe(), n = !1, ea(`UPDATING ${o} ${s} -> ${i}`), !await this.updateSwapCoin(s, {
 							cond: l,
@@ -2615,7 +2615,7 @@
 					const e = l.querySelector(this.#r.listSelector);
 					if (e && this.#n) {
 						const a = this.#n.querySelector("center");
-						a && e.querySelector("center")?.replaceWith(a), Ce(e), this.update(e);
+						a && e.querySelector("center")?.replaceWith(a), Ne(e), this.update(e);
 					}
 				}
 				ea(`UPDATING ${n}`);
@@ -2631,7 +2631,7 @@
 					const e = c.querySelector(this.#r.listSelector);
 					if (ea(this.#r.listSelector, this.#n, e), e && this.#n) {
 						const a = this.#n.querySelector("center");
-						a && e.querySelector("center")?.replaceWith(a), Ce(e), this.update(e);
+						a && e.querySelector("center")?.replaceWith(a), Ne(e), this.update(e);
 					}
 				}
 			}
@@ -2645,7 +2645,7 @@
 				method: "POST",
 				body: s
 			}).then(D));
-			return ea("fragment"), ea(l), ea("this.listForm.mainSelector"), ea(this.#r.mainSelector), ea("fragment.querySelector(this.listForm.mainSelector)"), ea(l.querySelector(this.#r.mainSelector)), l.querySelector(this.#r.mainSelector) ? l : N();
+			return ea("fragment"), ea(l), ea("this.listForm.mainSelector"), ea(this.#r.mainSelector), ea("fragment.querySelector(this.listForm.mainSelector)"), ea(l.querySelector(this.#r.mainSelector)), l.querySelector(this.#r.mainSelector) ? l : C();
 		}
 		async addSwapCoin(e) {
 			return this.updateSwapCoin("", e, "addswapcoin");
@@ -2655,7 +2655,7 @@
 			e instanceof Set && (e = [...e].join(","));
 			const a = new URL("/swap-list/", location.href), t = a.searchParams;
 			t.set("f", "del"), t.set("usid", e), t.set("uid", U);
-			return B(await fetch(a.href).then(K).then((e) => e.text())) || N();
+			return B(await fetch(a.href).then(K).then((e) => e.text())) || C();
 		}
 		updateLinkQty(e, a) {
 			if (e.hasAttribute("onClick")) {
@@ -2700,7 +2700,7 @@
 		updateList() {
 			this.swapListManager.update(this.listBlock);
 			const e = k().searchParams.get("vid");
-			for (const a of document.querySelectorAll(this.listSelector)) Ce(a);
+			for (const a of document.querySelectorAll(this.listSelector)) Ne(a);
 			(function(e, a) {
 				const t = Array.from(e?.querySelectorAll("a.list-link") || []);
 				for (const n of t) n.dataset.vid = (n.getAttribute("onClick")?.match(je))?.groups?.vid || "";
@@ -2711,7 +2711,7 @@
 				for (const n of t) e?.prepend(n);
 				for (const n of Array.from(e?.querySelectorAll("a.list-link") || [])) (n.dataset.vid !== a && n.previousElementSibling?.dataset.vid === a || !n.href.endsWith(`=${U}`) && n.previousElementSibling?.href.endsWith(`=${U}`)) && n.classList.add("with-separator");
 			})(this.listBlock, e), function() {
-				for (const e of qe()) Ne(e);
+				for (const e of Ee()) Ce(e);
 			}();
 		}
 		getConditionOption(e) {
@@ -2915,7 +2915,7 @@
 				const e = document.querySelectorAll(".coin-desc > div > a.blue-15");
 				if (!e) return n();
 				for (const n of e) {
-					await Qe(), H(n);
+					await Qe(), I(n);
 					const { screenLeft: e, screenTop: r, outerWidth: i, outerHeight: o } = window, s = window.open(n.href, a, [
 						"width=" + i / 1.25,
 						"height=" + o / 1.5,
@@ -5561,7 +5561,7 @@
 		yemen: "ye",
 		zambia: "zm",
 		zimbabwe: "zw"
-	}, qa = {
+	}, Ea = {
 		al: {
 			20: 3.9,
 			50: 4.2,
@@ -7474,24 +7474,24 @@
 			1e3: 8,
 			2e3: 11.75
 		}
-	}, Ea = function(e) {
+	}, qa = function(e) {
 		return e[e.SMALL_ENVELOPE = 50] = "SMALL_ENVELOPE", e[e.LARGE_ENVELOPE = 450] = "LARGE_ENVELOPE", e[e.SMALL_PACKAGE = 900] = "SMALL_PACKAGE", e[e.MEDIUM_PACKAGE = 1400] = "MEDIUM_PACKAGE", e[e.LARGE_PACKAGE = 1900] = "LARGE_PACKAGE", e;
 	}({});
 	function La(e, a) {
 		const t = ja[e];
-		if (!(t in qa)) return -1;
-		if (a > Ea.LARGE_PACKAGE) return +(La(e, a % Ea.LARGE_PACKAGE) + La(e, Ea.LARGE_PACKAGE) * Math.floor(a / Ea.LARGE_PACKAGE)).toFixed(2);
-		const n = qa[t];
+		if (!(t in Ea)) return -1;
+		if (a > qa.LARGE_PACKAGE) return +(La(e, a % qa.LARGE_PACKAGE) + La(e, qa.LARGE_PACKAGE) * Math.floor(a / qa.LARGE_PACKAGE)).toFixed(2);
+		const n = Ea[t];
 		return Object.entries(n).find(([e]) => a <= +e)?.[1] || -1;
 	}
-	var Ca = function(e) {
+	var Na = function(e) {
 		return e.GET = "get", e.GIVE = "give", e.HISTORY = "history", e;
 	}({});
-	async function Na(e) {
+	async function Ca(e) {
 		localStorage.setItem(p.TAB, e), await _((a) => a.set(p.TAB, e));
 	}
 	function $a(e) {
-		return e.classList.contains("lgray-13") ? Ca.HISTORY : e.textContent.includes("Coins′un′Notes") ? Ca.GIVE : Ca.GET;
+		return e.classList.contains("lgray-13") ? Na.HISTORY : e.textContent.includes("Coins′un′Notes") ? Na.GIVE : Na.GET;
 	}
 	function Ba(e, a) {
 		const t = ya(e);
@@ -7576,7 +7576,7 @@
 			}) : window.classNames = t;
 		})();
 	})()), Va = "/Users/asteponavicius/dev/ucoin/src/lib/filters.tsx", Oa = function(e) {
-		return e.RESERVED = "resedved", e.COUNTRY = "country", e.YEAR = "year", e.VALUE = "value", e.KM = "km", e;
+		return e.RESERVED = "reserved", e.MARKED = "marked", e.COUNTRY = "country", e.YEAR = "year", e.VALUE = "value", e.KM = "km", e;
 	}({});
 	function Ga({ name: e, direction: t, value: n, placeholder: r, width: i, options: o }) {
 		const s = o.size <= 1;
@@ -7590,7 +7590,7 @@
 			__self: this,
 			__source: {
 				fileName: Va,
-				lineNumber: 68,
+				lineNumber: 69,
 				columnNumber: 9
 			}
 		}, react.default.createElement("div", {
@@ -7605,7 +7605,7 @@
 			__self: this,
 			__source: {
 				fileName: Va,
-				lineNumber: 69,
+				lineNumber: 70,
 				columnNumber: 13
 			}
 		}, react.default.createElement("div", {
@@ -7614,7 +7614,7 @@
 			__self: this,
 			__source: {
 				fileName: Va,
-				lineNumber: 79,
+				lineNumber: 80,
 				columnNumber: 17
 			}
 		}), !s && (n ? react.default.createElement("div", {
@@ -7624,7 +7624,7 @@
 			__self: this,
 			__source: {
 				fileName: Va,
-				lineNumber: 85,
+				lineNumber: 86,
 				columnNumber: 25
 			}
 		}, "×") : react.default.createElement("div", {
@@ -7632,7 +7632,7 @@
 			__self: this,
 			__source: {
 				fileName: Va,
-				lineNumber: 89,
+				lineNumber: 90,
 				columnNumber: 25
 			}
 		}, react.default.createElement("span", {
@@ -7640,7 +7640,7 @@
 			__self: this,
 			__source: {
 				fileName: Va,
-				lineNumber: 90,
+				lineNumber: 91,
 				columnNumber: 29
 			}
 		}))) || ""), react.default.createElement("div", {
@@ -7650,7 +7650,7 @@
 			__self: this,
 			__source: {
 				fileName: Va,
-				lineNumber: 95,
+				lineNumber: 96,
 				columnNumber: 13
 			}
 		}, [["", "All"], ...o.entries()].map(([t, n]) => react.default.createElement(react.default.Fragment, null, react.default.createElement("a", {
@@ -7660,7 +7660,7 @@
 			__self: this,
 			__source: {
 				fileName: Va,
-				lineNumber: 99,
+				lineNumber: 100,
 				columnNumber: 25
 			}
 		}, react.default.createElement("span", {
@@ -7669,7 +7669,7 @@
 			__self: this,
 			__source: {
 				fileName: Va,
-				lineNumber: 100,
+				lineNumber: 101,
 				columnNumber: 29
 			}
 		}), "string" != typeof n && react.default.createElement("span", {
@@ -7677,18 +7677,18 @@
 			__self: this,
 			__source: {
 				fileName: Va,
-				lineNumber: 107,
+				lineNumber: 108,
 				columnNumber: 33
 			}
 		}, "(", n.count, ")"))))));
 	}
-	function Ha({ filters: e }) {
+	function Ia({ filters: e }) {
 		return react.default.createElement("div", {
 			className: "left filter-container filters",
 			__self: this,
 			__source: {
 				fileName: Va,
-				lineNumber: 119,
+				lineNumber: 120,
 				columnNumber: 9
 			}
 		}, [...e.entries()].map(([e, t]) => react.default.createElement(Ga, {
@@ -7698,14 +7698,14 @@
 			__self: this,
 			__source: {
 				fileName: Va,
-				lineNumber: 121,
+				lineNumber: 122,
 				columnNumber: 17
 			}
 		})));
 	}
-	var Ia = function(e) {
-		return e.DEFAULT = "#DDD", e.RESERVED = "#E4A500", e;
-	}(Ia || {}), Ua = (e = Ia.DEFAULT) => `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 96 960 960" width="20px" style="fill:${e}"><path d="M425 711h110V611h100V501H535V401H425v100H325v110h100v100Zm55 255q-135.091-34.197-223.045-155.842Q169 688.514 169 540V303l311-117 311 117v237q0 148.514-87.955 270.158Q615.091 931.803 480 966Zm0-78.5q102.5-33 169.25-130.603Q716 659.293 716 540V354.387L480 266l-236 88.387V540q0 119.293 66.75 216.897Q377.5 854.5 480 887.5Zm0-311Z"></path></svg>`, Ka = {
+	var Ha = function(e) {
+		return e.DISABLED = "#DDD", e.ENABLED = "#E4A500", e;
+	}(Ha || {}), Ua = (e = Ha.DISABLED) => `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 96 960 960" width="20px" style="fill:${e}"><path d="M425 711h110V611h100V501H535V401H425v100H325v110h100v100Zm55 255q-135.091-34.197-223.045-155.842Q169 688.514 169 540V303l311-117 311 117v237q0 148.514-87.955 270.158Q615.091 931.803 480 966Zm0-78.5q102.5-33 169.25-130.603Q716 659.293 716 540V354.387L480 266l-236 88.387V540q0 119.293 66.75 216.897Q377.5 854.5 480 887.5Zm0-311Z"></path></svg>`, Ka = (e = Ha.DISABLED) => `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 96 960 960" width="20px" style="fill:${e}"><path d="m233 976 65-281L80 506l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z"/></svg>`, Da = {
 		year: {
 			index: 0,
 			label: "Year",
@@ -7724,19 +7724,19 @@
 		value: {
 			index: 4,
 			label: "Value",
-			sort: (e, a, t = 1) => t * He(e, a, "value") || We(e, a, -1)
+			sort: (e, a, t = 1) => t * Ie(e, a, "value") || We(e, a, -1)
 		},
 		km: {
 			index: 6,
 			label: "Krause",
 			sort: Ke
 		}
-	}, Da = "year", Wa = "d";
-	function Xa(e, a) {
+	}, Wa = "year", Xa = "d";
+	function Ya(e, a) {
 		for (let t = 0; t < e.length; t++) if (e[t] === a) return t;
 		return -1;
 	}
-	async function Ya() {
+	async function Ja() {
 		(function() {
 			const e = [...document.querySelectorAll("#swap-mgr div.leftCol > div.user-info > .wrap")].map((e) => e.textContent).join(" / ");
 			e && (document.title = `${e} - ${document.title}`);
@@ -7757,10 +7757,10 @@
 				for (const a of e.querySelectorAll("table.swap-coin td a.dgray-13")) a.textContent?.match(/(eur(o|a[is])|евро)/i) && a.classList.add("separate-country");
 			}
 		}(), function() {
-			const e = document.querySelector("#tree a.list-link:not([href]):first-child .right")?.textContent || "0", [, a] = document.querySelector("#tree .user-info + div span[class^=\"swap-status\"]")?.className.match(/swap-status(\d+)/) || [], t = x(p.TAB) || localStorage.getItem(p.TAB) || ("0" === e || "1" === a || "2" === a ? Ca.GIVE : Ca.GET), n = document.querySelectorAll("#swap-mgr div.widerightCol > ul.region-list > li.region");
+			const e = document.querySelector("#tree a.list-link:not([href]):first-child .right")?.textContent || "0", [, a] = document.querySelector("#tree .user-info + div span[class^=\"swap-status\"]")?.className.match(/swap-status(\d+)/) || [], t = x(p.TAB) || localStorage.getItem(p.TAB) || ("0" === e || "1" === a || "2" === a ? Na.GIVE : Na.GET), n = document.querySelectorAll("#swap-mgr div.widerightCol > ul.region-list > li.region");
 			for (const r of n) {
 				const e = $a(r);
-				r.addEventListener("click", () => Na(e)), e === t && r.click();
+				r.addEventListener("click", () => Ca(e)), e === t && r.click();
 			}
 		}(), function() {
 			const e = document.getElementById("take-swap-list");
@@ -7769,46 +7769,39 @@
 			if (!a) return;
 			const t = e.querySelectorAll("table.swap-coin tbody");
 			if (!t || !t.length) return;
-			a.removeAttribute("style"), a.insertAdjacentHTML("afterend", Te("sort-filter", Pe(b(Ka[Da]?.label), Wa), Object.entries(Ka).map(([e, { label: a }]) => `\n                    <a class='list-link' data-option='${e}' data-order='a'>${Me(b(a))}${Be()}</a>\n                    <a class='list-link' data-option='${e}' data-order='d'>${Me(b(a))}${Fe()}</a>\n                `)));
+			a.removeAttribute("style"), a.insertAdjacentHTML("afterend", Te("sort-filter", Pe(b(Da[Wa]?.label), Xa), Object.entries(Da).map(([e, { label: a }]) => `\n                    <a class='list-link' data-option='${e}' data-order='a'>${Me(b(a))}${Be()}</a>\n                    <a class='list-link' data-option='${e}' data-order='d'>${Me(b(a))}${Fe()}</a>\n                `)));
 			const n = e.querySelector("#sort-filter");
 			if (!n) return;
 			const r = e.querySelector("#sort-filter-dialog");
 			if (!r) return;
 			n.addEventListener("click", (e) => {
-				C(e), r.style.display = "block";
+				N(e), r.style.display = "block";
 			}), r.addEventListener("click", async (e) => {
-				C(e), r.style.display = "none";
+				N(e), r.style.display = "none";
 				const a = e.target.closest("a");
 				if (!a) return;
 				const { option: i, order: o } = a.dataset;
-				i && o && (Da = i, Wa = o, n.innerHTML = Pe(b(Ka[Da]?.label), Wa), await Je(Da, Wa), Xe(t, Ka[Da]?.sort, Wa));
+				i && o && (Wa = i, Xa = o, n.innerHTML = Pe(b(Da[Wa]?.label), Xa), await Je(Wa, Xa), Xe(t, Da[Wa]?.sort, Xa));
 			});
 			const i = e.querySelectorAll("table.swap-coin tbody tr");
 			for (const o of i) {
-				const e = o.children, a = Xa(e, o.querySelector("th.thumbnails")), t = o.querySelectorAll("td.ico-star").length + a + 1, n = e, r = o.dataset;
-				for (const [i, { index: o }] of Object.entries(Ka)) {
-					const e = Ge(i), s = n[o + t].textContent;
-					if (console.debug("[DEV]", {
-						name: e,
-						index: o,
-						offset: t,
-						thumb: a,
-						t: s,
-						c: n
-					}), s) if ("year" === i) {
-						const [a, ...t] = s.split(/(?:\s|&nbsp;)+/);
-						r[e] = a, r.sortMm = t.join(" ");
-					} else if ("cond" === i) r[e] = `${ae[s]}`;
+				const e = o.children, a = Ya(e, o.querySelector("th.thumbnails")), t = o.querySelectorAll("td.ico-star").length + a + 1, n = e, r = o.dataset;
+				for (const [i, { index: o }] of Object.entries(Da)) {
+					const e = Ge(i), a = n[o + t].textContent;
+					if (a) if ("year" === i) {
+						const [t, ...n] = a.split(/(?:\s|&nbsp;)+/);
+						r[e] = t, r.sortMm = n.join(" ");
+					} else if ("cond" === i) r[e] = `${ae[a]}`;
 					else if ("km" === i) {
-						const a = s.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i);
-						if (a && a.groups) {
-							const { groups: { cat: t, num: n, prefix: i, suffix: o } } = a;
-							r.sortKmc = t, r[e] = n, r.sortKma = `${i}${o}`, r.sortKmz = s;
-						} else r.sortKmc = "", r[e] = s, r.sortKma = "", r.sortKmz = s;
-					} else r[e] = s;
+						const t = a.match(/(?<cat>\w+)#\s*(?<prefix>[a-zA-Z]*)(?<num>\d+)(?<suffix>(?:\.\d+)?[a-zA-Z]*)/i);
+						if (t && t.groups) {
+							const { groups: { cat: n, num: i, prefix: o, suffix: s } } = t;
+							r.sortKmc = n, r[e] = i, r.sortKma = `${o}${s}`, r.sortKmz = a;
+						} else r.sortKmc = "", r[e] = a, r.sortKma = "", r.sortKmz = a;
+					} else r[e] = a;
 				}
 			}
-			[Da, Wa] = Ye(), Xe(t, Ka[Da]?.sort, Wa);
+			[Wa, Xa] = Ye(), Xe(t, Da[Wa]?.sort, Xa);
 		}(), function() {
 			const e = document.getElementById("take-swap-list");
 			if (!e) return;
@@ -7822,6 +7815,7 @@
 			}
 			const i = /* @__PURE__ */ new Map(), o = [
 				Oa.RESERVED,
+				Oa.MARKED,
 				Oa.COUNTRY,
 				Oa.YEAR,
 				Oa.VALUE,
@@ -7831,21 +7825,33 @@
 				placeholder: "Reserved",
 				width: 100,
 				options: new Map(c && u ? [["on", {
-					name: `<span class="left filter-label">${Ua(Ia.RESERVED)}</span>`,
+					name: `<span class="left filter-label">${Ua(Ha.ENABLED)}</span>`,
 					count: c
 				}], ["off", {
-					name: `<span class="left filter-label">${Ua(Ia.DEFAULT)}</span>`,
+					name: `<span class="left filter-label">${Ua(Ha.DISABLED)}</span>`,
 					count: u
 				}]] : [])
 			});
-			const d = e.querySelectorAll("h2");
+			const d = [...e.querySelectorAll("tr.mark")].filter(l).length, m = [...e.querySelectorAll("tr:not(.mark)")].filter(l).length;
+			i.set(Oa.MARKED, {
+				placeholder: "Starred",
+				width: 100,
+				options: new Map(d && m ? [["on", {
+					name: `<span class="left filter-label">${Ka(Ha.ENABLED)}</span>`,
+					count: d
+				}], ["off", {
+					name: `<span class="left filter-label">${Ka(Ha.DISABLED)}</span>`,
+					count: m
+				}]] : [])
+			});
+			const f = e.querySelectorAll("h2");
 			i.set(Oa.COUNTRY, {
 				placeholder: "Country",
 				width: 250,
-				options: r([...d].reduce((e, a) => {
+				options: r([...f].reduce((e, a) => {
 					const t = a.cloneNode(!0);
 					for (const n of t.querySelectorAll("input, sup, span")) n.remove();
-					return [...a.nextElementSibling?.querySelectorAll("tr") || []].filter(l).map((e) => e.style.display), e.set(t.id, {
+					return e.set(t.id, {
 						name: t.innerHTML,
 						count: [...a.nextElementSibling?.querySelectorAll("tr") || []].filter(l).length
 					}), e;
@@ -7869,13 +7875,13 @@
 						const [t] = n.split(" ");
 						a.set(t, {
 							name: t,
-							count: [...e.querySelectorAll(`tr[data-sort-face="${t}"]`), ...e.querySelectorAll(`tr[data-sort-face^="${t} "]`)].filter(l).length
+							count: [...e.querySelectorAll(`tr[data-sort-face="${t}"], tr[data-sort-face^="${t} "]`)].filter(l).length
 						});
 					}
 					return a;
 				}, /* @__PURE__ */ new Map()), (e, a) => Oe(Ve(e), Ve(a)))
 			});
-			const m = /([a-z]*)([0-9]*)((?:\.[0-9]+)?[a-z]*)/i;
+			const p = /([a-z]*)([0-9]*)((?:\.[0-9]+)?[a-z]*)/i;
 			i.set(Oa.KM, {
 				placeholder: "KM#",
 				width: 110,
@@ -7886,7 +7892,7 @@
 						count: [...e.querySelectorAll(`tr[data-sort-kmc="${n}"][data-sort-km="${r}"][data-sort-kma="${i}"]`)].filter(l).length
 					}), a;
 				}, /* @__PURE__ */ new Map()), (e, a) => {
-					const [, t, n, r] = e.match(m) || [], [, i, o, s] = a.match(m) || [];
+					const [, t, n, r] = e.match(p) || [], [, i, o, s] = a.match(p) || [];
 					return Oe(t, i) || Oe(Ve(n), Ve(o)) || Oe(r, s);
 				})
 			});
@@ -7898,8 +7904,8 @@
 					t && (t.value = e);
 				}
 			}
-			function f() {
-				for (const e of d) {
+			function h() {
+				for (const e of f) {
 					const a = e.nextElementSibling, t = a.querySelectorAll("tr");
 					let n = !1;
 					e: for (const r of t) {
@@ -7908,6 +7914,16 @@
 							case Oa.RESERVED:
 								const t = "on" === i ? "on" : "";
 								if (i && !r.querySelector(`[data-reserve="${t}"]`)) {
+									r.style.display = "none";
+									continue e;
+								}
+								break;
+							case Oa.MARKED:
+								if ("on" === i && !r.classList.contains("mark")) {
+									r.style.display = "none";
+									continue e;
+								}
+								if ("off" === i && r.classList.contains("mark")) {
 									r.style.display = "none";
 									continue e;
 								}
@@ -7931,7 +7947,7 @@
 								}
 								break;
 							case Oa.KM: {
-								const [, e, t, n] = i.match(m) || [];
+								const [, e, t, n] = i.match(p) || [];
 								if (a.sortKmc?.toLowerCase() !== e || a.sortKm !== t || a.sortKma !== n) {
 									r.style.display = "none";
 									continue e;
@@ -7944,24 +7960,31 @@
 					e.style.display = a.style.display = n ? "" : "none";
 				}
 			}
-			n.insertAdjacentHTML("beforebegin", (0, react_dom_server.renderToString)(react.default.createElement(Ha, {
+			n.insertAdjacentHTML("beforebegin", (0, react_dom_server.renderToString)(react.default.createElement(Ia, {
 				filters: i,
 				__self: this,
 				__source: {
 					fileName: "/Users/asteponavicius/dev/ucoin/src/lib/swap-list-filter.tsx",
-					lineNumber: 200,
+					lineNumber: 239,
 					columnNumber: 63
 				}
-			}))), f();
+			}))), h(), new MutationObserver((e) => {
+				const a = s.has(Oa.RESERVED) && e.some((e) => "data-reserve" === e.attributeName), t = s.has(Oa.MARKED) && e.some((e) => "class" === e.attributeName);
+				(a || t) && h();
+			}).observe(e, {
+				subtree: !0,
+				attributes: !0,
+				attributeFilter: ["data-reserve", "class"]
+			});
 			for (const a of document.querySelectorAll("[data-filter-by]")) a.addEventListener("click", async () => {
 				const e = a.dataset, t = e.filterBy, n = e.filterValue;
 				await _((e) => n ? e.set(t, n) : e.delete(t));
 				const r = document.querySelector(`[data-filter="${t}"]`);
 				var i;
-				r && (n ? (r.innerHTML = `${Re(a.querySelector(".left")?.outerHTML)}${i = t, `<div class='right close' title='Clear filter' data-filter-clear='${i}'>×</div>`}`, r.classList.add("filter-box-active")) : (r.innerHTML = `${Re(r.dataset?.filterPlaceholder)}${Fe()}`, r.classList.remove("filter-box-active"))), n ? s.set(t, n) : s.delete(t), f();
+				r && (n ? (r.innerHTML = `${Re(a.querySelector(".left")?.outerHTML)}${i = t, `<div class='right close' title='Clear filter' data-filter-clear='${i}'>×</div>`}`, r.classList.add("filter-box-active")) : (r.innerHTML = `${Re(r.dataset?.filterPlaceholder)}${Fe()}`, r.classList.remove("filter-box-active"))), n ? s.set(t, n) : s.delete(t), h();
 			});
 			for (const a of document.querySelectorAll("[data-filter]")) a.addEventListener("click", async (e) => {
-				C(e);
+				N(e);
 				const t = a.dataset;
 				if ("true" === t.filterDisabled) return;
 				let n = !1;
@@ -7969,23 +7992,23 @@
 				if (r.matches("[data-filter-clear]")) {
 					n = !0;
 					const { filterClear: e } = r.dataset;
-					e && await _((a) => a.delete(e)), a.innerHTML = `${Re(t.filterPlaceholder)}${Fe()}`, a.classList.remove("filter-box-active"), s.delete(i), f();
+					e && await _((a) => a.delete(e)), a.innerHTML = `${Re(t.filterPlaceholder)}${Fe()}`, a.classList.remove("filter-box-active"), s.delete(i), h();
 				}
 				for (const a of document.querySelectorAll("[data-filter-dialog]")) a.style.display = n || a.dataset.filterDialog !== i || "block" === a.style.display ? "none" : "block";
 			});
 			for (const a of document.querySelectorAll("[data-filter-dialog]")) a.addEventListener("click", (e) => {
-				C(e), a.style.display = "none";
+				N(e), a.style.display = "none";
 			});
-			const p = e.querySelectorAll(".filter");
-			for (const a of p) a.addEventListener("input", (a) => {
+			const g = e.querySelectorAll(".filter");
+			for (const a of g) a.addEventListener("input", (a) => {
 				const t = a.target, n = t.id, r = t.value, i = Ge(n), o = e.querySelectorAll("tbody > tr");
 				for (const e of o) {
 					const a = e.dataset;
 					e.style.display = !r || a[i]?.includes(r) ? "" : "none";
 				}
 			});
-			const h = e.querySelectorAll("table.swap-coin tbody");
-			h && h.length;
+			const b = e.querySelectorAll("table.swap-coin tbody");
+			b && b.length;
 		}(), function() {
 			const e = document.getElementById("swap-list");
 			if (!e) return;
@@ -8060,7 +8083,7 @@
 					const a = Ra(e);
 					a && !c.has(a) && (c.delete(a), e.remove());
 				}
-				c.size ? N() : i.remove();
+				c.size ? C() : i.remove();
 			});
 		}(), function() {
 			if (document.getElementById("need-swap-list")) return;
@@ -8138,7 +8161,7 @@
 					console.warn(`[DEV] Missing tab for title "${r}"`);
 					continue;
 				}
-				const h = p === Ca.GIVE, g = n[f]?.querySelectorAll("tr:not(.del) .price");
+				const h = p === Na.GIVE, g = n[f]?.querySelectorAll("tr:not(.del) .price");
 				if (!g?.length) {
 					console.error(`[DEV] Missing price cells for title "${r}"`, {
 						titleIndex: f,
@@ -8183,7 +8206,7 @@
 			if (!e) return;
 			const a = new Function(e.getAttribute("onclick") ?? "return;");
 			e.removeAttribute("onclick"), e.addEventListener("click", async (e) => {
-				if (C(e), !1 === a()) return !1;
+				if (N(e), !1 === a()) return !1;
 				const { href: t } = e.currentTarget, n = fetch(t), r = new URL(t), i = r.searchParams.get("usid") ?? r.searchParams.get("amp;usid");
 				for (const a of i?.split(",") ?? []) {
 					const e = document.querySelector(`tr#usid${a}`), t = e?.closest("table");
@@ -8193,7 +8216,7 @@
 					}
 				}
 				const o = await n;
-				return o.ok ? void 0 : (console.error(o), N());
+				return o.ok ? void 0 : (console.error(o), C());
 			});
 		}(), function() {
 			const e = document.getElementById("tree");
@@ -8206,7 +8229,7 @@
 			}
 		}();
 	}
-	var Ja = {
+	var Za = {
 		year: {
 			index: 0,
 			label: "Year",
@@ -8220,14 +8243,14 @@
 		subject: {
 			index: 2,
 			label: "Subject",
-			sort: (e, a, t = 1) => t * Ie(e, a, "subject") || De(e, a)
+			sort: (e, a, t = 1) => t * He(e, a, "subject") || De(e, a)
 		},
 		km: {
 			index: 3,
 			label: "Krause",
 			sort: Ke
 		}
-	}, Za = "year", Qa = "d";
+	}, Qa = "year", et = "d";
 	(async function() {
 		const e = [], { pathname: a, searchParams: t } = k();
 		a.includes(`/uid${U}`) && e.push(async function() {
@@ -8284,7 +8307,7 @@
 					const a = await fetch(t, { credentials: "same-origin" });
 					if (a.ok) {
 						const t = new DOMParser().parseFromString(await a.text(), "text/html"), r = t.querySelector("ul.hor-switcher ~ div.country-list");
-						r ? Object.assign(e, I(r)) : Object.assign(e, I(t)), n = !0;
+						r ? Object.assign(e, H(r)) : Object.assign(e, H(t)), n = !0;
 					}
 				} catch {}
 				if (n) {
@@ -8337,7 +8360,7 @@
 					}
 				});
 			}
-		}())), a.includes("/swap-") && e.push(Ya()), a.includes("/wish-") && e.push(async function() {
+		}())), a.includes("/swap-") && e.push(Ja()), a.includes("/wish-") && e.push(async function() {
 			const e = "table.wish-coin";
 			va(e), ka(e);
 		}()), a.includes("/table/") && e.push(async function() {
@@ -8352,21 +8375,21 @@
 				let n = t.querySelector("#sort-filter");
 				n && n.remove();
 				let r = t.querySelector("#sort-filter-dialog");
-				if (r && r.remove(), t.insertAdjacentHTML("beforeend", `<div class="right filter-container" style="margin-right:0;">${Te("sort-filter", Pe(`${b("Sorting")}: ${b(Ja[Za]?.label)}`, Qa), Object.entries(Ja).map(([e, { label: a }]) => `\n                    <a class="list-link" data-option="${e}" data-order="a">${Me(b(a))}${Be()}</a>\n                    <a class="list-link" data-option="${e}" data-order="d">${Me(b(a))}${Fe()}</a>\n                `))}</div>`), n = t.querySelector("#sort-filter"), !n) return;
+				if (r && r.remove(), t.insertAdjacentHTML("beforeend", `<div class="right filter-container" style="margin-right:0;">${Te("sort-filter", Pe(`${b("Sorting")}: ${b(Za[Qa]?.label)}`, et), Object.entries(Za).map(([e, { label: a }]) => `\n                    <a class="list-link" data-option="${e}" data-order="a">${Me(b(a))}${Be()}</a>\n                    <a class="list-link" data-option="${e}" data-order="d">${Me(b(a))}${Fe()}</a>\n                `))}</div>`), n = t.querySelector("#sort-filter"), !n) return;
 				if (r = t.querySelector("#sort-filter-dialog"), !r) return;
 				n.addEventListener("click", (e) => {
-					C(e), r.style.display = "block";
+					N(e), r.style.display = "block";
 				}), r.addEventListener("click", async (e) => {
-					C(e), r.style.display = "none";
+					N(e), r.style.display = "none";
 					const t = e.target.closest("a");
 					if (!t) return;
 					const { option: i, order: o } = t.dataset;
-					i && o && (Za = i, Qa = o, n.innerHTML = Pe(`${b("Sorting")}: ${b(Ja[Za]?.label)}`, Qa), await Je(Za, Qa), Xe(a, Ja[Za]?.sort, Qa));
+					i && o && (Qa = i, et = o, n.innerHTML = Pe(`${b("Sorting")}: ${b(Za[Qa]?.label)}`, et), await Je(Qa, et), Xe(a, Za[Qa]?.sort, et));
 				});
 				const i = e.querySelectorAll("tbody tr");
 				for (const o of i) {
 					const e = o.children, a = o.dataset;
-					for (const [t, { index: n }] of Object.entries(Ja)) {
+					for (const [t, { index: n }] of Object.entries(Za)) {
 						const r = Ge(t), i = e[n].textContent;
 						if (i) if ("year" === t) {
 							const [e, ...t] = i.split(/(?:\s|&nbsp;)+/);
@@ -8380,7 +8403,7 @@
 						} else a[r] = i;
 					}
 				}
-				[Za, Qa] = Ye(), Xe(a, Ja[Za]?.sort, Qa);
+				[Qa, et] = Ye(), Xe(a, Za[Qa]?.sort, et);
 			}(), setTimeout(() => {
 				document.querySelector("a.period.selected")?.scrollIntoView({
 					behavior: "auto",
@@ -8409,7 +8432,7 @@
 						const a = t.test(o.textContent ?? "");
 						let n = 0;
 						const r = e.querySelectorAll("a.period");
-						for (const e of r) if (a) q(e);
+						for (const e of r) if (a) E(e);
 						else {
 							const a = t.test(e.textContent ?? "");
 							L(a, e), a && (n += 1);
@@ -8423,7 +8446,7 @@
 				}
 				for (const o of a.querySelectorAll("div.country")) if (!j(o)) {
 					const e = [...a.querySelectorAll("div.country:not(.hide)")].filter((e) => e !== o && e.textContent === o.textContent);
-					for (const a of e) E(a);
+					for (const a of e) q(a);
 				}
 				const r = a.querySelectorAll("div.country:not(.hide)");
 				if (1 === r.length) {

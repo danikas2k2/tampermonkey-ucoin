@@ -14,7 +14,7 @@
         "experimentalDecorators": true,
         "exactOptionalPropertyTypes": true,
         "strictNullChecks": true,
-        "moduleResolution": "node",
+        "moduleResolution": "node16",
         "removeComments": false,
         "noImplicitAny": true,
         "preserveConstEnums": false,

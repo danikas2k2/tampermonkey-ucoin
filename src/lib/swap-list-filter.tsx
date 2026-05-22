@@ -5,12 +5,16 @@ import { c, cmp, d, num, sortField, x } from './sort';
 import { getHashParam, updateLocationHash } from './url';
 import { cancel } from './utils';
 
-const enum ReserveColors {
-    DEFAULT = `#DDD`,
-    RESERVED = `#E4A500`,
+const enum IconColors {
+    DISABLED = `#DDD`,
+    ENABLED = `#E4A500`,
 }
-const getReserveIcon = (color = ReserveColors.DEFAULT) =>
+
+const getReserveIcon = (color = IconColors.DISABLED) =>
     `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 96 960 960" width="20px" style="fill:${color}"><path d="M425 711h110V611h100V501H535V401H425v100H325v110h100v100Zm55 255q-135.091-34.197-223.045-155.842Q169 688.514 169 540V303l311-117 311 117v237q0 148.514-87.955 270.158Q615.091 931.803 480 966Zm0-78.5q102.5-33 169.25-130.603Q716 659.293 716 540V354.387L480 266l-236 88.387V540q0 119.293 66.75 216.897Q377.5 854.5 480 887.5Zm0-311Z"></path></svg>`;
+
+const getStarIcon = (color = IconColors.DISABLED) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 96 960 960" width="20px" style="fill:${color}"><path d="m233 976 65-281L80 506l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z"/></svg>`;
 
 export function addFilteringOptions(): void {
     const swapList = document.getElementById('take-swap-list') as HTMLDivElement;
@@ -41,6 +45,7 @@ export function addFilteringOptions(): void {
     const filterProps = new Map<FilterName, FilterProps>();
     const filterNames: FilterName[] = [
         FilterName.RESERVED,
+        FilterName.MARKED,
         FilterName.COUNTRY,
         FilterName.YEAR,
         FilterName.VALUE,
@@ -50,10 +55,10 @@ export function addFilteringOptions(): void {
 
     const isVisible = (el: HTMLElement): boolean => el.style.display !== 'none';
 
-    const reservedCount = [...swapList.querySelectorAll('th[data-reserve="on"]')].filter(
-        isVisible
-    ).length;
-    const missingCount = [...swapList.querySelectorAll('th[data-reserve=""]')].filter(
+    const reservedCount = [
+        ...swapList.querySelectorAll<HTMLElement>('th[data-reserve="on"]'),
+    ].filter(isVisible).length;
+    const missingCount = [...swapList.querySelectorAll<HTMLElement>('th[data-reserve=""]')].filter(
         isVisible
     ).length;
     filterProps.set(FilterName.RESERVED, {
@@ -65,15 +70,46 @@ export function addFilteringOptions(): void {
                       [
                           'on',
                           {
-                              name: `<span class="left filter-label">${getReserveIcon(ReserveColors.RESERVED)}</span>`,
+                              name: `<span class="left filter-label">${getReserveIcon(IconColors.ENABLED)}</span>`,
                               count: reservedCount,
                           },
                       ],
                       [
                           'off',
                           {
-                              name: `<span class="left filter-label">${getReserveIcon(ReserveColors.DEFAULT)}</span>`,
+                              name: `<span class="left filter-label">${getReserveIcon(IconColors.DISABLED)}</span>`,
                               count: missingCount,
+                          },
+                      ],
+                  ]
+                : []
+        ),
+    });
+
+    const markedCount = [...swapList.querySelectorAll<HTMLTableRowElement>('tr.mark')].filter(
+        isVisible
+    ).length;
+    const unmarkedCount = [
+        ...swapList.querySelectorAll<HTMLTableRowElement>('tr:not(.mark)'),
+    ].filter(isVisible).length;
+    filterProps.set(FilterName.MARKED, {
+        placeholder: 'Starred',
+        width: 100,
+        options: new Map(
+            markedCount && unmarkedCount
+                ? [
+                      [
+                          'on',
+                          {
+                              name: `<span class="left filter-label">${getStarIcon(IconColors.ENABLED)}</span>`,
+                              count: markedCount,
+                          },
+                      ],
+                      [
+                          'off',
+                          {
+                              name: `<span class="left filter-label">${getStarIcon(IconColors.DISABLED)}</span>`,
+                              count: unmarkedCount,
                           },
                       ],
                   ]
@@ -92,9 +128,9 @@ export function addFilteringOptions(): void {
                     el.remove();
                 }
 
-                const rows = h.nextElementSibling?.querySelectorAll('tr') || [];
-                const filtered = [...rows].filter(isVisible);
-                const mapped = filtered.map((el) => el.style.display);
+                // const rows = h.nextElementSibling?.querySelectorAll('tr') || [];
+                // const filtered = [...rows].filter(isVisible);
+                // const mapped = filtered.map((el) => el.style.display);
 
                 r.set(hc.id, {
                     name: hc.innerHTML,
@@ -118,7 +154,9 @@ export function addFilteringOptions(): void {
                         r.set(y, {
                             name: y,
                             count: [
-                                ...swapList.querySelectorAll(`tr[data-sort-year="${y}"]`),
+                                ...swapList.querySelectorAll<HTMLElement>(
+                                    `tr[data-sort-year="${y}"]`
+                                ),
                             ].filter(isVisible).length,
                         });
                     }
@@ -142,8 +180,9 @@ export function addFilteringOptions(): void {
                         r.set(v, {
                             name: v,
                             count: [
-                                ...swapList.querySelectorAll(`tr[data-sort-face="${v}"]`),
-                                ...swapList.querySelectorAll(`tr[data-sort-face^="${v} "]`),
+                                ...swapList.querySelectorAll<HTMLElement>(
+                                    `tr[data-sort-face="${v}"], tr[data-sort-face^="${v} "]`
+                                ),
                             ].filter(isVisible).length,
                         });
                     }
@@ -168,7 +207,7 @@ export function addFilteringOptions(): void {
                         r.set(v, {
                             name: `${c}# ${k}${a}`,
                             count: [
-                                ...swapList.querySelectorAll(
+                                ...swapList.querySelectorAll<HTMLElement>(
                                     `tr[data-sort-kmc="${c}"][data-sort-km="${k}"][data-sort-kma="${a}"]`
                                 ),
                             ].filter(isVisible).length,
@@ -213,6 +252,17 @@ export function addFilteringOptions(): void {
                         case FilterName.RESERVED:
                             const reserve = value === 'on' ? 'on' : '';
                             if (value && !r.querySelector(`[data-reserve="${reserve}"]`)) {
+                                r.style.display = 'none';
+                                continue rowLoop;
+                            }
+                            break;
+
+                        case FilterName.MARKED:
+                            if (value === 'on' && !r.classList.contains('mark')) {
+                                r.style.display = 'none';
+                                continue rowLoop;
+                            }
+                            if (value === 'off' && r.classList.contains('mark')) {
                                 r.style.display = 'none';
                                 continue rowLoop;
                             }
@@ -264,6 +314,23 @@ export function addFilteringOptions(): void {
     }
 
     applyFilters();
+
+    const reserveObserver = new MutationObserver((mutations) => {
+        const hasReserveChange =
+            filterValues.has(FilterName.RESERVED) &&
+            mutations.some((m) => m.attributeName === 'data-reserve');
+        const hasStarChange =
+            filterValues.has(FilterName.MARKED) &&
+            mutations.some((m) => m.attributeName === 'class');
+        if (hasReserveChange || hasStarChange) {
+            applyFilters();
+        }
+    });
+    reserveObserver.observe(swapList, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['data-reserve', 'class'],
+    });
 
     for (const option of document.querySelectorAll<HTMLElement>('[data-filter-by]')) {
         option.addEventListener('click', async () => {

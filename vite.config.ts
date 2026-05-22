@@ -9,7 +9,7 @@ function svgInlineLoader(): Plugin {
     return {
         name: 'svg-inline-loader',
         enforce: 'pre',
-        load(id) {
+        load(id: string) {
             const [filePath, query] = id.split('?', 2);
             if (query) {
                 return null;
@@ -89,5 +89,3 @@ export default defineConfig({
         },
     },
 });
-
-

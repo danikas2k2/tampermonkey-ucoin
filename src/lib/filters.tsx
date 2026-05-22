@@ -4,7 +4,8 @@ import React, { ReactElement } from 'react';
 export type FilterDirection = 'left' | 'right';
 
 export const enum FilterName {
-    RESERVED = 'resedved',
+    RESERVED = 'reserved',
+    MARKED = 'marked',
     COUNTRY = 'country',
     YEAR = 'year',
     VALUE = 'value',

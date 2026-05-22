@@ -125,8 +125,6 @@ export function addSortingOptions(): void {
 
             const t = c[index + offset].textContent as Condition;
 
-            console.debug(`[DEV]`, { name, index, offset, thumb, t, c });
-
             if (!t) {
                 continue;
             }
