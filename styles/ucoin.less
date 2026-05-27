@@ -597,12 +597,11 @@ body, select, textarea, input[type="text"], input[type="password"], input[type="
         }
 
         .filters {
+            clear: both;
             position: sticky;
             z-index: 100;
-            top: 0;
             background: var(--color-surface);
-            padding: 15px 0;
-            margin: -15px 0 5px;
+            height: 2rem;
         }
     }
 
@@ -630,6 +629,10 @@ body, select, textarea, input[type="text"], input[type="password"], input[type="
 
         .filter-label {
             max-width: 140px;
+        }
+
+        .filter-icon {
+            margin-block-start: -2px;
         }
     }
 

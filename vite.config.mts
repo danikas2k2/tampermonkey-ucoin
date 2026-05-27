@@ -68,24 +68,14 @@ export default defineConfig({
     define: {
         'process.env.NODE_ENV': JSON.stringify('production'),
     },
-    esbuild: {
-        // Ensure classic React JSX transform (no react/jsx-runtime import).
-        jsx: 'transform',
+    oxc: {
+        jsx: { runtime: 'classic' },
     },
     build: {
         outDir: 'dist',
         emptyOutDir: true,
         sourcemap: false,
         target: 'es2024',
-        minify: 'terser',
-        terserOptions: {
-            compress: {
-                toplevel: true,
-                passes: 2,
-            },
-            format: {
-                comments: /^\**!!/,
-            },
-        },
+        minify: 'oxc',
     },
 });

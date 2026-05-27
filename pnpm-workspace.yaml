@@ -1,2 +1,13 @@
 allowBuilds:
   esbuild: true
+
+overrides:
+  glob: "^13.0.6"
+  micromatch: "^4.0.8"
+  minimatch: "^10.2.5"
+  postcss: "^8.5.15"
+  sugarss: "^5.0.1"
+
+peerDependencyRules:
+  allowedVersions:
+    eslint: "10"

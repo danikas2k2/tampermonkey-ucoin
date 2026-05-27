@@ -53,18 +53,17 @@ export function addFilteringOptions(): void {
     ];
     const filterValues = new Map<FilterName, string>();
 
-    const isVisible = (el: HTMLElement): boolean => el.style.display !== 'none';
+    const isVisible = (el: HTMLElement): boolean =>
+        el.style.display !== 'none' && el.closest<HTMLElement>('table')?.style.display !== 'none';
 
-    const reservedCount = [
-        ...swapList.querySelectorAll<HTMLElement>('th[data-reserve="on"]'),
-    ].filter(isVisible).length;
-    const missingCount = [...swapList.querySelectorAll<HTMLElement>('th[data-reserve=""]')].filter(
-        isVisible
-    ).length;
-    filterProps.set(FilterName.RESERVED, {
-        placeholder: 'Reserved',
-        width: 100,
-        options: new Map(
+    function buildReservedOptions(): FilterOptions {
+        const reservedCount = [
+            ...swapList.querySelectorAll<HTMLElement>('th[data-reserve="on"]'),
+        ].filter(isVisible).length;
+        const missingCount = [
+            ...swapList.querySelectorAll<HTMLElement>('th[data-reserve=""]'),
+        ].filter(isVisible).length;
+        return new Map(
             reservedCount && missingCount
                 ? [
                       [
@@ -83,19 +82,17 @@ export function addFilteringOptions(): void {
                       ],
                   ]
                 : []
-        ),
-    });
+        );
+    }
 
-    const markedCount = [...swapList.querySelectorAll<HTMLTableRowElement>('tr.mark')].filter(
-        isVisible
-    ).length;
-    const unmarkedCount = [
-        ...swapList.querySelectorAll<HTMLTableRowElement>('tr:not(.mark)'),
-    ].filter(isVisible).length;
-    filterProps.set(FilterName.MARKED, {
-        placeholder: 'Starred',
-        width: 100,
-        options: new Map(
+    function buildMarkedOptions(): FilterOptions {
+        const markedCount = [...swapList.querySelectorAll<HTMLTableRowElement>('tr.mark')].filter(
+            isVisible
+        ).length;
+        const unmarkedCount = [
+            ...swapList.querySelectorAll<HTMLTableRowElement>('tr:not(.mark)'),
+        ].filter(isVisible).length;
+        return new Map(
             markedCount && unmarkedCount
                 ? [
                       [
@@ -114,7 +111,19 @@ export function addFilteringOptions(): void {
                       ],
                   ]
                 : []
-        ),
+        );
+    }
+
+    filterProps.set(FilterName.RESERVED, {
+        placeholder: 'Reserved',
+        width: 100,
+        options: buildReservedOptions(),
+    });
+
+    filterProps.set(FilterName.MARKED, {
+        placeholder: 'Starred',
+        width: 100,
+        options: buildMarkedOptions(),
     });
 
     const countryHeadings = swapList.querySelectorAll('h2');
@@ -239,23 +248,33 @@ export function addFilteringOptions(): void {
     dataList.insertAdjacentHTML('beforebegin', renderToString(<Filters filters={filterProps} />));
 
     function applyFilters(): void {
+        const countryFilter = filterValues.get(FilterName.COUNTRY);
+        const countryActive = !!countryFilter;
+
         for (const h of countryHeadings) {
             const t = h.nextElementSibling as HTMLTableElement;
-            const rows = t.querySelectorAll('tr');
 
+            if (countryActive && h.id !== countryFilter) {
+                h.style.display = t.style.display = 'none';
+                continue;
+            }
+
+            const rows = t.querySelectorAll('tr');
             let hasVisibleRows = false;
 
             rowLoop: for (const r of rows) {
                 const d = r.dataset;
                 for (const [filter, value] of filterValues) {
+                    if (filter === FilterName.COUNTRY) continue;
                     switch (filter) {
-                        case FilterName.RESERVED:
+                        case FilterName.RESERVED: {
                             const reserve = value === 'on' ? 'on' : '';
-                            if (value && !r.querySelector(`[data-reserve="${reserve}"]`)) {
+                            if (!r.querySelector(`[data-reserve="${reserve}"]`)) {
                                 r.style.display = 'none';
                                 continue rowLoop;
                             }
                             break;
+                        }
 
                         case FilterName.MARKED:
                             if (value === 'on' && !r.classList.contains('mark')) {
@@ -265,13 +284,6 @@ export function addFilteringOptions(): void {
                             if (value === 'off' && r.classList.contains('mark')) {
                                 r.style.display = 'none';
                                 continue rowLoop;
-                            }
-                            break;
-
-                        case FilterName.COUNTRY:
-                            if (h.id !== value) {
-                                hasVisibleRows = false;
-                                break rowLoop;
                             }
                             break;
 
@@ -304,7 +316,6 @@ export function addFilteringOptions(): void {
                     }
                 }
 
-                // no filter applied
                 r.style.display = '';
                 hasVisibleRows = true;
             }
@@ -315,14 +326,314 @@ export function addFilteringOptions(): void {
 
     applyFilters();
 
+    const boundListeners = new WeakSet<Element>();
+
+    function setupFilterListeners(): void {
+        for (const option of document.querySelectorAll<HTMLElement>('[data-filter-by]')) {
+            if (boundListeners.has(option)) continue;
+            boundListeners.add(option);
+            option.addEventListener('click', async () => {
+                const ds = option.dataset;
+                const filter = ds.filterBy as FilterName;
+                const value = ds.filterValue;
+                await updateLocationHash((params) =>
+                    value ? params.set(filter, value) : params.delete(filter)
+                );
+
+                const display = document.querySelector<HTMLElement>(`[data-filter="${filter}"]`);
+                if (display) {
+                    if (value) {
+                        display.innerHTML = `${c(option.querySelector('.left')?.outerHTML)}${x(filter)}`;
+                        display.classList.add('filter-box-active');
+                    } else {
+                        display.innerHTML = `${c(display.dataset?.filterPlaceholder)}${d()}`;
+                        display.classList.remove('filter-box-active');
+                    }
+                }
+
+                if (value) {
+                    filterValues.set(filter as FilterName, value);
+                } else {
+                    filterValues.delete(filter as FilterName);
+                }
+                applyFilters();
+                updateFilters();
+            });
+        }
+
+        for (const display of document.querySelectorAll<HTMLElement>('[data-filter]')) {
+            if (boundListeners.has(display)) continue;
+            boundListeners.add(display);
+            display.addEventListener('click', async (e) => {
+                cancel(e);
+                const ds = display.dataset;
+                if (ds.filterDisabled === 'true') {
+                    return;
+                }
+
+                let clearClicked = false;
+                const button = e.target as HTMLElement;
+                const filter = ds.filter as FilterName;
+                if (button.matches('[data-filter-clear]')) {
+                    clearClicked = true;
+                    const { filterClear } = button.dataset;
+                    if (filterClear) {
+                        await updateLocationHash((params) => params.delete(filterClear));
+                    }
+                    display.innerHTML = `${c(ds.filterPlaceholder)}${d()}`;
+                    display.classList.remove('filter-box-active');
+                    filterValues.delete(filter);
+                    applyFilters();
+                    updateFilters();
+                }
+
+                for (const dialog of document.querySelectorAll<HTMLElement>(
+                    `[data-filter-dialog]`
+                )) {
+                    dialog.style.display =
+                        !clearClicked &&
+                        dialog.dataset.filterDialog === filter &&
+                        dialog.style.display !== 'block'
+                            ? 'block'
+                            : 'none';
+                }
+            });
+        }
+
+        for (const dialog of document.querySelectorAll<HTMLElement>('[data-filter-dialog]')) {
+            if (boundListeners.has(dialog)) continue;
+            boundListeners.add(dialog);
+            dialog.addEventListener('click', (e) => {
+                cancel(e);
+                dialog.style.display = 'none';
+            });
+        }
+    }
+
+    setupFilterListeners();
+
+    function buildCountryOptions(): FilterOptions {
+        return sort(
+            [...countryHeadings].reduce((r: FilterOptions, h) => {
+                const rows = [
+                    ...(h.nextElementSibling?.querySelectorAll<HTMLElement>('tr') || []),
+                ].filter(isVisible);
+                if (rows.length) {
+                    const hc = h.cloneNode(true) as HTMLHeadingElement;
+                    for (const el of hc.querySelectorAll('input, sup, span')) el.remove();
+                    r.set(hc.id, { name: hc.innerHTML, count: rows.length });
+                }
+                return r;
+            }, new Map())
+        );
+    }
+
+    function buildYearOptions(): FilterOptions {
+        return sort(
+            [...swapList.querySelectorAll<HTMLTableRowElement>('tr[data-sort-year]')].reduce(
+                (r: FilterOptions, o) => {
+                    const y = o.dataset.sortYear;
+                    if (y && !r.has(y)) {
+                        const count = [
+                            ...swapList.querySelectorAll<HTMLElement>(`tr[data-sort-year="${y}"]`),
+                        ].filter(isVisible).length;
+                        if (count) r.set(y, { name: y, count });
+                    }
+                    return r;
+                },
+                new Map()
+            ),
+            (a, b) => cmp(num(b), num(a))
+        );
+    }
+
+    function buildValueOptions(): FilterOptions {
+        return sort(
+            [...swapList.querySelectorAll<HTMLTableRowElement>('tr[data-sort-face]')].reduce(
+                (r: FilterOptions, o) => {
+                    const f = o.dataset.sortFace;
+                    if (f) {
+                        const [v] = f.split(' ');
+                        if (!r.has(v)) {
+                            const count = [
+                                ...swapList.querySelectorAll<HTMLElement>(
+                                    `tr[data-sort-face="${v}"], tr[data-sort-face^="${v} "]`
+                                ),
+                            ].filter(isVisible).length;
+                            if (count) r.set(v, { name: v, count });
+                        }
+                    }
+                    return r;
+                },
+                new Map()
+            ),
+            (a, b) => cmp(num(a), num(b))
+        );
+    }
+
+    function buildKmOptions(): FilterOptions {
+        return sort(
+            [...swapList.querySelectorAll<HTMLTableRowElement>('tr[data-sort-km]')].reduce(
+                (r: FilterOptions, o) => {
+                    const { sortKmc: kc = '', sortKm: k = '', sortKma: ka = '' } = o.dataset;
+                    const v = `${kc.toLowerCase()}${k}${ka}`;
+                    if (v && !r.has(v)) {
+                        const count = [
+                            ...swapList.querySelectorAll<HTMLElement>(
+                                `tr[data-sort-kmc="${kc}"][data-sort-km="${k}"][data-sort-kma="${ka}"]`
+                            ),
+                        ].filter(isVisible).length;
+                        if (count) r.set(v, { name: `${kc}# ${k}${ka}`, count });
+                    }
+                    return r;
+                },
+                new Map()
+            ),
+            (a, b) => {
+                const [, ac, ak, aa] = a.match(kmMatch) || [];
+                const [, bc, bk, ba] = b.match(kmMatch) || [];
+                return cmp(ac, bc) || cmp(num(ak), num(bk)) || cmp(aa, ba);
+            }
+        );
+    }
+
+    type FilterDef = {
+        build: () => FilterOptions;
+        placeholder: string;
+        width: number;
+        insertBefore?: FilterName;
+    };
+    const filterDefs = new Map<FilterName, FilterDef>([
+        [
+            FilterName.RESERVED,
+            {
+                build: buildReservedOptions,
+                placeholder: 'Reserved',
+                width: 100,
+                insertBefore: FilterName.COUNTRY,
+            },
+        ],
+        [
+            FilterName.MARKED,
+            {
+                build: buildMarkedOptions,
+                placeholder: 'Starred',
+                width: 100,
+                insertBefore: FilterName.COUNTRY,
+            },
+        ],
+        [
+            FilterName.COUNTRY,
+            {
+                build: buildCountryOptions,
+                placeholder: 'Country',
+                width: 250,
+                insertBefore: FilterName.YEAR,
+            },
+        ],
+        [
+            FilterName.YEAR,
+            {
+                build: buildYearOptions,
+                placeholder: 'Year',
+                width: 90,
+                insertBefore: FilterName.VALUE,
+            },
+        ],
+        [
+            FilterName.VALUE,
+            {
+                build: buildValueOptions,
+                placeholder: 'Face value',
+                width: 110,
+                insertBefore: FilterName.KM,
+            },
+        ],
+        [FilterName.KM, { build: buildKmOptions, placeholder: 'KM#', width: 110 }],
+    ]);
+
+    function getFiltersContainer(): HTMLElement | null {
+        const el =
+            (dataList.previousElementSibling as HTMLElement | null) ||
+            (swapList.querySelector('.filter-container') as HTMLElement | null);
+        return el?.classList.contains('filter-container') ? el : null;
+    }
+
+    function updateFilters(): void {
+        const filtersContainer = getFiltersContainer();
+        if (!filtersContainer) return;
+
+        for (const [name, { build, placeholder, width, insertBefore }] of filterDefs) {
+            const newOptions = build();
+            const currentProps = filterProps.get(name)!;
+            const hadOptions = currentProps.options.size > 1;
+            const hasOptions = newOptions.size > 1;
+            currentProps.options = newOptions;
+
+            const existingWidget = filtersContainer
+                .querySelector<HTMLElement>(`[data-filter="${name}"]`)
+                ?.closest<HTMLElement>('.filter');
+
+            if (hasOptions) {
+                if (existingWidget) {
+                    // update option counts and visibility
+                    for (const optEl of existingWidget.querySelectorAll<HTMLElement>(
+                        `[data-filter-by="${name}"]`
+                    )) {
+                        const key = optEl.dataset.filterValue;
+                        if (!key) continue;
+                        const opt = newOptions.get(key);
+                        if (opt) {
+                            optEl.style.display = '';
+                            const countEl = optEl.querySelector('.lgray-11');
+                            if (countEl) countEl.textContent = `(${opt.count})`;
+                        } else {
+                            optEl.style.display = 'none';
+                        }
+                    }
+                } else if (!hadOptions) {
+                    // filter needs to appear
+                    const activeValue = filterValues.get(name);
+                    const props: FilterProps = activeValue
+                        ? { placeholder, width, options: newOptions, value: activeValue }
+                        : { placeholder, width, options: newOptions };
+                    const html = renderToString(
+                        <Filters filters={new Map<FilterName, FilterProps>([[name, props]])} />
+                    );
+                    const wrapper = document.createElement('div');
+                    wrapper.innerHTML = html;
+                    const newNode = wrapper.firstElementChild?.firstElementChild;
+                    if (newNode) {
+                        const anchor = insertBefore
+                            ? filtersContainer
+                                  .querySelector<HTMLElement>(`[data-filter="${insertBefore}"]`)
+                                  ?.closest('.filter')
+                            : null;
+                        if (anchor) {
+                            filtersContainer.insertBefore(newNode, anchor);
+                        } else {
+                            filtersContainer.append(newNode);
+                        }
+                        setupFilterListeners();
+                    }
+                }
+            } else if (!filterValues.has(name)) {
+                // no options and not active — remove
+                existingWidget?.remove();
+            }
+        }
+    }
+
     const reserveObserver = new MutationObserver((mutations) => {
-        const hasReserveChange =
-            filterValues.has(FilterName.RESERVED) &&
-            mutations.some((m) => m.attributeName === 'data-reserve');
-        const hasStarChange =
-            filterValues.has(FilterName.MARKED) &&
-            mutations.some((m) => m.attributeName === 'class');
-        if (hasReserveChange || hasStarChange) {
+        const hasReserveChange = mutations.some((m) => m.attributeName === 'data-reserve');
+        const hasClassChange = mutations.some((m) => m.attributeName === 'class');
+        if (hasReserveChange || hasClassChange) {
+            updateFilters();
+        }
+        const shouldReapply =
+            (filterValues.has(FilterName.RESERVED) && hasReserveChange) ||
+            (filterValues.has(FilterName.MARKED) && hasClassChange);
+        if (shouldReapply) {
             applyFilters();
         }
     });
@@ -331,76 +642,6 @@ export function addFilteringOptions(): void {
         attributes: true,
         attributeFilter: ['data-reserve', 'class'],
     });
-
-    for (const option of document.querySelectorAll<HTMLElement>('[data-filter-by]')) {
-        option.addEventListener('click', async () => {
-            const ds = option.dataset;
-            const filter = ds.filterBy as FilterName;
-            const value = ds.filterValue;
-            await updateLocationHash((params) =>
-                value ? params.set(filter, value) : params.delete(filter)
-            );
-
-            const display = document.querySelector<HTMLElement>(`[data-filter="${filter}"]`);
-            if (display) {
-                if (value) {
-                    display.innerHTML = `${c(option.querySelector('.left')?.outerHTML)}${x(filter)}`;
-                    display.classList.add('filter-box-active');
-                } else {
-                    display.innerHTML = `${c(display.dataset?.filterPlaceholder)}${d()}`;
-                    display.classList.remove('filter-box-active');
-                }
-            }
-
-            if (value) {
-                filterValues.set(filter as FilterName, value);
-            } else {
-                filterValues.delete(filter as FilterName);
-            }
-            applyFilters();
-        });
-    }
-
-    for (const display of document.querySelectorAll<HTMLElement>('[data-filter]')) {
-        display.addEventListener('click', async (e) => {
-            cancel(e);
-            const ds = display.dataset;
-            if (ds.filterDisabled === 'true') {
-                return;
-            }
-
-            let clearClicked = false;
-            const button = e.target as HTMLElement;
-            const filter = ds.filter as FilterName;
-            if (button.matches('[data-filter-clear]')) {
-                clearClicked = true;
-                const { filterClear } = button.dataset;
-                if (filterClear) {
-                    await updateLocationHash((params) => params.delete(filterClear));
-                }
-                display.innerHTML = `${c(ds.filterPlaceholder)}${d()}`;
-                display.classList.remove('filter-box-active');
-                filterValues.delete(filter);
-                applyFilters();
-            }
-
-            for (const dialog of document.querySelectorAll<HTMLElement>(`[data-filter-dialog]`)) {
-                dialog.style.display =
-                    !clearClicked &&
-                    dialog.dataset.filterDialog === filter &&
-                    dialog.style.display !== 'block'
-                        ? 'block'
-                        : 'none';
-            }
-        });
-    }
-
-    for (const dialog of document.querySelectorAll<HTMLElement>('[data-filter-dialog]')) {
-        dialog.addEventListener('click', (e) => {
-            cancel(e);
-            dialog.style.display = 'none';
-        });
-    }
 
     const filters = swapList.querySelectorAll<HTMLInputElement>('.filter');
     for (const filter of filters) {

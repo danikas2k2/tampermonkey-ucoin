@@ -3,7 +3,12 @@
     "allow": [
       "Bash(grep -E \"\\\\.\\(ts|tsx|js|jsx\\)$\")",
       "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(node -e \"const v = require\\('vite'\\); console.log\\(Object.keys\\(v\\)\\)\")",
+      "Bash(npm show *)",
+      "Bash(npm install *)",
+      "Bash(pnpm add *)"
     ]
   }
 }

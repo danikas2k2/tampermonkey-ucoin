@@ -48,15 +48,15 @@ export function Filter({
     placeholder,
     width,
     options,
-}: FilterComponentProps): ReactElement {
+}: FilterComponentProps): ReactElement | null {
     const disabled = options.size <= 1;
+    if (disabled && !value) {
+        return null;
+    }
 
     let display = placeholder || '';
     let option: FilterOption | undefined;
-    if (disabled) {
-        const key = [...options.keys()].filter((k) => k !== '').pop() || '';
-        option = options.get(key);
-    } else if (value) {
+    if (value) {
         option = options.get(value);
     }
     if (option?.name) {
@@ -64,6 +64,8 @@ export function Filter({
     } else if (value) {
         display = value;
     }
+
+    const icon = value && (name === 'marked' || name === 'reserved');
 
     return (
         <div className={classNames('filter', direction || 'left')}>
@@ -78,7 +80,9 @@ export function Filter({
                 style={{ width: width - 24 }}
             >
                 <div
-                    className={classNames('left', { 'blue-13': value }, 'filter-label')}
+                    className={classNames('left', { 'blue-13': value }, 'filter-label', {
+                        'filter-icon': icon,
+                    })}
                     dangerouslySetInnerHTML={{ __html: display }}
                 />
                 {(!disabled &&
@@ -99,7 +103,9 @@ export function Filter({
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a className="list-link" data-filter-by={name} data-filter-value={value}>
                             <span
-                                className="left gray-13 wrap filter-label"
+                                className={classNames('left', 'gray-13', 'wrap', 'filter-label', {
+                                    'filter-icon': icon,
+                                })}
                                 dangerouslySetInnerHTML={{
                                     __html: typeof option === 'string' ? option : `${option.name}`,
                                 }}
@@ -117,7 +123,7 @@ export function Filter({
 
 export function Filters({ filters }: { filters: Map<FilterName, FilterProps> }): ReactElement {
     return (
-        <div className="left filter-container filters">
+        <div className="filter-container filters">
             {[...filters.entries()].map(([name, props]) => (
                 <Filter key={name} {...props} name={name} />
             ))}

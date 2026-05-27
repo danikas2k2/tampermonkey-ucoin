@@ -11,6 +11,7 @@ import { formatNumber, parsePrice } from './prices';
 import { getShippingPrice } from './shipping';
 import { getReserveCountElement } from './swap-utils';
 import { getSwapTab, setActiveSwapTab, Tab } from './swap/tabs';
+import { queryNumberOnly } from './text';
 import { getHashParam, loc } from './url';
 import { documentFragment, reload } from './utils';
 
@@ -76,9 +77,10 @@ export function listenForReserveCountChange(): void {
         return;
     }
 
-    const total = +(totalElement.querySelector('.right')?.textContent || 0);
+    const total = queryNumberOnly(totalElement.querySelector('.right'));
+
     const toggle = () => {
-        const count = +reserveElement.textContent || 0;
+        const count = queryNumberOnly(reserveElement);
         const someMissing = count < total;
         const allReserved = count === total;
         parentElement.classList.toggle('some-missing', someMissing);

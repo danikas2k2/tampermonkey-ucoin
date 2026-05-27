@@ -116,7 +116,7 @@ export function addSortingOptions(): void {
     for (const row of rows) {
         const cells = row.children;
         const thumb = indexOf(cells, row.querySelector('th.thumbnails'));
-        const offset = row.querySelectorAll('td.ico-star').length + thumb + 1;
+        const offset = /*row.querySelectorAll('td.ico-star').length +*/ thumb + 1;
 
         const c = cells;
         const d = row.dataset;
