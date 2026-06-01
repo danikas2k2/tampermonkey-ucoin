@@ -8,7 +8,14 @@
       "Bash(node -e \"const v = require\\('vite'\\); console.log\\(Object.keys\\(v\\)\\)\")",
       "Bash(npm show *)",
       "Bash(npm install *)",
-      "Bash(pnpm add *)"
+      "Bash(pnpm add *)",
+      "Bash(xargs ls -la)",
+      "Bash(grep -rn \"for.*h2\\\\|for.*querySelectorAll.*heading\" /Users/asteponavicius/dev/ucoin/src --include=\"*.ts\" ! -name \"*.test.ts\")",
+      "Bash(grep *)",
+      "Bash(python3 *)",
+      "Bash(pnpm run *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

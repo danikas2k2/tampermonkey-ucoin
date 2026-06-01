@@ -15,8 +15,65 @@ import {
     sortField,
     SortOption,
     SortOrder,
+    sortSections,
 } from './sort';
 import { cancel } from './utils';
+
+const sectionSortRemaps: [pattern: RegExp, sortKey: string][] = [
+    [/africa/i, 'A'],
+    [/caribbean/i, 'C'],
+    [/caledonia/i, 'C'],
+    [/korea/i, 'K'],
+    [/macedonia/i, 'M'],
+    [/ussr/i, 'Russian'],
+    [/germany/i, 'Germany'],
+    [/ceylon/i, 'Sri Lanka'],
+];
+
+function h2SortKey(h2: HTMLHeadingElement): string {
+    const text = h2.textContent ?? '';
+    for (const [pattern, mapping] of sectionSortRemaps) {
+        if (pattern.test(text)) {
+            return mapping.length > 1
+                ? `${mapping.toLowerCase()} ${text.toLowerCase()}`
+                : `${mapping.toLowerCase()}${text.toLowerCase()}`;
+        }
+    }
+    return text.toLowerCase();
+}
+
+function decorateH2(h2: HTMLHeadingElement): void {
+    const text = h2.textContent ?? '';
+    for (const [pattern, mapping] of sectionSortRemaps) {
+        if (!pattern.test(text)) {
+            continue;
+        }
+
+        if (!text.toLowerCase().includes(mapping.toLowerCase())) {
+            if (!h2.querySelector('.sort-hint')) {
+                h2.insertAdjacentHTML(
+                    'beforeend',
+                    ` <span class="sort-hint lgray-13">(${mapping})</span>`
+                );
+            }
+        } else {
+            if (!h2.querySelector('b')) {
+                h2.innerHTML = h2.innerHTML.replace(
+                    new RegExp(`(>[^<>]*?)(${mapping})([^<>]*?<)`, 'i'),
+                    '$1<b>$2</b>$3'
+                );
+            }
+        }
+
+        return;
+    }
+}
+
+export function sortMappedCountries() {
+    for (const container of document.querySelectorAll<HTMLElement>('#swap-list, #take-swap-list')) {
+        sortSections(container, h2SortKey, decorateH2);
+    }
+}
 
 const sortOptions: Record<string, SortOption> = {
     year: { index: 0, label: 'Year', sort: cmpYear },

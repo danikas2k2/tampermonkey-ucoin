@@ -95,6 +95,30 @@ export function sortBy(
     }
 }
 
+export function sortSections(
+    container: Element,
+    getKey: (heading: HTMLHeadingElement) => string,
+    decorate?: (heading: HTMLHeadingElement) => void
+): void {
+    const headings = [...container.querySelectorAll<HTMLHeadingElement>('h2')];
+    if (headings.length < 2) {
+        return;
+    }
+
+    const pairs = headings.map((heading) => ({ heading, table: heading.nextElementSibling }));
+    pairs.sort((a, b) => cmp(getKey(a.heading), getKey(b.heading)));
+
+    for (const { heading, table } of pairs) {
+        if (decorate) {
+            decorate(heading);
+        }
+        container.append(heading);
+        if (table) {
+            container.append(table);
+        }
+    }
+}
+
 export const ORDER_PARAM = 'o';
 export const ORDER_SEPARATOR = '_';
 

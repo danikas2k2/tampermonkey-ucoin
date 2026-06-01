@@ -22,6 +22,7 @@ import {
 } from '../lib/swap-list';
 import { improveSwapButtons } from '../lib/swap-list-actions';
 import { addFilteringOptions } from '../lib/swap-list-filter';
+import { sortMappedCountries } from '../lib/list-sort';
 import { addSortingOptions } from '../lib/swap-list-sort';
 
 export async function handleSwapPage(): Promise<void> {
@@ -31,6 +32,7 @@ export async function handleSwapPage(): Promise<void> {
     markSeparateCountries();
     addOpenedTabsHandler();
     addSortingOptions();
+    sortMappedCountries();
     addFilteringOptions();
     duplicatePagination();
     showAllPrices();
