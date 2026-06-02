@@ -70,7 +70,7 @@ function decorateH2(h2: HTMLHeadingElement): void {
 }
 
 export function sortMappedCountries() {
-    for (const container of document.querySelectorAll<HTMLElement>('#swap-list, #take-swap-list')) {
+    for (const container of document.querySelectorAll<HTMLElement>('#take-swap-list')) {
         sortSections(container, h2SortKey, decorateH2);
     }
 }
