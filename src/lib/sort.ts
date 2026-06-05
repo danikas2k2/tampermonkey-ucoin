@@ -105,6 +105,7 @@ export function sortSections(
         return;
     }
 
+    const parent = headings[0].parentElement ?? container;
     const pairs = headings.map((heading) => ({ heading, table: heading.nextElementSibling }));
     pairs.sort((a, b) => cmp(getKey(a.heading), getKey(b.heading)));
 
@@ -112,9 +113,9 @@ export function sortSections(
         if (decorate) {
             decorate(heading);
         }
-        container.append(heading);
+        parent.append(heading);
         if (table) {
-            container.append(table);
+            parent.append(table);
         }
     }
 }
