@@ -101,6 +101,7 @@
         "preset": "ts-jest",
         "testEnvironment": "jsdom",
         "collectCoverage": false,
+        "coverageProvider": "v8",
         "collectCoverageFrom": [
             "src/**/*.{ts,tsx}",
             "!src/**/*.d.ts",
