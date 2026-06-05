@@ -20,8 +20,8 @@ export abstract class ListForm {
     abstract formTypePrefix: FormTypePrefix;
     abstract formUidPrefix: FormUidPrefix;
     abstract buttonSetButtons: Map<string, [Color, CondValue]>;
-    widgetHeaderRedirectHandler: EventHandler | null;
-    private formClickTimeout: NodeJS.Timeout;
+    widgetHeaderRedirectHandler: EventHandler | null = null;
+    private formClickTimeout: NodeJS.Timeout | undefined = undefined;
 
     constructor() {
         this.widgetHeaderCloseHandler = this.widgetHeaderCloseHandler.bind(this);
@@ -332,7 +332,7 @@ export abstract class ListForm {
             console.debug('Widget header not found.');
             return;
         }
-        this.widgetHeaderRedirectHandler = this.widgetHeader.onclick;
+        this.widgetHeaderRedirectHandler = this.widgetHeader.onclick as EventHandler | null;
         this.widgetHeader.removeAttribute('onclick');
     }
 

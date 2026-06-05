@@ -4,7 +4,7 @@ import React from 'react';
 describe('uid', () => {
     it('return null by default', async () => {
         jest.isolateModules(() => {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             expect(require('./uid').UID).toBeNull();
         });
     });
@@ -20,7 +20,8 @@ describe('uid', () => {
                     </div>
                 </div>
             );
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             expect(require('./uid').UID).toEqual('12345');
         });
     });

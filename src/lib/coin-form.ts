@@ -49,8 +49,10 @@ async function updateCoinFormFragment(fragment: DocumentFragment): Promise<void>
 
 function updateCoinViewLinks(view: HTMLElement | null) {
     for (const link of view?.querySelectorAll<HTMLAnchorElement>('a[type=submit]') || []) {
-        handleLinkClick(link, async ({ href }: HTMLAnchorElement) =>
-            updateCoinFormFragment(documentFragment(await fetch(href).then(text)))
+        handleLinkClick(link, async (target) =>
+            updateCoinFormFragment(
+                documentFragment(await fetch((target as HTMLAnchorElement).href).then(text))
+            )
         );
     }
 }
@@ -58,7 +60,8 @@ function updateCoinViewLinks(view: HTMLElement | null) {
 function updateCoinFormInputs(form: HTMLFormElement): void {
     updateBuyDateInput(form);
     addSyncConditionToColorTable(form);
-    wrapFormSubmit(form, async (form: HTMLFormElement) => {
+    wrapFormSubmit(form, async (target) => {
+        const form = target as HTMLFormElement;
         if (form) {
             await updateCoinFormFragment(
                 documentFragment(
@@ -282,7 +285,7 @@ function updateFormButtons(main: HTMLElement | null): void {
     }
 }
 
-function toggleTitle(e: PointerEvent): void {
+function toggleTitle(e: Event): void {
     const title = e.target as HTMLElement;
     if (!title) {
         return;

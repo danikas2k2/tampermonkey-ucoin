@@ -4,6 +4,11 @@ declare module '*.svg' {
     export default svgCntent;
 }
 
+declare module '*.less' {
+    const styles: Record<string, string>;
+    export default styles;
+}
+
 declare interface CoinSwapFormOnMatchGroups extends Record<string, string> {
     uniq?: string;
     usid?: string;

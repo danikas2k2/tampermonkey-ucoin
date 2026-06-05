@@ -4,7 +4,7 @@ import React from 'react';
 describe('lang', () => {
     it('return "en" by default', async () => {
         jest.isolateModules(() => {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             expect(require('./lang').lang).toEqual('en');
         });
     });
@@ -20,7 +20,8 @@ describe('lang', () => {
                     <a href="https://ru.ucoin.net/">Русский</a>
                 </div>
             );
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             expect(require('./lang').lang).toEqual('lt');
         });
     });
@@ -28,7 +29,7 @@ describe('lang', () => {
 
 describe('translations', () => {
     jest.isolateModules(() => {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { _ } = require('./lang');
 
         it('return a default translation', async () => {

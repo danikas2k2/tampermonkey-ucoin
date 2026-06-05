@@ -115,32 +115,96 @@ describe('cmpKm', () => {
 
 describe('cmpFace', () => {
     it('sort by face value first', () => {
-        const a = { sortFace: '1', sortKmc: '', sortKm: '0', sortKma: '', sortYear: '2000', sortMm: '' };
-        const b = { sortFace: '2', sortKmc: '', sortKm: '0', sortKma: '', sortYear: '2000', sortMm: '' };
+        const a = {
+            sortFace: '1',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
+        const b = {
+            sortFace: '2',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
         expect(cmpFace(a, b, 1)).toBeLessThan(0);
     });
 });
 
 describe('cmpSubject', () => {
     it('sort by subject first', () => {
-        const a = { sortSubject: 'Apple', sortFace: '1', sortKmc: '', sortKm: '0', sortKma: '', sortYear: '2000', sortMm: '' };
-        const b = { sortSubject: 'Banana', sortFace: '1', sortKmc: '', sortKm: '0', sortKma: '', sortYear: '2000', sortMm: '' };
+        const a = {
+            sortSubject: 'Apple',
+            sortFace: '1',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
+        const b = {
+            sortSubject: 'Banana',
+            sortFace: '1',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
         expect(cmpSubject(a, b, 1)).toBeLessThan(0);
     });
 });
 
 describe('cmpCond', () => {
     it('sort by condition first', () => {
-        const a = { sortCond: '1', sortFace: '1', sortKmc: '', sortKm: '0', sortKma: '', sortYear: '2000', sortMm: '' };
-        const b = { sortCond: '2', sortFace: '1', sortKmc: '', sortKm: '0', sortKma: '', sortYear: '2000', sortMm: '' };
+        const a = {
+            sortCond: '1',
+            sortFace: '1',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
+        const b = {
+            sortCond: '2',
+            sortFace: '1',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
         expect(cmpCond(a, b, 1)).toBeLessThan(0);
     });
 });
 
 describe('cmpValue', () => {
     it('sort by value first', () => {
-        const a = { sortValue: '10', sortCond: '1', sortFace: '1', sortKmc: '', sortKm: '0', sortKma: '', sortYear: '2000', sortMm: '' };
-        const b = { sortValue: '20', sortCond: '1', sortFace: '1', sortKmc: '', sortKm: '0', sortKma: '', sortYear: '2000', sortMm: '' };
+        const a = {
+            sortValue: '10',
+            sortCond: '1',
+            sortFace: '1',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
+        const b = {
+            sortValue: '20',
+            sortCond: '1',
+            sortFace: '1',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
         expect(cmpValue(a, b, 1)).toBeLessThan(0);
     });
 });
@@ -159,7 +223,6 @@ describe('sortBy', () => {
 
     it('sort rows in a section by year ascending', () => {
         const section = makeSection(['2005', '1990', '2020']);
-        const sections = { [Symbol.iterator]: function* () { yield section; } } as unknown as NodeListOf<HTMLTableSectionElement>;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         sortBy([section] as any, cmpYear, 'a');
         const rows = section.querySelectorAll('tr');
@@ -246,11 +309,11 @@ describe('HTML helpers', () => {
     });
 
     it('a renders ascending arrow by default', () => {
-        expect(a()).toContain('class=\'arrow at\'');
+        expect(a()).toContain("class='arrow at'");
     });
 
     it('a renders descending arrow for "d"', () => {
-        expect(a('d')).toContain('class=\'arrow ab\'');
+        expect(a('d')).toContain("class='arrow ab'");
     });
 
     it('d renders same as a("d")', () => {
@@ -279,7 +342,7 @@ describe('HTML helpers', () => {
 
     it('dropdown contains id and options', () => {
         const result = dropdown('my-id', s('Year', 'a'), [s('KM', 'a'), s('Value', 'd')]);
-        expect(result).toContain('id=\'my-id\'');
+        expect(result).toContain("id='my-id'");
         expect(result).toContain('KM');
         expect(result).toContain('Value');
     });

@@ -30,7 +30,11 @@ describe('safe', () => {
     });
 
     it('throw with status code and text in message', () => {
-        const response = makeResponse({ ok: false, status: 500, statusText: 'Internal Server Error' });
+        const response = makeResponse({
+            ok: false,
+            status: 500,
+            statusText: 'Internal Server Error',
+        });
         expect(() => safe(response)).toThrow('500: Internal Server Error');
     });
 });
