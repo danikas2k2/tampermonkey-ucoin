@@ -16,7 +16,8 @@
       "Bash(pnpm run *)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(pnpm build *)"
+      "Bash(pnpm build *)",
+      "Bash(pnpm install *)"
     ]
   }
 }

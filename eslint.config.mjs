@@ -3,7 +3,7 @@ import parser from '@typescript-eslint/parser';
 import prettier from 'eslint-config-prettier';
 import functional from 'eslint-plugin-functional';
 import pluginPrettier from 'eslint-plugin-prettier';
-import imp from 'eslint-plugin-import'; // 'import' is ambiguous & prettier has trouble
+import imp from 'eslint-plugin-import-x'; // 'import' is ambiguous & prettier has trouble
 import jest from 'eslint-plugin-jest';
 import a11y from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
