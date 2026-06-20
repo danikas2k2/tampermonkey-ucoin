@@ -1,5 +1,4 @@
 import countryCodes from '../data/country-codes.json';
-import shippingPrices from '../data/shipping-prices.json';
 
 export const enum Weight {
     SMALL_ENVELOPE = 50,
@@ -9,23 +8,132 @@ export const enum Weight {
     LARGE_PACKAGE = 1900,
 }
 
+const API_BASE = 'https://api.andriaus.com/shipping';
+const API_KEY = process.env.API_KEY ?? '';
+const CACHE_PREFIX = 'shipping_';
+
+interface ShippingEntry {
+    country: string;
+    weightFrom: number;
+    weightTo: number;
+    provider: 'omniva' | 'lpe' | 'post';
+    size: 'xs' | 'sm' | 'md' | 'lg';
+    type?: 'ordinary' | 'registered' | 'tracked';
+    price: number;
+}
+
+interface ShippingResponse {
+    prices: ShippingEntry[];
+    updatedAt: string;
+    validTo: string;
+}
+
+interface CachedShipping {
+    data: ShippingResponse;
+    updatedAt: string;
+    validTo: string;
+}
+
+function getCacheKey(countryCode: string, weight: number): string {
+    return `${CACHE_PREFIX}${countryCode}_${weight}`;
+}
+
+function readCache(countryCode: string, weight: number): ShippingResponse | null {
+    try {
+        const raw = localStorage.getItem(getCacheKey(countryCode, weight));
+        if (!raw) {
+            return null;
+        }
+
+        const cached: CachedShipping = JSON.parse(raw);
+        return new Date(cached.validTo) > new Date() ? cached.data : null;
+    } catch {
+        return null;
+    }
+}
+
+function writeCache(countryCode: string, weight: number, data: ShippingResponse): void {
+    try {
+        const entry: CachedShipping = {
+            data,
+            updatedAt: data.updatedAt,
+            validTo: data.validTo,
+        };
+        localStorage.setItem(getCacheKey(countryCode, weight), JSON.stringify(entry));
+    } catch {
+        // localStorage quota exceeded — skip caching
+    }
+}
+
+async function fetchShippingData(
+    countryCode: string,
+    weight: number
+): Promise<ShippingResponse | null> {
+    const cached = readCache(countryCode, weight);
+    if (cached) {
+        return cached;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/${countryCode}/${weight}`, {
+            headers: { 'x-api-key': API_KEY },
+        });
+        if (!response.ok) {
+            return null;
+        }
+        const data: ShippingResponse = await response.json();
+        writeCache(countryCode, weight, data);
+        return data;
+    } catch {
+        return null;
+    }
+}
+
+// Finds the cheapest way to ship `totalWeight` grams using available price brackets.
+// Compares sending as a single package vs splitting into sub-packages (DP, memoized).
+function cheapestSplit(prices: ShippingEntry[], totalWeight: number): number {
+    const memo = new Map<number, number>();
+
+    function solve(weight: number): number {
+        if (weight <= 0) return 0;
+        if (memo.has(weight)) return memo.get(weight)!;
+
+        let best = Infinity;
+
+        for (const entry of prices) {
+            if (weight >= entry.weightFrom && weight <= entry.weightTo) {
+                // Direct: single package covers this weight
+                best = Math.min(best, entry.price);
+            } else if (entry.weightTo < weight) {
+                // Chunk: send entry.weightTo as one package, solve remainder
+                const sub = solve(weight - entry.weightTo);
+                if (sub >= 0) {
+                    best = Math.min(best, entry.price + sub);
+                }
+            }
+        }
+
+        const result = best === Infinity ? -1 : best;
+        memo.set(weight, result);
+        return result;
+    }
+
+    const result = solve(totalWeight);
+    return result < 0 ? -1 : +result.toFixed(2);
+}
+
 // TODO add currency support for shipping prices
 // TODO add support for number of coins
-export function getShippingPrice(country: string, weight: number): number {
+export async function getShippingPrice(country: string, weight: number): Promise<number> {
     const countryCode = (countryCodes as MapOf)[country];
-    if (!(countryCode in shippingPrices)) {
+    if (!countryCode) {
         return -1;
     }
 
-    // Split large packages into multiple packages, because they are cheaper
-    if (weight > Weight.LARGE_PACKAGE) {
-        return +(
-            getShippingPrice(country, weight % Weight.LARGE_PACKAGE) +
-            getShippingPrice(country, Weight.LARGE_PACKAGE) *
-                Math.floor(weight / Weight.LARGE_PACKAGE)
-        ).toFixed(2);
+    const data = await fetchShippingData(countryCode, weight);
+    if (!data) {
+        return -1;
     }
 
-    const prices = (shippingPrices as Prices)[countryCode];
-    return Object.entries(prices).find(([w]) => weight <= +w)?.[1] || -1;
+    return cheapestSplit(data.prices, weight);
 }

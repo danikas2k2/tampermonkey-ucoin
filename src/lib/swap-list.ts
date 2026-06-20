@@ -93,7 +93,7 @@ export function listenForReserveCountChange(): void {
     observer.observe(reserveElement, { childList: true, characterData: true, subtree: true });
 }
 
-export function calcTotalPrices(): void {
+export async function calcTotalPrices(): Promise<void> {
     const tree = document.querySelector('#swap-mgr #tree');
     if (!tree) {
         return;
@@ -218,7 +218,7 @@ export function calcTotalPrices(): void {
             getCountryId(
                 tree.previousElementSibling?.querySelector('.gray-11')?.textContent ?? ''
             ) ?? '';
-        const shippingPrice = getShippingPrice(country, weight);
+        const shippingPrice = await getShippingPrice(country, weight);
         if (shippingPrice > 0) {
             totalPrice = currentPrice + shippingPrice;
             const totalDescription = `${formatNumber(currentPrice)} + ${formatNumber(
