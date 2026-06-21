@@ -122,6 +122,13 @@ function cheapestSplit(prices: ShippingEntry[], totalWeight: number): number {
     return result < 0 ? -1 : +result.toFixed(2);
 }
 
+const SHIPPING_FEE = 0.3;
+const SHIPPING_ROUND_STEP = 0.25;
+
+function applyFee(price: number): number {
+    return Math.ceil((price + SHIPPING_FEE) / SHIPPING_ROUND_STEP) * SHIPPING_ROUND_STEP;
+}
+
 // TODO add currency support for shipping prices
 // TODO add support for number of coins
 export async function getShippingPrice(country: string, weight: number): Promise<number> {
@@ -135,5 +142,6 @@ export async function getShippingPrice(country: string, weight: number): Promise
         return -1;
     }
 
-    return cheapestSplit(data.prices, weight);
+    const base = cheapestSplit(data.prices, weight);
+    return base < 0 ? -1 : applyFee(base);
 }
