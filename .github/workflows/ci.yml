@@ -1,4 +1,4 @@
-name: Code Coverage
+name: CI
 
 on: [ push, pull_request ]
 
@@ -25,8 +25,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run the tests
-        run: pnpm test:coverage
+      - name: Run tests
+        run: pnpm test
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+      - name: Build
+        run: pnpm build
