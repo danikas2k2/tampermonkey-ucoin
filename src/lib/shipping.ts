@@ -1,5 +1,3 @@
-import countryCodes from '../data/country-codes.json';
-
 export const enum Weight {
     SMALL_ENVELOPE = 50,
     LARGE_ENVELOPE = 450,
@@ -9,8 +7,58 @@ export const enum Weight {
 }
 
 const API_BASE = 'https://api.andriaus.com/shipping';
+const CODES_API = 'https://api.andriaus.com/countries/codes';
 const API_KEY = process.env.API_KEY ?? '';
 const CACHE_PREFIX = 'shipping_';
+const CODES_CACHE_KEY = 'countries_codes';
+
+interface CountryCodesResponse {
+    codes: Record<string, string>;
+    updatedAt: string;
+    validTo: string;
+}
+
+function readCodesCache(): CountryCodesResponse | null {
+    try {
+        const raw = localStorage.getItem(CODES_CACHE_KEY);
+        if (!raw) {
+            return null;
+        }
+        const cached: CountryCodesResponse = JSON.parse(raw);
+        return new Date(cached.validTo) > new Date() ? cached : null;
+    } catch {
+        return null;
+    }
+}
+
+function writeCodesCache(data: CountryCodesResponse): void {
+    try {
+        localStorage.setItem(CODES_CACHE_KEY, JSON.stringify(data));
+    } catch {
+        // localStorage quota exceeded — skip caching
+    }
+}
+
+async function fetchCountryCodes(): Promise<Record<string, string> | null> {
+    const cached = readCodesCache();
+    if (cached) {
+        return cached.codes;
+    }
+
+    try {
+        const response = await fetch(CODES_API, {
+            headers: { 'x-api-key': API_KEY },
+        });
+        if (!response.ok) {
+            return null;
+        }
+        const data: CountryCodesResponse = await response.json();
+        writeCodesCache(data);
+        return data.codes;
+    } catch {
+        return null;
+    }
+}
 
 interface ShippingEntry {
     country: string;
@@ -136,7 +184,8 @@ function applyFee(price: number): number {
 // TODO add currency support for shipping prices
 // TODO add support for number of coins
 export async function getShippingPrice(country: string, weight: number): Promise<number> {
-    const countryCode = (countryCodes as MapOf)[country];
+    const codes = await fetchCountryCodes();
+    const countryCode = codes?.[country];
     if (!countryCode) {
         return -1;
     }
