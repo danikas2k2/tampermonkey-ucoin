@@ -22,7 +22,8 @@
       "Bash(pnpm *)",
       "Bash(sed -n '18,30p' /Users/asteponavicius/dev/ucoin/src/lib/list-form.ts)",
       "Bash(sed -n '330,340p' /Users/asteponavicius/dev/ucoin/src/lib/list-form.ts)",
-      "Bash(npx eslint *)"
+      "Bash(npx eslint *)",
+      "Bash(npx jest *)"
     ]
   }
 }

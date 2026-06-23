@@ -1,23 +1,40 @@
 import { getShippingPrice, Weight } from './shipping';
 
+const store: Record<string, unknown> = {};
+jest.mock('./storage', () => ({
+    getItem: jest.fn(async (key: string) => store[key] ?? null),
+    setItem: jest.fn(async (key: string, value: unknown) => {
+        store[key] = value;
+        return true;
+    }),
+}));
+
 type PartialEntry = { weightFrom: number; weightTo: number; price: number };
 
-const makeResponse = (entries: PartialEntry[]) => ({
-    prices: entries.map((e) => ({
+const makeEntries = (entries: PartialEntry[]) =>
+    entries.map((e) => ({
         country: 'fr',
         provider: 'post' as const,
         size: 'sm' as const,
         ...e,
-    })),
-    updatedAt: new Date(Date.now() - 1000).toISOString(),
-    validTo: new Date(Date.now() + 86400_000).toISOString(),
+    }));
+
+const CODES = { france: 'fr' };
+
+const mockHeaders = new Headers({
+    Expires: new Date(Date.now() + 86400_000).toUTCString(),
+    'Last-Modified': new Date(Date.now() - 1000).toUTCString(),
 });
 
 const mockFetch = (entries: PartialEntry[]) => {
-    global.fetch = jest.fn().mockResolvedValue({
-        ok: true,
-        json: async () => makeResponse(entries),
-    } as Response);
+    global.fetch = jest.fn().mockImplementation((url: string) => {
+        const body = url.includes('/countries/codes') ? CODES : makeEntries(entries);
+        return Promise.resolve({
+            ok: true,
+            headers: mockHeaders,
+            json: async () => body,
+        } as Response);
+    });
 };
 
 // Realistic brackets: each tier covers up to its weightTo
@@ -30,8 +47,10 @@ const BRACKETS: PartialEntry[] = [
 ];
 
 beforeEach(() => {
-    localStorage.clear();
     jest.restoreAllMocks();
+    for (const key of Object.keys(store)) {
+        delete store[key];
+    }
 });
 
 // applyFee: +0.3, round up to nearest 0.25
@@ -87,22 +106,21 @@ describe('getShippingPrice', () => {
         ).toBeCloseTo(17.25);
     });
 
-    it('uses localStorage cache on second call', async () => {
+    it('uses cache on second call', async () => {
         mockFetch(BRACKETS);
         await getShippingPrice('france', Weight.SMALL_ENVELOPE);
         await getShippingPrice('france', Weight.SMALL_ENVELOPE);
-        expect(global.fetch).toHaveBeenCalledTimes(1);
+        // fetch called twice on first call (codes + shipping), zero on second (both cached)
+        expect(global.fetch).toHaveBeenCalledTimes(2);
     });
 
     it('return -1 for unknown country', async () => {
+        mockFetch([]);
         expect(await getShippingPrice('unknown', Weight.SMALL_ENVELOPE)).toBe(-1);
     });
 
     it('return -1 when API returns no matching prices', async () => {
-        global.fetch = jest.fn().mockResolvedValue({
-            ok: true,
-            json: async () => makeResponse([]),
-        } as Response);
+        mockFetch([]);
         expect(await getShippingPrice('france', Weight.SMALL_ENVELOPE)).toBe(-1);
     });
 

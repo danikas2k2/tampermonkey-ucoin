@@ -1,9 +1,9 @@
-import { getCountryId } from '../data/countries';
-import separateCountries from '../data/separate-countries.json';
+import COUNTRY_BOXES from '../data/country-boxes.json';
 import { text } from './ajax';
 import { getConditionCell } from './coin-list';
 import { Param } from './common/params';
 import { Color, ColorValues, Condition, ConditionValues } from './cond';
+import { getCountryId } from './countries';
 import { _ } from './lang';
 import { updateLinkHref, updateOnClickHref } from './links';
 import { getPayPalPrice } from './paypal';
@@ -24,12 +24,12 @@ export function addSwapTitle(): void {
     }
 }
 
-export function markSeparateCountries(): void {
+export function markSeparateCountryBoxes(): void {
     for (const list of document.querySelectorAll<HTMLHeadingElement>(
         '#swap-list, #take-swap-list'
     )) {
         for (const h2 of list.querySelectorAll<HTMLHeadingElement>('h2')) {
-            if (separateCountries.includes(h2.id)) {
+            if (COUNTRY_BOXES.includes(h2.id)) {
                 h2.classList.add('separate-country');
             }
         }
@@ -224,7 +224,11 @@ export async function calcTotalPrices(): Promise<void> {
             const totalDescription = `${formatNumber(currentPrice)} + ${formatNumber(
                 shippingPrice
             )} <s>${_('shipping')}</s>`;
-            const { price: ppPrice, charges: ppCharges } = getPayPalPrice(country, totalPrice);
+            const ppResult = await getPayPalPrice(country, totalPrice);
+            if (!ppResult) {
+                continue;
+            }
+            const { price: ppPrice, charges: ppCharges } = ppResult;
             const ppDescription = `${formatNumber(totalPrice)} + ${formatNumber(ppCharges)} <s>${_(
                 'PayPal charges'
             )}</s>`;

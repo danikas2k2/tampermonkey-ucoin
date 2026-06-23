@@ -16,7 +16,7 @@ import {
     fixFilterLinks,
     ignoreUnwanted,
     listenForReserveCountChange,
-    markSeparateCountries,
+    markSeparateCountryBoxes,
     removeRowHrefFromSwapList,
     showAllPrices,
 } from '../lib/swap-list';
@@ -29,7 +29,7 @@ export async function handleSwapPage(): Promise<void> {
     addSwapTitle();
     expandUserInfo();
     addThumbnails();
-    markSeparateCountries();
+    markSeparateCountryBoxes();
     addOpenedTabsHandler();
     addSortingOptions();
     sortMappedCountries();

@@ -52,7 +52,13 @@ export default defineConfig(({ mode }) => {
                     ],
                     match: ['https://*.ucoin.net/*'],
                     'run-at': 'document-end',
-                    grant: ['GM_xmlhttpRequest', 'GM_getResourceText', 'GM_addStyle'],
+                    grant: [
+                        'GM_xmlhttpRequest',
+                        'GM_getResourceText',
+                        'GM_addStyle',
+                        'GM_getValue',
+                        'GM_setValue',
+                    ],
                 },
                 build: {
                     fileName: 'ucoin.user.js',
@@ -69,7 +75,6 @@ export default defineConfig(({ mode }) => {
         ],
         define: {
             'process.env.NODE_ENV': JSON.stringify('production'),
-            'process.env.API_KEY': JSON.stringify(env.API_KEY),
         },
         oxc: {
             jsx: { runtime: 'classic' },

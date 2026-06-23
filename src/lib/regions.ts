@@ -1,14 +1,15 @@
-import countryRegions from '../data/country-regions.json';
-import regionNames from '../data/region-names.json';
-import regionTree from '../data/region-tree.json';
+import { apiFetch } from './api';
 import { Param } from './common/params';
-import { _ } from './lang';
+import { _, lang } from './lang';
 import { getHashParam, loc, updateLocationHash } from './url';
 import { slug, unique } from './utils';
 
-function getEuroSlugsFromTree(): Set<string> {
-    const t = regionTree as Record<string, string[] | unknown>;
-    const ch = t.euro;
+interface RegionTree {
+    [key: string]: string[] | RegionTree;
+}
+
+function getEuroSlugsFromTree(tree: RegionTree): Set<string> {
+    const ch = tree.euro;
     const out = [slug('euro')];
     if (Array.isArray(ch)) {
         for (const r of ch) {
@@ -54,6 +55,9 @@ function updateRegionHeadingsByDirectLists(): void {
 }
 
 export async function handleCountryRegions(): Promise<void> {
+    const regionNames =
+        (await apiFetch<Record<string, string>>(`/regions/${lang}`, `countries_regions_${lang}`)) ??
+        {};
     const countryList = document.querySelector<HTMLDivElement>(
         'ul.hor-switcher ~ div.country-list'
     );
@@ -77,12 +81,16 @@ export async function handleCountryRegions(): Promise<void> {
 
     const allText = headingList?.querySelector('li.region[value="0"]')?.textContent;
     const currentRegion = getHashParam(Param.REGION);
+
+    const regionTree = (await apiFetch<RegionTree>('/regions/tree', 'regions_tree')) ?? {};
+    const countryRegions =
+        (await apiFetch<Record<string, string[]>>('/country/regions', 'country_regions')) ?? {};
     const topRegions = Object.keys(regionTree);
 
     // add all regions
     countryList.insertAdjacentHTML('beforebegin', `<ul class="regions"></ul>`);
-    (function renderRegions(container: Element, regions: Record<string, string[]> | string[]) {
-        const entries: [string, string[]][] = Array.isArray(regions)
+    (function renderRegions(container: Element, regions: RegionTree | string[]) {
+        const entries: [string, RegionTree | string[]][] = Array.isArray(regions)
             ? regions.map((r) => [r, []])
             : Object.entries(regions);
         for (const [k, sub] of entries) {
@@ -92,10 +100,7 @@ export async function handleCountryRegions(): Promise<void> {
                 currentRegion && id !== currentRegion && topRegions.includes(k) ? ` hide` : '';
             container.insertAdjacentHTML(
                 'beforeend',
-                `<li class="region${hide}${active}" id="${id}"><h2>${_(
-                    k,
-                    regionNames
-                )}</h2><ul class="regions"></ul><div class="country-list catalog-list"></div></li>`
+                `<li class="region${hide}${active}" id="${id}"><h2>${regionNames[k] ?? k}</h2><ul class="regions"></ul><div class="country-list catalog-list"></div></li>`
             );
             const region = container.querySelector(`#${id} .regions`);
             if (region) {
@@ -107,7 +112,7 @@ export async function handleCountryRegions(): Promise<void> {
     // move countries to regions
     for (const c of countryList.querySelectorAll<HTMLDivElement>('div.cntry')) {
         const [, cid] = c.querySelector('a')?.href.match(/&country=(\w+)/) || [];
-        const regions = (countryRegions as Record<string, string[]>)[cid];
+        const regions = countryRegions[cid];
         if (regions) {
             for (const r of unique(regions)) {
                 const id = slug(r);
@@ -156,7 +161,7 @@ export async function handleCountryRegions(): Promise<void> {
             // leave euroByCountry empty; rows stay at full totals
         }
         if (parsed) {
-            const euroSlugs = getEuroSlugsFromTree();
+            const euroSlugs = getEuroSlugsFromTree(regionTree);
             const rows = document.querySelectorAll<HTMLDivElement>(
                 'ul.hor-switcher ~ ul.regions div.cntry'
             );
@@ -214,10 +219,7 @@ export async function handleCountryRegions(): Promise<void> {
             if (document.querySelector(`.region#${id}`)) {
                 headingList.insertAdjacentHTML(
                     'beforeend',
-                    `<li class="region${currentRegion === id ? ' active' : ''}" data-id="${id}">${_(
-                        r,
-                        regionNames
-                    )}</li>`
+                    `<li class="region${currentRegion === id ? ' active' : ''}" data-id="${id}">${regionNames[r] ?? r}</li>`
                 );
             }
         }

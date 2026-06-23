@@ -1,14 +1,8 @@
-import paypalCountries from '../data/paypal-countries.json';
+import { apiFetch } from './api';
 
-export function getPayPalCharges(country: string): number {
-    switch ((paypalCountries as MapOf)[country]) {
-        case 'eu':
-            return 3.4;
-        case 'uk':
-            return 4.69; // 3.4 + 1.29
-        default:
-            return 5.39; // 3.4 + 2.99
-    }
+interface PayPalRates {
+    fixed: number;
+    variable: number;
 }
 
 export interface PayPalPrice {
@@ -19,14 +13,17 @@ export interface PayPalPrice {
 }
 
 // TODO add discount/custom prices
-export function getPayPalPrice(country: string, price: number): PayPalPrice {
-    const fixed = 0.35;
-    const percents = getPayPalCharges(country);
-    const charges = price * (percents / 100) + fixed;
+export async function getPayPalPrice(country: string, price: number): Promise<PayPalPrice | null> {
+    const rates = await apiFetch<PayPalRates>(`/shipping/paypal/${country}`, `paypal_${country}`);
+    if (!rates) {
+        return null;
+    }
+
+    const charges = price * (rates.variable / 100) + rates.fixed;
     return {
         price: price + charges,
         charges,
-        percents,
-        fixed,
+        percents: rates.variable,
+        fixed: rates.fixed,
     };
 }
