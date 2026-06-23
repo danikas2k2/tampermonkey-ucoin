@@ -215,9 +215,9 @@ export async function calcTotalPrices(): Promise<void> {
         const weightLine = price.closest('a.region')?.nextElementSibling;
         const weight = parsePrice(weightLine?.querySelector('.right')?.textContent) ?? 0;
         const country =
-            getCountryId(
+            (await getCountryId(
                 tree.previousElementSibling?.querySelector('.gray-11')?.textContent ?? ''
-            ) ?? '';
+            )) ?? '';
         const shippingPrice = await getShippingPrice(country, weight);
         if (shippingPrice > 0) {
             totalPrice = currentPrice + shippingPrice;

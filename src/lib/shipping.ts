@@ -95,8 +95,12 @@ function cheapestSplit(prices: ShippingEntry[], totalWeight: number): number {
     const memo = new Map<number, number>();
 
     function solve(weight: number): number {
-        if (weight <= 0) return 0;
-        if (memo.has(weight)) return memo.get(weight)!;
+        if (weight <= 0) {
+            return 0;
+        }
+        if (memo.has(weight)) {
+            return memo.get(weight)!;
+        }
 
         let best = Infinity;
 

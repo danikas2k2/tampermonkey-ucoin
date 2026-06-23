@@ -265,7 +265,9 @@ export function addFilteringOptions(): void {
             rowLoop: for (const r of rows) {
                 const d = r.dataset;
                 for (const [filter, value] of filterValues) {
-                    if (filter === FilterName.COUNTRY) continue;
+                    if (filter === FilterName.COUNTRY) {
+                        continue;
+                    }
                     switch (filter) {
                         case FilterName.RESERVED: {
                             const reserve = value === 'on' ? 'on' : '';
@@ -330,7 +332,9 @@ export function addFilteringOptions(): void {
 
     function setupFilterListeners(): void {
         for (const option of document.querySelectorAll<HTMLElement>('[data-filter-by]')) {
-            if (boundListeners.has(option)) continue;
+            if (boundListeners.has(option)) {
+                continue;
+            }
             boundListeners.add(option);
             option.addEventListener('click', async () => {
                 const ds = option.dataset;
@@ -362,7 +366,9 @@ export function addFilteringOptions(): void {
         }
 
         for (const display of document.querySelectorAll<HTMLElement>('[data-filter]')) {
-            if (boundListeners.has(display)) continue;
+            if (boundListeners.has(display)) {
+                continue;
+            }
             boundListeners.add(display);
             display.addEventListener('click', async (e) => {
                 cancel(e);
@@ -401,7 +407,9 @@ export function addFilteringOptions(): void {
         }
 
         for (const dialog of document.querySelectorAll<HTMLElement>('[data-filter-dialog]')) {
-            if (boundListeners.has(dialog)) continue;
+            if (boundListeners.has(dialog)) {
+                continue;
+            }
             boundListeners.add(dialog);
             dialog.addEventListener('click', (e) => {
                 cancel(e);
@@ -420,7 +428,9 @@ export function addFilteringOptions(): void {
                 ].filter(isVisible);
                 if (rows.length) {
                     const hc = h.cloneNode(true) as HTMLHeadingElement;
-                    for (const el of hc.querySelectorAll('input, sup, span')) el.remove();
+                    for (const el of hc.querySelectorAll('input, sup, span')) {
+                        el.remove();
+                    }
                     r.set(hc.id, { name: hc.innerHTML, count: rows.length });
                 }
                 return r;
@@ -437,7 +447,9 @@ export function addFilteringOptions(): void {
                         const count = [
                             ...swapList.querySelectorAll<HTMLElement>(`tr[data-sort-year="${y}"]`),
                         ].filter(isVisible).length;
-                        if (count) r.set(y, { name: y, count });
+                        if (count) {
+                            r.set(y, { name: y, count });
+                        }
                     }
                     return r;
                 },
@@ -460,7 +472,9 @@ export function addFilteringOptions(): void {
                                     `tr[data-sort-face="${v}"], tr[data-sort-face^="${v} "]`
                                 ),
                             ].filter(isVisible).length;
-                            if (count) r.set(v, { name: v, count });
+                            if (count) {
+                                r.set(v, { name: v, count });
+                            }
                         }
                     }
                     return r;
@@ -483,7 +497,9 @@ export function addFilteringOptions(): void {
                                 `tr[data-sort-kmc="${kc}"][data-sort-km="${k}"][data-sort-kma="${ka}"]`
                             ),
                         ].filter(isVisible).length;
-                        if (count) r.set(v, { name: `${kc}# ${k}${ka}`, count });
+                        if (count) {
+                            r.set(v, { name: `${kc}# ${k}${ka}`, count });
+                        }
                     }
                     return r;
                 },
@@ -561,7 +577,9 @@ export function addFilteringOptions(): void {
 
     function updateFilters(): void {
         const filtersContainer = getFiltersContainer();
-        if (!filtersContainer) return;
+        if (!filtersContainer) {
+            return;
+        }
 
         for (const [name, { build, placeholder, width, insertBefore }] of filterDefs) {
             const newOptions = build();
@@ -581,12 +599,16 @@ export function addFilteringOptions(): void {
                         `[data-filter-by="${name}"]`
                     )) {
                         const key = optEl.dataset.filterValue;
-                        if (!key) continue;
+                        if (!key) {
+                            continue;
+                        }
                         const opt = newOptions.get(key);
                         if (opt) {
                             optEl.style.display = '';
                             const countEl = optEl.querySelector('.lgray-11');
-                            if (countEl) countEl.textContent = `(${opt.count})`;
+                            if (countEl) {
+                                countEl.textContent = `(${opt.count})`;
+                            }
                         } else {
                             optEl.style.display = 'none';
                         }
