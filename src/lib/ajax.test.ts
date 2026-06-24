@@ -55,18 +55,18 @@ describe('redirect', () => {
     });
 
     it('push state when redirected to a different URL', () => {
-        const pushState = jest.spyOn(history, 'pushState');
+        const pushState = vi.spyOn(history, 'pushState');
         const response = makeResponse({
             redirected: true,
-            url: 'http://localhost/new-path',
+            url: 'http://localhost:3000/new-path',
         });
         redirect(response);
-        expect(pushState).toHaveBeenCalledWith({}, '', 'http://localhost/new-path');
+        expect(pushState).toHaveBeenCalledWith({}, '', 'http://localhost:3000/new-path');
         pushState.mockRestore();
     });
 
     it('not push state when redirected URL matches current location', () => {
-        const pushState = jest.spyOn(history, 'pushState');
+        const pushState = vi.spyOn(history, 'pushState');
         const response = makeResponse({
             redirected: true,
             url: location.href,

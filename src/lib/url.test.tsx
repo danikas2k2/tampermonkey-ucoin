@@ -14,30 +14,32 @@ import {
 
 describe('loc', () => {
     it('return URL object for current location', () => {
-        expect(loc())
-            .toEqual(expect.any(URL))
-            .toEqual(
-                expect.objectContaining({
-                    protocol: 'http:',
-                    host: 'localhost',
-                    pathname: '/',
-                    searchParams: expect.any(URLSearchParams),
-                })
-            );
+        expect(loc()).toEqual(expect.any(URL));
+        expect(loc()).toEqual(
+            expect.objectContaining({
+                protocol: 'http:',
+                host: 'localhost:3000',
+                pathname: '/',
+                searchParams: expect.any(URLSearchParams),
+            })
+        );
     });
 });
 
 describe('getUrl', () => {
     it('get URL object from string', () => {
-        expect(getUrl('/foo?bar=baz'))
-            .toEqual(expect.any(URL))
-            .toEqual(expect.objectContaining({ href: 'http://localhost/foo?bar=baz' }));
+        expect(getUrl('/foo?bar=baz')).toEqual(expect.any(URL));
+        expect(getUrl('/foo?bar=baz')).toEqual(
+            expect.objectContaining({ href: 'http://localhost:3000/foo?bar=baz' })
+        );
     });
 
     it('get URL object from URL', () => {
-        expect(getUrl(new URL('/foo?bar=baz', location.href)))
-            .toEqual(expect.any(URL))
-            .toEqual(expect.objectContaining({ href: 'http://localhost/foo?bar=baz' }));
+        const result = getUrl(new URL('/foo?bar=baz', location.href));
+        expect(result).toEqual(expect.any(URL));
+        expect(result).toEqual(
+            expect.objectContaining({ href: 'http://localhost:3000/foo?bar=baz' })
+        );
     });
 });
 
@@ -84,19 +86,19 @@ describe('hashSearchParams', () => {
 describe('updateHashHref', () => {
     it('update location hash by string', async () => {
         expect(await updateHashHref('foo=bar&baz=qux')).toEqual(
-            'http://localhost/#foo=bar&baz=qux'
+            'http://localhost:3000/#foo=bar&baz=qux'
         );
     });
 
     it('update location hash by search params', async () => {
         expect(await updateHashHref(new URLSearchParams({ foo: 'bar', baz: 'qux' }))).toEqual(
-            'http://localhost/#foo=bar&baz=qux'
+            'http://localhost:3000/#foo=bar&baz=qux'
         );
     });
 
     it('update location hash by processor returning params', async () => {
         expect(await updateHashHref(() => new URLSearchParams({ foo: 'bar', baz: 'qux' }))).toEqual(
-            'http://localhost/#foo=bar&baz=qux'
+            'http://localhost:3000/#foo=bar&baz=qux'
         );
     });
 
@@ -106,13 +108,13 @@ describe('updateHashHref', () => {
                 params.set('foo', 'bar');
                 params.set('baz', 'qux');
             })
-        ).toEqual('http://localhost/#foo=bar&baz=qux');
+        ).toEqual('http://localhost:3000/#foo=bar&baz=qux');
     });
 
     it('update location hash by async processor returning params', async () => {
         expect(
             await updateHashHref(async () => new URLSearchParams({ foo: 'bar', baz: 'qux' }))
-        ).toEqual('http://localhost/#foo=bar&baz=qux');
+        ).toEqual('http://localhost:3000/#foo=bar&baz=qux');
     });
 
     it('update location hash by async processor updating params', async () => {
@@ -121,12 +123,12 @@ describe('updateHashHref', () => {
                 params.set('foo', 'bar');
                 params.set('baz', 'qux');
             })
-        ).toEqual('http://localhost/#foo=bar&baz=qux');
+        ).toEqual('http://localhost:3000/#foo=bar&baz=qux');
     });
 
     it('update location hash from custom url by string', async () => {
         expect(await updateHashHref('foo=bar&baz=qux', getUrl('/que#bar=baz'))).toEqual(
-            'http://localhost/que#foo=bar&baz=qux'
+            'http://localhost:3000/que#foo=bar&baz=qux'
         );
     });
 
@@ -136,7 +138,7 @@ describe('updateHashHref', () => {
                 new URLSearchParams({ foo: 'bar', baz: 'qux' }),
                 getUrl('/que#bar=baz')
             )
-        ).toEqual('http://localhost/que#foo=bar&baz=qux');
+        ).toEqual('http://localhost:3000/que#foo=bar&baz=qux');
     });
 
     it('update location hash from custom url by processor returning params', async () => {
@@ -145,7 +147,7 @@ describe('updateHashHref', () => {
                 () => new URLSearchParams({ foo: 'bar', baz: 'qux' }),
                 getUrl('/que#bar=baz')
             )
-        ).toEqual('http://localhost/que#foo=bar&baz=qux');
+        ).toEqual('http://localhost:3000/que#foo=bar&baz=qux');
     });
 
     it('update location hash from custom url by processor updating params', async () => {
@@ -154,7 +156,7 @@ describe('updateHashHref', () => {
                 params.set('foo', 'bar');
                 params.set('baz', 'qux');
             }, getUrl('/que#bar=baz'))
-        ).toEqual('http://localhost/que#bar=baz&foo=bar&baz=qux');
+        ).toEqual('http://localhost:3000/que#bar=baz&foo=bar&baz=qux');
     });
 
     it('update location hash from custom url by async processor returning params', async () => {
@@ -163,7 +165,7 @@ describe('updateHashHref', () => {
                 async () => new URLSearchParams({ foo: 'bar', baz: 'qux' }),
                 getUrl('/que#bar=baz')
             )
-        ).toEqual('http://localhost/que#foo=bar&baz=qux');
+        ).toEqual('http://localhost:3000/que#foo=bar&baz=qux');
     });
 
     it('update location hash from custom url by async processor updating params', async () => {
@@ -172,7 +174,7 @@ describe('updateHashHref', () => {
                 params.set('foo', 'bar');
                 params.set('baz', 'qux');
             }, getUrl('/que#bar=baz'))
-        ).toEqual('http://localhost/que#bar=baz&foo=bar&baz=qux');
+        ).toEqual('http://localhost:3000/que#bar=baz&foo=bar&baz=qux');
     });
 });
 
@@ -182,12 +184,12 @@ describe('setHashParam', () => {
     });
 
     it('change param by name to location hash', async () => {
-        expect(await setHashParam('foo', 'baz')).toEqual('http://localhost/#foo=baz&baz=qux');
+        expect(await setHashParam('foo', 'baz')).toEqual('http://localhost:3000/#foo=baz&baz=qux');
     });
 
     it('add param by name to location hash', async () => {
         expect(await setHashParam('bar', 'baz')).toEqual(
-            'http://localhost/#foo=bar&baz=qux&bar=baz'
+            'http://localhost:3000/#foo=bar&baz=qux&bar=baz'
         );
     });
 });
@@ -198,11 +200,11 @@ describe('deleteHashParam', () => {
     });
 
     it('remove param by name from location hash', async () => {
-        expect(await deleteHashParam('foo')).toEqual('http://localhost/#baz=qux');
+        expect(await deleteHashParam('foo')).toEqual('http://localhost:3000/#baz=qux');
     });
 
     it('leave location hash unchanged if param is missing', async () => {
-        expect(await deleteHashParam('bar')).toEqual('http://localhost/#foo=bar&baz=qux');
+        expect(await deleteHashParam('bar')).toEqual('http://localhost:3000/#foo=bar&baz=qux');
     });
 });
 

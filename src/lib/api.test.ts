@@ -18,7 +18,7 @@ beforeEach(freshIdb);
 
 describe('apiFetch', () => {
     it('fetches and returns data', async () => {
-        global.fetch = jest.fn().mockResolvedValue({
+        global.fetch = vi.fn().mockResolvedValue({
             ok: true,
             status: 200,
             headers: makeHeaders(),
@@ -28,7 +28,7 @@ describe('apiFetch', () => {
     });
 
     it('returns null on non-ok response', async () => {
-        global.fetch = jest.fn().mockResolvedValue({
+        global.fetch = vi.fn().mockResolvedValue({
             ok: false,
             status: 500,
             headers: new Headers(),
@@ -38,12 +38,12 @@ describe('apiFetch', () => {
     });
 
     it('returns null on network error', async () => {
-        global.fetch = jest.fn().mockRejectedValue(new Error('network'));
+        global.fetch = vi.fn().mockRejectedValue(new Error('network'));
         expect(await apiFetch('/test', 'k3')).toBeNull();
     });
 
     it('returns cached data on second call without fetching', async () => {
-        const fetchMock = jest.fn().mockResolvedValue({
+        const fetchMock = vi.fn().mockResolvedValue({
             ok: true,
             status: 200,
             headers: makeHeaders(),
@@ -56,7 +56,7 @@ describe('apiFetch', () => {
     });
 
     it('re-fetches when cache is expired', async () => {
-        const fetchMock = jest
+        const fetchMock = vi
             .fn()
             .mockResolvedValueOnce({
                 ok: true,
@@ -79,7 +79,7 @@ describe('apiFetch', () => {
 
     it('sends If-Modified-Since on re-fetch after expiry', async () => {
         const lm = lastModified();
-        const fetchMock = jest
+        const fetchMock = vi
             .fn()
             .mockResolvedValueOnce({
                 ok: true,
@@ -101,7 +101,7 @@ describe('apiFetch', () => {
 
     it('returns cached data on 304 and updates expires', async () => {
         const newExpires = futureExpires();
-        const fetchMock = jest
+        global.fetch = vi
             .fn()
             .mockResolvedValueOnce({
                 ok: true,
@@ -115,14 +115,13 @@ describe('apiFetch', () => {
                 headers: new Headers({ Expires: newExpires }),
                 json: async () => ({}),
             } as unknown as Response);
-        global.fetch = fetchMock;
         await apiFetch('/test', 'k7');
         const result = await apiFetch('/test', 'k7');
         expect(result).toEqual({ v: 1 });
     });
 
     it('does not cache when Expires header is missing', async () => {
-        const fetchMock = jest.fn().mockResolvedValue({
+        const fetchMock = vi.fn().mockResolvedValue({
             ok: true,
             status: 200,
             headers: new Headers({ 'Last-Modified': lastModified() }),
@@ -135,7 +134,7 @@ describe('apiFetch', () => {
     });
 
     it('does not cache when Last-Modified header is missing', async () => {
-        const fetchMock = jest.fn().mockResolvedValue({
+        const fetchMock = vi.fn().mockResolvedValue({
             ok: true,
             status: 200,
             headers: new Headers({ Expires: futureExpires() }),
@@ -149,7 +148,7 @@ describe('apiFetch', () => {
 
     it('304 with only Last-Modified updates lastModified but not expires', async () => {
         const newLm = new Date(Date.now() - 100).toUTCString();
-        const fetchMock = jest
+        const fetchMock = vi
             .fn()
             .mockResolvedValueOnce({
                 ok: true,

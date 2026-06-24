@@ -1,7 +1,7 @@
 const store: Record<string, unknown> = {};
-jest.mock('./storage', () => ({
-    getItem: jest.fn(async (key: string) => store[key] ?? null),
-    setItem: jest.fn(async (key: string, value: unknown) => {
+vi.mock('./storage', () => ({
+    getItem: vi.fn(async (key: string) => store[key] ?? null),
+    setItem: vi.fn(async (key: string, value: unknown) => {
         store[key] = value;
         return true;
     }),
@@ -10,7 +10,7 @@ jest.mock('./storage', () => ({
 import { getPayPalPrice } from './paypal';
 
 const mockFetch = (rates: { fixed: number; variable: number }) => {
-    global.fetch = jest.fn().mockResolvedValue({
+    global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         status: 200,
         headers: new Headers({
@@ -25,7 +25,7 @@ beforeEach(() => {
     for (const key of Object.keys(store)) {
         delete store[key];
     }
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 });
 
 describe('getPayPalPrice', () => {
@@ -41,7 +41,7 @@ describe('getPayPalPrice', () => {
     });
 
     it('returns null when API fails', async () => {
-        global.fetch = jest.fn().mockResolvedValue({
+        global.fetch = vi.fn().mockResolvedValue({
             ok: false,
             status: 500,
             headers: new Headers(),
@@ -51,14 +51,14 @@ describe('getPayPalPrice', () => {
     });
 
     it('returns null on network error', async () => {
-        global.fetch = jest.fn().mockRejectedValue(new Error('network'));
+        global.fetch = vi.fn().mockRejectedValue(new Error('network'));
         expect(await getPayPalPrice('france', 10)).toBeNull();
     });
 
     it('scales charges proportionally to price', async () => {
         mockFetch({ fixed: 0.35, variable: 5.0 });
         const r1 = await getPayPalPrice('lt', 20);
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         mockFetch({ fixed: 0.35, variable: 5.0 });
         const r2 = await getPayPalPrice('uk', 40);
         // charges should double when price doubles (fixed stays)

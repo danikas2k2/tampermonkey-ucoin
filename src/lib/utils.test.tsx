@@ -350,13 +350,13 @@ describe('disable', () => {
 
 describe('cancel', () => {
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('prevent event default and stop propagation', () => {
         const event = {
-            preventDefault: jest.fn(),
-            stopPropagation: jest.fn(),
+            preventDefault: vi.fn(),
+            stopPropagation: vi.fn(),
         } as unknown as Event;
         cancel(event);
         expect(event.preventDefault).toHaveBeenCalled();
@@ -366,12 +366,12 @@ describe('cancel', () => {
 
 describe('reload', () => {
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('reload current page and return null', () => {
-        const locationReload = jest.fn();
-        jest.spyOn(URL, 'location').mockReturnValue({
+        const locationReload = vi.fn();
+        vi.spyOn(URL, 'location').mockReturnValue({
             reload: locationReload,
         } as unknown as Location);
         expect(reload()).toBeNull();
@@ -381,7 +381,7 @@ describe('reload', () => {
 
 describe('documentFragment', () => {
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('create document fragment from source', () => {
@@ -397,21 +397,21 @@ describe('documentFragment', () => {
 
 describe('dataHrefClickHandler', () => {
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('handle click on [data-href] element', () => {
         const element = {
             href: '',
-            dispatchEvent: jest.fn(),
+            dispatchEvent: vi.fn(),
         } as unknown as HTMLAnchorElement;
 
-        jest.spyOn(document, 'createElement').mockReturnValueOnce(element);
+        vi.spyOn(document, 'createElement').mockReturnValueOnce(element);
 
         const event = {
             type: 'click',
-            preventDefault: jest.fn(),
-            stopPropagation: jest.fn(),
+            preventDefault: vi.fn(),
+            stopPropagation: vi.fn(),
             target: {
                 dataset: {
                     href: '/test',
@@ -424,22 +424,22 @@ describe('dataHrefClickHandler', () => {
         expect(event.preventDefault).toHaveBeenCalled();
         expect(event.stopPropagation).toHaveBeenCalled();
 
-        expect(document.createElement).toHaveBeenCalledTimes(1).toHaveBeenCalledWith('a');
+        expect(document.createElement).toHaveBeenCalledTimes(1);
+        expect(document.createElement).toHaveBeenCalledWith('a');
 
         expect(element.href).toEqual('/test');
-        expect(element.dispatchEvent)
-            .toHaveBeenCalledTimes(1)
-            .toHaveBeenCalledWith(expect.any(MouseEvent));
+        expect(element.dispatchEvent).toHaveBeenCalledTimes(1);
+        expect(element.dispatchEvent).toHaveBeenCalledWith(expect.any(MouseEvent));
     });
 });
 
 describe('wrapDataHrefClicks', () => {
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('wrap all [data-href] elements with dataHrefClickHandler', () => {
-        jest.spyOn(HTMLElement.prototype, 'addEventListener');
+        vi.spyOn(HTMLElement.prototype, 'addEventListener');
 
         render(
             <div role="article">
@@ -450,22 +450,24 @@ describe('wrapDataHrefClicks', () => {
         );
 
         const element = screen.getByRole('article');
-        jest.clearAllMocks();
+        vi.clearAllMocks();
 
         wrapDataHrefClicks(element);
 
-        expect(HTMLElement.prototype.addEventListener)
-            .toHaveBeenCalledTimes(3)
-            .toHaveBeenLastCalledWith('click', dataHrefClickHandler);
+        expect(HTMLElement.prototype.addEventListener).toHaveBeenCalledTimes(3);
+        expect(HTMLElement.prototype.addEventListener).toHaveBeenLastCalledWith(
+            'click',
+            dataHrefClickHandler
+        );
     });
 });
 
 describe('updateRequiredElement', () => {
-    const onUpdated = jest.fn();
-    const onMissing = jest.fn();
+    const onUpdated = vi.fn();
+    const onMissing = vi.fn();
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('do nothing if no element for update was specified', () => {
@@ -574,19 +576,19 @@ describe('updateOptionalElement', () => {
 });
 
 describe('formSubmitHandler', () => {
-    const onSubmit = jest.fn();
-    const onSuccess = jest.fn();
+    const onSubmit = vi.fn();
+    const onSuccess = vi.fn();
 
     const expectedTarget = document.createElement('form');
     const event = {
         type: 'submit',
-        preventDefault: jest.fn(),
-        stopPropagation: jest.fn(),
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
         target: expectedTarget,
     } as unknown as SubmitEvent;
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('handle form submit', async () => {
@@ -620,42 +622,47 @@ describe('formSubmitHandler', () => {
 });
 
 describe('wrapFormSubmit', () => {
-    const onSubmit = jest.fn();
-    (globalThis as unknown as { onSubmit: jest.Mock }).onSubmit = onSubmit;
-    const onSuccess = jest.fn();
+    const onSubmit = vi.fn();
+    const onSuccess = vi.fn();
+
+    beforeEach(() => {
+        (window as unknown as Record<string, unknown>).onSubmit = onSubmit;
+    });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('wrap form submit', async () => {
         render(<form aria-label="form"></form>);
         const form = screen.getByRole<HTMLFormElement>('form');
-        form.setAttribute('onsubmit', 'onSubmit(event)');
+        form.onsubmit = onSubmit;
+        const prevOnSubmit = form.onsubmit;
 
         wrapFormSubmit(form, onSuccess);
-        expect(form.onsubmit).toBeNull();
+        // removeAttribute('onsubmit') clears attribute but IDL property stays when set via JS
+        expect(form.getAttribute('onsubmit')).toBeNull();
 
         fireEvent.submit(form);
-        await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(expect.any(Event)));
+        await waitFor(() => expect(prevOnSubmit).toHaveBeenCalledWith(expect.any(Event)));
         expect(onSuccess).toHaveBeenCalledWith(form);
     });
 });
 
 describe('linkClickHandler', () => {
-    const onClick = jest.fn();
-    const onSuccess = jest.fn();
+    const onClick = vi.fn();
+    const onSuccess = vi.fn();
 
     const expectedTarget = document.createElement('a');
     const event = {
         type: 'click',
-        preventDefault: jest.fn(),
-        stopPropagation: jest.fn(),
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
         target: expectedTarget,
     } as unknown as PointerEvent;
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('handle link click', async () => {
@@ -689,24 +696,28 @@ describe('linkClickHandler', () => {
 });
 
 describe('handleLinkClick', () => {
-    const onClick = jest.fn();
-    (globalThis as unknown as { onClick: jest.Mock }).onClick = onClick;
-    const onSuccess = jest.fn();
+    const onClick = vi.fn();
+    const onSuccess = vi.fn();
+
+    beforeEach(() => {
+        (window as unknown as Record<string, unknown>).onClick = onClick;
+    });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('wrap form submit', async () => {
         render(<a href="/">content</a>);
         const link = screen.getByRole<HTMLAnchorElement>('link');
-        link.setAttribute('onclick', 'onClick(event)');
+        link.onclick = onClick;
+        const prevOnClick = link.onclick;
 
         void handleLinkClick(link, onSuccess);
-        expect(link.onclick).toBeNull();
+        expect(link.getAttribute('onclick')).toBeNull();
 
         link.click();
-        await waitFor(() => expect(onClick).toHaveBeenCalledWith(expect.any(Event)));
+        await waitFor(() => expect(prevOnClick).toHaveBeenCalledWith(expect.any(Event)));
         expect(onSuccess).toHaveBeenCalledWith(link);
     });
 });
@@ -715,15 +726,15 @@ describe('todayMonth', () => {
     beforeEach(() => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        jest.useFakeTimers('modern');
+        vi.useFakeTimers('modern');
     });
 
     afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     it('get today year and month', () => {
-        jest.setSystemTime(new Date('2023-04-15'));
+        vi.setSystemTime(new Date('2023-04-15'));
         expect(todayMonth()).toEqual('2023-04');
     });
 });
@@ -773,10 +784,10 @@ describe('slug', () => {
 });
 
 describe('scrollIntoView', () => {
-    const mockScroll = jest.fn();
+    const mockScroll = vi.fn();
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('scroll element into view', () => {

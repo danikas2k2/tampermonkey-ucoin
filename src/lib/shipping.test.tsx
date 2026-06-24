@@ -1,9 +1,9 @@
 import { getShippingPrice, Weight } from './shipping';
 
 const store: Record<string, unknown> = {};
-jest.mock('./storage', () => ({
-    getItem: jest.fn(async (key: string) => store[key] ?? null),
-    setItem: jest.fn(async (key: string, value: unknown) => {
+vi.mock('./storage', () => ({
+    getItem: vi.fn(async (key: string) => store[key] ?? null),
+    setItem: vi.fn(async (key: string, value: unknown) => {
         store[key] = value;
         return true;
     }),
@@ -27,7 +27,7 @@ const mockHeaders = new Headers({
 });
 
 const mockFetch = (entries: PartialEntry[]) => {
-    global.fetch = jest.fn().mockImplementation((url: string) => {
+    global.fetch = vi.fn().mockImplementation((url: string) => {
         const body = url.includes('/countries/codes') ? CODES : makeEntries(entries);
         return Promise.resolve({
             ok: true,
@@ -47,7 +47,7 @@ const BRACKETS: PartialEntry[] = [
 ];
 
 beforeEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
     for (const key of Object.keys(store)) {
         delete store[key];
     }
@@ -125,12 +125,12 @@ describe('getShippingPrice', () => {
     });
 
     it('return -1 when API fails', async () => {
-        global.fetch = jest.fn().mockResolvedValue({ ok: false } as Response);
+        global.fetch = vi.fn().mockResolvedValue({ ok: false } as Response);
         expect(await getShippingPrice('france', Weight.SMALL_ENVELOPE)).toBe(-1);
     });
 
     it('return -1 when codes API returns null', async () => {
-        global.fetch = jest.fn().mockImplementation((url: string) => {
+        global.fetch = vi.fn().mockImplementation((url: string) => {
             if (url.includes('/countries/codes')) {
                 return Promise.resolve({ ok: false, headers: mockHeaders } as Response);
             }
@@ -150,7 +150,7 @@ describe('getShippingPrice', () => {
     });
 
     it('return -1 when prices API returns null', async () => {
-        global.fetch = jest.fn().mockImplementation((url: string) => {
+        global.fetch = vi.fn().mockImplementation((url: string) => {
             if (url.includes('/countries/codes')) {
                 return Promise.resolve({
                     ok: true,

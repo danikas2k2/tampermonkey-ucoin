@@ -383,7 +383,7 @@ describe('sortSections', () => {
 
     it('call decorate on each heading', () => {
         const container = makeContainer(['B', 'A']);
-        const decorate = jest.fn();
+        const decorate = vi.fn();
         sortSections(container, (h) => h.textContent ?? '', decorate);
         expect(decorate).toHaveBeenCalledTimes(2);
     });

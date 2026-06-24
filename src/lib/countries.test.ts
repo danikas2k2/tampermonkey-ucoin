@@ -1,7 +1,7 @@
 const store: Record<string, unknown> = {};
-jest.mock('./storage', () => ({
-    getItem: jest.fn(async (key: string) => store[key] ?? null),
-    setItem: jest.fn(async (key: string, value: unknown) => {
+vi.mock('./storage', () => ({
+    getItem: vi.fn(async (key: string) => store[key] ?? null),
+    setItem: vi.fn(async (key: string, value: unknown) => {
         store[key] = value;
         return true;
     }),
@@ -10,7 +10,7 @@ jest.mock('./storage', () => ({
 import { getCountryId } from './countries';
 
 const mockFetch = (countries: Record<string, string>) => {
-    global.fetch = jest.fn().mockResolvedValue({
+    global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         status: 200,
         headers: new Headers({
@@ -25,7 +25,7 @@ beforeEach(() => {
     for (const key of Object.keys(store)) {
         delete store[key];
     }
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 });
 
 describe('getCountryId', () => {
@@ -40,7 +40,7 @@ describe('getCountryId', () => {
     });
 
     it('returns undefined when API fails', async () => {
-        global.fetch = jest.fn().mockResolvedValue({
+        global.fetch = vi.fn().mockResolvedValue({
             ok: false,
             status: 500,
             headers: new Headers(),
