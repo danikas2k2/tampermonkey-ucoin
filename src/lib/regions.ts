@@ -84,7 +84,7 @@ export async function handleCountryRegions(): Promise<void> {
 
     const regionTree = (await apiFetch<RegionTree>('/regions/tree', 'regions_tree')) ?? {};
     const countryRegions =
-        (await apiFetch<Record<string, string[]>>('/country/regions', 'country_regions')) ?? {};
+        (await apiFetch<Record<string, string[]>>('/countries/regions', 'countries_regions')) ?? {};
     const topRegions = Object.keys(regionTree);
 
     // add all regions

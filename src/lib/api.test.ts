@@ -146,4 +146,27 @@ describe('apiFetch', () => {
         await apiFetch('/test', 'k9');
         expect(fetchMock).toHaveBeenCalledTimes(2);
     });
+
+    it('304 with only Last-Modified updates lastModified but not expires', async () => {
+        const newLm = new Date(Date.now() - 100).toUTCString();
+        const fetchMock = jest
+            .fn()
+            .mockResolvedValueOnce({
+                ok: true,
+                status: 200,
+                headers: makeHeaders({ Expires: pastExpires() }),
+                json: async () => ({ v: 1 }),
+            } as Response)
+            .mockResolvedValueOnce({
+                ok: false,
+                status: 304,
+                headers: new Headers({ 'Last-Modified': newLm }),
+                json: async () => ({}),
+            } as unknown as Response);
+        global.fetch = fetchMock;
+        await apiFetch('/test', 'k10');
+        const result = await apiFetch('/test', 'k10');
+        expect(result).toEqual({ v: 1 });
+        expect(fetchMock).toHaveBeenCalledTimes(2);
+    });
 });

@@ -10,6 +10,7 @@ import {
     formSubmitHandler,
     handleLinkClick,
     hide,
+    isHidden,
     linkClickHandler,
     reload,
     scrollIntoView,
@@ -26,6 +27,22 @@ import {
     wrapFormSubmit,
 } from './utils';
 import * as URL from './url';
+
+describe('isHidden', () => {
+    it('returns true when element has hide class', () => {
+        render(<div role="button" className="hide" />);
+        expect(isHidden(screen.getByRole('button') as HTMLElement)).toBe(true);
+    });
+
+    it('returns false when element does not have hide class', () => {
+        render(<div role="button" />);
+        expect(isHidden(screen.getByRole('button') as HTMLElement)).toBe(false);
+    });
+
+    it('returns false for null', () => {
+        expect(isHidden(null)).toBe(false);
+    });
+});
 
 describe('sp', () => {
     it('return empty string for empty string', () => {

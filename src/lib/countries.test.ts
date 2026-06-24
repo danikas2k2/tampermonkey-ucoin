@@ -58,4 +58,9 @@ describe('getCountryId', () => {
         mockFetch({ france: 'France' });
         expect(await getCountryId('City,  France')).toBe('france');
     });
+
+    it('returns undefined when comma split yields empty string', async () => {
+        mockFetch({ france: 'France' });
+        expect(await getCountryId('Something,')).toBeUndefined();
+    });
 });

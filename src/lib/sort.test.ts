@@ -12,6 +12,7 @@ import {
     sortBy,
     sortSections,
     getActiveSortOption,
+    setActiveSortOption,
     x,
     a,
     d,
@@ -111,6 +112,18 @@ describe('cmpKm', () => {
         const b = { sortKmc: 'A', sortKm: '2', sortKma: '', sortYear: '2000', sortMm: '' };
         expect(cmpKm(a, b, 1)).toBeLessThan(0);
     });
+
+    it('fall through to km suffix when kmc and km equal', () => {
+        const a = { sortKmc: 'A', sortKm: '1', sortKma: 'a', sortYear: '2000', sortMm: '' };
+        const b = { sortKmc: 'A', sortKm: '1', sortKma: 'b', sortYear: '2000', sortMm: '' };
+        expect(cmpKm(a, b, 1)).toBeLessThan(0);
+    });
+
+    it('fall through to year when kmc, km and kma all equal', () => {
+        const a = { sortKmc: 'A', sortKm: '1', sortKma: 'a', sortYear: '1990', sortMm: '' };
+        const b = { sortKmc: 'A', sortKm: '1', sortKma: 'a', sortYear: '2000', sortMm: '' };
+        expect(cmpKm(a, b, 1)).toBeLessThan(0);
+    });
 });
 
 describe('cmpFace', () => {
@@ -132,6 +145,27 @@ describe('cmpFace', () => {
             sortMm: '',
         };
         expect(cmpFace(a, b, 1)).toBeLessThan(0);
+    });
+
+    it('fall through to km when face values equal', () => {
+        const a = {
+            sortFace: '1',
+            sortKmc: 'A',
+            sortKm: '1',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
+        const b = {
+            sortFace: '1',
+            sortKmc: 'B',
+            sortKm: '1',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
+        // cmpFace falls through to cmpKm(a, b, -1), so result is non-zero
+        expect(cmpFace(a, b, 1)).not.toBe(0);
     });
 });
 
@@ -157,6 +191,28 @@ describe('cmpSubject', () => {
         };
         expect(cmpSubject(a, b, 1)).toBeLessThan(0);
     });
+
+    it('fall through to face when subjects equal', () => {
+        const a = {
+            sortSubject: 'Apple',
+            sortFace: '1',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
+        const b = {
+            sortSubject: 'Apple',
+            sortFace: '2',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
+        expect(cmpSubject(a, b, 1)).toBeLessThan(0);
+    });
 });
 
 describe('cmpCond', () => {
@@ -173,6 +229,28 @@ describe('cmpCond', () => {
         const b = {
             sortCond: '2',
             sortFace: '1',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
+        expect(cmpCond(a, b, 1)).toBeLessThan(0);
+    });
+
+    it('fall through to face when conditions equal', () => {
+        const a = {
+            sortCond: '1',
+            sortFace: '1',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
+        const b = {
+            sortCond: '1',
+            sortFace: '2',
             sortKmc: '',
             sortKm: '0',
             sortKma: '',
@@ -206,6 +284,30 @@ describe('cmpValue', () => {
             sortMm: '',
         };
         expect(cmpValue(a, b, 1)).toBeLessThan(0);
+    });
+
+    it('fall through to cond when values equal', () => {
+        const a = {
+            sortValue: '10',
+            sortCond: '1',
+            sortFace: '1',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
+        const b = {
+            sortValue: '10',
+            sortCond: '2',
+            sortFace: '1',
+            sortKmc: '',
+            sortKm: '0',
+            sortKma: '',
+            sortYear: '2000',
+            sortMm: '',
+        };
+        expect(cmpValue(a, b, 1)).not.toBe(0);
     });
 });
 
@@ -299,6 +401,23 @@ describe('getActiveSortOption', () => {
     it('return field and order from hash param', () => {
         location.hash = '#o=km_a';
         expect(getActiveSortOption()).toEqual(['km', 'a']);
+    });
+});
+
+describe('setActiveSortOption', () => {
+    beforeEach(() => {
+        location.hash = '';
+    });
+
+    it('sets hash param with option and order', async () => {
+        await setActiveSortOption('km', 'a');
+        expect(getActiveSortOption()).toEqual(['km', 'a']);
+    });
+
+    it('overwrites existing sort option', async () => {
+        location.hash = '#o=year_d';
+        await setActiveSortOption('face', 'd');
+        expect(getActiveSortOption()).toEqual(['face', 'd']);
     });
 });
 

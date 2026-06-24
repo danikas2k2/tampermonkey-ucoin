@@ -128,4 +128,38 @@ describe('getShippingPrice', () => {
         global.fetch = jest.fn().mockResolvedValue({ ok: false } as Response);
         expect(await getShippingPrice('france', Weight.SMALL_ENVELOPE)).toBe(-1);
     });
+
+    it('return -1 when codes API returns null', async () => {
+        global.fetch = jest.fn().mockImplementation((url: string) => {
+            if (url.includes('/countries/codes')) {
+                return Promise.resolve({ ok: false, headers: mockHeaders } as Response);
+            }
+            return Promise.resolve({
+                ok: true,
+                headers: mockHeaders,
+                json: async () => makeEntries(BRACKETS),
+            } as Response);
+        });
+        expect(await getShippingPrice('france', Weight.SMALL_ENVELOPE)).toBe(-1);
+    });
+
+    it('zero remainder during split resolves correctly', async () => {
+        mockFetch([{ weightFrom: 0, weightTo: 500, price: 4.0 }]);
+        // 1000 = 500 + 500; base=8.0; 8.0+0.3=8.3 → 8.5
+        expect(await getShippingPrice('france', 1000)).toBeCloseTo(8.5);
+    });
+
+    it('return -1 when prices API returns null', async () => {
+        global.fetch = jest.fn().mockImplementation((url: string) => {
+            if (url.includes('/countries/codes')) {
+                return Promise.resolve({
+                    ok: true,
+                    headers: mockHeaders,
+                    json: async () => CODES,
+                } as Response);
+            }
+            return Promise.resolve({ ok: false, headers: mockHeaders } as Response);
+        });
+        expect(await getShippingPrice('france', Weight.SMALL_ENVELOPE)).toBe(-1);
+    });
 });
