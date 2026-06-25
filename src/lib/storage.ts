@@ -42,6 +42,23 @@ export async function setItem<T>(key: string, value: T): Promise<boolean> {
     }
 }
 
+export async function getAllKeys(prefix: string): Promise<string[]> {
+    try {
+        const db = await openDb();
+        return await new Promise((resolve) => {
+            const range = IDBKeyRange.bound(prefix, prefix + '￿');
+            const request = db
+                .transaction(STORE_NAME, 'readonly')
+                .objectStore(STORE_NAME)
+                .getAllKeys(range);
+            request.onsuccess = () => resolve((request.result as string[]) ?? []);
+            request.onerror = () => resolve([]);
+        });
+    } catch {
+        return [];
+    }
+}
+
 export async function removeItem(key: string): Promise<boolean> {
     try {
         const db = await openDb();

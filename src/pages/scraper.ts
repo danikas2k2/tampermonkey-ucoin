@@ -1,3 +1,4 @@
+import { flushOneChange, flushOneImage, ingestCoin } from '../lib/coin-store';
 import {
     type CoinEntry,
     detectPageType,
@@ -33,7 +34,45 @@ export function scrapePage(doc: Document): CoinEntry[] {
     }
 }
 
+async function ingestAll(coins: CoinEntry[]): Promise<void> {
+    for (const coin of coins) {
+        await ingestCoin(coin);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Background flusher — runs on every page load, one request per tick
+// ---------------------------------------------------------------------------
+
+function startBackgroundSync(): void {
+    let running = false;
+
+    async function tick(): Promise<void> {
+        if (running) {
+            return;
+        }
+        running = true;
+        try {
+            const didChange = await flushOneChange();
+            if (!didChange) {
+                await flushOneImage();
+            }
+        } finally {
+            running = false;
+        }
+    }
+
+    // Run once on load, then every 5 seconds
+    void tick();
+    setInterval(() => void tick(), 5000);
+}
+
 export async function handleScraperPage(): Promise<void> {
-    const data = scrapePage(document);
-    console.info(`[DEV]`, data);
+    startBackgroundSync();
+
+    const coins = scrapePage(document);
+    console.info(`[DEV]`, coins);
+    if (coins.length > 0) {
+        await ingestAll(coins);
+    }
 }

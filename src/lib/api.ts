@@ -1,6 +1,6 @@
 import { getItem, setItem } from './storage';
 
-const API_BASE = 'https://api.andriaus.com';
+export const API_BASE = 'https://api.andriaus.com';
 
 if (GM_getValue('apiKey') == null) {
     GM_setValue('apiKey', '');
@@ -9,10 +9,11 @@ if (GM_getValue('apiUser') == null) {
     GM_setValue('apiUser', '');
 }
 
-function getApiHeaders(): Record<string, string> {
+export function getApiHeaders(extra?: Record<string, string>): Record<string, string> {
     return {
         'x-api-key': GM_getValue('apiKey', ''),
         'x-api-user': GM_getValue('apiUser', ''),
+        ...extra,
     };
 }
 
