@@ -1,5 +1,2 @@
-/profile.md
 /.env
-data/*.csv
-/src/data/post-lt.json
-/src/lib/common/price.ts
+/pages/
