@@ -1,5 +1,5 @@
 import { API_BASE, getApiHeaders } from './api';
-import { type CoinEntry, coinId } from './scraper';
+import { type CoinEntry, coinId, type CoinMintage, type CoinSide } from './scraper';
 import { getAllKeys, getItem, removeItem, setItem } from './storage';
 
 // ---------------------------------------------------------------------------
@@ -25,56 +25,160 @@ export type CoinChanges = Partial<CoinEntry>;
 // Merge helpers
 // ---------------------------------------------------------------------------
 
-/**
- * Merge incoming (possibly partial) data onto existing stored data.
- * Rule: incoming defined value always wins over existing (including overwriting).
- * Incoming undefined never overwrites an existing defined value.
- */
-function mergeEntry(existing: CoinEntry, incoming: CoinEntry): CoinEntry {
-    const result = { ...existing };
-    for (const key of Object.keys(incoming) as (keyof CoinEntry)[]) {
-        const val = incoming[key];
-        if (val !== undefined) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (result as any)[key] = val;
+/** Returns a copy of `source` with undefined values stripped. */
+function withDefined<T extends object>(source: T): Partial<T> {
+    return Object.fromEntries(
+        Object.entries(source).filter(([, v]) => v !== undefined)
+    ) as Partial<T>;
+}
+
+function mergeSide(existing: CoinSide, incoming: CoinSide): CoinSide {
+    return { ...existing, ...withDefined(incoming) };
+}
+
+function diffSide(before: CoinSide, after: CoinSide): CoinSide | undefined {
+    const allKeys = new Set([...Object.keys(before), ...Object.keys(after)]) as Set<keyof CoinSide>;
+    const changed = [...allKeys].filter(
+        (k) => JSON.stringify(before[k]) !== JSON.stringify(after[k])
+    );
+    if (changed.length === 0) {
+        return undefined;
+    }
+    return Object.fromEntries(changed.map((k) => [k, after[k]])) as CoinSide;
+}
+
+function mintageKey(row: CoinMintage, fallbackYear?: string): string {
+    return row.year ?? fallbackYear ?? row.mint ?? '';
+}
+
+function mergeMintage(
+    existing: CoinMintage[],
+    incoming: CoinMintage[],
+    fallbackYear?: string
+): CoinMintage[] {
+    const map = new Map<string, CoinMintage>();
+    for (const row of existing) {
+        map.set(mintageKey(row, fallbackYear), row);
+    }
+    for (const row of incoming) {
+        const k = mintageKey(row, fallbackYear);
+        const prev = map.get(k);
+        map.set(k, prev ? { ...prev, ...withDefined(row) } : row);
+    }
+    return [...map.values()];
+}
+
+function diffMintage(
+    before: CoinMintage[],
+    after: CoinMintage[],
+    fallbackYear?: string
+): CoinMintage[] | undefined {
+    const beforeMap = new Map<string, CoinMintage>();
+    for (const row of before) {
+        beforeMap.set(mintageKey(row, fallbackYear), row);
+    }
+    const changed: CoinMintage[] = [];
+    for (const row of after) {
+        const k = mintageKey(row, fallbackYear);
+        const prev = beforeMap.get(k);
+        if (!prev) {
+            changed.push(row);
+            continue;
         }
+        const idField: Partial<CoinMintage> =
+            row.year !== undefined
+                ? { year: row.year }
+                : row.mint !== undefined
+                  ? { mint: row.mint }
+                  : fallbackYear !== undefined
+                    ? { year: fallbackYear }
+                    : {};
+        const allKeys = new Set([...Object.keys(prev), ...Object.keys(row)]) as Set<
+            keyof CoinMintage
+        >;
+        const diffFields = Object.fromEntries(
+            [...allKeys]
+                .filter((key) => JSON.stringify(prev[key]) !== JSON.stringify(row[key]))
+                .map((key) => [key, row[key]])
+        ) as Partial<CoinMintage>;
+        if (Object.keys(diffFields).length > 0) {
+            changed.push({ ...idField, ...diffFields });
+        }
+    }
+    return changed.length > 0 ? changed : undefined;
+}
+
+function mergePartialEntry(
+    existing: CoinChanges,
+    incoming: CoinChanges,
+    fallbackYear?: string
+): CoinChanges {
+    const { obverse, reverse, edge, mintage, ...simpleIncoming } = incoming;
+    const result: CoinChanges = { ...existing, ...withDefined(simpleIncoming) };
+    if (obverse !== undefined) {
+        result.obverse = existing.obverse ? mergeSide(existing.obverse, obverse) : obverse;
+    }
+    if (reverse !== undefined) {
+        result.reverse = existing.reverse ? mergeSide(existing.reverse, reverse) : reverse;
+    }
+    if (edge !== undefined) {
+        result.edge = existing.edge ? mergeSide(existing.edge, edge) : edge;
+    }
+    if (mintage !== undefined) {
+        result.mintage = existing.mintage
+            ? mergeMintage(existing.mintage, mintage, fallbackYear)
+            : mintage;
     }
     return result;
 }
 
-/**
- * Compute the diff between old and new: only keys whose value changed.
- */
+function mergeEntry(existing: CoinEntry, incoming: CoinEntry): CoinEntry {
+    return mergePartialEntry(existing, incoming, existing.year) as CoinEntry;
+}
+
 function diffEntry(before: CoinEntry, after: CoinEntry): CoinChanges {
-    const diff: CoinChanges = {};
-    const keys = new Set([
-        ...(Object.keys(before) as (keyof CoinEntry)[]),
-        ...(Object.keys(after) as (keyof CoinEntry)[]),
-    ]);
-    for (const key of keys) {
-        const a = before[key];
-        const b = after[key];
-        if (JSON.stringify(a) !== JSON.stringify(b)) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (diff as any)[key] = b;
+    const { obverse: bObv, reverse: bRev, edge: bEdge, mintage: bMint, ...simpleBefore } = before;
+    const { obverse: aObv, reverse: aRev, edge: aEdge, mintage: aMint, ...simpleAfter } = after;
+
+    const allSimpleKeys = new Set([
+        ...Object.keys(simpleBefore),
+        ...Object.keys(simpleAfter),
+    ]) as Set<keyof typeof simpleAfter>;
+    const diff: CoinChanges = Object.fromEntries(
+        [...allSimpleKeys]
+            .filter((k) => JSON.stringify(simpleBefore[k]) !== JSON.stringify(simpleAfter[k]))
+            .map((k) => [k, simpleAfter[k]])
+    ) as CoinChanges;
+
+    if (aObv) {
+        const d = bObv ? diffSide(bObv, aObv) : aObv;
+        if (d) {
+            diff.obverse = d;
         }
     }
+    if (aRev) {
+        const d = bRev ? diffSide(bRev, aRev) : aRev;
+        if (d) {
+            diff.reverse = d;
+        }
+    }
+    if (aEdge) {
+        const d = bEdge ? diffSide(bEdge, aEdge) : aEdge;
+        if (d) {
+            diff.edge = d;
+        }
+    }
+
+    const mintageDiff = diffMintage(bMint ?? [], aMint ?? [], after.year);
+    if (mintageDiff) {
+        diff.mintage = mintageDiff;
+    }
+
     return diff;
 }
 
-/**
- * Merge two changesets: prefer the newer value when the same key appears in both.
- */
 function mergeChanges(existing: CoinChanges, incoming: CoinChanges): CoinChanges {
-    const result = { ...existing };
-    for (const key of Object.keys(incoming) as (keyof CoinChanges)[]) {
-        const val = incoming[key];
-        if (val !== undefined) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (result as any)[key] = val;
-        }
-    }
-    return result;
+    return mergePartialEntry(existing, incoming);
 }
 
 // ---------------------------------------------------------------------------
