@@ -1,2 +1,5 @@
 /.env
+/.env.deploy.local
 /pages/
+/cache/
+/errors/

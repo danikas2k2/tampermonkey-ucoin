@@ -9,7 +9,6 @@ import { handleHomePage } from './pages/home';
 import { handleMessagePage } from './pages/message';
 import { handleSwapPage } from './pages/swap';
 import { handleTablePage } from './pages/table';
-import { handleScraperPage } from './pages/scraper';
 import { handleWishPage } from './pages/wish';
 
 (async function () {
@@ -48,7 +47,6 @@ import { handleWishPage } from './pages/wish';
         actions.push(handleMessagePage());
     }
 
-    actions.push(handleScraperPage());
     actions.push(handleTree());
     actions.push(handleLanguages());
 
