@@ -8,7 +8,6 @@ overrides:
   minimatch: ^10.2.6
   postcss: ^8.5.26
   sugarss: "^5.0.1"
-  typescript: 7.0.2
 
 peerDependencyRules:
   allowedVersions:
